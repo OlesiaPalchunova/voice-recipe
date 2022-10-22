@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/recipe_header.dart';
+import 'package:voice_recipe/screens/recipe_screen.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
   const RecipeHeaderCard({
@@ -8,7 +9,7 @@ class RecipeHeaderCard extends StatelessWidget {
     required this.recipe,
   }) : super(key: key);
 
-  final RecipeHeader recipe;
+  final Recipe recipe;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +28,14 @@ class RecipeHeaderCard extends StatelessWidget {
           ),
           contentPadding: const EdgeInsets.all(10),
           leading: Image(
-            image: AssetImage(recipe.imageUrl),
+            image: AssetImage(recipe.faceImageUrl),
           ),
-          onTap: () => print("${recipe.id} on tap"),
+          onTap: () => _navigateToNextScreen(context, recipe),
         ));
+  }
+
+  void _navigateToNextScreen(BuildContext context, Recipe recipe) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        RecipeScreen(recipe: recipe)));
   }
 }

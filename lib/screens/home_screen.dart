@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipe_header.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
+import 'package:voice_recipe/screens/recipe_screen.dart';
 
 void handle() {
   print("Button has pressed");
 }
 
 class Home extends StatelessWidget {
-  final List<RecipeHeader> recipes = [
-    RecipeHeader(name: "Борщ", imageUrl: "assets/images/borsh.png", id: 0),
-    RecipeHeader(
-        name: "Карбонара", imageUrl: "assets/images/carbonara.png", id: 1),
-  ];
-
   Home({super.key});
 
   @override
@@ -32,10 +27,6 @@ class Home extends StatelessWidget {
           itemCount: recipes.length,
           itemBuilder: (_, index) => RecipeHeaderCard(recipe: recipes[index]),
         ),
-      ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: handle,
-        child: Text("add"),
       ),
     );
   }
