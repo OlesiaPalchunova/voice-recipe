@@ -32,8 +32,11 @@ class RecipeStepWidget extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
           child: Container(
-            height: 80,
-            color: Colors.black87.withOpacity(0.75),
+            decoration: BoxDecoration(
+                color: Colors.black87.withOpacity(0.75),
+              borderRadius: BorderRadius.circular(15)
+            ),
+            height: 120,
             alignment: Alignment.center,
             padding: const EdgeInsets.all(5),
             child: Text(step.description, style: const TextStyle(

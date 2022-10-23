@@ -19,6 +19,9 @@ class RecipeIngredients extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Column(
         children: [
+          const SizedBox(
+            height: 40,
+          ),
           GeneralInfo(recipe: recipe),
           const Divider(color: Colors.black, thickness: 0.5,),
           const SizedBox(
