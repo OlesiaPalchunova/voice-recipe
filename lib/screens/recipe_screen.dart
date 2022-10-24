@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:intro_slider/intro_slider.dart';
 
 import 'package:voice_recipe/components/recipe_face.dart';
 import 'package:voice_recipe/components/recipe_ingredients.dart';
 import 'package:voice_recipe/components/recipe_step.dart';
+import 'package:voice_recipe/components/notifications/slide_notification.dart';
 
 import 'package:voice_recipe/model/recipe_header.dart';
 
+import '../components/header_panel.dart';
+
+class RecipeScreenInherited extends InheritedWidget {
+  const RecipeScreenInherited({super.key, required super.child});
+
+  @override
+  bool updateShouldNotify(RecipeScreenInherited oldWidget) {
+    // TODO: implement updateShouldNotify
+    throw UnimplementedError();
+  }
+}
+
 class RecipeScreen extends StatefulWidget {
+
   const RecipeScreen({
     Key? key,
     required this.recipe,
@@ -25,45 +38,40 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (TapDownDetails details) {
-        RenderBox box = context.findRenderObject() as RenderBox;
-        final localOffset = box.globalToLocal(details.globalPosition);
-        final x = localOffset.dx;
-        if(x < box.size.width / 2){
-          setState(() {
-            _decrementSlideId();
-          });
-        }else{
-          setState(() {
-            _incrementSlideId();
-          });
+    return NotificationListener<SlideNotification>(
+      onNotification: (SlideNotification slideNotification) {
+        if (slideNotification.slideId == _slideId) {
+          return false;
         }
-
+        setState(() {
+          _slideId = slideNotification.slideId;
+        });
+        return true;
       },
-      onPanUpdate: (details) {
-        int sensitivity = 0;
-        int cur = DateTime.now().millisecondsSinceEpoch;
-        if (cur - _lastDetect < 500) {
-          return;
-        }
-        if (details.delta.dx != 0) {
-          _lastDetect = cur;
-        }
-        if (details.delta.dx > sensitivity) {
-          setState(() {
-            _decrementSlideId();
-          });
-        }
-        if (details.delta.dx < sensitivity) {
-          setState(() {
-            _incrementSlideId();
-          });
-        }
-      },
-      child: Scaffold(
-        body: Container(
-          child: getSlide(_slideId),
+      child: GestureDetector(
+        onTapDown: (TapDownDetails details) {
+          _tapHandler(details);
+        },
+        onPanUpdate: (details) {
+          _swipeHandler(details);
+        },
+        child: Scaffold(
+          body: Container(
+            color: const Color(
+                0xFFE9F7CA
+            ),
+            child: Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  child: _getSlide(_slideId),
+                ),
+                Container(
+                    margin: const EdgeInsets.symmetric(vertical: 55, horizontal: 10),
+                    child: const HeaderPanel()),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -80,7 +88,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _slideId = _slideId > max ? max : _slideId;
   }
 
-  Widget getSlide(int slideId) {
+  Widget _getSlide(int slideId) {
     if (slideId == 0) {
       return RecipeFace(
         recipe: widget.recipe,
@@ -90,44 +98,40 @@ class _RecipeScreenState extends State<RecipeScreen> {
     }
     return RecipeStepWidget(recipe: widget.recipe, idx: slideId - 1);
   }
-}
 
-// class RecipeScreen extends StatefulWidget {
-//   const RecipeScreen({
-//     Key? key,
-//     required this.recipe,
-//   }) : super(key: key);
-//
-//   final Recipe recipe;
-//
-//   @override
-//   _RecipeScreenState createState() => _RecipeScreenState();
-// }
-//
-// class _RecipeScreenState extends State<RecipeScreen> {
-//   List<Slide> slides = [];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return IntroSlider(
-//       slides: slides,
-//       colorActiveDot: Colors.white,
-//     );
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     slides.add(
-//       Slide(
-//         // backgroundImage: widget.recipe.faceImageUrl,
-//         centerWidget: RecipeFace(recipe: widget.recipe,),
-//       ),
-//     );
-//     slides.add(
-//       Slide(
-//           centerWidget: RecipeIngredients(recipe: widget.recipe,)
-//       ),
-//     );
-//   }
-// }
+  void _tapHandler(TapDownDetails details) {
+    RenderBox box = context.findRenderObject() as RenderBox;
+    final localOffset = box.globalToLocal(details.globalPosition);
+    final x = localOffset.dx;
+    if (x < box.size.width / 2) {
+      setState(() {
+        _decrementSlideId();
+      });
+    } else {
+      setState(() {
+        _incrementSlideId();
+      });
+    }
+  }
+
+  void _swipeHandler(DragUpdateDetails details) {
+    int sensitivity = 0;
+    int cur = DateTime.now().millisecondsSinceEpoch;
+    if (cur - _lastDetect < 500) {
+      return;
+    }
+    if (details.delta.dx != 0) {
+      _lastDetect = cur;
+    }
+    if (details.delta.dx > sensitivity) {
+      setState(() {
+        _decrementSlideId();
+      });
+    }
+    if (details.delta.dx < sensitivity) {
+      setState(() {
+        _incrementSlideId();
+      });
+    }
+  }
+}

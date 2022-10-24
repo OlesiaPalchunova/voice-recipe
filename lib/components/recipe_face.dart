@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipe_header.dart';
+import 'package:voice_recipe/components/header_panel.dart';
 
 class RecipeFace extends StatelessWidget {
   const RecipeFace({
@@ -13,22 +14,19 @@ class RecipeFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(recipe.faceImageUrl),
             fit: BoxFit.fitHeight,
           ),
+          color: Colors.orangeAccent
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-                alignment: Alignment.centerLeft,
-                child: const Icon(
-                  Icons.cookie_outlined,
-                  size: 20,
-                )),
+            Container(),
             Container(
               alignment: Alignment.centerLeft,
               child: Column(
