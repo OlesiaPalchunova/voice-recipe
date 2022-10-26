@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step.dart';
 import 'package:voice_recipe/components/notifications/slide_notification.dart';
+import 'package:voice_recipe/components/notifications/tts_notification.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 
@@ -11,12 +13,15 @@ import '../components/header_panel.dart';
 
 class RecipeScreen extends StatefulWidget {
 
-  const RecipeScreen({
+  RecipeScreen({
     Key? key,
     required this.recipe,
-  }) : super(key: key);
+  }) : super(key: key) {
+    flutterTts.setLanguage("ru");
+  }
 
   final Recipe recipe;
+  final FlutterTts flutterTts = FlutterTts();
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -28,42 +33,51 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<SlideNotification>(
-      onNotification: (SlideNotification slideNotification) {
-        if (slideNotification.slideId == _slideId) {
-          return false;
-        }
-        setState(() {
-          _slideId = slideNotification.slideId;
-        });
+    return NotificationListener<TtsNotification>(
+      onNotification: (TtsNotification ttsNotification) {
+        int idx = ttsNotification.slideId - 2;
+        RecipeStep step = stepsResolve[widget.recipe.id][idx];
+        widget.flutterTts.speak(step.description);
         return true;
       },
-      child: GestureDetector(
-        onTapDown: (TapDownDetails details) {
-          _tapHandler(details);
+      child: NotificationListener<SlideNotification>(
+        onNotification: (SlideNotification slideNotification) {
+          if (slideNotification.slideId == _slideId) {
+            return false;
+          }
+          widget.flutterTts.stop();
+          setState(() {
+            _slideId = slideNotification.slideId;
+          });
+          return true;
         },
-        onPanUpdate: (details) {
-          _swipeHandler(details);
-        },
-        child: Scaffold(
-          body: Container(
-            color: const Color(
-                0xFFE9F7CA
-            ),
-            child: Stack(
-              children: [
-                Container(
-                  height: 50,
-                  color: Colors.white,
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: _getSlide(context, _slideId),
-                ),
-                Container(
-                    margin: const EdgeInsets.symmetric(vertical: 55, horizontal: 10),
-                    child: const HeaderPanel()),
-              ],
+        child: GestureDetector(
+          onTapDown: (TapDownDetails details) {
+            _tapHandler(details);
+          },
+          onPanUpdate: (details) {
+            _swipeHandler(details);
+          },
+          child: Scaffold(
+            body: Container(
+              color: const Color(
+                  0xFFE9F7CA
+              ),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    child: _getSlide(context, _slideId),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(vertical: 55, horizontal: 10),
+                      child: const HeaderPanel()),
+                ],
+              ),
             ),
           ),
         ),
@@ -98,6 +112,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     RenderBox box = context.findRenderObject() as RenderBox;
     final localOffset = box.globalToLocal(details.globalPosition);
     final x = localOffset.dx;
+    widget.flutterTts.stop();
     if (x < box.size.width / 2) {
       setState(() {
         _decrementSlideId();
@@ -119,11 +134,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
       _lastDetect = cur;
     }
     if (details.delta.dx > sensitivity) {
+      widget.flutterTts.stop();
       setState(() {
         _decrementSlideId();
       });
     }
     if (details.delta.dx < sensitivity) {
+      widget.flutterTts.stop();
       setState(() {
         _incrementSlideId();
       });

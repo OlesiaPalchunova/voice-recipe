@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:video_player/video_player.dart';
 import 'package:voice_recipe/components/notifications/slide_notification.dart';
+import 'package:voice_recipe/components/notifications/tts_notification.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
@@ -14,7 +15,6 @@ class RecipeStepWidget extends StatelessWidget {
     int len = stepsResolve[recipe.id].length;
     int idx = min(slideId - 2, len - 1);
     step = stepsResolve[recipe.id][idx];
-    flutterTts.setLanguage("ru");
     // controller = VideoPlayerController.asset('assets/videos/tef1.mp4');
     // controller.initialize();
     // controller.setLooping(true);
@@ -23,7 +23,6 @@ class RecipeStepWidget extends StatelessWidget {
 
   final Recipe recipe;
   final int slideId;
-  final FlutterTts flutterTts = FlutterTts();
   late final RecipeStep step;
 
   // late final VideoPlayerController controller;
@@ -37,7 +36,7 @@ class RecipeStepWidget extends StatelessWidget {
             HeaderPanel.buildButton(
                 context,
                 IconButton(
-                    onPressed: _pronounce,
+                    onPressed: () => _pronounce(context),
                     icon: const Icon(
                       Icons.play_arrow,
                       color: Colors.black87,
@@ -79,7 +78,8 @@ class RecipeStepWidget extends StatelessWidget {
         ));
   }
 
-  void _pronounce() {
-    flutterTts.speak(step.description);
+  void _pronounce(BuildContext context) {
+    TtsNotification ttsNotification = TtsNotification(slideId: slideId);
+    ttsNotification.dispatch(context);
   }
 }
