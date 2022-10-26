@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/components/recipe_face.dart';
-import 'package:voice_recipe/components/recipe_ingredients.dart';
-import 'package:voice_recipe/components/recipe_step.dart';
+import 'package:voice_recipe/components/slides/recipe_face.dart';
+import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
+import 'package:voice_recipe/components/slides/recipe_step.dart';
 import 'package:voice_recipe/components/notifications/slide_notification.dart';
 
-import 'package:voice_recipe/model/recipe_header.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
 
 import '../components/header_panel.dart';
-
-class RecipeScreenInherited extends InheritedWidget {
-  const RecipeScreenInherited({super.key, required super.child});
-
-  @override
-  bool updateShouldNotify(RecipeScreenInherited oldWidget) {
-    // TODO: implement updateShouldNotify
-    throw UnimplementedError();
-  }
-}
 
 class RecipeScreen extends StatefulWidget {
 
@@ -63,8 +53,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
             child: Stack(
               children: [
                 Container(
+                  height: 50,
+                  color: Colors.white,
+                ),
+                Container(
                   margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: _getSlide(_slideId),
+                  child: _getSlide(context, _slideId),
                 ),
                 Container(
                     margin: const EdgeInsets.symmetric(vertical: 55, horizontal: 10),
@@ -88,7 +82,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _slideId = _slideId > max ? max : _slideId;
   }
 
-  Widget _getSlide(int slideId) {
+  Widget _getSlide(BuildContext context, int slideId) {
+    SlideNotification(slideId: _slideId).dispatch(context);
     if (slideId == 0) {
       return RecipeFace(
         recipe: widget.recipe,
@@ -96,7 +91,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } else if (slideId == 1) {
       return RecipeIngredients(recipe: widget.recipe);
     }
-    return RecipeStepWidget(recipe: widget.recipe, idx: slideId - 1);
+    return RecipeStepWidget(recipe: widget.recipe, slideId: slideId);
   }
 
   void _tapHandler(TapDownDetails details) {

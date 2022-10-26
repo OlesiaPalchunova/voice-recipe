@@ -11,7 +11,6 @@ class Recipe {
 
   Recipe({required this.name, required this.faceImageUrl, required this.id,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories});
-
 }
 
 class Ingredient {
@@ -23,13 +22,15 @@ class Ingredient {
 }
 
 final List<Recipe> recipes = [
-  Recipe(name: "Борщ", faceImageUrl: "assets/images/borsh.jpg", id: 0,
+  Recipe(name: "Борщ", faceImageUrl: "assets/images/borsh_face.jpg", id: 0,
   cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140),
   Recipe(
-      name: "Карбонара", faceImageUrl: "assets/images/carbonara.png", id: 1,
+      name: "Карбонара", faceImageUrl: "assets/images/carbonara_face.jpg", id: 1,
   cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320),
   Recipe(name: "Маффины", faceImageUrl: "assets/images/muffin6.jpg", id: 2,
-      cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240)
+      cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240),
+  Recipe(name: "Фрикадельки", faceImageUrl: "assets/images/tef4.jpg", id: 3,
+      cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440),
 ];
 
 final List<Ingredient> borshIngredients = [
@@ -58,8 +59,15 @@ final List<Ingredient> muffinsIngredients = [
   Ingredient(id: 5, name: "Разрыхлитель", count: "1 ч.л.")
 ];
 
+final List<Ingredient> tefIngredients = [
+  Ingredient(id: 1, name: "Фрикадельки", count: "300 г"),
+  Ingredient(id: 2, name: "Томатная паста", count: "100 мл"),
+  Ingredient(id: 3, name: "Зелень", count: "50 г"),
+  Ingredient(id: 3, name: "Растительное масло", count: "2 ст. л."),
+];
+
 final List<List<Ingredient>> ingrResolve = [borshIngredients, carbonaraIngredients,
-muffinsIngredients];
+muffinsIngredients, tefIngredients];
 
 class RecipeStep {
   int id;
@@ -78,4 +86,10 @@ final List<RecipeStep> muffinsSteps = [
   RecipeStep(id: 6, imgUrl: "assets/images/muffin6.jpg", description: "Капкейки Брауни готовы. Приятного чаепития!"),
 ];
 
-final List<List<RecipeStep>> stepsResolve = [[], [], muffinsSteps];
+final List<RecipeStep> tefSteps = [
+  RecipeStep(id: 1, imgUrl: "assets/images/tef1.jpg", description: "Налейте растительное масло в сковородку, разогрейте. Выложите фрикадельки и жарьте в течение 10 минут"),
+  RecipeStep(id: 2, imgUrl: "assets/images/tef2.jpg", description: "Затем добавьте томатную пасту, залейте кипятком до уровня одного сантиметра. Тушите 5 минут."),
+  RecipeStep(id: 3, imgUrl: "assets/images/tef3.jpg", description: "Посыпьте свежей зеленью и подавайте. Приятного аппетита!"),
+];
+
+final List<List<RecipeStep>> stepsResolve = [[], [], muffinsSteps, tefSteps];

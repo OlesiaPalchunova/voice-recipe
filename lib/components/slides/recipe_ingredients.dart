@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/model/recipe_header.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
 
 class RecipeIngredients extends StatelessWidget {
@@ -20,7 +20,7 @@ class RecipeIngredients extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Column(
         children: [
-          const SizedBox(height: 40,),
+          const SizedBox(height: 50,),
           GeneralInfo(recipe: recipe),
           const Divider(color: Colors.black, thickness: 0.5,),
           const SizedBox(

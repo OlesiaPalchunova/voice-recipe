@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/model/recipe_header.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 import 'package:voice_recipe/components/voice_recipe_media.dart';
 
@@ -12,18 +12,18 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "VoiceRecipe",
+          "Voice Recipe",
           style: TextStyle(
               fontFamily: "MontserratBold",
-              fontSize: 18,
+              fontSize: 22,
               fontWeight: FontWeight.normal,
               color: Colors.white),
         ),
-        leading: const Icon(
-          VoiceRecipeMedia.icon,
-          size: 30,
-          color: Colors.white,
-        ),
+        centerTitle: true,
+        leading:
+            Container(
+              padding: const EdgeInsets.all(5),
+                child: Image.asset("assets/images/voice_recipe.png")),
         // backgroundColor: Colors.amberAccent,
       ),
       body: ListView.builder(
