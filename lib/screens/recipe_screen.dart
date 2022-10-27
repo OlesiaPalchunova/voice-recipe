@@ -6,13 +6,13 @@ import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step.dart';
 import 'package:voice_recipe/components/notifications/slide_notification.dart';
 import 'package:voice_recipe/components/notifications/tts_notification.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import 'package:voice_recipe/model/recipes_info.dart';
 
 import '../components/header_panel.dart';
 
 class RecipeScreen extends StatefulWidget {
-
   RecipeScreen({
     Key? key,
     required this.recipe,
@@ -30,6 +30,39 @@ class RecipeScreen extends StatefulWidget {
 class _RecipeScreenState extends State<RecipeScreen> {
   int _slideId = 0;
   int _lastDetect = DateTime.now().millisecondsSinceEpoch;
+  late stt.SpeechToText _speech;
+  String _text = 'Press the button and start speaking';
+  double _confidence = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _launchRecognition();
+  }
+
+  void _launchRecognition() {
+    _initSpeechToText().then((available) {
+      if (available) {
+        _listen();
+      }
+    });
+  }
+
+  Future<bool> _initSpeechToText() async {
+    _speech = stt.SpeechToText();
+    return await _speech.initialize(
+      onStatus: (val) => {
+        print('onStatus: $val')
+      },
+      onError: (val) {
+        print('onError: $val');
+        if (val.errorMsg == 'error_speech_timeout' ||
+            val.errorMsg == 'error_no_match') {
+          _launchRecognition();
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +93,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
           },
           child: Scaffold(
             body: Container(
-              color: const Color(
-                  0xFFE9F7CA
-              ),
+              color: const Color(0xFFE9F7CA),
               child: Stack(
                 children: [
                   Container(
@@ -74,7 +105,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     child: _getSlide(context, _slideId),
                   ),
                   Container(
-                      margin: const EdgeInsets.symmetric(vertical: 55, horizontal: 10),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 55, horizontal: 10),
                       child: const HeaderPanel()),
                 ],
               ),
@@ -145,5 +177,36 @@ class _RecipeScreenState extends State<RecipeScreen> {
         _incrementSlideId();
       });
     }
+  }
+
+  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
+  static const backWords = ["назад"];
+
+  bool _isNextCommand(String command) => nextWords.contains(command.toLowerCase());
+
+  bool _isBackCommand(String command) => backWords.contains(command.toLowerCase());
+
+  void _listen() async {
+    _speech.listen(
+      localeId: "ru_RU",
+      listenFor: const Duration(minutes: 1),
+      onResult: (val) => setState(() {
+        _text = val.recognizedWords;
+        print(_text);
+        if (_isNextCommand(_text)) {
+          setState(() {
+            _incrementSlideId();
+          });
+        } else if (_isBackCommand(_text)) {
+          setState(() {
+            _decrementSlideId();
+          });
+        }
+        if (val.hasConfidenceRating && val.confidence > 0) {
+          _confidence = val.confidence;
+        }
+        _listen();
+      }),
+    );
   }
 }
