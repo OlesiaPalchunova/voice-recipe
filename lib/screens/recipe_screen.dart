@@ -6,7 +6,6 @@ import 'package:voice_recipe/components/notifications/stt_notification.dart';
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step.dart';
-import 'package:voice_recipe/screens/home_screen.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
 
@@ -49,7 +48,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onPrev: () => setState(() {
               _decrementSlideId();
             }),
-        onSay: () => {});
+        onSay: () => {
+          _pronounce(_slideId)
+        });
     _listener.launchRecognition();
   }
 
@@ -125,7 +126,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _onClose(BuildContext context) {
     _listener.shutdown();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Home()));
+    Navigator.of(context).pop();
   }
 
   void _onList(BuildContext context) {
@@ -160,7 +161,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
       return RecipeIngredients(recipe: widget.recipe);
     }
     return RecipeStepWidget(recipe: widget.recipe,
-      onSayButton: () => _pronounce(slideId), onStopButton: () => widget.flutterTts.stop(), slideId: slideId,);
+      onSayButton: () => _pronounce(slideId), onStopButton: () => widget.flutterTts.stop(),
+      slideId: slideId,);
   }
 
   void _tapHandler(TapDownDetails details) {
