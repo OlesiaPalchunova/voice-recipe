@@ -23,23 +23,26 @@ class CommandsListener {
   static const startWords = ["начать", "старт", "начало"];
   static const exitWords = ["выйди", "закрой"];
   var lastDoneTime = DateTime.now();
+  var enabled = true;
 
   var _speechAvailable = false;
   final String _selectedLocaleId = 'ru_Ru';
 
   void start() async {
+    enabled = true;
     if (!_speechAvailable) {
       _speechToText.initialize(
         onStatus: (val) {
           debugPrint('=== onStatus: $val');
-          if (val == 'done') {
+          if (val == 'done' && enabled) {
+            _listen();
           }
         },
         onError: (val) {
           debugPrint('=== onError: $val');
-          if (val.errorMsg == 'error_speech_timeout' ||
+          if (enabled && val.errorMsg == 'error_speech_timeout' ||
               val.errorMsg == 'error_no_match') {
-            start();
+            _listen();
           }
         },
       ).then((available) {
@@ -56,24 +59,9 @@ class CommandsListener {
   }
 
   void shutdown() {
+    enabled = false;
     _speechToText.cancel();
-  }
-
-  void _initSpeechToText() async {
-    _speechAvailable = await _speechToText.initialize(
-      onStatus: (val) {
-        debugPrint('=== onStatus: $val');
-        if (val == 'done') {
-        }
-      },
-      onError: (val) {
-        debugPrint('=== onError: $val');
-        if (val.errorMsg == 'error_speech_timeout' ||
-            val.errorMsg == 'error_no_match') {
-          start();
-        }
-      },
-    );
+    _speechToText.stop();
   }
 
   void _listen() async {
@@ -84,7 +72,6 @@ class CommandsListener {
       onResult: (val) {
         var text = val.recognizedWords;
         _handleText(text);
-        start();
       },
     );
   }

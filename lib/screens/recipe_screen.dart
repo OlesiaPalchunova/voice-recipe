@@ -42,14 +42,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
         }),
         onExit: () => _onClose(context),
         onNext: () => setState(() {
-              print('GOT NEXT');
+              debugPrint('GOT NEXT');
               _incrementSlideId();
             }),
         onPrev: () => setState(() {
               _decrementSlideId();
             }),
-        onSay: () => {
-          _pronounce(_slideId)
+        onSay: () {
+          _pronounce(_slideId);
         });
     _listener.start();
   }
