@@ -1,5 +1,7 @@
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
+import '../screens/recipe_screen.dart';
+
 class CommandsListener {
   CommandsListener({required this.onNext, required this.onPrev});
 
@@ -8,6 +10,7 @@ class CommandsListener {
   final void Function() onPrev;
   static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
   static const backWords = ["назад"];
+  var lastCommandTime = DateTime.now();
 
   void launchRecognition() {
     _initSpeechToText().then((available) {
@@ -44,14 +47,20 @@ class CommandsListener {
       onResult: (val) {
         var text = val.recognizedWords;
         print(text);
+        var current = DateTime.now();
         if (_isNextCommand(text)) {
-          onNext();
+          if (current.difference(lastCommandTime).inMilliseconds >=
+              RecipeScreen.minSlideChangeDelayMillis) {
+            lastCommandTime = current;
+            onNext();
+          }
         } else if (_isBackCommand(text)) {
-          onPrev();
+          if (current.difference(lastCommandTime).inMilliseconds >=
+              RecipeScreen.minSlideChangeDelayMillis) {
+            lastCommandTime = current;
+            onPrev();
+          }
         }
-        // if (val.hasConfidenceRating && val.confidence > 0) {
-        //   _confidence = val.confidence;
-        // }
         _listen();
       },
     );

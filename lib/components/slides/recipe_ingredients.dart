@@ -16,7 +16,11 @@ class RecipeIngredients extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(6.0)
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Column(
         children: [

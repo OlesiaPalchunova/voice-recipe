@@ -38,11 +38,18 @@ class RecipeHeaderCard extends StatelessWidget {
               width: width,
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
-                  color: Colors.black87.withOpacity(0.3),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black87.withOpacity(0.6),
+                    Colors.black87.withOpacity(0.0),
+                  ]
+                ),
                   borderRadius: BorderRadius.vertical(
                       top: Radius.circular(borderRadius))),
               // width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(30, 40, 0, 5),
+              padding: const EdgeInsets.fromLTRB(30, 35, 0, 10),
               child: Text(
                 recipe.name,
                 style: const TextStyle(
@@ -54,25 +61,6 @@ class RecipeHeaderCard extends StatelessWidget {
             ),
           ])),
     );
-    // Card(
-    //   elevation: 40,
-    //   margin: const EdgeInsets.symmetric(vertical: 7),
-    //   child: ListTile(
-    //     hoverColor: Colors.black12,
-    //     dense: false,
-    //     title: Text(
-    //       recipe.name,
-    //       style: const TextStyle(
-    //           fontSize: 22,
-    //           fontFamily: "Montserrat",
-    //           color: Colors.black87),
-    //     ),
-    //     contentPadding: const EdgeInsets.all(10),
-    //     leading: Image(
-    //       image: AssetImage(recipe.faceImageUrl),
-    //     ),
-    //     onTap: () => _navigateToNextScreen(context, recipe),
-    //   ));
   }
 
   void _navigateToNextScreen(BuildContext context, Recipe recipe) {

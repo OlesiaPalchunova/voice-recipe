@@ -46,7 +46,7 @@ class RecipeStepWidget extends StatelessWidget {
             ),
             SizedBox(
               // child: VideoPlayer(controller),
-              height: 510,
+              height: MediaQuery.of(context).size.height * 0.65,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: Image(

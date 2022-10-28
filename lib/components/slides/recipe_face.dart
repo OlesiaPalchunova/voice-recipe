@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/header_panel.dart';
-
 class RecipeFace extends StatelessWidget {
   const RecipeFace({
     Key? key,
@@ -26,52 +24,78 @@ class RecipeFace extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                alignment: Alignment.centerLeft,
-                color: Colors.black87.withOpacity(0.3),
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20,),
-                    Row(
+            Column(
+              children: [
+                Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black87.withOpacity(0.4),
+                            Colors.black87.withOpacity(0.0),
+                          ])),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    color: Colors.black87.withOpacity(0.4),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    width: double.infinity,
+                    child: Column(
                       children: [
-                        const Icon(
-                            Icons.access_time,
-                          color: Colors.white,
-                          size: 20,
+                        const SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            const Icon(
+                                Icons.access_time,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            Container(
+                              height: 16,
+                              margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              alignment: Alignment.centerLeft,
+                              child: Text("${recipe.cookTimeMins} минут\n",
+                                  style: const TextStyle(fontFamily: "MontserratBold",
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
+                            )
+                          ]
                         ),
                         Container(
-                          height: 16,
-                          margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           alignment: Alignment.centerLeft,
-                          child: Text("${recipe.cookTimeMins} минут\n",
-                              style: const TextStyle(fontFamily: "MontserratBold",
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                          child: RichText(
+                            text: TextSpan(
+                                style: const TextStyle(
+                                    fontFamily: "MontserratBold",
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                children: <TextSpan>[
+                                  TextSpan(text: recipe.name)
+                                ]),
+                          ),
                         )
-                      ]
+                      ],
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: RichText(
-                        text: TextSpan(
-                            style: const TextStyle(
-                                fontFamily: "MontserratBold",
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                            children: <TextSpan>[
-                              TextSpan(text: recipe.name)
-                            ]),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black87.withOpacity(0.4),
+                            Colors.black87.withOpacity(0.0),
+                          ])),
+                ),
+              ],
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),

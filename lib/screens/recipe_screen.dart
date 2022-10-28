@@ -23,6 +23,7 @@ class RecipeScreen extends StatefulWidget {
 
   final Recipe recipe;
   final FlutterTts flutterTts = FlutterTts();
+  static const minSlideChangeDelayMillis = 500;
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -30,7 +31,7 @@ class RecipeScreen extends StatefulWidget {
 
 class _RecipeScreenState extends State<RecipeScreen> {
   int _slideId = 0;
-  int _lastDetect = DateTime.now().millisecondsSinceEpoch;
+  var lastSwipeTime = DateTime.now();
   late CommandsListener _listener;
 
   @override
@@ -140,12 +141,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _swipeHandler(DragUpdateDetails details) {
     int sensitivity = 0;
-    int cur = DateTime.now().millisecondsSinceEpoch;
-    if (cur - _lastDetect < 500) {
+    var cur = DateTime.now();
+    if (cur.difference(lastSwipeTime).inMilliseconds <= RecipeScreen.minSlideChangeDelayMillis) {
       return;
     }
     if (details.delta.dx != 0) {
-      _lastDetect = cur;
+      lastSwipeTime = cur;
     }
     if (details.delta.dx > sensitivity) {
       widget.flutterTts.stop();
