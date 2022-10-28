@@ -7,9 +7,7 @@ class CommandsListener {
       required this.onPrev,
       required this.onSay,
       required this.onStart,
-      required this.onExit}) {
-    _initSpeechToText();
-  }
+      required this.onExit});
 
   late final SpeechToText _speechToText = SpeechToText();
   final void Function() onNext;
@@ -19,7 +17,6 @@ class CommandsListener {
   final void Function() onExit;
   var lastCommandTime = DateTime.now();
   static const _minSlideChangeDelayMillis = 800;
-  static const _minDoneDelay = 200;
   static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
   static const backWords = ["назад"];
   static const sayWords = ["скажи"];
@@ -30,9 +27,29 @@ class CommandsListener {
   var _speechAvailable = false;
   final String _selectedLocaleId = 'ru_Ru';
 
-  void start() {
+  void start() async {
     if (!_speechAvailable) {
-      debugPrint("STT module is not available");
+      _speechToText.initialize(
+        onStatus: (val) {
+          debugPrint('=== onStatus: $val');
+          if (val == 'done') {
+          }
+        },
+        onError: (val) {
+          debugPrint('=== onError: $val');
+          if (val.errorMsg == 'error_speech_timeout' ||
+              val.errorMsg == 'error_no_match') {
+            start();
+          }
+        },
+      ).then((available) {
+        if (available) {
+          _speechAvailable = true;
+          _listen();
+        } else {
+          debugPrint("Stt is not available");
+        }
+      });
     } else {
       _listen();
     }
@@ -47,12 +64,6 @@ class CommandsListener {
       onStatus: (val) {
         debugPrint('=== onStatus: $val');
         if (val == 'done') {
-          // var current = DateTime.now();
-          // if (current.difference(lastDoneTime).inMilliseconds.abs() >=
-          // _minDoneDelay) {
-            start();
-            // lastDoneTime = current;
-          // }
         }
       },
       onError: (val) {
@@ -73,6 +84,7 @@ class CommandsListener {
       onResult: (val) {
         var text = val.recognizedWords;
         _handleText(text);
+        start();
       },
     );
   }
