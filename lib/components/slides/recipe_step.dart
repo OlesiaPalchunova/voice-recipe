@@ -1,13 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:video_player/video_player.dart';
-import 'package:voice_recipe/components/notifications/slide_notification.dart';
-import 'package:voice_recipe/components/notifications/tts_notification.dart';
 
+import 'package:voice_recipe/components/notifications/tts_notification.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
+import 'package:voice_recipe/components/util.dart';
 
 class RecipeStepWidget extends StatelessWidget {
   RecipeStepWidget({Key? key, required this.recipe, required this.slideId})
@@ -15,22 +13,21 @@ class RecipeStepWidget extends StatelessWidget {
     int len = stepsResolve[recipe.id].length;
     int idx = min(slideId - 2, len - 1);
     step = stepsResolve[recipe.id][idx];
-    // controller = VideoPlayerController.asset('assets/videos/tef1.mp4');
-    // controller.initialize();
-    // controller.setLooping(true);
-    // controller.play();
   }
 
   final Recipe recipe;
   final int slideId;
   late final RecipeStep step;
 
-  // late final VideoPlayerController controller;
+  static const _imageSize = 0.65;
+  static const _borderRadius = 16.0;
+  static const _textBackgroundOpacity = 0.75;
+  static const _textSize = 0.022;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: const EdgeInsets.all(Util.padding),
         child: Column(
           children: [
             HeaderPanel.buildButton(
@@ -41,14 +38,11 @@ class RecipeStepWidget extends StatelessWidget {
                       Icons.play_arrow,
                       color: Colors.black87,
                     ))),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              // child: VideoPlayer(controller),
-              height: MediaQuery.of(context).size.height * 0.65,
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, Util.margin, 0, 0),
+              height: Util.pageHeight(context) * _imageSize,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
+                borderRadius: BorderRadius.circular(_borderRadius),
                 child: Image(
                   image: AssetImage(step.imgUrl),
                   fit: BoxFit.fitHeight,
@@ -57,20 +51,19 @@ class RecipeStepWidget extends StatelessWidget {
             ),
             Container(
                 alignment: Alignment.topCenter,
-                // padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                margin: const EdgeInsets.symmetric(vertical: Util.margin, horizontal: 0),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.black87.withOpacity(0.75),
-                      borderRadius: BorderRadius.circular(15)),
+                      color: Colors.black87.withOpacity(_textBackgroundOpacity),
+                      borderRadius: BorderRadius.circular(_borderRadius)),
                   // height: 120,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(Util.padding),
                   child: Text(
                     step.description,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontFamily: "Montserrat",
-                        fontSize: 18,
+                        fontSize: Util.pageHeight(context) * _textSize,
                         color: Colors.white),
                   ),
                 )),
