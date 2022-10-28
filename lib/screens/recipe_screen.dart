@@ -51,7 +51,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onSay: () => {
           _pronounce(_slideId)
         });
-    _listener.launchRecognition();
+    _listener.start();
   }
 
   @override
@@ -105,10 +105,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     ),
                     Container(
                         margin: const EdgeInsets.symmetric(
-                            vertical: 55, horizontal: 10),
+                            vertical: 60, horizontal: 10),
                         child: HeaderPanel(
                           onClose: _onClose,
                           onList: _onList,
+                          onMute: () => _listener.shutdown(),
+                          onListen: () => _listener.start(),
                         )),
                   ],
                 ),
@@ -129,7 +131,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     Navigator.of(context).pop();
   }
 
-  void _onList(BuildContext context) {
+  void _onList() {
     setState(() {
       _slideId = 1;
     });

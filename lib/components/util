@@ -1,0 +1,161 @@
+  CommandsListener({required this.onNext, required this.onPrev, required this.onSay,
+  required this.onStart, required this.onExit}) {
+    _initSpeech();
+  }
+
+  late final stt.SpeechToText _speechToText = stt.SpeechToText();
+  final void Function() onNext;
+  final void Function() onPrev;
+  final void Function() onSay;
+  final void Function() onStart;
+  final void Function() onExit;
+  var lastCommandTime = DateTime.now();
+  static const _minSlideChangeDelayMillis = 800;
+
+  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
+  static const backWords = ["назад"];
+  static const sayWords = ["скажи"];
+  static const startWords = ["начать", "старт", "начало"];
+  static const exitWords = ["выйди", "закрой"];
+  var _speechEnabled = false;
+  var _speechAvailable = false;
+  final String _selectedLocaleId = 'ru_Ru';
+
+  void launchRecognition() {
+    _initSpeechToText().then((available) {
+      if (available) {
+        _listen();
+      }
+    });
+    _initSpeech();
+    _startListening();
+  }
+
+  void shutdown() {
+    _speechToText.cancel();
+  }
+
+  void statusListener(String status) async {
+    debugPrint("status $status");
+    if (status == "done") {
+      debugPrint("HERE");
+      _speechEnabled = false;
+      await _startListening();
+    } else {
+      debugPrint((status == "done").toString());
+    }
+  }
+
+  /// Each time to start a speech recognition session
+  Future _startListening() async {
+    debugPrint("=================================================");
+    await _stopListening();
+    // await Future.delayed(const Duration(milliseconds: 50));
+    await _speechToText.listen(
+        onResult: (result) {
+          var text = result.recognizedWords;
+          debugPrint(text);
+          var current = DateTime.now();
+          var passed = current.difference(lastCommandTime).inMilliseconds.abs();
+          if (passed >=
+              _minSlideChangeDelayMillis) {
+            if (_isNextCommand(text)) {
+              lastCommandTime = current;
+              debugPrint('detected next command');
+              onNext();
+              debugPrint('called onNext()');
+            } else if (_isBackCommand(text)) {
+              lastCommandTime = current;
+              onPrev();
+            } else if (_isSayCommand(text)) {
+              lastCommandTime = current;
+              onSay();
+            } else if (startWords.contains(text.toLowerCase())) {
+              lastCommandTime = current;
+              onStart();
+            } else if (exitWords.contains(text.toLowerCase())) {
+              lastCommandTime = current;
+              onExit();
+            }
+          } else {
+            debugPrint('PASSED $passed');
+          }
+        },
+        localeId: _selectedLocaleId,
+        cancelOnError: false,
+        partialResults: true,
+    );
+    _speechEnabled = true;
+  }
+
+  Future _stopListening() async {
+    _speechEnabled = false;
+    await _speechToText.stop();
+  }
+
+  Future<bool> _initSpeechToText() async {
+    return await _speechToText.initialize(
+      onStatus: (val) {
+        print('onStatus: $val');
+        if (val == 'done') {
+          launchRecognition();
+        }
+      },
+      onError: (val) {
+        print('onError: $val');
+        if (val.errorMsg == 'error_speech_timeout' ||
+            val.errorMsg == 'error_no_match') {
+          launchRecognition();
+        }
+      },
+    );
+  }
+
+  void _initSpeech() async {
+    _speechAvailable = await _speechToText.initialize(
+        onError: (error) => debugPrint(error.errorMsg.toString()),
+        onStatus: statusListener
+    );
+  }
+
+  bool _isNextCommand(String command) => nextWords.contains(command.toLowerCase());
+
+  bool _isBackCommand(String command) => backWords.contains(command.toLowerCase());
+
+  bool _isSayCommand(String command) => sayWords.contains(command.toLowerCase());
+
+  void _listen() async {
+    _speechToText.listen(
+      localeId: "ru_RU",
+      listenFor: const Duration(hours: 2),
+      onResult: (val) {
+        var text = val.recognizedWords;
+        print(text);
+        var current = DateTime.now();
+        var passed = current.difference(lastCommandTime).inMilliseconds.abs();
+        if (passed >=
+            _minSlideChangeDelayMillis) {
+          if (_isNextCommand(text)) {
+            lastCommandTime = current;
+            print('detected next command');
+            onNext();
+            print('called onNext()');
+          } else if (_isBackCommand(text)) {
+            lastCommandTime = current;
+            onPrev();
+          } else if (_isSayCommand(text)) {
+            lastCommandTime = current;
+            onSay();
+          } else if (startWords.contains(text.toLowerCase())) {
+            lastCommandTime = current;
+            onStart();
+          } else if (exitWords.contains(text.toLowerCase())) {
+            lastCommandTime = current;
+            onExit();
+          }
+        } else {
+          print('PASSED $passed');
+        }
+      },
+    );
+  }

@@ -32,7 +32,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_tts:
-  video_player:
   speech_to_text:
 
 

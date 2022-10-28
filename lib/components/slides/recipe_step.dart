@@ -36,7 +36,7 @@ class RecipeStepWidget extends StatefulWidget {
 
 class _RecipeStepWidgetState extends State<RecipeStepWidget> {
   var _isSaying = false;
-  
+
   @override
   Widget build(BuildContext context) {
     if (_isSaying) {
