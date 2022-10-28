@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/screens/home_screen.dart';
-import 'package:voice_recipe/components/notifications/slide_notification.dart';
-
 class HeaderPanel extends StatelessWidget {
-  const HeaderPanel({super.key});
+  const HeaderPanel({super.key, required this.onClose, required this.onList});
 
   final double _iconSize = 25;
   final double _panelHeight = 45;
+  final void Function(BuildContext) onClose;
+  final void Function(BuildContext) onList;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class HeaderPanel extends StatelessWidget {
             buildButton(
               context,
               IconButton(
-                onPressed: () => _onList(context),
+                onPressed: () => onList(context),
                 icon: Icon(
                   Icons.list,
                   color: Colors.black,
@@ -37,7 +36,7 @@ class HeaderPanel extends StatelessWidget {
             buildButton(
               context,
               IconButton(
-                onPressed: () => _onClose(context),
+                onPressed: () => onClose(context),
                 icon: Icon(
                   Icons.close_outlined,
                   color: Colors.black,
@@ -58,15 +57,5 @@ class HeaderPanel extends StatelessWidget {
           color: Colors.white,
         ),
         child: iconButton);
-  }
-
-  void _onClose(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const Home()));
-  }
-
-  void _onList(BuildContext context) {
-    SlideNotification n = SlideNotification(slideId: 1);
-    n.dispatch(context);
   }
 }

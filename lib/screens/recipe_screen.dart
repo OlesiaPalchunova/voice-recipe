@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/commands_listener.dart';
+import 'package:voice_recipe/components/notifications/stt_notification.dart';
 
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step.dart';
-
-import 'package:voice_recipe/components/notifications/slide_notification.dart';
-import 'package:voice_recipe/components/notifications/tts_notification.dart';
-
+import 'package:voice_recipe/screens/home_screen.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-
-import '../components/header_panel.dart';
+import 'package:voice_recipe/components/header_panel.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
     Key? key,
     required this.recipe,
   }) : super(key: key) {
-    flutterTts.setLanguage("ru");
+    flutterTts.setLanguage('ru');
   }
 
   final Recipe recipe;
+  late final RecipeIngredients ingPage = RecipeIngredients(recipe: recipe);
+  late final RecipeFace facePage = RecipeFace(recipe: recipe);
   final FlutterTts flutterTts = FlutterTts();
-  static const minSlideChangeDelayMillis = 500;
+
+  static const minSlideChangeDelayMillis = 100;
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -38,66 +38,100 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void initState() {
     super.initState();
     _listener = CommandsListener(
+        onStart: () => setState(() {
+          _slideId = 2;
+        }),
+        onExit: () => _onClose(context),
         onNext: () => setState(() {
+              print('GOT NEXT');
               _incrementSlideId();
             }),
         onPrev: () => setState(() {
               _decrementSlideId();
-            }));
+            }),
+        onSay: () => {});
     _listener.launchRecognition();
   }
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<TtsNotification>(
-      onNotification: (TtsNotification ttsNotification) {
-        int idx = ttsNotification.slideId - 2;
-        RecipeStep step = stepsResolve[widget.recipe.id][idx];
-        widget.flutterTts.speak(step.description);
-        return true;
-      },
-      child: NotificationListener<SlideNotification>(
-        onNotification: (SlideNotification slideNotification) {
-          if (slideNotification.slideId == _slideId) {
-            return false;
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: NotificationListener<SttNotification>(
+        onNotification: (SttNotification n) {
+          switch(n.command) {
+            case Command.start: {
+              setState(() {
+                _slideId = 2;
+              });
+              break;
+            }
+            case Command.next:
+              setState(() {
+                _incrementSlideId();
+              });
+              break;
+            case Command.back:
+              setState(() {
+                _decrementSlideId();
+              });
+              break;
+            case Command.exit:
+              _onClose(context);
+              break;
           }
-          widget.flutterTts.stop();
-          setState(() {
-            _slideId = slideNotification.slideId;
-          });
           return true;
         },
         child: GestureDetector(
-          onTapDown: (TapDownDetails details) {
-            _tapHandler(details);
-          },
-          onPanUpdate: (details) {
-            _swipeHandler(details);
-          },
-          child: Scaffold(
-            body: Container(
-              color: const Color(0xFFE9F7CA),
-              child: Stack(
-                children: [
-                  Container(
-                    height: 50,
-                    color: Colors.white,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                    child: _getSlide(context, _slideId),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 55, horizontal: 10),
-                      child: const HeaderPanel()),
-                ],
+            onTapDown: (TapDownDetails details) {
+              _tapHandler(details);
+            },
+            onPanUpdate: (details) {
+              _swipeHandler(details);
+            },
+            child: Scaffold(
+              body: Container(
+                color: const Color(0xFFE9F7CA),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 50,
+                      color: Colors.white,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      child: _getSlide(context, _slideId),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 55, horizontal: 10),
+                        child: HeaderPanel(
+                          onClose: _onClose,
+                          onList: _onList,
+                        )),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
       ),
     );
+  }
+
+  Future<bool> _onWillPop() async {
+    _onClose(context);
+    return true;
+  }
+
+  void _onClose(BuildContext context) {
+    _listener.shutdown();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Home()));
+  }
+
+  void _onList(BuildContext context) {
+    setState(() {
+      _slideId = 1;
+    });
   }
 
   void _decrementSlideId() {
@@ -111,8 +145,13 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _slideId = _slideId > max ? max : _slideId;
   }
 
+  void _pronounce(int slideId) {
+    int idx = slideId - 2;
+    var step = stepsResolve[widget.recipe.id][idx];
+    widget.flutterTts.speak(step.description);
+  }
+
   Widget _getSlide(BuildContext context, int slideId) {
-    SlideNotification(slideId: _slideId).dispatch(context);
     if (slideId == 0) {
       return RecipeFace(
         recipe: widget.recipe,
@@ -120,7 +159,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } else if (slideId == 1) {
       return RecipeIngredients(recipe: widget.recipe);
     }
-    return RecipeStepWidget(recipe: widget.recipe, slideId: slideId);
+    return RecipeStepWidget(recipe: widget.recipe,
+      onSayButton: () => _pronounce(slideId), onStopButton: () => widget.flutterTts.stop(), slideId: slideId,);
   }
 
   void _tapHandler(TapDownDetails details) {
@@ -142,7 +182,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void _swipeHandler(DragUpdateDetails details) {
     int sensitivity = 0;
     var cur = DateTime.now();
-    if (cur.difference(lastSwipeTime).inMilliseconds <= RecipeScreen.minSlideChangeDelayMillis) {
+    if (cur.difference(lastSwipeTime).inMilliseconds <=
+        RecipeScreen.minSlideChangeDelayMillis) {
       return;
     }
     if (details.delta.dx != 0) {

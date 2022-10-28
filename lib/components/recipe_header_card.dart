@@ -10,8 +10,8 @@ class RecipeHeaderCard extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  final double borderRadius = 16.0;
-  final double width = 380;
+  static const borderRadius = 16.0;
+  static const width = 380.0;
 
   @override
   Widget build(BuildContext context) {

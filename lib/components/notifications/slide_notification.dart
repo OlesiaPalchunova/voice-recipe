@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SlideNotification extends Notification {
-  final int slideId;
+class PageUpdated extends Notification {
+  final int pageNumber;
 
-  SlideNotification({required this.slideId});
+  PageUpdated({required this.pageNumber});
 }
