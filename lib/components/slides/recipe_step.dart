@@ -1,19 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/notifications/slide_notification.dart';
-
-import 'package:voice_recipe/components/notifications/tts_notification.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
 import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/components/timer.dart';
+import 'package:voice_recipe/shared_data.dart';
 
 class RecipeStepWidget extends StatefulWidget {
   RecipeStepWidget(
       {Key? key,
       required this.recipe,
       required this.onSayButton,
-      required this.onStopButton, required int slideId})
+      required this.onStopButton,
+      required this.slideId})
       : super(key: key) {
     int len = stepsResolve[recipe.id].length;
     int idx = min(slideId - 2, len - 1);
@@ -23,6 +23,7 @@ class RecipeStepWidget extends StatefulWidget {
   final void Function() onSayButton;
   final void Function() onStopButton;
   final Recipe recipe;
+  final int slideId;
   late final RecipeStep step;
 
   static const _imageSize = 0.65;
@@ -36,6 +37,40 @@ class RecipeStepWidget extends StatefulWidget {
 
 class _RecipeStepWidgetState extends State<RecipeStepWidget> {
   var _isSaying = false;
+  final Map<int, CookTimer> _cookTimers = SharedData.getCookTimers();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  double _getImageHeight() {
+    var timerCoefficient = 1.0;
+    if (widget.step.waitTime != 0) {
+      timerCoefficient = 0.85;
+    }
+    if (widget.step.description.length >= 140) {
+      return Util.pageHeight(context) *
+          RecipeStepWidget._imageSize *
+          0.9 *
+          timerCoefficient;
+    }
+    return Util.pageHeight(context) *
+        RecipeStepWidget._imageSize *
+        timerCoefficient;
+  }
+
+  Widget _buildTimer() {
+    if (widget.step.waitTime == 0) {
+      return Container();
+    }
+    if (_cookTimers.containsKey(widget.slideId)){
+      return _cookTimers[widget.slideId]!;
+    } else {
+      _cookTimers[widget.slideId] = CookTimer(waitTimeMins: widget.step.waitTime);
+    }
+    return _cookTimers[widget.slideId]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,31 +81,11 @@ class _RecipeStepWidgetState extends State<RecipeStepWidget> {
         padding: const EdgeInsets.all(Util.padding),
         child: Column(
           children: [
-            HeaderPanel.buildButton(
-                context,
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isSaying = !_isSaying;
-                      });
-                      if (_isSaying) {
-                        widget.onSayButton();
-                      } else {
-                        widget.onStopButton();
-                      }
-                    },
-                    icon: _isSaying
-                        ? const Icon(
-                            Icons.pause,
-                            color: Colors.black87,
-                          )
-                        : const Icon(
-                            Icons.play_arrow,
-                            color: Colors.black87,
-                          ))),
+            HeaderPanel.buildButton(context, _buildSayIcon(),
+                !_isSaying ? Colors.white : Colors.white54),
             Container(
               margin: const EdgeInsets.fromLTRB(0, Util.margin, 0, 0),
-              height: Util.pageHeight(context) * RecipeStepWidget._imageSize,
+              height: _getImageHeight(),
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.circular(RecipeStepWidget._borderRadius),
@@ -80,6 +95,7 @@ class _RecipeStepWidgetState extends State<RecipeStepWidget> {
                 ),
               ),
             ),
+            _buildTimer(),
             Container(
                 alignment: Alignment.topCenter,
                 margin: const EdgeInsets.symmetric(
@@ -104,5 +120,28 @@ class _RecipeStepWidgetState extends State<RecipeStepWidget> {
                 )),
           ],
         ));
+  }
+
+  IconButton _buildSayIcon() {
+    return IconButton(
+        onPressed: () {
+          setState(() {
+            _isSaying = !_isSaying;
+          });
+          if (_isSaying) {
+            widget.onSayButton();
+          } else {
+            widget.onStopButton();
+          }
+        },
+        icon: _isSaying
+            ? const Icon(
+                Icons.pause,
+                color: Colors.black87,
+              )
+            : const Icon(
+                Icons.play_arrow,
+                color: Colors.black87,
+              ));
   }
 }

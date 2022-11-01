@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
+import 'package:voice_recipe/components/util.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
   const RecipeHeaderCard({
@@ -11,7 +14,18 @@ class RecipeHeaderCard extends StatelessWidget {
 
   final Recipe recipe;
   static const borderRadius = 16.0;
-  static const width = 380.0;
+  static const maxWidth = 380.0;
+  static const maxHeight = 290.0;
+
+  double _getCardWidth(BuildContext context) {
+    var screenWidth = Util.pageWidth(context);
+    return min(screenWidth * 0.9, maxWidth);
+  }
+
+  double _getCardHeight(BuildContext context) {
+    var screenHeight = Util.pageHeight(context);
+    return max(screenHeight * 0.3, maxHeight);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +39,8 @@ class RecipeHeaderCard extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 7),
           child: Stack(children: [
             SizedBox(
-              height: 260,
-              width: width,
+              height: _getCardHeight(context),
+              width: _getCardWidth(context),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(borderRadius),
                   child: Image(
@@ -35,21 +49,21 @@ class RecipeHeaderCard extends StatelessWidget {
                   )),
             ),
             Container(
-              width: width,
+              width: _getCardWidth(context),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black87.withOpacity(0.6),
+                    Colors.black87.withOpacity(0.8),
                     Colors.black87.withOpacity(0.0),
                   ]
                 ),
-                  borderRadius: BorderRadius.vertical(
+                  borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(borderRadius))),
               // width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(30, 35, 0, 10),
+              padding: const EdgeInsets.fromLTRB(30, 35, 0, 50),
               child: Text(
                 recipe.name,
                 style: const TextStyle(
@@ -64,7 +78,6 @@ class RecipeHeaderCard extends StatelessWidget {
   }
 
   void _navigateToNextScreen(BuildContext context, Recipe recipe) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => RecipeScreen(recipe: recipe)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecipeScreen(recipe: recipe)));
   }
 }

@@ -8,6 +8,7 @@ import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
+import 'package:voice_recipe/components/util.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
@@ -38,11 +39,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
     super.initState();
     _listener = CommandsListener(
         onStart: () => setState(() {
-          _slideId = 2;
-        }),
+              _slideId = 2;
+            }),
         onExit: () => _onClose(context),
         onNext: () => setState(() {
-              debugPrint('GOT NEXT');
               _incrementSlideId();
             }),
         onPrev: () => setState(() {
@@ -58,65 +58,61 @@ class _RecipeScreenState extends State<RecipeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: NotificationListener<SttNotification>(
-        onNotification: (SttNotification n) {
-          switch(n.command) {
-            case Command.start: {
-              setState(() {
-                _slideId = 2;
-              });
-              break;
-            }
-            case Command.next:
-              setState(() {
-                _incrementSlideId();
-              });
-              break;
-            case Command.back:
-              setState(() {
-                _decrementSlideId();
-              });
-              break;
-            case Command.exit:
-              _onClose(context);
-              break;
-          }
-          return true;
+      child: GestureDetector(
+        onTapDown: (TapDownDetails details) {
+          _tapHandler(details);
         },
-        child: GestureDetector(
-            onTapDown: (TapDownDetails details) {
-              _tapHandler(details);
-            },
-            onPanUpdate: (details) {
-              _swipeHandler(details);
-            },
-            child: Scaffold(
-              body: Container(
-                color: const Color(0xFFE9F7CA),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 50,
-                      color: Colors.white,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: _getSlide(context, _slideId),
-                    ),
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 60, horizontal: 10),
-                        child: HeaderPanel(
-                          onClose: _onClose,
-                          onList: _onList,
-                          onMute: () => _listener.shutdown(),
-                          onListen: () => _listener.start(),
-                        )),
-                  ],
+        onPanUpdate: (details) {
+          _swipeHandler(details);
+        },
+        child: Scaffold(
+          body: Container(
+            color: Util.backColors[widget.recipe.id % Util.backColors.length],
+            child: Stack(
+              children: [
+                Container(
+                  height: 50,
+                  color: Colors.white,
                 ),
-              ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  child: _getSlide(context, _slideId),
+                ),
+                Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 60, horizontal: 10),
+                    child: HeaderPanel(
+                      onClose: _onClose,
+                      onList: _onList,
+                      onMute: () => _listener.shutdown(),
+                      onListen: () => _listener.start(),
+                    )),
+                Container(
+                    alignment: Alignment.bottomCenter, child: sectionsPanel())
+              ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget sectionsPanel() {
+    var width = Util.pageWidth(context);
+    var slidesCount = 2 + stepsResolve[widget.recipe.id].length;
+    var sectionWidth = width / slidesCount;
+    return Container(
+      alignment: Alignment.center,
+      height: 10,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        // padding: const EdgeInsets.symmetric(horizontal: 10),
+        itemCount: slidesCount,
+        itemBuilder: (_, index) => Container(
+          width: sectionWidth,
+          color: index == _slideId ? Util.colors[widget.recipe.id % Util.colors.length]
+              : Colors.black87,
+        ),
       ),
     );
   }
@@ -162,9 +158,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } else if (slideId == 1) {
       return RecipeIngredients(recipe: widget.recipe);
     }
-    return RecipeStepWidget(recipe: widget.recipe,
-      onSayButton: () => _pronounce(slideId), onStopButton: () => widget.flutterTts.stop(),
-      slideId: slideId,);
+    return RecipeStepWidget(
+      recipe: widget.recipe,
+      onSayButton: () => _pronounce(slideId),
+      onStopButton: () => widget.flutterTts.stop(),
+      slideId: slideId,
+    );
   }
 
   void _tapHandler(TapDownDetails details) {

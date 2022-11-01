@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class HeaderPanel extends StatefulWidget {
-  const HeaderPanel({super.key, required this.onClose, required this.onList,
-  required this.onListen, required this.onMute});
+  const HeaderPanel(
+      {super.key,
+      required this.onClose,
+      required this.onList,
+      required this.onListen,
+      required this.onMute});
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
@@ -13,11 +17,12 @@ class HeaderPanel extends StatefulWidget {
   @override
   State<HeaderPanel> createState() => _HeaderPanelState();
 
-  static Container buildButton(BuildContext context, IconButton iconButton) {
+  static Container buildButton(
+      BuildContext context, IconButton iconButton, Color color) {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.white,
+          color: color,
         ),
         child: iconButton);
   }
@@ -58,44 +63,47 @@ class _HeaderPanelState extends State<HeaderPanel> {
                         widget.onMute();
                       }
                     },
-                    icon: isListening ? const Icon(
-                      Icons.mic,
-                      color: Colors.black,
-                      size: HeaderPanel._iconSize,
-                    ) : const Icon(
-                      Icons.mic_off,
-                      color: Colors.black,
-                      size: HeaderPanel._iconSize,
-                    )))
+                    icon: isListening
+                        ? const Icon(
+                            Icons.mic,
+                            color: Colors.black,
+                            size: HeaderPanel._iconSize,
+                          )
+                        : const Icon(
+                            Icons.mic_off,
+                            color: Colors.black,
+                            size: HeaderPanel._iconSize,
+                          )),
+                isListening ? Colors.white : Colors.white54)
           ],
         ),
         Row(
           children: [
             HeaderPanel.buildButton(
-              context,
-              IconButton(
-                onPressed: () => widget.onList(),
-                icon: const Icon(
-                  Icons.list,
-                  color: Colors.black,
-                  size: HeaderPanel._iconSize,
+                context,
+                IconButton(
+                  onPressed: () => widget.onList(),
+                  icon: const Icon(
+                    Icons.list,
+                    color: Colors.black,
+                    size: HeaderPanel._iconSize,
+                  ),
                 ),
-              ),
-            ),
+                Colors.white),
             const SizedBox(
               width: 10,
             ),
             HeaderPanel.buildButton(
-              context,
-              IconButton(
-                onPressed: () => widget.onClose(context),
-                icon: const Icon(
-                  Icons.close_outlined,
-                  color: Colors.black,
-                  size: HeaderPanel._iconSize,
+                context,
+                IconButton(
+                  onPressed: () => widget.onClose(context),
+                  icon: const Icon(
+                    Icons.close_outlined,
+                    color: Colors.black,
+                    size: HeaderPanel._iconSize,
+                  ),
                 ),
-              ),
-            ),
+                Colors.white),
           ],
         )
       ],

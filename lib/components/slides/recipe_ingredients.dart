@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -11,14 +13,14 @@ class RecipeIngredients extends StatelessWidget {
 
   final Recipe recipe;
   static const _topOffset = 0.06;
-  static const _listOffset = 0.05;
+  static const _listOffset = 0.03;
   static const _splitterThickness = 0.5;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white70,
           borderRadius: BorderRadius.circular(Util.borderRadius)),
       margin: const EdgeInsets.all(Util.margin),
       padding: const EdgeInsets.all(Util.padding),
@@ -54,7 +56,7 @@ class IngredientsList extends StatelessWidget {
   late final List<Ingredient> ingredients;
   static const _titleSize = 0.032;
   static const _entitySize = 0.024;
-  static const _spaceAfterName = 0.01;
+  static const _spaceAfterName = 0.001;
 
   @override
   Widget build(BuildContext context) {

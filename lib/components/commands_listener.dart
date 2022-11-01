@@ -17,9 +17,10 @@ class CommandsListener {
   final void Function() onExit;
   var lastCommandTime = DateTime.now();
   static const _minSlideChangeDelayMillis = 800;
-  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
+  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже",
+    "некст", "нэкст", "ещё", "го"];
   static const backWords = ["назад"];
-  static const sayWords = ["скажи"];
+  static const sayWords = ["скажи", "читай", "говори"];
   static const startWords = ["начать", "старт", "начало"];
   static const exitWords = ["выйди", "закрой"];
   var lastDoneTime = DateTime.now();
@@ -27,6 +28,7 @@ class CommandsListener {
 
   var _speechAvailable = false;
   final String _selectedLocaleId = 'ru_Ru';
+  var listensCount = 0;
 
   void start() async {
     enabled = true;
@@ -35,25 +37,28 @@ class CommandsListener {
         onStatus: (val) {
           debugPrint('=== onStatus: $val');
           if (val == 'done' && enabled) {
-            _listen();
           }
         },
         onError: (val) {
           debugPrint('=== onError: $val');
           if (enabled && val.errorMsg == 'error_speech_timeout' ||
               val.errorMsg == 'error_no_match') {
+            // debugPrint('launch _listen() again');
+            debugPrint('call _listen after ${val.errorMsg}');
             _listen();
           }
         },
       ).then((available) {
         if (available) {
           _speechAvailable = true;
+          debugPrint('call _listen in start() 1');
           _listen();
         } else {
           debugPrint("Stt is not available");
         }
       });
     } else {
+      debugPrint('call _listen in start() 2');
       _listen();
     }
   }
@@ -65,6 +70,7 @@ class CommandsListener {
   }
 
   void _listen() async {
+    listensCount++;
     await _stopListening();
     await _speechToText.listen(
       localeId: _selectedLocaleId,
@@ -72,6 +78,11 @@ class CommandsListener {
       onResult: (val) {
         var text = val.recognizedWords;
         _handleText(text);
+        if (enabled) {
+          debugPrint("total count of calls to _listen(): $listensCount");
+          debugPrint('call _listen() from itself');
+          _listen();
+        }
       },
     );
   }

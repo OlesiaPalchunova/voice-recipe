@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
-import 'package:voice_recipe/components/voice_recipe_media.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
