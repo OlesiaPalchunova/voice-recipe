@@ -3,61 +3,62 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 class CommandsListener {
   CommandsListener(
-      {required this.onNext,
-      required this.onPrev,
-      required this.onSay,
-      required this.onStart,
-      required this.onExit});
+      {required void Function() onNext,
+      required void Function() onPrev,
+      required void Function() onSay,
+      required void Function() onStart,
+      required void Function() onExit}) {
+    staticOnNext = onNext;
+    staticOnPrev = onPrev;
+    staticOnExit = onExit;
+    staticOnSay = onSay;
+    staticOnStart = onStart;
+  }
 
-  late final SpeechToText _speechToText = SpeechToText();
-  final void Function() onNext;
-  final void Function() onPrev;
-  final void Function() onSay;
-  final void Function() onStart;
-  final void Function() onExit;
-  var lastCommandTime = DateTime.now();
+  static late void Function() staticOnNext;
+  static late void Function() staticOnPrev;
+  static late void Function() staticOnSay;
+  static late void Function() staticOnStart;
+  static late void Function() staticOnExit;
+  static final _speechToText = SpeechToText();
+  static var _speechAvailable = false;
+  static var enabled = true;
+  static var lastCommandTime = DateTime.now();
   static const _minSlideChangeDelayMillis = 800;
   static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
   static const backWords = ["назад"];
   static const sayWords = ["скажи", "читай", "говори"];
   static const startWords = ["начать", "старт", "начало"];
   static const exitWords = ["выйди", "закрой"];
-  var lastDoneTime = DateTime.now();
-  var enabled = true;
+  static var lastDoneTime = DateTime.now();
 
-  var _speechAvailable = false;
-  final String _selectedLocaleId = 'ru_Ru';
-  var listensCount = 0;
+  static const String _selectedLocaleId = 'ru_Ru';
+  static var listensCount = 0;
 
   void start() async {
+    debugPrint('START LISTENER');
     enabled = true;
     if (!_speechAvailable) {
       _speechToText.initialize(
         onStatus: (val) {
           debugPrint('=== onStatus: $val');
-          if (val == 'done' && enabled) {
-          }
         },
         onError: (val) {
           debugPrint('=== onError: $val');
-          if (enabled && val.errorMsg == 'error_speech_timeout') {
-            // debugPrint('launch _listen() again');
-            debugPrint('call _listen after ${val.errorMsg}');
-            // _stopListening().then((value) => _listen());
+          if (enabled && (val.errorMsg == 'error_speech_timeout' ||
+          val.errorMsg == 'error_no_match')) {
             _listen();
           }
         },
       ).then((available) {
         if (available) {
           _speechAvailable = true;
-          debugPrint('call _listen in start() 1');
           _listen();
         } else {
           debugPrint("Stt is not available");
         }
       });
     } else {
-      debugPrint('call _listen in start() 2');
       _listen();
     }
   }
@@ -65,10 +66,8 @@ class CommandsListener {
   void shutdown() async {
     enabled = false;
     while (_speechToText.isListening) {
-      debugPrint('CANCEL');
-      await _speechToText.cancel();
+      await _speechToText.stop();
     }
-    // _speechToText.stop();
   }
 
   void _listen() async {
@@ -81,9 +80,6 @@ class CommandsListener {
         var text = val.recognizedWords;
         _handleText(text);
         if (enabled) {
-          debugPrint("total count of calls to _listen(): $listensCount");
-          debugPrint('call _listen() from itself');
-          // _stopListening().then((value) => _listen());
           _listen();
         }
       },
@@ -101,21 +97,19 @@ class CommandsListener {
     }
     if (_isNextCommand(text)) {
       lastCommandTime = current;
-      debugPrint('detected next command');
-      onNext();
-      debugPrint('called onNext()');
+      staticOnNext();
     } else if (_isBackCommand(text)) {
       lastCommandTime = current;
-      onPrev();
+      staticOnPrev();
     } else if (_isSayCommand(text)) {
       lastCommandTime = current;
-      onSay();
+      staticOnSay();
     } else if (startWords.contains(text.toLowerCase())) {
       lastCommandTime = current;
-      onStart();
+      staticOnStart();
     } else if (exitWords.contains(text.toLowerCase())) {
       lastCommandTime = current;
-      onExit();
+      staticOnExit();
     }
   }
 
