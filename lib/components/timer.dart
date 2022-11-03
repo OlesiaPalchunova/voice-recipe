@@ -5,13 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/util.dart';
 
 class CookTimer extends StatefulWidget {
-  CookTimer({super.key, required this.waitTimeMins});
+  const CookTimer({super.key, required this.waitTimeMins, required this.id});
 
   final int waitTimeMins;
-  Duration? _leftDuration;
-  bool _isDisposed = false;
-  bool _isTimerActive = false;
-  Timer? _timer;
+  final int id;
 
   @override
   State<CookTimer> createState() => _CookTimerState();
@@ -21,50 +18,70 @@ class _CookTimerState extends State<CookTimer> {
   static const _height = 0.1;
   static const _iconHeight = 0.1 * 0.6;
   bool _isTimerActive = false;
+  late Duration _leftDuration;
+  bool _isDisposed = false;
+  int? id;
+  Timer? _timer;
+  static final Map<int, _CookTimerState?> _statesTable = {};
+  _CookTimerState? _prevState;
+
+  void initTimerInfo() {
+    debugPrint('INIT TIMER STATE ${widget.id}');
+    if (_statesTable.containsKey(widget.id)) {
+      _prevState = _statesTable[widget.id];
+    }
+    if (_prevState != null) {
+      _leftDuration = _prevState!._leftDuration;
+      _isTimerActive = _prevState!._isTimerActive;
+      _timer = _prevState!._timer;
+      if (_prevState!._isDisposed && _isTimerActive) {
+        _timer!.cancel();
+        _timer = null;
+        startTimer();
+      }
+    } else {
+      _leftDuration = Duration(minutes: widget.waitTimeMins);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _isTimerActive = widget._isTimerActive;
-    widget._leftDuration ??= Duration(minutes: widget.waitTimeMins);
-    if (widget._isDisposed && _isTimerActive) {
-      widget._timer!.cancel();
-      startTimer();
-    }
-    widget._isDisposed = false;
+    initTimerInfo();
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget._isTimerActive = _isTimerActive;
-    widget._isDisposed = true;
+    _isDisposed = true;
+    id = widget.id;
+    _statesTable[widget.id] = this;
   }
 
   void startTimer() {
     _isTimerActive = true;
-    widget._timer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+    _timer ??= Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
   }
 
   void stopTimer() {
     _isTimerActive = false;
-    setState(() => widget._timer!.cancel());
+    setState(() => _timer?.cancel());
   }
 
   void resetTimer() {
     stopTimer();
-    setState(() => widget._leftDuration = Duration(minutes: widget.waitTimeMins));
+    setState(() => _leftDuration = Duration(minutes: widget.waitTimeMins));
   }
 
   void setCountDown() {
     const reduceSecondsBy = 1;
-    final seconds =  widget._leftDuration!.inSeconds - reduceSecondsBy;
+    final seconds =  _leftDuration.inSeconds - reduceSecondsBy;
     if (seconds < 0) {
-      widget._timer!.cancel();
+      _timer!.cancel();
     } else {
-      widget._leftDuration = Duration(seconds: seconds);
+      _leftDuration = Duration(seconds: seconds);
     }
-    if (!widget._isDisposed) {
+    if (!_isDisposed) {
       setState(() {
       });
     }
@@ -122,15 +139,14 @@ class _CookTimerState extends State<CookTimer> {
     const labelWidth = 0.3;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
-    widget._leftDuration ??= Duration(minutes: widget.waitTimeMins);
-    final hours = strDigits( widget._leftDuration!.inHours.remainder(24));
-    final minutes = strDigits( widget._leftDuration!.inMinutes.remainder(60));
-    final seconds = strDigits( widget._leftDuration!.inSeconds.remainder(60));
+    final hours = strDigits( _leftDuration.inHours.remainder(24));
+    final minutes = strDigits( _leftDuration.inMinutes.remainder(60));
+    final seconds = strDigits( _leftDuration.inSeconds.remainder(60));
     return Container(
       alignment: Alignment.center,
       width: labelWidth * Util.pageWidth(context),
       child: Text(
-        widget._leftDuration!.inHours == 0
+        _leftDuration.inHours == 0
             ? "$minutes:$seconds"
             : "$hours:$minutes:$seconds",
         style: TextStyle(

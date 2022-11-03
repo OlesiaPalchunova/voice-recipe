@@ -2,12 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:voice_recipe/components/notifications/say_notification.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
 import 'package:voice_recipe/components/util.dart';
 import 'package:voice_recipe/components/timer.dart';
-import 'package:voice_recipe/shared_data.dart';
 
 class RecipeStepView extends StatefulWidget {
   RecipeStepView(
@@ -37,19 +35,12 @@ class RecipeStepView extends StatefulWidget {
 
 class RecipeStepViewState extends State<RecipeStepView> {
   var _isSaying = false;
-  final Map<int, CookTimer> _cookTimers = SharedData.getCookTimers();
   static RecipeStepViewState? currentState;
-
 
   @override
   void initState() {
     super.initState();
     currentState = this;
-    // RecipeStepView.tts.setCompletionHandler(() {
-    //   setState(() {
-    //     _isSaying = false;
-    //   });
-    // });
   }
 
   static bool sayCurrent() {
@@ -90,13 +81,9 @@ class RecipeStepViewState extends State<RecipeStepView> {
     if (widget.step.waitTime == 0) {
       return Container();
     }
-    if (!_cookTimers.containsKey(widget.slideId)){
-      _cookTimers[widget.slideId] = CookTimer(waitTimeMins: widget.step.waitTime,
-        );
-    }
-    return _cookTimers[widget.slideId]!;
-    // return CookTimer(waitTimeMins: widget.step.waitTime,
-    //   slideId: widget.slideId,);
+    int timerId = widget.slideId + widget.recipe.id * 100;
+    return CookTimer(key: Key("$timerId"), waitTimeMins: widget.step.waitTime,
+      id: timerId,);
   }
 
   @override
@@ -104,16 +91,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
     if (_isSaying) {
       RecipeStepView.tts.speak(widget.step.description);
     }
-    return NotificationListener<SayNotification>(
-      onNotification: (SayNotification n) {
-        if (!_isSaying) {
-          setState(() {
-            _isSaying = true;
-          });
-        }
-        return true;
-      },
-      child: Container(
+    return Container(
           padding: const EdgeInsets.all(Util.padding),
           child: Column(
             children: [
@@ -155,7 +133,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
                     ),
                   )),
             ],
-          )),
+          )
     );
   }
 

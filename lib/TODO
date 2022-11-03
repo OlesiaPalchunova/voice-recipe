@@ -1,5 +1,4 @@
 - add voice commands for timer
-- add support of several timers per recipe
 - add announcement after time expiration
 - fix bug with not reenter-able commands listener
 - [optional] deal with notifications
