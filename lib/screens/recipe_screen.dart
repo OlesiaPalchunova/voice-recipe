@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/components/commands_listener.dart';
-import 'package:voice_recipe/components/notifications/say_notification.dart';
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step_view.dart';

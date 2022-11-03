@@ -17,8 +17,7 @@ class CommandsListener {
   final void Function() onExit;
   var lastCommandTime = DateTime.now();
   static const _minSlideChangeDelayMillis = 800;
-  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже",
-    "некст", "нэкст", "ещё", "го"];
+  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
   static const backWords = ["назад"];
   static const sayWords = ["скажи", "читай", "говори"];
   static const startWords = ["начать", "старт", "начало"];
@@ -41,10 +40,10 @@ class CommandsListener {
         },
         onError: (val) {
           debugPrint('=== onError: $val');
-          if (enabled && val.errorMsg == 'error_speech_timeout' ||
-              val.errorMsg == 'error_no_match') {
+          if (enabled && val.errorMsg == 'error_speech_timeout') {
             // debugPrint('launch _listen() again');
             debugPrint('call _listen after ${val.errorMsg}');
+            // _stopListening().then((value) => _listen());
             _listen();
           }
         },
@@ -63,10 +62,13 @@ class CommandsListener {
     }
   }
 
-  void shutdown() {
+  void shutdown() async {
     enabled = false;
-    _speechToText.cancel();
-    _speechToText.stop();
+    while (_speechToText.isListening) {
+      debugPrint('CANCEL');
+      await _speechToText.cancel();
+    }
+    // _speechToText.stop();
   }
 
   void _listen() async {
@@ -81,6 +83,7 @@ class CommandsListener {
         if (enabled) {
           debugPrint("total count of calls to _listen(): $listensCount");
           debugPrint('call _listen() from itself');
+          // _stopListening().then((value) => _listen());
           _listen();
         }
       },

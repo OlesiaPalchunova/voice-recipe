@@ -24,6 +24,7 @@ class _CookTimerState extends State<CookTimer> {
   Timer? _timer;
   static final Map<int, _CookTimerState?> _statesTable = {};
   _CookTimerState? _prevState;
+  var _lastShown = DateTime.now();
 
   void initTimerInfo() {
     debugPrint('INIT TIMER STATE ${widget.id}');
@@ -35,8 +36,10 @@ class _CookTimerState extends State<CookTimer> {
       _isTimerActive = _prevState!._isTimerActive;
       _timer = _prevState!._timer;
       if (_prevState!._isDisposed && _isTimerActive) {
-        _timer!.cancel();
-        _timer = null;
+        var current = DateTime.now();
+        var diff = current.difference(_prevState!._lastShown).abs();
+        var secsLeft = _leftDuration.inSeconds - diff.inSeconds;
+        _leftDuration = Duration(seconds: (secsLeft > 0 ? secsLeft: 0));
         startTimer();
       }
     } else {
@@ -55,6 +58,9 @@ class _CookTimerState extends State<CookTimer> {
     super.dispose();
     _isDisposed = true;
     id = widget.id;
+    _timer?.cancel();
+    _timer = null;
+    _lastShown = DateTime.now();
     _statesTable[widget.id] = this;
   }
 
