@@ -1,37 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:voice_recipe/components/voice_commands/command.dart';
 
 class CommandsListener {
-  CommandsListener(
-      {required void Function() onNext,
-      required void Function() onPrev,
-      required void Function() onSay,
-      required void Function() onStart,
-      required void Function() onExit}) {
-    staticOnNext = onNext;
-    staticOnPrev = onPrev;
-    staticOnExit = onExit;
-    staticOnSay = onSay;
-    staticOnStart = onStart;
+  CommandsListener({required List<Command> commandsList}) {
+    _commandsList = commandsList;
   }
 
-  static late void Function() staticOnNext;
-  static late void Function() staticOnPrev;
-  static late void Function() staticOnSay;
-  static late void Function() staticOnStart;
-  static late void Function() staticOnExit;
+  static late List<Command> _commandsList;
   static final _speechToText = SpeechToText();
   static var _speechAvailable = false;
   static var enabled = true;
   static var lastCommandTime = DateTime.now();
   static const _minSlideChangeDelayMillis = 800;
-  static const nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];
-  static const backWords = ["назад"];
-  static const sayWords = ["скажи", "читай", "говори"];
-  static const startWords = ["начать", "старт", "начало"];
-  static const exitWords = ["выйди", "закрой"];
   static var lastDoneTime = DateTime.now();
-
   static const String _selectedLocaleId = 'ru_Ru';
   static var listensCount = 0;
 
@@ -95,34 +77,15 @@ class CommandsListener {
           'Passed not enough time, just $passed / $_minSlideChangeDelayMillis');
       return;
     }
-    if (_isNextCommand(text)) {
-      lastCommandTime = current;
-      staticOnNext();
-    } else if (_isBackCommand(text)) {
-      lastCommandTime = current;
-      staticOnPrev();
-    } else if (_isSayCommand(text)) {
-      lastCommandTime = current;
-      staticOnSay();
-    } else if (startWords.contains(text.toLowerCase())) {
-      lastCommandTime = current;
-      staticOnStart();
-    } else if (exitWords.contains(text.toLowerCase())) {
-      lastCommandTime = current;
-      staticOnExit();
+    for (Command command in _commandsList) {
+      if (command.getTriggerWords().contains(text.toLowerCase())) {
+        command.onTrigger()();
+        lastCommandTime = current;
+      }
     }
   }
 
   Future _stopListening() async {
     await _speechToText.stop();
   }
-
-  bool _isNextCommand(String command) =>
-      nextWords.contains(command.toLowerCase());
-
-  bool _isBackCommand(String command) =>
-      backWords.contains(command.toLowerCase());
-
-  bool _isSayCommand(String command) =>
-      sayWords.contains(command.toLowerCase());
 }

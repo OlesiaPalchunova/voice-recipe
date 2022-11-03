@@ -4,9 +4,16 @@ import 'package:voice_recipe/components/commands_listener.dart';
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step_view.dart';
+import 'package:voice_recipe/components/voice_commands/close_command.dart';
+import 'package:voice_recipe/components/voice_commands/command.dart';
+import 'package:voice_recipe/components/voice_commands/next_command.dart';
+import 'package:voice_recipe/components/voice_commands/say_command.dart';
+import 'package:voice_recipe/components/voice_commands/start_command.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_panel.dart';
 import 'package:voice_recipe/components/util.dart';
+
+import '../components/voice_commands/prev_command.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
@@ -24,6 +31,7 @@ class RecipeScreen extends StatefulWidget {
 }
 
 class _RecipeScreenState extends State<RecipeScreen> {
+  static const firstStepSlideId = 2;
   int _slideId = 0;
   var lastSwipeTime = DateTime.now();
   late CommandsListener _listener;
@@ -32,19 +40,20 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void initState() {
     super.initState();
     _listener = CommandsListener(
-        onStart: () => setState(() {
-              _slideId = 2;
-            }),
-        onExit: () => _onClose(context),
-        onNext: () => setState(() {
-              _incrementSlideId();
-            }),
-        onPrev: () => setState(() {
-              _decrementSlideId();
-            }),
-        onSay: () {
-          RecipeStepViewState.sayCurrent();
-        });
+      commandsList: <Command>[
+        NextCommand(onTriggerFunction: () => setState(() {
+          _incrementSlideId();
+        })),
+        BackCommand(onTriggerFunction: () => setState(() {
+          _decrementSlideId();
+        })),
+        SayCommand(onTriggerFunction: () => RecipeStepViewState.sayCurrent()),
+        StartCommand(onTriggerFunction: () => setState(() {
+          _slideId = firstStepSlideId;
+        })),
+        CloseCommand(onTriggerFunction: () => _onClose(context)),
+      ]
+    );
     _listener.start();
   }
 
