@@ -102,7 +102,7 @@ final List<RecipeStep> muffinsSteps = [
 ];
 
 final List<RecipeStep> tefSteps = [
-  RecipeStep(id: 1, imgUrl: "assets/images/tef1.jpg", description: "Налейте растительное масло в сковородку, разогрейте. Выложите фрикадельки и жарьте в течение 10 минут"),
+  RecipeStep(waitTime: 10, id: 1, imgUrl: "assets/images/tef1.jpg", description: "Налейте растительное масло в сковородку, разогрейте. Выложите фрикадельки и жарьте в течение 10 минут"),
   RecipeStep(id: 2, imgUrl: "assets/images/tef2.jpg", description: "Затем добавьте томатную пасту, залейте кипятком до уровня одного сантиметра. Тушите 5 минут."),
   RecipeStep(id: 3, imgUrl: "assets/images/tef3.jpg", description: "Посыпьте свежей зеленью и подавайте. Приятного аппетита!"),
 ];
