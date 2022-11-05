@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
-import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/util.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
   const RecipeHeaderCard({
@@ -18,12 +18,12 @@ class RecipeHeaderCard extends StatelessWidget {
   static const maxHeight = 290.0;
 
   double _getCardWidth(BuildContext context) {
-    var screenWidth = Util.pageWidth(context);
+    var screenWidth = Config.pageWidth(context);
     return min(screenWidth * 0.9, maxWidth);
   }
 
   double _getCardHeight(BuildContext context) {
-    var screenHeight = Util.pageHeight(context);
+    var screenHeight = Config.pageHeight(context);
     return max(screenHeight * 0.3, maxHeight);
   }
 
@@ -31,7 +31,7 @@ class RecipeHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _navigateToNextScreen(context, recipe);
+        _navigateToRecipe(context, recipe);
       },
       child: Card(
           color: Colors.white.withOpacity(0),
@@ -77,7 +77,8 @@ class RecipeHeaderCard extends StatelessWidget {
     );
   }
 
-  void _navigateToNextScreen(BuildContext context, Recipe recipe) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecipeScreen(recipe: recipe)));
+  void _navigateToRecipe(BuildContext context, Recipe recipe) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => RecipeScreen(recipe: recipe)));
   }
 }

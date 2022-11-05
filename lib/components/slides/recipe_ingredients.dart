@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/util.dart';
 
 class RecipeIngredients extends StatelessWidget {
   const RecipeIngredients({
@@ -21,13 +21,13 @@ class RecipeIngredients extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white70,
-          borderRadius: BorderRadius.circular(Util.borderRadius)),
-      margin: const EdgeInsets.all(Util.margin),
-      padding: const EdgeInsets.all(Util.padding),
+          borderRadius: BorderRadius.circular(Config.borderRadius)),
+      margin: const EdgeInsets.all(Config.margin),
+      padding: const EdgeInsets.all(Config.padding),
       child: Column(
         children: [
           SizedBox(
-            height: Util.pageHeight(context) * _topOffset,
+            height: Config.pageHeight(context) * _topOffset,
           ),
           GeneralInfo(recipe: recipe),
           const Divider(
@@ -35,7 +35,7 @@ class RecipeIngredients extends StatelessWidget {
             thickness: _splitterThickness,
           ),
           SizedBox(
-            height: Util.pageHeight(context) * _listOffset,
+            height: Config.pageHeight(context) * _listOffset,
           ),
           IngredientsList(recipe: recipe)
         ],
@@ -68,13 +68,13 @@ class IngredientsList extends StatelessWidget {
             "Ингредиенты",
             style: TextStyle(
                 fontFamily: "Montserrat",
-                fontSize: Util.pageHeight(context) * _titleSize,
+                fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87),
           ),
         ),
         SizedBox(
-          height: Util.pageHeight(context) * _spaceAfterName,
+          height: Config.pageHeight(context) * _spaceAfterName,
         ),
         ListView.builder(
           scrollDirection: Axis.vertical,
@@ -87,7 +87,7 @@ class IngredientsList extends StatelessWidget {
                   ingredients[index].name,
                   style: TextStyle(
                     fontFamily: "Montserrat",
-                    fontSize: Util.pageHeight(context) * _entitySize,
+                    fontSize: Config.pageHeight(context) * _entitySize,
                     textBaseline: TextBaseline.alphabetic,
                   ),
                 ),
@@ -95,7 +95,7 @@ class IngredientsList extends StatelessWidget {
                   ingredients[index].count,
                   style: TextStyle(
                     fontFamily: "Montserrat",
-                    fontSize: Util.pageHeight(context) * _entitySize,
+                    fontSize: Config.pageHeight(context) * _entitySize,
                   ),
                 ),
               ]),
@@ -127,12 +127,12 @@ class GeneralInfo extends StatelessWidget {
       children: [
         Container(
           alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.symmetric(vertical: Util.margin),
+          margin: const EdgeInsets.symmetric(vertical: Config.margin),
           child: Text(
             recipe.name,
             style: TextStyle(
                 fontFamily: "Montserrat",
-                fontSize: Util.pageHeight(context) * _titleSize,
+                fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.w400,
                 color: Colors.black87),
           ),
@@ -156,7 +156,7 @@ class GeneralInfo extends StatelessWidget {
         ),
         Container(
           alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.symmetric(vertical: Util.margin),
+          margin: const EdgeInsets.symmetric(vertical: Config.margin),
           child: Assignment(
             recipe: recipe,
             name: "ккал/100г",
@@ -193,13 +193,13 @@ class Assignment extends StatelessWidget {
       children: [
         Icon(iconData),
         SizedBox(
-          width: Util.pageHeight(context) * _betweenIconAndTextSize,
+          width: Config.pageHeight(context) * _betweenIconAndTextSize,
         ),
         RichText(
           text: TextSpan(
               style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: Util.pageHeight(context) * _nameSize,
+                  fontSize: Config.pageHeight(context) * _nameSize,
                   fontWeight: FontWeight.w400,
                   color: Colors.black),
               children: <TextSpan>[
@@ -209,7 +209,7 @@ class Assignment extends StatelessWidget {
                 TextSpan(
                     text: value,
                     style: TextStyle(
-                        fontSize: Util.pageHeight(context) * _valueSize))
+                        fontSize: Config.pageHeight(context) * _valueSize))
               ]),
         ),
       ],

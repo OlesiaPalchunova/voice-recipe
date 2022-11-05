@@ -1,4 +1,4 @@
-import 'package:voice_recipe/components/voice_commands/command.dart';
+import 'package:voice_recipe/model/voice_commands/command.dart';
 
 class NextCommand implements Command {
   static const _nextWords = ["дальше", "даша", "вперёд", "польша", "даже"];

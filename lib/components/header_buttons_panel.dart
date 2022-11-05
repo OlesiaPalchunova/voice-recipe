@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HeaderPanel extends StatefulWidget {
-  const HeaderPanel(
+class HeaderButtonsPanel extends StatefulWidget {
+  const HeaderButtonsPanel(
       {super.key,
       required this.onClose,
       required this.onList,
@@ -15,7 +15,7 @@ class HeaderPanel extends StatefulWidget {
   final void Function() onMute;
 
   @override
-  State<HeaderPanel> createState() => _HeaderPanelState();
+  State<HeaderButtonsPanel> createState() => _HeaderButtonsPanelState();
 
   static Container buildButton(
       BuildContext context, IconButton iconButton, Color color) {
@@ -28,7 +28,7 @@ class HeaderPanel extends StatefulWidget {
   }
 }
 
-class _HeaderPanelState extends State<HeaderPanel> {
+class _HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
   var isListening = true;
 
   @override
@@ -50,7 +50,7 @@ class _HeaderPanelState extends State<HeaderPanel> {
             const SizedBox(
               width: 10,
             ),
-            HeaderPanel.buildButton(
+            HeaderButtonsPanel.buildButton(
                 context,
                 IconButton(
                     onPressed: () {
@@ -67,40 +67,40 @@ class _HeaderPanelState extends State<HeaderPanel> {
                         ? const Icon(
                             Icons.mic,
                             color: Colors.black,
-                            size: HeaderPanel._iconSize,
+                            size: HeaderButtonsPanel._iconSize,
                           )
                         : const Icon(
                             Icons.mic_off,
                             color: Colors.black,
-                            size: HeaderPanel._iconSize,
+                            size: HeaderButtonsPanel._iconSize,
                           )),
                 isListening ? Colors.white : Colors.white54)
           ],
         ),
         Row(
           children: [
-            HeaderPanel.buildButton(
+            HeaderButtonsPanel.buildButton(
                 context,
                 IconButton(
                   onPressed: () => widget.onList(),
                   icon: const Icon(
                     Icons.list,
                     color: Colors.black,
-                    size: HeaderPanel._iconSize,
+                    size: HeaderButtonsPanel._iconSize,
                   ),
                 ),
                 Colors.white),
             const SizedBox(
               width: 10,
             ),
-            HeaderPanel.buildButton(
+            HeaderButtonsPanel.buildButton(
                 context,
                 IconButton(
                   onPressed: () => widget.onClose(context),
                   icon: const Icon(
                     Icons.close_outlined,
                     color: Colors.black,
-                    size: HeaderPanel._iconSize,
+                    size: HeaderButtonsPanel._iconSize,
                   ),
                 ),
                 Colors.white),

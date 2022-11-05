@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/header_panel.dart';
-import 'package:voice_recipe/components/util.dart';
-import 'package:voice_recipe/components/timer.dart';
+import 'package:voice_recipe/components/header_buttons_panel.dart';
+import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/components/timer_view.dart';
 
 class RecipeStepView extends StatefulWidget {
   RecipeStepView(
@@ -67,12 +67,12 @@ class RecipeStepViewState extends State<RecipeStepView> {
       timerCoefficient = 0.85;
     }
     if (widget.step.description.length >= 140) {
-      return Util.pageHeight(context) *
+      return Config.pageHeight(context) *
           RecipeStepView._imageSize *
           0.9 *
           timerCoefficient;
     }
-    return Util.pageHeight(context) *
+    return Config.pageHeight(context) *
         RecipeStepView._imageSize *
         timerCoefficient;
   }
@@ -82,7 +82,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
       return Container();
     }
     int timerId = widget.slideId + widget.recipe.id * 100;
-    return CookTimer(key: Key("$timerId"), waitTimeMins: widget.step.waitTime,
+    return TimerView(key: Key("$timerId"), waitTimeMins: widget.step.waitTime,
       id: timerId,);
   }
 
@@ -92,13 +92,13 @@ class RecipeStepViewState extends State<RecipeStepView> {
       RecipeStepView.tts.speak(widget.step.description);
     }
     return Container(
-          padding: const EdgeInsets.all(Util.padding),
+          padding: const EdgeInsets.all(Config.padding),
           child: Column(
             children: [
-              HeaderPanel.buildButton(context, _buildSayIcon(),
+              HeaderButtonsPanel.buildButton(context, _buildSayIcon(),
                   !_isSaying ? Colors.white : Colors.white54),
               Container(
-                margin: const EdgeInsets.fromLTRB(0, Util.margin, 0, 0),
+                margin: const EdgeInsets.fromLTRB(0, Config.margin, 0, 0),
                 height: _getImageHeight(),
                 child: ClipRRect(
                   borderRadius:
@@ -113,7 +113,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
               Container(
                   alignment: Alignment.topCenter,
                   margin: const EdgeInsets.symmetric(
-                      vertical: Util.margin, horizontal: 0),
+                      vertical: Config.margin, horizontal: 0),
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.black87
@@ -122,12 +122,12 @@ class RecipeStepViewState extends State<RecipeStepView> {
                             RecipeStepView._borderRadius)),
                     // height: 120,
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(Util.padding),
+                    padding: const EdgeInsets.all(Config.padding),
                     child: Text(
                       widget.step.description,
                       style: TextStyle(
                           fontFamily: "Montserrat",
-                          fontSize: Util.pageHeight(context) *
+                          fontSize: Config.pageHeight(context) *
                               RecipeStepView._textSize,
                           color: Colors.white),
                     ),

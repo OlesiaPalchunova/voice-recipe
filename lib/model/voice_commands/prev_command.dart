@@ -1,4 +1,4 @@
-import 'package:voice_recipe/components/voice_commands/command.dart';
+import 'package:voice_recipe/model/voice_commands/command.dart';
 
 class BackCommand implements Command {
   static const _backWords = ["назад"];

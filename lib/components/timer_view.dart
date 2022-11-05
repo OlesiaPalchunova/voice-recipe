@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/util.dart';
 
-class CookTimer extends StatefulWidget {
-  const CookTimer({super.key, required this.waitTimeMins, required this.id});
+class TimerView extends StatefulWidget {
+  const TimerView({super.key, required this.waitTimeMins, required this.id});
 
   final int waitTimeMins;
   final int id;
 
   @override
-  State<CookTimer> createState() => CookTimerState();
+  State<TimerView> createState() => TimerViewState();
 }
 
-class CookTimerState extends State<CookTimer> {
+class TimerViewState extends State<TimerView> {
   static const _height = 0.1;
   static const _iconHeight = 0.1 * 0.6;
   static const _reduceSecondsBy = 1;
@@ -25,9 +25,9 @@ class CookTimerState extends State<CookTimer> {
   late Duration _leftDuration;
   var _lastShown = DateTime.now();
 
-  CookTimerState? _prevState;
-  static final Map<int, CookTimerState?> _statesTable = {};
-  static CookTimerState? _current;
+  TimerViewState? _prevState;
+  static final Map<int, TimerViewState?> _statesTable = {};
+  static TimerViewState? _current;
 
   @override
   void initState() {
@@ -41,9 +41,9 @@ class CookTimerState extends State<CookTimer> {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(Util.borderRadiusLarge)),
-      height: Util.pageHeight(context) * _height,
-      margin: const EdgeInsets.fromLTRB(0, Util.margin, 0, 0),
+          borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
+      height: Config.pageHeight(context) * _height,
+      margin: const EdgeInsets.fromLTRB(0, Config.margin, 0, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -74,7 +74,7 @@ class CookTimerState extends State<CookTimer> {
     );
   }
 
-  static CookTimerState? getCurrent() {
+  static TimerViewState? getCurrent() {
     return _current;
   }
 
@@ -142,10 +142,10 @@ class CookTimerState extends State<CookTimer> {
 
   Widget _buildTimerButton({required void Function() onPressed, required Icon icon}) {
     return Container(
-      padding: const EdgeInsets.all(Util.padding),
+      padding: const EdgeInsets.all(Config.padding),
       child: IconButton(
           onPressed: onPressed,
-          iconSize: _iconHeight * Util.pageHeight(context),
+          iconSize: _iconHeight * Config.pageHeight(context),
           icon: icon),
     );
   }
@@ -159,14 +159,14 @@ class CookTimerState extends State<CookTimer> {
     final seconds = strDigits( _leftDuration.inSeconds.remainder(60));
     return Container(
       alignment: Alignment.center,
-      width: labelWidth * Util.pageWidth(context),
+      width: labelWidth * Config.pageWidth(context),
       child: Text(
         _leftDuration.inHours == 0
             ? "$minutes:$seconds"
             : "$hours:$minutes:$seconds",
         style: TextStyle(
             fontFamily: "Montserrat",
-            fontSize: fontSize * Util.pageHeight(context),
+            fontSize: fontSize * Config.pageHeight(context),
             color: Colors.black87),
       ),
     );

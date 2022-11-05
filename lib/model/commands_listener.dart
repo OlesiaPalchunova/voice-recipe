@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'package:voice_recipe/components/voice_commands/command.dart';
+import 'package:voice_recipe/model/voice_commands/command.dart';
 
 class CommandsListener {
   CommandsListener({required List<Command> commandsList}) {

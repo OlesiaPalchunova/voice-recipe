@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/slider_gesture_handler.dart';
 
-import 'package:voice_recipe/components/commands_listener.dart';
+import 'package:voice_recipe/model/commands_listener.dart';
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step_view.dart';
-import 'package:voice_recipe/components/timer.dart';
-import 'package:voice_recipe/components/voice_commands/close_command.dart';
-import 'package:voice_recipe/components/voice_commands/command.dart';
-import 'package:voice_recipe/components/voice_commands/next_command.dart';
-import 'package:voice_recipe/components/voice_commands/reset_timer_command.dart';
-import 'package:voice_recipe/components/voice_commands/say_command.dart';
-import 'package:voice_recipe/components/voice_commands/start_command.dart';
+import 'package:voice_recipe/components/timer_view.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/header_panel.dart';
-import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/components/header_buttons_panel.dart';
+import 'package:voice_recipe/util.dart';
 
-import '../components/voice_commands/prev_command.dart';
-import '../components/voice_commands/start_timer_command.dart';
-import '../components/voice_commands/stop_timer_command.dart';
+import 'package:voice_recipe/model/voice_commands/close_command.dart';
+import 'package:voice_recipe/model/voice_commands/command.dart';
+import 'package:voice_recipe/model/voice_commands/next_command.dart';
+import 'package:voice_recipe/model/voice_commands/reset_timer_command.dart';
+import 'package:voice_recipe/model/voice_commands/say_command.dart';
+import 'package:voice_recipe/model/voice_commands/start_command.dart';
+import 'package:voice_recipe/model/voice_commands/prev_command.dart';
+import 'package:voice_recipe/model/voice_commands/start_timer_command.dart';
+import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
@@ -28,71 +29,34 @@ class RecipeScreen extends StatefulWidget {
   final Recipe recipe;
   late final RecipeIngredients ingPage = RecipeIngredients(recipe: recipe);
   late final RecipeFace facePage = RecipeFace(recipe: recipe);
-  static const minSlideChangeDelayMillis = 100;
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
 }
 
 class _RecipeScreenState extends State<RecipeScreen> {
+  static const faceSlideId = 0;
+  static const ingredientsSlideId = 1;
   static const firstStepSlideId = 2;
   int _slideId = 0;
-  var lastSwipeTime = DateTime.now();
   late CommandsListener _listener;
 
   @override
   void initState() {
     super.initState();
-    _listener = CommandsListener(
-      commandsList: <Command>[
-        NextCommand(onTriggerFunction: () => setState(() {
-          _incrementSlideId();
-        })),
-        BackCommand(onTriggerFunction: () => setState(() {
-          _decrementSlideId();
-        })),
-        SayCommand(onTriggerFunction: () => RecipeStepViewState.sayCurrent()),
-        StartCommand(onTriggerFunction: () => setState(() {
-          _slideId = firstStepSlideId;
-        })),
-        CloseCommand(onTriggerFunction: () => _onClose(context)),
-        StartTimerCommand(onTriggerFunction: () {
-          CookTimerState? state = CookTimerState.getCurrent();
-          if (state != null) {
-            state.startTimer();
-          }
-        }),
-        StopTimerCommand(onTriggerFunction: () {
-          CookTimerState? state = CookTimerState.getCurrent();
-          if (state != null) {
-            state.stopTimer();
-          }
-        }),
-        ResetTimerCommand(onTriggerFunction: () {
-          CookTimerState? state = CookTimerState.getCurrent();
-          if (state != null) {
-            state.resetTimer();
-          }
-        }),
-      ]
-    );
-    _listener.start();
+    _initCommandsListener();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: GestureDetector(
-        onTapDown: (TapDownDetails details) {
-          _tapHandler(details);
-        },
-        onPanUpdate: (details) {
-          _swipeHandler(details);
-        },
+      child: SliderGestureHandler(
+        onLeft: () => setState(() => _decrementSlideId()),
+        onRight: () => setState(() => _incrementSlideId()),
         child: Scaffold(
           body: Container(
-            color: Util.backColors[widget.recipe.id % Util.backColors.length],
+            color: Config.backColors[widget.recipe.id % Config.backColors.length],
             child: Stack(
               children: [
                 Container(
@@ -101,19 +65,21 @@ class _RecipeScreenState extends State<RecipeScreen> {
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: _getSlide(context, _slideId),
+                  child: _buildCurrentSlide(context, _slideId),
                 ),
                 Container(
                     margin: const EdgeInsets.symmetric(
                         vertical: 60, horizontal: 10),
-                    child: HeaderPanel(
+                    child: HeaderButtonsPanel(
                       onClose: _onClose,
-                      onList: _onList,
+                      onList: () => setState(() {
+                        _slideId = ingredientsSlideId;
+                      }),
                       onMute: () => _listener.shutdown(),
                       onListen: () => _listener.start(),
                     )),
                 Container(
-                    alignment: Alignment.bottomCenter, child: sectionsPanel())
+                    alignment: Alignment.bottomCenter, child: _buildSliderBottom())
               ],
             ),
           ),
@@ -122,8 +88,22 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
-  Widget sectionsPanel() {
-    var width = Util.pageWidth(context);
+  Widget _buildCurrentSlide(BuildContext context, int slideId) {
+    if (slideId == faceSlideId) {
+      return RecipeFace(
+        recipe: widget.recipe,
+      );
+    } else if (slideId == ingredientsSlideId) {
+      return RecipeIngredients(recipe: widget.recipe);
+    }
+    return RecipeStepView(
+      recipe: widget.recipe,
+      slideId: slideId,
+    );
+  }
+
+  Widget _buildSliderBottom() {
+    var width = Config.pageWidth(context);
     var slidesCount = 2 + stepsResolve[widget.recipe.id].length;
     var sectionWidth = width / slidesCount;
     return Container(
@@ -135,10 +115,46 @@ class _RecipeScreenState extends State<RecipeScreen> {
         itemCount: slidesCount,
         itemBuilder: (_, index) => Container(
           width: sectionWidth,
-          color: index == _slideId ? Util.colors[widget.recipe.id % Util.colors.length]
+          color: index == _slideId ? Config.colors[widget.recipe.id % Config.colors.length]
               : Colors.black87,
         ),
       ),
+    );
+  }
+
+  void _initCommandsListener() {
+    _listener = CommandsListener(
+        commandsList: <Command>[
+          NextCommand(onTriggerFunction: () => setState(() {
+            _incrementSlideId();
+          })),
+          BackCommand(onTriggerFunction: () => setState(() {
+            _decrementSlideId();
+          })),
+          SayCommand(onTriggerFunction: () => RecipeStepViewState.sayCurrent()),
+          StartCommand(onTriggerFunction: () => setState(() {
+            _slideId = firstStepSlideId;
+          })),
+          CloseCommand(onTriggerFunction: () => _onClose(context)),
+          StartTimerCommand(onTriggerFunction: () {
+            TimerViewState? state = TimerViewState.getCurrent();
+            if (state != null) {
+              state.startTimer();
+            }
+          }),
+          StopTimerCommand(onTriggerFunction: () {
+            TimerViewState? state = TimerViewState.getCurrent();
+            if (state != null) {
+              state.stopTimer();
+            }
+          }),
+          ResetTimerCommand(onTriggerFunction: () {
+            TimerViewState? state = TimerViewState.getCurrent();
+            if (state != null) {
+              state.resetTimer();
+            }
+          }),
+        ]
     );
   }
 
@@ -152,12 +168,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
     Navigator.of(context).pop();
   }
 
-  void _onList() {
-    setState(() {
-      _slideId = 1;
-    });
-  }
-
   void _decrementSlideId() {
     _slideId--;
     _slideId = _slideId < 0 ? 0 : _slideId;
@@ -167,56 +177,5 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _slideId++;
     int max = stepsResolve[widget.recipe.id].length + 1;
     _slideId = _slideId > max ? max : _slideId;
-  }
-
-  Widget _getSlide(BuildContext context, int slideId) {
-    if (slideId == 0) {
-      return RecipeFace(
-        recipe: widget.recipe,
-      );
-    } else if (slideId == 1) {
-      return RecipeIngredients(recipe: widget.recipe);
-    }
-    return RecipeStepView(
-      recipe: widget.recipe,
-      slideId: slideId,
-    );
-  }
-
-  void _tapHandler(TapDownDetails details) {
-    RenderBox box = context.findRenderObject() as RenderBox;
-    final localOffset = box.globalToLocal(details.globalPosition);
-    final x = localOffset.dx;
-    if (x < box.size.width / 2) {
-      setState(() {
-        _decrementSlideId();
-      });
-    } else {
-      setState(() {
-        _incrementSlideId();
-      });
-    }
-  }
-
-  void _swipeHandler(DragUpdateDetails details) {
-    int sensitivity = 0;
-    var cur = DateTime.now();
-    if (cur.difference(lastSwipeTime).inMilliseconds <=
-        RecipeScreen.minSlideChangeDelayMillis) {
-      return;
-    }
-    if (details.delta.dx != 0) {
-      lastSwipeTime = cur;
-    }
-    if (details.delta.dx > sensitivity) {
-      setState(() {
-        _decrementSlideId();
-      });
-    }
-    if (details.delta.dx < sensitivity) {
-      setState(() {
-        _incrementSlideId();
-      });
-    }
   }
 }

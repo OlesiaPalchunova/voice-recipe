@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/util.dart';
+import 'package:voice_recipe/util.dart';
 
 class RecipeFace extends StatelessWidget {
   const RecipeFace({
@@ -35,7 +35,7 @@ class RecipeFace extends StatelessWidget {
             Column(
               children: [
                 Container(
-                  height: Util.pageHeight(context) * _gradSize,
+                  height: Config.pageHeight(context) * _gradSize,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
@@ -50,31 +50,31 @@ class RecipeFace extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     color: Colors.black87.withOpacity(_centerOpacity),
-                    padding: const EdgeInsets.all(Util.padding),
+                    padding: const EdgeInsets.all(Config.padding),
                     width: double.infinity,
                     child: Column(
                       children: [
                         SizedBox(
-                          height: Util.pageHeight(context) * _betweenTextSize,
+                          height: Config.pageHeight(context) * _betweenTextSize,
                         ),
                         Row(children: [
                           Icon(
                             Icons.access_time,
                             color: Colors.white,
-                            size: Util.pageHeight(context) * _iconSize,
+                            size: Config.pageHeight(context) * _iconSize,
                           ),
                           SizedBox(
-                            width: Util.pageHeight(context) *
+                            width: Config.pageHeight(context) *
                                 _betweenIconAndTextSize,
                           ),
                           Container(
-                            height: Util.pageHeight(context) * _iconSize,
+                            height: Config.pageHeight(context) * _iconSize,
                             alignment: Alignment.centerLeft,
                             child: Text("${recipe.cookTimeMins} минут\n",
                                 style: TextStyle(
                                     fontFamily: "MontserratBold",
                                     fontSize:
-                                        Util.pageHeight(context) * _timeSize,
+                                        Config.pageHeight(context) * _timeSize,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white)),
                           )
@@ -86,7 +86,7 @@ class RecipeFace extends StatelessWidget {
                                 style: TextStyle(
                                     fontFamily: "MontserratBold",
                                     fontSize:
-                                        Util.pageHeight(context) * _nameSize,
+                                        Config.pageHeight(context) * _nameSize,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                                 children: <TextSpan>[
@@ -99,7 +99,7 @@ class RecipeFace extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: Util.pageHeight(context) * _gradSize,
+                  height: Config.pageHeight(context) * _gradSize,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
