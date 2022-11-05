@@ -11,83 +11,29 @@ class CookTimer extends StatefulWidget {
   final int id;
 
   @override
-  State<CookTimer> createState() => _CookTimerState();
+  State<CookTimer> createState() => CookTimerState();
 }
 
-class _CookTimerState extends State<CookTimer> {
+class CookTimerState extends State<CookTimer> {
   static const _height = 0.1;
   static const _iconHeight = 0.1 * 0.6;
-  bool _isTimerActive = false;
-  late Duration _leftDuration;
+  static const _reduceSecondsBy = 1;
+
+  bool _isRunPressed = false;
   bool _isDisposed = false;
   Timer? _timer;
-  static final Map<int, _CookTimerState?> _statesTable = {};
-  _CookTimerState? _prevState;
+  late Duration _leftDuration;
   var _lastShown = DateTime.now();
 
-  void initTimerInfo() {
-    if (_statesTable.containsKey(widget.id)) {
-      _prevState = _statesTable[widget.id];
-    }
-    if (_prevState != null) {
-      _leftDuration = _prevState!._leftDuration;
-      _isTimerActive = _prevState!._isTimerActive;
-      _timer = _prevState!._timer;
-      if (_prevState!._isDisposed && _isTimerActive) {
-        var current = DateTime.now();
-        var diff = current.difference(_prevState!._lastShown).abs();
-        var secsLeft = _leftDuration.inSeconds - diff.inSeconds;
-        _leftDuration = Duration(seconds: (secsLeft > 0 ? secsLeft: 0));
-        startTimer();
-      }
-    } else {
-      _leftDuration = Duration(minutes: widget.waitTimeMins);
-    }
-  }
+  CookTimerState? _prevState;
+  static final Map<int, CookTimerState?> _statesTable = {};
+  static CookTimerState? _current;
 
   @override
   void initState() {
     super.initState();
-    initTimerInfo();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _isDisposed = true;
-    _timer?.cancel();
-    _timer = null;
-    _lastShown = DateTime.now();
-    _statesTable[widget.id] = this;
-  }
-
-  void startTimer() {
-    _isTimerActive = true;
-    _timer ??= Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
-  }
-
-  void stopTimer() {
-    _isTimerActive = false;
-    setState(() => _timer?.cancel());
-  }
-
-  void resetTimer() {
-    stopTimer();
-    setState(() => _leftDuration = Duration(minutes: widget.waitTimeMins));
-  }
-
-  void setCountDown() {
-    const reduceSecondsBy = 1;
-    final seconds =  _leftDuration.inSeconds - reduceSecondsBy;
-    if (seconds < 0) {
-      _timer!.cancel();
-    } else {
-      _leftDuration = Duration(seconds: seconds);
-    }
-    if (!_isDisposed) {
-      setState(() {
-      });
-    }
+    _current = this;
+    _initTimerInfo();
   }
 
   @override
@@ -101,21 +47,21 @@ class _CookTimerState extends State<CookTimer> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          timerButton(onPressed: () {
+          _buildTimerButton(onPressed: () {
             setState(() {
-              _isTimerActive = !_isTimerActive;
+              _isRunPressed = !_isRunPressed;
             });
-            if (_isTimerActive) {
+            if (_isRunPressed) {
               startTimer();
             } else {
               stopTimer();
             }
           }, icon: Icon(
-            _isTimerActive ? Icons.pause_circle : Icons.play_circle,
+            _isRunPressed ? Icons.pause_circle : Icons.play_circle,
             color: Colors.black87.withOpacity(0.8),
           )),
-          timeLabel(),
-          timerButton(onPressed: () {
+          _buildTimerLabel(),
+          _buildTimerButton(onPressed: () {
             setState(() {
               resetTimer();
             });
@@ -128,7 +74,73 @@ class _CookTimerState extends State<CookTimer> {
     );
   }
 
-  Widget timerButton({required void Function() onPressed, required Icon icon}) {
+  static CookTimerState? getCurrent() {
+    return _current;
+  }
+
+  void _initTimerInfo() {
+    if (_statesTable.containsKey(widget.id)) {
+      _prevState = _statesTable[widget.id];
+    }
+    if (_prevState != null) {
+      _leftDuration = _prevState!._leftDuration;
+      _isRunPressed = _prevState!._isRunPressed;
+      _timer = _prevState!._timer;
+      if (_prevState!._isDisposed && _isRunPressed) {
+        var current = DateTime.now();
+        var diff = current.difference(_prevState!._lastShown).abs();
+        var secsLeft = _leftDuration.inSeconds - diff.inSeconds;
+        _leftDuration = Duration(seconds: (secsLeft > 0 ? secsLeft: 0));
+        startTimer();
+      }
+    } else {
+      _leftDuration = Duration(minutes: widget.waitTimeMins);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _isDisposed = true;
+    _timer?.cancel();
+    _timer = null;
+    _lastShown = DateTime.now();
+    _statesTable[widget.id] = this;
+  }
+
+  void startTimer() {
+    if (_isDisposed) {
+      return;
+    }
+    _timer = Timer.periodic(
+        const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
+  }
+
+  void stopTimer() {
+    setState(() => _timer?.cancel());
+  }
+
+  void resetTimer() {
+    if (_isDisposed) return;
+    stopTimer();
+    _isRunPressed = false;
+    setState(() => _leftDuration = Duration(minutes: widget.waitTimeMins));
+  }
+
+  void setCountDown() {
+    final seconds =  _leftDuration.inSeconds - _reduceSecondsBy;
+    if (seconds < 0) {
+      _timer!.cancel();
+    } else {
+      _leftDuration = Duration(seconds: seconds);
+    }
+    if (!_isDisposed) {
+      setState(() {
+      });
+    }
+  }
+
+  Widget _buildTimerButton({required void Function() onPressed, required Icon icon}) {
     return Container(
       padding: const EdgeInsets.all(Util.padding),
       child: IconButton(
@@ -138,7 +150,7 @@ class _CookTimerState extends State<CookTimer> {
     );
   }
 
-  Widget timeLabel() {
+  Widget _buildTimerLabel() {
     const labelWidth = 0.3;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');

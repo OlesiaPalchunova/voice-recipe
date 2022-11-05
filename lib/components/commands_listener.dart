@@ -12,8 +12,8 @@ class CommandsListener {
   static var _speechAvailable = false;
   static var enabled = true;
   static var lastCommandTime = DateTime.now();
-  static const _minSlideChangeDelayMillis = 800;
-  static var lastDoneTime = DateTime.now();
+  static const _minSlideChangeDelayMillis = 200;
+  static var lastDoneTime = DateTime.wednesday;
   static const String _selectedLocaleId = 'ru_Ru';
   static var listensCount = 0;
 

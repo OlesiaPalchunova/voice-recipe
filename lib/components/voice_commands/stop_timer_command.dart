@@ -1,10 +1,10 @@
 import 'package:voice_recipe/components/voice_commands/command.dart';
 
-class StartTimerCommand implements Command {
-  static const _words = ["стоп"];
+class StopTimerCommand implements Command {
+  static const _words = ["стоп", "таймер стоп"];
   final void Function() onTriggerFunction;
 
-  StartTimerCommand({required this.onTriggerFunction});
+  StopTimerCommand({required this.onTriggerFunction});
 
   @override
   List<String> getTriggerWords() {

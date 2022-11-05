@@ -4,9 +4,11 @@ import 'package:voice_recipe/components/commands_listener.dart';
 import 'package:voice_recipe/components/slides/recipe_face.dart';
 import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slides/recipe_step_view.dart';
+import 'package:voice_recipe/components/timer.dart';
 import 'package:voice_recipe/components/voice_commands/close_command.dart';
 import 'package:voice_recipe/components/voice_commands/command.dart';
 import 'package:voice_recipe/components/voice_commands/next_command.dart';
+import 'package:voice_recipe/components/voice_commands/reset_timer_command.dart';
 import 'package:voice_recipe/components/voice_commands/say_command.dart';
 import 'package:voice_recipe/components/voice_commands/start_command.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -14,6 +16,8 @@ import 'package:voice_recipe/components/header_panel.dart';
 import 'package:voice_recipe/components/util.dart';
 
 import '../components/voice_commands/prev_command.dart';
+import '../components/voice_commands/start_timer_command.dart';
+import '../components/voice_commands/stop_timer_command.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
@@ -52,6 +56,24 @@ class _RecipeScreenState extends State<RecipeScreen> {
           _slideId = firstStepSlideId;
         })),
         CloseCommand(onTriggerFunction: () => _onClose(context)),
+        StartTimerCommand(onTriggerFunction: () {
+          CookTimerState? state = CookTimerState.getCurrent();
+          if (state != null) {
+            state.startTimer();
+          }
+        }),
+        StopTimerCommand(onTriggerFunction: () {
+          CookTimerState? state = CookTimerState.getCurrent();
+          if (state != null) {
+            state.stopTimer();
+          }
+        }),
+        ResetTimerCommand(onTriggerFunction: () {
+          CookTimerState? state = CookTimerState.getCurrent();
+          if (state != null) {
+            state.resetTimer();
+          }
+        }),
       ]
     );
     _listener.start();
