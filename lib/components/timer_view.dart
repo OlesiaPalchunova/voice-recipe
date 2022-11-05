@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
+import 'package:voice_recipe/local_notice_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:voice_recipe/util.dart';
 
 class TimerView extends StatefulWidget {
@@ -18,6 +19,8 @@ class TimerViewState extends State<TimerView> {
   static const _height = 0.1;
   static const _iconHeight = 0.1 * 0.6;
   static const _reduceSecondsBy = 1;
+  static final AudioPlayer player = AudioPlayer();
+  static const alarmAudioPath = "sounds/relax-message-tone.mp3";
 
   bool _isRunPressed = false;
   bool _isDisposed = false;
@@ -89,8 +92,8 @@ class TimerViewState extends State<TimerView> {
       if (_prevState!._isDisposed && _isRunPressed) {
         var current = DateTime.now();
         var diff = current.difference(_prevState!._lastShown).abs();
-        var secsLeft = _leftDuration.inSeconds - diff.inSeconds;
-        _leftDuration = Duration(seconds: (secsLeft > 0 ? secsLeft: 0));
+        var millisLeft = _leftDuration.inMilliseconds - diff.inMilliseconds;
+        _leftDuration = Duration(milliseconds: (millisLeft > 0 ? millisLeft: 0));
         startTimer();
       }
     } else {
@@ -112,6 +115,15 @@ class TimerViewState extends State<TimerView> {
     if (_isDisposed) {
       return;
     }
+    if (_leftDuration.inSeconds == widget.waitTimeMins * 60) {
+      if (Config.notificationsOn) {
+        LocalNoticeService().addNotification(
+            title: "Время прошло",
+            body: "Можно переходить к следующему шагу",
+            alarmTime: DateTime.now().add(Duration(seconds: _leftDuration.inSeconds))
+        );
+      }
+    }
     _timer = Timer.periodic(
         const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
   }
@@ -131,6 +143,9 @@ class TimerViewState extends State<TimerView> {
     final seconds =  _leftDuration.inSeconds - _reduceSecondsBy;
     if (seconds < 0) {
       _timer!.cancel();
+      _isRunPressed = false;
+      player.stop();
+      player.play(AssetSource(alarmAudioPath));
     } else {
       _leftDuration = Duration(seconds: seconds);
     }

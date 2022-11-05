@@ -37,7 +37,7 @@ final List<Recipe> recipes = [
   cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320),
   Recipe(name: "Маффины", faceImageUrl: "assets/images/muffin6.jpg", id: 2,
       cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240),
-  Recipe(name: "Фрикадельки", faceImageUrl: "assets/images/tef4.jpg", id: 3,
+  Recipe(name: "Фрикадельки", faceImageUrl: "assets/images/tef5.jpg", id: 3,
       cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440),
   Recipe(name: "Соба с курицей и овощами", faceImageUrl: "assets/images/soba13.jpg", id: 4,
       cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270),
@@ -116,7 +116,7 @@ final List<RecipeStep> tefSteps = [
 ];
 
 final List<RecipeStep> carbonaraSteps = [
-  RecipeStep(id: 1, imgUrl: "assets/images/carbonara1.jpg", description: "Отварить макароны до готовности. Бекон обжарить на сухой сковородке."),
+  RecipeStep(waitTime: 1, id: 1, imgUrl: "assets/images/carbonara1.jpg", description: "Отварить макароны до готовности. Бекон обжарить на сухой сковородке."),
   RecipeStep(id: 2, imgUrl: "assets/images/carbonara2.jpg", description: "Когда бекон немного обжарится, добавить сливки, довести до кипения и убавить огонь. Добавить сыр, постоянно помешивать до растворения сыра. Макароны добавить к сливкам и бекону, перемешать и прогреть 1–2 минуты."),
   RecipeStep(id: 3, imgUrl: "assets/images/carbonara3.jpg", description: "Посыпать черным перцем: все готово!"),
 ];

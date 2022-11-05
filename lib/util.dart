@@ -39,4 +39,6 @@ class Config {
   static double pageWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }
+
+  static var notificationsOn = true;
 }

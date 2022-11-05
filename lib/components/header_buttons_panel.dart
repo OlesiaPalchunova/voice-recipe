@@ -29,7 +29,7 @@ class HeaderButtonsPanel extends StatefulWidget {
 }
 
 class _HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
-  var isListening = true;
+  var isListening = false;
 
   @override
   Widget build(BuildContext context) {
