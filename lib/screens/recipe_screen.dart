@@ -133,12 +133,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
           BackCommand(onTriggerFunction: () => setState(() {
             _decrementSlideId();
           })),
-          SayCommand(onTriggerFunction: () => RecipeStepViewState.sayCurrent()),
+          SayCommand(onTriggerFunction:
+              () => RecipeStepViewState.getCurrent()?.say()),
           StartCommand(onTriggerFunction: () => setState(() {
             _slideId = firstStepSlideId;
           })),
           CloseCommand(onTriggerFunction: () => _onClose(context)),
-          StopSayCommand(onTriggerFunction: () => RecipeStepViewState.stopCurrent()),
+          StopSayCommand(onTriggerFunction:
+              () => RecipeStepViewState.getCurrent()?.stopSaying()),
           StartTimerCommand(onTriggerFunction: () {
             TimerViewState? state = TimerViewState.getCurrent();
             if (state != null) {

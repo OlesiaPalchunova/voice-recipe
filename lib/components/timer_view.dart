@@ -131,6 +131,7 @@ class TimerViewState extends State<TimerView> {
 
   void stopTimer() {
     setState(() => _timer?.cancel());
+    _isRunPressed = false;
   }
 
   void resetTimer() {

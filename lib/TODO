@@ -1,3 +1,6 @@
-- add announcement after time expiration
+- turn off micro while app is saying something
+- add small list of ingredients for every step
+- add cancel of notification if timer was stopped
+- make some more decorations for a recipe header
 - make relative sizes in all widgets using both height and width parameters
 - [optional] deal with notifications

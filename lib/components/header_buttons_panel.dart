@@ -15,7 +15,7 @@ class HeaderButtonsPanel extends StatefulWidget {
   final void Function() onMute;
 
   @override
-  State<HeaderButtonsPanel> createState() => _HeaderButtonsPanelState();
+  State<HeaderButtonsPanel> createState() => HeaderButtonsPanelState();
 
   static Container buildButton(
       BuildContext context, IconButton iconButton, Color color) {
@@ -28,8 +28,58 @@ class HeaderButtonsPanel extends StatefulWidget {
   }
 }
 
-class _HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
-  var isListening = false;
+class HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
+  static var _isListening = false;
+  static HeaderButtonsPanelState? _currentState;
+  var _isButtonBlocked = false;
+  var _wasListeningBeforeBlock = true;
+
+  static HeaderButtonsPanelState? getCurrent() {
+    return _currentState;
+  }
+
+  void stopListening() async {
+    if (_isButtonBlocked) {
+      return;
+    }
+    _isButtonBlocked = true;
+    _wasListeningBeforeBlock = _isListening;
+    if (_isListening) {
+      widget.onMute();
+    }
+    debugPrint('stopListening()');
+    await Future.delayed(const Duration(milliseconds: 100));
+    setState(() {
+      _isListening = false;
+    });
+  }
+
+  void startListening() async {
+    if (!_isButtonBlocked) {
+      return;
+    }
+    _isButtonBlocked = false;
+    if (!_wasListeningBeforeBlock) {
+      return;
+    }
+    if (!_isListening) {
+      widget.onListen();
+    }
+    debugPrint('startListening()');
+    await Future.delayed(const Duration(milliseconds: 100));
+    setState(() {
+      _isListening = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _currentState = this;
+    if (_isListening) {
+      widget.onListen();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +104,17 @@ class _HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
                 context,
                 IconButton(
                     onPressed: () {
+                      if (_isButtonBlocked) return;
                       setState(() {
-                        isListening = !isListening;
+                        _isListening = !_isListening;
                       });
-                      if (isListening) {
+                      if (_isListening) {
                         widget.onListen();
                       } else {
                         widget.onMute();
                       }
                     },
-                    icon: isListening
+                    icon: _isListening
                         ? const Icon(
                             Icons.mic,
                             color: Colors.black,
@@ -74,7 +125,7 @@ class _HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
                             color: Colors.black,
                             size: HeaderButtonsPanel._iconSize,
                           )),
-                isListening ? Colors.white : Colors.white54)
+                _isListening ? Colors.white : Colors.white54)
           ],
         ),
         Row(

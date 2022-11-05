@@ -33,6 +33,7 @@ class RecipeStepView extends StatefulWidget {
 class RecipeStepViewState extends State<RecipeStepView> {
   var _isSaying = false;
   static RecipeStepViewState? currentState;
+  static int _slideId = 0;
 
   @override
   void initState() {
@@ -40,19 +41,12 @@ class RecipeStepViewState extends State<RecipeStepView> {
     currentState = this;
   }
 
-  static bool sayCurrent() {
-    if (currentState == null) return false;
-    currentState!.say();
-    return true;
-  }
-
-  static bool stopCurrent() {
-    if (currentState == null) return false;
-    currentState!.stopSaying();
-    return true;
+  static RecipeStepViewState? getCurrent(){
+    return currentState;
   }
 
   void say() {
+    _pronounce();
     setState(() {
       _isSaying = true;
     });
@@ -101,9 +95,10 @@ class RecipeStepViewState extends State<RecipeStepView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isSaying) {
-      RecipeStepView.tts.speak(widget.step.description);
+    if (_isSaying && _slideId != widget.slideId) {
+      _pronounce();
     }
+    _slideId = widget.slideId;
     return Container(
         padding: const EdgeInsets.all(Config.padding),
         child: Column(
@@ -149,6 +144,18 @@ class RecipeStepViewState extends State<RecipeStepView> {
         ));
   }
 
+  void _continueListening() {
+    HeaderButtonsPanelState.getCurrent()?.startListening();
+  }
+
+  void _pronounce() {
+    HeaderButtonsPanelState.getCurrent()?.stopListening();
+    RecipeStepView.tts.setCompletionHandler(_continueListening);
+    RecipeStepView.tts.setPauseHandler(_continueListening);
+    RecipeStepView.tts.setCancelHandler(_continueListening);
+    RecipeStepView.tts.speak(widget.step.description);
+  }
+
   IconButton _buildSayIcon() {
     return IconButton(
         onPressed: () {
@@ -156,7 +163,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
             _isSaying = !_isSaying;
           });
           if (_isSaying) {
-            RecipeStepView.tts.speak(widget.step.description);
+            _pronounce();
           } else {
             RecipeStepView.tts.stop();
           }
