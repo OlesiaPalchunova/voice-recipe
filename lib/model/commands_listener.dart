@@ -11,14 +11,13 @@ class CommandsListener {
   static final _speechToText = SpeechToText();
   static var _speechAvailable = false;
   static var enabled = true;
-  static var lastCommandTime = DateTime.now();
+  static var lastCommandTime = DateTime.now().subtract(const Duration(seconds: 5));
   static const _minSlideChangeDelayMillis = 200;
   static var lastDoneTime = DateTime.wednesday;
   static const String _selectedLocaleId = 'ru_Ru';
   static var listensCount = 0;
 
   void start() async {
-    debugPrint('START LISTENER');
     enabled = true;
     if (!_speechAvailable) {
       _speechToText.initialize(

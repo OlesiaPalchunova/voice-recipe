@@ -20,6 +20,8 @@ import 'package:voice_recipe/model/voice_commands/prev_command.dart';
 import 'package:voice_recipe/model/voice_commands/start_timer_command.dart';
 import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
 
+import '../model/voice_commands/stop_say.dart';
+
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
     Key? key,
@@ -136,6 +138,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             _slideId = firstStepSlideId;
           })),
           CloseCommand(onTriggerFunction: () => _onClose(context)),
+          StopSayCommand(onTriggerFunction: () => RecipeStepViewState.stopCurrent()),
           StartTimerCommand(onTriggerFunction: () {
             TimerViewState? state = TimerViewState.getCurrent();
             if (state != null) {

@@ -126,6 +126,7 @@ class TimerViewState extends State<TimerView> {
     }
     _timer = Timer.periodic(
         const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
+    _isRunPressed = true;
   }
 
   void stopTimer() {

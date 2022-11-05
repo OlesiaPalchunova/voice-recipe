@@ -46,9 +46,22 @@ class RecipeStepViewState extends State<RecipeStepView> {
     return true;
   }
 
+  static bool stopCurrent() {
+    if (currentState == null) return false;
+    currentState!.stopSaying();
+    return true;
+  }
+
   void say() {
     setState(() {
       _isSaying = true;
+    });
+  }
+
+  void stopSaying() {
+    RecipeStepView.tts.stop();
+    setState(() {
+      _isSaying = false;
     });
   }
 
