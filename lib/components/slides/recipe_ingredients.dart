@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/util.dart';
 
-class RecipeIngredients extends StatelessWidget {
-  const RecipeIngredients({
+class IngredientsSlideView extends StatelessWidget {
+  const IngredientsSlideView({
     Key? key,
     required this.recipe,
   }) : super(key: key);
@@ -101,7 +99,7 @@ class IngredientsList extends StatelessWidget {
               ]),
               const Divider(
                 color: Colors.black,
-                thickness: RecipeIngredients._splitterThickness,
+                thickness: IngredientsSlideView._splitterThickness,
               ),
             ],
           ),

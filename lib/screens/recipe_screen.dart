@@ -27,8 +27,8 @@ class RecipeScreen extends StatefulWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  late final RecipeIngredients ingPage = RecipeIngredients(recipe: recipe);
-  late final RecipeFace facePage = RecipeFace(recipe: recipe);
+  late final IngredientsSlideView ingPage = IngredientsSlideView(recipe: recipe);
+  late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -90,11 +90,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   Widget _buildCurrentSlide(BuildContext context, int slideId) {
     if (slideId == faceSlideId) {
-      return RecipeFace(
+      return RecipeFaceSlideView(
         recipe: widget.recipe,
       );
     } else if (slideId == ingredientsSlideId) {
-      return RecipeIngredients(recipe: widget.recipe);
+      return IngredientsSlideView(recipe: widget.recipe);
     }
     return RecipeStepView(
       recipe: widget.recipe,
@@ -104,7 +104,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   Widget _buildSliderBottom() {
     var width = Config.pageWidth(context);
-    var slidesCount = 2 + stepsResolve[widget.recipe.id].length;
+    var slidesCount = 2 + getStepsCount(widget.recipe.id);
     var sectionWidth = width / slidesCount;
     return Container(
       alignment: Alignment.center,
@@ -175,7 +175,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _incrementSlideId() {
     _slideId++;
-    int max = stepsResolve[widget.recipe.id].length + 1;
+    int max = getStepsCount(widget.recipe.id) + 1;
     _slideId = _slideId > max ? max : _slideId;
   }
 }

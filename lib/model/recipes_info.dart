@@ -21,6 +21,14 @@ class Ingredient {
   Ingredient({required this.id, required this.name, required this.count});
 }
 
+int getStepsCount(int recipeId) {
+  return stepsResolve[recipeId].length;
+}
+
+RecipeStep getStep(int recipeId, int stepId) {
+  return stepsResolve[recipeId][stepId];
+}
+
 final List<Recipe> recipes = [
   Recipe(name: "Борщ", faceImageUrl: "assets/images/borsh_face.jpg", id: 0,
   cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140),

@@ -1,2 +1,3 @@
 - add announcement after time expiration
+- make relative sizes in all widgets using both height and width parameters
 - [optional] deal with notifications

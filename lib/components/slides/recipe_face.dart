@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/util.dart';
 
-class RecipeFace extends StatelessWidget {
-  const RecipeFace({
+class RecipeFaceSlideView extends StatelessWidget {
+  const RecipeFaceSlideView({
     Key? key,
     required this.recipe,
   }) : super(key: key);
