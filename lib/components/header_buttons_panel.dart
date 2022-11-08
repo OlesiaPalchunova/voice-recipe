@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/config.dart';
 
 class HeaderButtonsPanel extends StatefulWidget {
   const HeaderButtonsPanel(
       {super.key,
       required this.onClose,
       required this.onList,
+      required this.onSay,
       required this.onListen,
-      required this.onMute});
+      required this.onMute,
+      required this.id});
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
   final void Function() onList;
+  final void Function() onSay;
   final void Function() onListen;
   final void Function() onMute;
+  final int id;
 
   @override
   State<HeaderButtonsPanel> createState() => HeaderButtonsPanelState();
@@ -33,6 +38,8 @@ class HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
   static HeaderButtonsPanelState? _currentState;
   var _isButtonBlocked = false;
   var _wasListeningBeforeBlock = true;
+  static const backColor = Colors.white;
+  static const iconColor = Colors.black87;
 
   static HeaderButtonsPanelState? getCurrent() {
     return _currentState;
@@ -117,15 +124,15 @@ class HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
                     icon: _isListening
                         ? const Icon(
                             Icons.mic,
-                            color: Colors.black,
+                            color: iconColor,
                             size: HeaderButtonsPanel._iconSize,
                           )
                         : const Icon(
                             Icons.mic_off,
-                            color: Colors.black,
+                            color: iconColor,
                             size: HeaderButtonsPanel._iconSize,
                           )),
-                _isListening ? Colors.white : Colors.white54)
+                _isListening ? backColor : backColor.withOpacity(0.6))
           ],
         ),
         Row(
@@ -136,11 +143,11 @@ class HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
                   onPressed: () => widget.onList(),
                   icon: const Icon(
                     Icons.list,
-                    color: Colors.black,
+                    color: iconColor,
                     size: HeaderButtonsPanel._iconSize,
                   ),
                 ),
-                Colors.white),
+                backColor),
             const SizedBox(
               width: 10,
             ),
@@ -150,11 +157,11 @@ class HeaderButtonsPanelState extends State<HeaderButtonsPanel> {
                   onPressed: () => widget.onClose(context),
                   icon: const Icon(
                     Icons.close_outlined,
-                    color: Colors.black,
+                    color: iconColor,
                     size: HeaderButtonsPanel._iconSize,
                   ),
                 ),
-                Colors.white),
+                backColor),
           ],
         )
       ],

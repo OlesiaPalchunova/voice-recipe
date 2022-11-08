@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_buttons_panel.dart';
-import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/components/timer_view.dart';
 
 class RecipeStepView extends StatefulWidget {
@@ -90,6 +90,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
       key: Key("$timerId"),
       waitTimeMins: widget.step.waitTime,
       id: timerId,
+      alarmText: "${widget.recipe.name}: шаг ${widget.slideId - 1}",
     );
   }
 
@@ -101,48 +102,65 @@ class RecipeStepViewState extends State<RecipeStepView> {
     _slideId = widget.slideId;
     return Container(
         padding: const EdgeInsets.all(Config.padding),
-        child: Column(
+        child: Stack(
           children: [
-            HeaderButtonsPanel.buildButton(context, _buildSayIcon(),
-                !_isSaying ? Colors.white : Colors.white54),
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, Config.margin, 0, 0),
-              height: _getImageHeight(),
-              child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(RecipeStepView._borderRadius),
-                child: Image(
-                  image: AssetImage(widget.step.imgUrl),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-            ),
-            _buildTimer(),
-            Container(
-                alignment: Alignment.topCenter,
-                margin: const EdgeInsets.symmetric(
-                    vertical: Config.margin, horizontal: 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black87
-                          .withOpacity(RecipeStepView._textBackgroundOpacity),
-                      borderRadius:
-                          BorderRadius.circular(RecipeStepView._borderRadius)),
-                  // height: 120,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(Config.padding),
-                  child: Text(
-                    widget.step.description,
-                    style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontSize: Config.pageHeight(context) *
-                            RecipeStepView._textSize,
-                        color: Colors.white),
+            ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, Config.margin * 2, 0, 0),
+                  height: _getImageHeight(),
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(RecipeStepView._borderRadius),
+                    child: Image(
+                      image: AssetImage(widget.step.imgUrl),
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
-                )),
+                ),
+                Container(
+                    alignment: Alignment.topCenter,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: Config.margin, horizontal: 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black87
+                              .withOpacity(RecipeStepView._textBackgroundOpacity),
+                          borderRadius:
+                              BorderRadius.circular(RecipeStepView._borderRadius)),
+                      // height: 120,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(Config.padding),
+                      child: Text(
+                        widget.step.description,
+                        style: TextStyle(
+                            fontFamily: "Montserrat",
+                            fontSize: Config.pageHeight(context) *
+                                RecipeStepView._textSize,
+                            color: Colors.white),
+                      ),
+                    )
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin),
+                  child: _buildTimer(),
+                )
+              ],
+            ),
+            Container(
+              color: Config.backColors[widget.recipe.id % Config.backColors.length],
+              height: 55,
+              alignment: Alignment.topCenter,
+              child: HeaderButtonsPanel.buildButton(context, _buildSayIcon(),
+                  !_isSaying ? backColor : backColor.withOpacity(0.6)),
+            ),
           ],
         ));
   }
+
+  static const backColor = Colors.white;
+  static const iconColor = Colors.black87;
 
   void _continueListening() {
     HeaderButtonsPanelState.getCurrent()?.startListening();
@@ -171,11 +189,11 @@ class RecipeStepViewState extends State<RecipeStepView> {
         icon: _isSaying
             ? const Icon(
                 Icons.pause,
-                color: Colors.black87,
+                color: iconColor,
               )
             : const Icon(
                 Icons.play_arrow,
-                color: Colors.black87,
+                color: iconColor,
               )
     );
   }

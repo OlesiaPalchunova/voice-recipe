@@ -1,6 +1,8 @@
-- turn off micro while app is saying something
+- move say button from recipe step to header buttons panel
+- fix bug with repeatable zero-timer
+- try to switch to NetworkImage instead of AssetImage
+
 - add small list of ingredients for every step
 - add cancel of notification if timer was stopped
 - make some more decorations for a recipe header
 - make relative sizes in all widgets using both height and width parameters
-- [optional] deal with notifications

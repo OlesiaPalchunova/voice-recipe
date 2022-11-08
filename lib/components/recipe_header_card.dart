@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
-import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/config.dart';
 
 class RecipeHeaderCard extends StatelessWidget {
   const RecipeHeaderCard({

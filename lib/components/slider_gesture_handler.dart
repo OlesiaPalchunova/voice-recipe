@@ -7,8 +7,8 @@ class SliderGestureHandler extends StatelessWidget {
   final void Function() onRight;
   final void Function() onLeft;
   final Widget child;
-  static const minSlideChangeDelayMillis = 100;
-  final lastSwipeTime = DateTime.now();
+  static const minSlideChangeDelayMillis = 400;
+  var lastSwipeTime = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +31,22 @@ class SliderGestureHandler extends StatelessWidget {
   }
 
   void _swipeHandler(DragUpdateDetails details) {
-    int sensitivity = 0;
+    const int sensitivity = 2;
     var cur = DateTime.now();
+    debugPrint('${cur.difference(lastSwipeTime).inMilliseconds}/$minSlideChangeDelayMillis');
     if (cur.difference(lastSwipeTime).inMilliseconds <=
         minSlideChangeDelayMillis) {
       return;
     }
-    if (details.delta.dx != 0) {
-      lastSwipeTime.add(cur.difference(lastSwipeTime));
+    if (details.delta.dy.abs() > details.delta.dx.abs()) {
+      return;
     }
     if (details.delta.dx > sensitivity) {
+      lastSwipeTime = cur;
       onLeft();
     }
-    if (details.delta.dx < sensitivity) {
+    if (details.delta.dx < -sensitivity) {
+      lastSwipeTime = cur;
       onRight();
     }
   }

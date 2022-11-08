@@ -3,13 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/local_notice_service.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/config.dart';
 
 class TimerView extends StatefulWidget {
-  const TimerView({super.key, required this.waitTimeMins, required this.id});
+  const TimerView({super.key, required this.waitTimeMins, required this.id,
+  required this.alarmText});
 
   final int waitTimeMins;
   final int id;
+  final String alarmText;
 
   @override
   State<TimerView> createState() => TimerViewState();
@@ -43,10 +45,9 @@ class TimerViewState extends State<TimerView> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.85),
           borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
       height: Config.pageHeight(context) * _height,
-      margin: const EdgeInsets.fromLTRB(0, Config.margin, 0, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -119,8 +120,8 @@ class TimerViewState extends State<TimerView> {
       if (Config.notificationsOn) {
         LocalNoticeService().addNotification(
             title: "Время прошло",
-            body: "Можно переходить к следующему шагу",
-            alarmTime: DateTime.now().add(Duration(seconds: _leftDuration.inSeconds))
+            body: widget.alarmText,
+            alarmTime: DateTime.now().add(_leftDuration)
         );
       }
     }
@@ -168,7 +169,7 @@ class TimerViewState extends State<TimerView> {
   }
 
   Widget _buildTimerLabel() {
-    const labelWidth = 0.3;
+    const labelWidth = 0.4;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final hours = strDigits( _leftDuration.inHours.remainder(24));

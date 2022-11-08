@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/config.dart';
 
 class RecipeFaceSlideView extends StatelessWidget {
   const RecipeFaceSlideView({

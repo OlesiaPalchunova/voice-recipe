@@ -8,7 +8,7 @@ import 'package:voice_recipe/components/slides/recipe_step_view.dart';
 import 'package:voice_recipe/components/timer_view.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/header_buttons_panel.dart';
-import 'package:voice_recipe/util.dart';
+import 'package:voice_recipe/config.dart';
 
 import 'package:voice_recipe/model/voice_commands/close_command.dart';
 import 'package:voice_recipe/model/voice_commands/command.dart';
@@ -58,7 +58,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onRight: () => setState(() => _incrementSlideId()),
         child: Scaffold(
           body: Container(
-            color: Config.backColors[widget.recipe.id % Config.backColors.length],
+            color: Config.getBackColor(widget.recipe.id),
             child: Stack(
               children: [
                 Container(
@@ -73,6 +73,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     margin: const EdgeInsets.symmetric(
                         vertical: 60, horizontal: 10),
                     child: HeaderButtonsPanel(
+                      id: widget.recipe.id,
                       onClose: _onClose,
                       onList: () => setState(() {
                         _slideId = ingredientsSlideId;
@@ -117,7 +118,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         itemCount: slidesCount,
         itemBuilder: (_, index) => Container(
           width: sectionWidth,
-          color: index == _slideId ? Config.colors[widget.recipe.id % Config.colors.length]
+          color: index == _slideId ? Config.getColor(widget.recipe.id)
               : Colors.black87,
         ),
       ),
