@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:voice_recipe/components/buttons/listen_button.dart';
+import 'package:voice_recipe/components/buttons/say_button.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';
@@ -26,9 +29,12 @@ class RecipeScreen extends StatefulWidget {
   RecipeScreen({
     Key? key,
     required this.recipe,
-  }) : super(key: key);
+  }) : super(key: key) {
+    tts.setLanguage("ru");
+  }
 
   final Recipe recipe;
+  static final FlutterTts tts = FlutterTts();
   late final IngredientsSlideView ingPage = IngredientsSlideView(recipe: recipe);
   late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
 
@@ -50,12 +56,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    RecipeScreen.tts.stop();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: SliderGestureHandler(
-        onLeft: () => setState(() => _decrementSlideId()),
-        onRight: () => setState(() => _incrementSlideId()),
+        onLeft: _onPrev,
+        onRight: _onNext,
         child: Scaffold(
           body: Container(
             color: Config.getBackColor(widget.recipe.id),
@@ -80,6 +92,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
                       }),
                       onMute: () => _listener.shutdown(),
                       onListen: () => _listener.start(),
+                      onSay: _onSay,
+                      onStopSaying: _onStopSaying,
                     )),
                 Container(
                     alignment: Alignment.bottomCenter, child: _buildSliderBottom())
@@ -89,6 +103,27 @@ class _RecipeScreenState extends State<RecipeScreen> {
         ),
       ),
     );
+  }
+
+  _onSay() {
+    if (_slideId < firstStepSlideId) {
+      return;
+    }
+    if (!ListenButtonState.isListening()) {
+      RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
+          firstStepSlideId).description);
+      return;
+    }
+    _listener.shutdown();
+    RecipeScreen.tts.setCompletionHandler(() => _listener.start());
+    RecipeScreen.tts.setCancelHandler(() => _listener.start());
+    RecipeScreen.tts.setPauseHandler(() => _listener.start());
+    RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
+        firstStepSlideId).description);
+  }
+
+  _onStopSaying() {
+    RecipeScreen.tts.stop();
   }
 
   Widget _buildCurrentSlide(BuildContext context, int slideId) {
@@ -125,23 +160,34 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
+  void _onNext() {
+    setState(() {
+      _onStopSaying();
+      _incrementSlideId();
+      if (SayButtonState.isSaying()) {
+        _onSay();
+      }
+    });
+  }
+
+  void _onPrev() {
+    setState(() {
+      _decrementSlideId();
+      _onStopSaying();
+    });
+  }
+
   void _initCommandsListener() {
     _listener = CommandsListener(
         commandsList: <Command>[
-          NextCommand(onTriggerFunction: () => setState(() {
-            _incrementSlideId();
-          })),
-          BackCommand(onTriggerFunction: () => setState(() {
-            _decrementSlideId();
-          })),
-          SayCommand(onTriggerFunction:
-              () => RecipeStepViewState.getCurrent()?.say()),
+          NextCommand(onTriggerFunction: _onNext),
+          BackCommand(onTriggerFunction: _onPrev),
+          SayCommand(onTriggerFunction: _onSay),
           StartCommand(onTriggerFunction: () => setState(() {
             _slideId = firstStepSlideId;
           })),
           CloseCommand(onTriggerFunction: () => _onClose(context)),
-          StopSayCommand(onTriggerFunction:
-              () => RecipeStepViewState.getCurrent()?.stopSaying()),
+          StopSayCommand(onTriggerFunction: _onStopSaying),
           StartTimerCommand(onTriggerFunction: () {
             TimerViewState? state = TimerViewState.getCurrent();
             if (state != null) {

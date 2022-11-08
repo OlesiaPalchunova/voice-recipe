@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/header_buttons_panel.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/components/timer_view.dart';
 
@@ -13,10 +12,8 @@ class RecipeStepView extends StatefulWidget {
     int len = getStepsCount(recipe.id);
     int idx = min(slideId - 2, len - 1);
     step = getStep(recipe.id, idx);
-    tts.setLanguage("ru");
   }
 
-  static final FlutterTts tts = FlutterTts();
   final Recipe recipe;
   final int slideId;
   late final RecipeStep step;
@@ -31,7 +28,6 @@ class RecipeStepView extends StatefulWidget {
 }
 
 class RecipeStepViewState extends State<RecipeStepView> {
-  var _isSaying = false;
   static RecipeStepViewState? currentState;
   static int _slideId = 0;
 
@@ -45,24 +41,9 @@ class RecipeStepViewState extends State<RecipeStepView> {
     return currentState;
   }
 
-  void say() {
-    _pronounce();
-    setState(() {
-      _isSaying = true;
-    });
-  }
-
-  void stopSaying() {
-    RecipeStepView.tts.stop();
-    setState(() {
-      _isSaying = false;
-    });
-  }
-
   @override
   void dispose() {
     super.dispose();
-    RecipeStepView.tts.stop();
   }
 
   double _getImageHeight() {
@@ -96,9 +77,9 @@ class RecipeStepViewState extends State<RecipeStepView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isSaying && _slideId != widget.slideId) {
-      _pronounce();
-    }
+    // if (_isSaying && _slideId != widget.slideId) {
+    //   _pronounce();
+    // }
     _slideId = widget.slideId;
     return Container(
         padding: const EdgeInsets.all(Config.padding),
@@ -148,53 +129,7 @@ class RecipeStepViewState extends State<RecipeStepView> {
                 )
               ],
             ),
-            Container(
-              color: Config.backColors[widget.recipe.id % Config.backColors.length],
-              height: 55,
-              alignment: Alignment.topCenter,
-              child: HeaderButtonsPanel.buildButton(context, _buildSayIcon(),
-                  !_isSaying ? backColor : backColor.withOpacity(0.6)),
-            ),
           ],
         ));
-  }
-
-  static const backColor = Colors.white;
-  static const iconColor = Colors.black87;
-
-  void _continueListening() {
-    HeaderButtonsPanelState.getCurrent()?.startListening();
-  }
-
-  void _pronounce() {
-    HeaderButtonsPanelState.getCurrent()?.stopListening();
-    RecipeStepView.tts.setCompletionHandler(_continueListening);
-    RecipeStepView.tts.setPauseHandler(_continueListening);
-    RecipeStepView.tts.setCancelHandler(_continueListening);
-    RecipeStepView.tts.speak(widget.step.description);
-  }
-
-  IconButton _buildSayIcon() {
-    return IconButton(
-        onPressed: () {
-          setState(() {
-            _isSaying = !_isSaying;
-          });
-          if (_isSaying) {
-            _pronounce();
-          } else {
-            RecipeStepView.tts.stop();
-          }
-        },
-        icon: _isSaying
-            ? const Icon(
-                Icons.pause,
-                color: iconColor,
-              )
-            : const Icon(
-                Icons.play_arrow,
-                color: iconColor,
-              )
-    );
   }
 }

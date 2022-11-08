@@ -6,6 +6,10 @@ class Config {
   static const padding = 10.0;
   static const margin = 10.0;
 
+  static const iconBackColor = Colors.white;
+  static const iconDisabledBackColor = Colors.white70;
+  static const iconColor = Colors.black87;
+
   static const backColors = [
     Color(0xFFE9F7CA),
     Color(0xFFF9C784),
