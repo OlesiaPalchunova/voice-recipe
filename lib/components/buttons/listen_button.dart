@@ -20,6 +20,7 @@ class ListenButton extends StatefulWidget {
 
 class ListenButtonState extends State<ListenButton> {
   var _isListening = false;
+  var _locked = false;
   static ListenButtonState? _state;
 
   static ListenButtonState? current() {
@@ -46,6 +47,14 @@ class ListenButtonState extends State<ListenButton> {
     widget.onMute();
   }
 
+  void lock() {
+    _locked = true;
+  }
+
+  void unlock() {
+    _locked = false;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +69,7 @@ class ListenButtonState extends State<ListenButton> {
     return HeaderButtonsPanel.buildButton(
         IconButton(
             onPressed: () {
+              if (_locked) return;
               setState(() {
                 _isListening = !_isListening;
               });

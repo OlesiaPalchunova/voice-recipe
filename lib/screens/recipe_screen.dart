@@ -103,9 +103,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
+  void _completeSaying() {
+    _completed = true;
+    ListenButtonState.current()!.unlock();
+  }
+
   void _setSayingEndHandler(void Function() callback, int slideId) {
     RecipeScreen.tts.setCompletionHandler(() {
-      _completed = true;
+      _completeSaying();
       if (_listenedBeforeStart!) {
         callback();
       }
@@ -113,7 +118,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     a() {
       if (slideId == _slideId) {
         callback();
-        _completed = true;
+        _completeSaying();
       }
       slideId = _slideId;
     }
@@ -139,6 +144,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         _listenedBeforeStart = false;
         _setSayingEndHandler(() {}, _slideId);
         _completed = false;
+        ListenButtonState.current()!.lock();
       }
       RecipeScreen.tts.speak(text);
       return;
@@ -147,6 +153,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _listenedBeforeStart = true;
     _setSayingEndHandler(_restartListening, _slideId);
     _completed = false;
+    ListenButtonState.current()!.lock();
     RecipeScreen.tts.speak(text);
   }
 
