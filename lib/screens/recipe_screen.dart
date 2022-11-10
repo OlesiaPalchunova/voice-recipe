@@ -110,9 +110,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
         callback();
       }
     });
-    if (!_listenedBeforeStart!) {
-      return;
-    }
     a() {
       if (slideId == _slideId) {
         callback();
@@ -128,8 +125,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static bool _completed = true;
 
   _onSay() {
-    if (_slideId < firstStepSlideId) {
-      return;
+    String text = "";
+    if (_slideId == faceSlideId) {
+      text = widget.recipe.name;
+    } else if (_slideId == ingredientsSlideId) {
+      text = "Время приготовления: ${widget.recipe.cookTimeMins} минут";
+    } else {
+      text = getStep(widget.recipe.id, _slideId -
+          firstStepSlideId).description;
     }
     if (!ListenButtonState.current()!.isListening()) {
       if (_completed) {
@@ -137,16 +140,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
         _setSayingEndHandler(() {}, _slideId);
         _completed = false;
       }
-      RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
-          firstStepSlideId).description);
+      RecipeScreen.tts.speak(text);
       return;
     }
     ListenButtonState.current()!.stopListening();
     _listenedBeforeStart = true;
     _setSayingEndHandler(_restartListening, _slideId);
     _completed = false;
-    RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
-        firstStepSlideId).description);
+    RecipeScreen.tts.speak(text);
   }
 
   void _restartListening() {
