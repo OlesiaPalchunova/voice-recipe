@@ -116,6 +116,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     a() {
       if (slideId == _slideId) {
         callback();
+        _completed = true;
       }
       slideId = _slideId;
     }
@@ -126,16 +127,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static bool? _listenedBeforeStart;
   static bool _completed = true;
 
-  _onSay({bool shouldRestartListener = false}) {
+  _onSay() {
     if (_slideId < firstStepSlideId) {
       return;
     }
     if (!ListenButtonState.current()!.isListening()) {
-      if (!_completed) {
-        // _setSayingEndHandler(() {}, _slideId);
-      } else {
+      if (_completed) {
         _listenedBeforeStart = false;
         _setSayingEndHandler(() {}, _slideId);
+        _completed = false;
       }
       RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
           firstStepSlideId).description);
@@ -206,7 +206,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _onStopSaying();
     setState(() {
       if (SayButtonState.current()!.isSaying()) {
-        _onSay(shouldRestartListener: true);
+        _onSay();
       }
     });
   }
