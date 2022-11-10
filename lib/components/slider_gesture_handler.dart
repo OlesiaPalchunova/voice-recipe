@@ -33,7 +33,7 @@ class SliderGestureHandler extends StatelessWidget {
   void _swipeHandler(DragUpdateDetails details) {
     const int sensitivity = 2;
     var cur = DateTime.now();
-    debugPrint('${cur.difference(lastSwipeTime).inMilliseconds}/$minSlideChangeDelayMillis');
+    // debugPrint('${cur.difference(lastSwipeTime).inMilliseconds}/$minSlideChangeDelayMillis');
     if (cur.difference(lastSwipeTime).inMilliseconds <=
         minSlideChangeDelayMillis) {
       return;

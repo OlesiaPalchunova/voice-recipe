@@ -60,7 +60,7 @@ class RecipeStepView extends StatelessWidget {
             ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                Container(
+                SizedBox(
                   height: _getImageHeight(context),
                   child: ClipRRect(
                     borderRadius:

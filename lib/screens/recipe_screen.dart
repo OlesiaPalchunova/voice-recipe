@@ -70,9 +70,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onRight: _onNext,
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: 70,
+            automaticallyImplyLeading: false,
+            toolbarHeight: 60,
             backgroundColor: Config.backgroundColor(),
-            flexibleSpace: HeaderButtonsPanel(
+            title: HeaderButtonsPanel(
               backColor: Config.backgroundColor(),
               id: widget.recipe.id,
               onClose: _onClose,
