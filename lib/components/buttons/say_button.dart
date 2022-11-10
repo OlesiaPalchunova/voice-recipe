@@ -18,16 +18,43 @@ class SayButton extends StatefulWidget {
 }
 
 class SayButtonState extends State<SayButton> {
-  static var _isSaying = false;
+  var _isSaying = false;
+  static SayButtonState? _state;
 
-  static bool isSaying() {
-    return _isSaying;
+  static SayButtonState? current() {
+    return _state;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _state = this;
   }
 
   @override
   Widget build(BuildContext context) {
     return HeaderButtonsPanel.buildButton(_buildSayIcon(),
         !_isSaying ? Config.iconBackColor() : Config.disabledIconBackColor());
+  }
+
+  void say() {
+    if (_isSaying) return;
+    setState(() {
+      _isSaying = true;
+    });
+    widget.onSay();
+  }
+
+  void stopSaying() {
+    if (!_isSaying) return;
+    setState(() {
+      _isSaying = false;
+    });
+    widget.onStopSaying();
+  }
+
+  bool isSaying() {
+    return _isSaying;
   }
 
   IconButton _buildSayIcon() {

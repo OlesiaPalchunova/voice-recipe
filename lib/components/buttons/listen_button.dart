@@ -19,15 +19,37 @@ class ListenButton extends StatefulWidget {
 }
 
 class ListenButtonState extends State<ListenButton> {
-  static var _isListening = false;
+  var _isListening = false;
+  static ListenButtonState? _state;
 
-  static bool isListening() {
+  static ListenButtonState? current() {
+    return _state;
+  }
+
+  bool isListening() {
     return _isListening;
+  }
+
+  void listen() {
+    if (_isListening) return;
+    setState(() {
+      _isListening = true;
+    });
+    widget.onListen();
+  }
+
+  void stopListening() {
+    if (!_isListening) return;
+    setState(() {
+      _isListening = false;
+    });
+    widget.onMute();
   }
 
   @override
   void initState() {
     super.initState();
+    _state = this;
     if (_isListening) {
       widget.onListen();
     }

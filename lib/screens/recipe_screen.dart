@@ -46,7 +46,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static const faceSlideId = 0;
   static const ingredientsSlideId = 1;
   static const firstStepSlideId = 2;
-  int _slideId = 0;
+  static int _slideId = 0;
   late CommandsListener _listener;
 
   @override
@@ -103,21 +103,54 @@ class _RecipeScreenState extends State<RecipeScreen> {
     );
   }
 
-  _onSay() {
+  void _setSayingEndHandler(void Function() callback, int slideId) {
+    RecipeScreen.tts.setCompletionHandler(() {
+      _completed = true;
+      if (_listenedBeforeStart!) {
+        callback();
+      }
+    });
+    if (!_listenedBeforeStart!) {
+      return;
+    }
+    a() {
+      if (slideId == _slideId) {
+        callback();
+      }
+      slideId = _slideId;
+    }
+    RecipeScreen.tts.setCancelHandler(a);
+    RecipeScreen.tts.setPauseHandler(a);
+  }
+
+  static bool? _listenedBeforeStart;
+  static bool _completed = true;
+
+  _onSay({bool shouldRestartListener = false}) {
     if (_slideId < firstStepSlideId) {
       return;
     }
-    if (!ListenButtonState.isListening()) {
+    if (!ListenButtonState.current()!.isListening()) {
+      if (!_completed) {
+        // _setSayingEndHandler(() {}, _slideId);
+      } else {
+        _listenedBeforeStart = false;
+        _setSayingEndHandler(() {}, _slideId);
+      }
       RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
           firstStepSlideId).description);
       return;
     }
-    _listener.shutdown();
-    RecipeScreen.tts.setCompletionHandler(() => _listener.start());
-    RecipeScreen.tts.setCancelHandler(() => _listener.start());
-    RecipeScreen.tts.setPauseHandler(() => _listener.start());
+    ListenButtonState.current()!.stopListening();
+    _listenedBeforeStart = true;
+    _setSayingEndHandler(_restartListening, _slideId);
+    _completed = false;
     RecipeScreen.tts.speak(getStep(widget.recipe.id, _slideId -
         firstStepSlideId).description);
+  }
+
+  void _restartListening() {
+    ListenButtonState.current()!.listen();
   }
 
   _onStopSaying() {
@@ -163,20 +196,23 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   void _onNext() {
+    _changeSlide(_incrementSlideId);
+  }
+
+  void _changeSlide(void Function() changer) {
+    int prev = _slideId;
+    changer();
+    if (prev == _slideId) return;
+    _onStopSaying();
     setState(() {
-      _onStopSaying();
-      _incrementSlideId();
-      if (SayButtonState.isSaying()) {
-        _onSay();
+      if (SayButtonState.current()!.isSaying()) {
+        _onSay(shouldRestartListener: true);
       }
     });
   }
 
   void _onPrev() {
-    setState(() {
-      _decrementSlideId();
-      _onStopSaying();
-    });
+    _changeSlide(_decrementSlideId);
   }
 
   void _initCommandsListener() {
@@ -184,7 +220,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         commandsList: <Command>[
           NextCommand(onTriggerFunction: _onNext),
           BackCommand(onTriggerFunction: _onPrev),
-          SayCommand(onTriggerFunction: _onSay),
+          SayCommand(onTriggerFunction: () => SayButtonState.current()!.say()),
           StartCommand(onTriggerFunction: () => setState(() {
             _slideId = firstStepSlideId;
           })),
