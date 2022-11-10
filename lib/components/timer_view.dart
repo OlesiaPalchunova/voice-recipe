@@ -6,8 +6,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:voice_recipe/config.dart';
 
 class TimerView extends StatefulWidget {
-  const TimerView({super.key, required this.waitTimeMins, required this.id,
-  required this.alarmText});
+  const TimerView(
+      {super.key,
+      required this.waitTimeMins,
+      required this.id,
+      required this.alarmText});
 
   final int waitTimeMins;
   final int id;
@@ -26,6 +29,7 @@ class TimerViewState extends State<TimerView> {
 
   bool _isRunPressed = false;
   bool _isDisposed = false;
+  bool _noticed = false;
   Timer? _timer;
   late Duration _leftDuration;
   var _lastShown = DateTime.now();
@@ -41,38 +45,67 @@ class TimerViewState extends State<TimerView> {
     _initTimerInfo();
   }
 
+  BoxDecoration _getTimerBoxDecoration() {
+    var gradientColor = Config.getGradientColor(widget.id);
+    if (Config.darkModeOn) {
+      return BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradientColor,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: gradientColor.last.withOpacity(0.4),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(4, 4),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+      );
+    }
+    return BoxDecoration(
+        color: Colors.white.withOpacity(0.85),
+        borderRadius: BorderRadius.circular(Config.borderRadiusLarge)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.85),
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
+      decoration: _getTimerBoxDecoration(),
       height: Config.pageHeight(context) * _height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildTimerButton(onPressed: () {
-            setState(() {
-              _isRunPressed = !_isRunPressed;
-            });
-            if (_isRunPressed) {
-              startTimer();
-            } else {
-              stopTimer();
-            }
-          }, icon: Icon(
-            _isRunPressed ? Icons.pause_circle : Icons.play_circle,
-            color: Colors.black87.withOpacity(0.8),
-          )),
+          _buildTimerButton(
+              onPressed: () {
+                setState(() {
+                  _isRunPressed = !_isRunPressed;
+                });
+                if (_isRunPressed) {
+                  startTimer();
+                } else {
+                  stopTimer();
+                }
+              },
+              icon: Icon(
+                _isRunPressed ? Icons.pause_outlined : Icons.play_arrow,
+                color: Config.iconColor(),
+              )),
           _buildTimerLabel(),
-          _buildTimerButton(onPressed: () {
-            setState(() {
-              resetTimer();
-            });
-          }, icon: Icon(
-            Icons.replay_circle_filled_rounded,
-            color: Colors.black87.withOpacity(0.8),
-          ))
+          _buildTimerButton(
+              onPressed: () {
+                setState(() {
+                  resetTimer();
+                });
+              },
+              icon: Icon(
+                Icons.replay,
+                color: Config.iconColor(),
+                size: _iconHeight * Config.pageHeight(context) * 0.9,
+              ))
         ],
       ),
     );
@@ -89,12 +122,14 @@ class TimerViewState extends State<TimerView> {
     if (_prevState != null) {
       _leftDuration = _prevState!._leftDuration;
       _isRunPressed = _prevState!._isRunPressed;
+      _noticed = _prevState!._noticed;
       _timer = _prevState!._timer;
       if (_prevState!._isDisposed && _isRunPressed) {
         var current = DateTime.now();
         var diff = current.difference(_prevState!._lastShown).abs();
         var millisLeft = _leftDuration.inMilliseconds - diff.inMilliseconds;
-        _leftDuration = Duration(milliseconds: (millisLeft > 0 ? millisLeft: 0));
+        _leftDuration =
+            Duration(milliseconds: (millisLeft > 0 ? millisLeft : 0));
         startTimer();
       }
     } else {
@@ -116,14 +151,16 @@ class TimerViewState extends State<TimerView> {
     if (_isDisposed) {
       return;
     }
-    if (_leftDuration.inSeconds == widget.waitTimeMins * 60) {
-      if (Config.notificationsOn) {
-        LocalNoticeService().addNotification(
-            title: "Время прошло",
-            body: widget.alarmText,
-            alarmTime: DateTime.now().add(_leftDuration)
-        );
-      }
+    if (_leftDuration.inSeconds == 0) {
+      return;
+    }
+    if (Config.notificationsOn && !_noticed) {
+      LocalNoticeService().addNotification(
+          id: widget.id,
+          title: "Время прошло",
+          body: widget.alarmText,
+          alarmTime: DateTime.now().add(_leftDuration));
+      _noticed = true;
     }
     _timer = Timer.periodic(
         const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
@@ -132,6 +169,8 @@ class TimerViewState extends State<TimerView> {
 
   void stopTimer() {
     setState(() => _timer?.cancel());
+    LocalNoticeService().cancelNotification(id: widget.id);
+    _noticed = false;
     _isRunPressed = false;
   }
 
@@ -143,7 +182,7 @@ class TimerViewState extends State<TimerView> {
   }
 
   void setCountDown() {
-    final seconds =  _leftDuration.inSeconds - _reduceSecondsBy;
+    final seconds = _leftDuration.inSeconds - _reduceSecondsBy;
     if (seconds < 0) {
       _timer!.cancel();
       _isRunPressed = false;
@@ -153,12 +192,12 @@ class TimerViewState extends State<TimerView> {
       _leftDuration = Duration(seconds: seconds);
     }
     if (!_isDisposed) {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
-  Widget _buildTimerButton({required void Function() onPressed, required Icon icon}) {
+  Widget _buildTimerButton(
+      {required void Function() onPressed, required Icon icon}) {
     return Container(
       padding: const EdgeInsets.all(Config.padding),
       child: IconButton(
@@ -168,13 +207,20 @@ class TimerViewState extends State<TimerView> {
     );
   }
 
+  Color _getDigitsColor() {
+    if (Config.darkModeOn) {
+      return Colors.white;
+    }
+    return Colors.black87;
+  }
+
   Widget _buildTimerLabel() {
     const labelWidth = 0.4;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = strDigits( _leftDuration.inHours.remainder(24));
-    final minutes = strDigits( _leftDuration.inMinutes.remainder(60));
-    final seconds = strDigits( _leftDuration.inSeconds.remainder(60));
+    final hours = strDigits(_leftDuration.inHours.remainder(24));
+    final minutes = strDigits(_leftDuration.inMinutes.remainder(60));
+    final seconds = strDigits(_leftDuration.inSeconds.remainder(60));
     return Container(
       alignment: Alignment.center,
       width: labelWidth * Config.pageWidth(context),
@@ -185,7 +231,8 @@ class TimerViewState extends State<TimerView> {
         style: TextStyle(
             fontFamily: "Montserrat",
             fontSize: fontSize * Config.pageHeight(context),
-            color: Colors.black87),
+            color: _getDigitsColor(),
+            ),
       ),
     );
   }

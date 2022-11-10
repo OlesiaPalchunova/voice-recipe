@@ -13,7 +13,8 @@ class HeaderButtonsPanel extends StatelessWidget {
       required this.onMute,
       required this.onSay,
       required this.onStopSaying,
-      required this.id});
+      required this.id,
+      required this.backColor});
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
@@ -23,6 +24,7 @@ class HeaderButtonsPanel extends StatelessWidget {
   final void Function() onSay;
   final void Function() onStopSaying;
   final int id;
+  final Color backColor;
 
   static Container buildButton(IconButton iconButton, Color color) {
     return Container(
@@ -35,30 +37,34 @@ class HeaderButtonsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            _buildAppIcon(),
-            const SizedBox(
-              width: 10,
-            ),
-            ListenButton(
-                onListen: onListen, onMute: onMute, iconSize: _iconSize)
-          ],
-        ),
-        SayButton(onSay: onSay, onStopSaying: onStopSaying, iconSize: _iconSize),
-        Row(
-          children: [
-            _buildListButton(),
-            const SizedBox(
-              width: 10,
-            ),
-            _buildCloseButton(context)
-          ],
-        )
-      ],
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(Config.padding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              _buildAppIcon(),
+              const SizedBox(
+                width: 10,
+              ),
+              ListenButton(
+                  onListen: onListen, onMute: onMute, iconSize: _iconSize)
+            ],
+          ),
+          SayButton(onSay: onSay, onStopSaying: onStopSaying, iconSize: _iconSize),
+          Row(
+            children: [
+              _buildListButton(),
+              const SizedBox(
+                width: 10,
+              ),
+              _buildCloseButton(context)
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -66,10 +72,10 @@ class HeaderButtonsPanel extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
+        color: Config.iconBackColor(),
       ),
       child: const Image(
-          height: 48.0, image: AssetImage("assets/images/voice_recipe.png")),
+          height: _iconSize * 1.65, image: AssetImage("assets/images/voice_recipe.png")),
     );
   }
 
@@ -77,25 +83,25 @@ class HeaderButtonsPanel extends StatelessWidget {
     return HeaderButtonsPanel.buildButton(
         IconButton(
           onPressed: () => onList(),
-          icon: const Icon(
+          icon: Icon(
             Icons.list,
-            color: Config.iconColor,
+            color: Config.iconColor(),
             size: HeaderButtonsPanel._iconSize,
           ),
         ),
-        Config.iconBackColor);
+        Config.iconBackColor());
   }
 
   Widget _buildCloseButton(BuildContext context) {
     return HeaderButtonsPanel.buildButton(
         IconButton(
           onPressed: () => onClose(context),
-          icon: const Icon(
+          icon: Icon(
             Icons.close_outlined,
-            color: Config.iconColor,
+            color: Config.iconColor(),
             size: HeaderButtonsPanel._iconSize,
           ),
         ),
-        Config.iconBackColor);
+        Config.iconBackColor());
   }
 }

@@ -27,7 +27,7 @@ class SayButtonState extends State<SayButton> {
   @override
   Widget build(BuildContext context) {
     return HeaderButtonsPanel.buildButton(_buildSayIcon(),
-        !_isSaying ? Config.iconBackColor : Config.iconDisabledBackColor);
+        !_isSaying ? Config.iconBackColor() : Config.disabledIconBackColor());
   }
 
   IconButton _buildSayIcon() {
@@ -45,12 +45,12 @@ class SayButtonState extends State<SayButton> {
         icon: _isSaying
             ? Icon(
           Icons.pause,
-          color: Config.iconColor,
+          color: Config.iconColor(),
           size: widget.iconSize,
         )
             : Icon(
           Icons.play_arrow,
-          color: Config.iconColor,
+          color: Config.iconColor(),
           size: widget.iconSize,
         )
     );

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 
+import 'package:voice_recipe/config.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -10,6 +12,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Config.darkModeOn ? Colors.black87 : Config.colorScheme[80],
         title: const Text(
           "Voice Recipe",
           style: TextStyle(
@@ -22,14 +25,19 @@ class Home extends StatelessWidget {
         leading:
             Container(
               padding: const EdgeInsets.all(5),
-                child: Image.asset("assets/images/voice_recipe.png")),
+                child: Image.asset("assets/images/voice_recipe.png")
+            ),
+
         // backgroundColor: Colors.amberAccent,
       ),
-      body: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        itemCount: recipes.length,
-        itemBuilder: (_, index) => RecipeHeaderCard(recipe: recipes[index]),
+      body: Container(
+        color: Config.backgroundColor(),
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          itemCount: recipes.length,
+          itemBuilder: (_, index) => RecipeHeaderCard(recipe: recipes[index]),
+        ),
       ),
     );
   }

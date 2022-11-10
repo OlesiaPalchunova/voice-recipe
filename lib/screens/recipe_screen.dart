@@ -69,32 +69,29 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onLeft: _onPrev,
         onRight: _onNext,
         child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 70,
+            backgroundColor: Config.backgroundColor(),
+            flexibleSpace: HeaderButtonsPanel(
+              backColor: Config.backgroundColor(),
+              id: widget.recipe.id,
+              onClose: _onClose,
+              onList: () => setState(() {
+                _slideId = ingredientsSlideId;
+              }),
+              onMute: () => _listener.shutdown(),
+              onListen: () => _listener.start(),
+              onSay: _onSay,
+              onStopSaying: _onStopSaying,
+            ),
+          ),
           body: Container(
             color: Config.getBackColor(widget.recipe.id),
             child: Stack(
               children: [
                 Container(
-                  height: 50,
-                  color: Colors.white,
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                   child: _buildCurrentSlide(context, _slideId),
                 ),
-                Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 60, horizontal: 10),
-                    child: HeaderButtonsPanel(
-                      id: widget.recipe.id,
-                      onClose: _onClose,
-                      onList: () => setState(() {
-                        _slideId = ingredientsSlideId;
-                      }),
-                      onMute: () => _listener.shutdown(),
-                      onListen: () => _listener.start(),
-                      onSay: _onSay,
-                      onStopSaying: _onStopSaying,
-                    )),
                 Container(
                     alignment: Alignment.bottomCenter, child: _buildSliderBottom())
               ],
@@ -147,14 +144,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
     return Container(
       alignment: Alignment.center,
       height: 10,
+      color: Colors.black87,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         // padding: const EdgeInsets.symmetric(horizontal: 10),
         itemCount: slidesCount,
         itemBuilder: (_, index) => Container(
+          decoration: BoxDecoration(
+              color: index == _slideId ? Config.getColor(widget.recipe.id)
+                  : Colors.black87,
+            borderRadius: BorderRadius.circular(Config.borderRadius)
+          ),
           width: sectionWidth,
-          color: index == _slideId ? Config.getColor(widget.recipe.id)
-              : Colors.black87,
         ),
       ),
     );

@@ -16,9 +16,10 @@ class IngredientsSlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //const Color(0xff1a1c24)
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white70,
+          color: Config.darkModeOn ? Config.iconBackColor(): Colors.white70,
           borderRadius: BorderRadius.circular(Config.borderRadius)),
       margin: const EdgeInsets.all(Config.margin),
       padding: const EdgeInsets.all(Config.padding),
@@ -28,8 +29,8 @@ class IngredientsSlideView extends StatelessWidget {
             height: Config.pageHeight(context) * _topOffset,
           ),
           GeneralInfo(recipe: recipe),
-          const Divider(
-            color: Colors.black,
+          Divider(
+            color: Config.darkModeOn ? Colors.white : Colors.black87,
             thickness: _splitterThickness,
           ),
           SizedBox(
@@ -55,6 +56,7 @@ class IngredientsList extends StatelessWidget {
   static const _titleSize = 0.032;
   static const _entitySize = 0.024;
   static const _spaceAfterName = 0.001;
+  final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class IngredientsList extends StatelessWidget {
                 fontFamily: "Montserrat",
                 fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87),
+                color: _textColor),
           ),
         ),
         SizedBox(
@@ -87,6 +89,7 @@ class IngredientsList extends StatelessWidget {
                     fontFamily: "Montserrat",
                     fontSize: Config.pageHeight(context) * _entitySize,
                     textBaseline: TextBaseline.alphabetic,
+                    color: _textColor
                   ),
                 ),
                 Text(
@@ -94,11 +97,12 @@ class IngredientsList extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: "Montserrat",
                     fontSize: Config.pageHeight(context) * _entitySize,
+                    color: _textColor
                   ),
                 ),
               ]),
-              const Divider(
-                color: Colors.black,
+              Divider(
+                color: _textColor,
                 thickness: IngredientsSlideView._splitterThickness,
               ),
             ],
@@ -110,13 +114,15 @@ class IngredientsList extends StatelessWidget {
 }
 
 class GeneralInfo extends StatelessWidget {
-  const GeneralInfo({
+
+  GeneralInfo({
     Key? key,
     required this.recipe,
   }) : super(key: key);
 
   final Recipe recipe;
   static const _titleSize = 0.032;
+  final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +138,7 @@ class GeneralInfo extends StatelessWidget {
                 fontFamily: "Montserrat",
                 fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.w400,
-                color: Colors.black87),
+                color: _textColor),
           ),
         ),
         Row(
@@ -168,7 +174,7 @@ class GeneralInfo extends StatelessWidget {
 }
 
 class Assignment extends StatelessWidget {
-  const Assignment(
+  Assignment(
       {Key? key,
       required this.recipe,
       required this.name,
@@ -184,12 +190,16 @@ class Assignment extends StatelessWidget {
   static const _betweenIconAndTextSize = 0.01;
   static const _nameSize = 0.024;
   static const _valueSize = 0.020;
+  final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(iconData),
+        Icon(
+            iconData,
+          color: _textColor,
+        ),
         SizedBox(
           width: Config.pageHeight(context) * _betweenIconAndTextSize,
         ),
@@ -199,7 +209,7 @@ class Assignment extends StatelessWidget {
                   fontFamily: "Montserrat",
                   fontSize: Config.pageHeight(context) * _nameSize,
                   fontWeight: FontWeight.w400,
-                  color: Colors.black),
+                  color: _textColor),
               children: <TextSpan>[
                 TextSpan(
                   text: "$name\n",

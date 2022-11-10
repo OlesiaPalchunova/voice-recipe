@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 
+class GradientColors {
+  final List<Color> colors;
+  GradientColors(this.colors);
+
+  static const List<Color> sky = [Color(0xFF6448FE), Color(0xFF5FC6FF)];
+  static const List<Color> sunset = [Color(0xFFFE6197), Color(0xFFFFB463)];
+  static const List<Color> forest = [Color(0xFF27b03b), Color(0xFF5afa71)];
+  static const List<Color> sea = [Color(0xFF61A3FE), Color(0xFF63FFD5)];
+  static const List<Color> mango = [Color(0xFFFFA738), Color(0xFFfcdd1e)];
+  static const List<Color> fire = [Color(0xFFFF5DCD), Color(0xFFFF8484)];
+  static const List<List<Color>> sets = [sky, sunset, sea, mango, fire];
+}
+
 class Config {
   static const borderRadius = 6.0;
   static const borderRadiusLarge = 16.0;
   static const padding = 10.0;
   static const margin = 10.0;
+  static var darkModeOn = true;
 
-  static const iconBackColor = Colors.white;
-  static const iconDisabledBackColor = Colors.white70;
-  static const iconColor = Colors.black87;
+  static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
+  static const  _darkIconBackColor = Color(0xFF202124);
+  static const _darkIconDisabledBackColor = Color(0xFF242634);
+  static const _darkIconColor = Colors.white;
+
+  static const _iconBackColor = Colors.white;
+  static const _iconDisabledBackColor = Colors.white70;
+  static const _iconColor = Colors.black87;
 
   static const backColors = [
     Color(0xFFE9F7CA),
@@ -24,14 +43,6 @@ class Config {
     Colors.orangeAccent
   ];
 
-  static Color getColor(int id) {
-    return colors[id % colors.length];
-  }
-
-  static Color getBackColor(int id) {
-    return backColors[id % backColors.length];
-  }
-
   static const Map<int, Color> colorScheme =
   {
     50:Color.fromRGBO (237, 120, 47, .1),
@@ -45,6 +56,52 @@ class Config {
     800:Color.fromRGBO(237, 120, 47, .9),
     900:Color.fromRGBO(237, 120, 47, 1),
   };
+
+  static Color backgroundColor() {
+    if (darkModeOn) {
+      return _darkThemeBackColor;
+    }
+    return Colors.white;
+  }
+
+  static Color iconBackColor() {
+    if (darkModeOn) {
+      return _darkIconBackColor;
+    }
+    return _iconBackColor;
+  }
+
+  static Color disabledIconBackColor() {
+    if (darkModeOn) {
+      return _darkIconDisabledBackColor;
+    }
+    return _iconDisabledBackColor;
+  }
+
+  static Color iconColor() {
+    if (darkModeOn) {
+      return _darkIconColor;
+    }
+    return _iconColor;
+  }
+
+  static List<Color> getGradientColor(int id) {
+    return GradientColors.sets[id % GradientColors.sets.length];
+  }
+
+  static Color getColor(int id) {
+    if (darkModeOn) {
+      return GradientColors.sets[id % GradientColors.sets.length].last;
+    }
+    return colors[id % colors.length];
+  }
+
+  static Color getBackColor(int id) {
+    if (darkModeOn) {
+      return _darkThemeBackColor;
+    }
+    return backColors[id % backColors.length];
+  }
 
   static double pageHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;

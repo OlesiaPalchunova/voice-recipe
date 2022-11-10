@@ -29,7 +29,35 @@ class LocalNoticeService {
     });
   }
 
+  // Future<void> showNotificationWithChronometer({
+  //   required String title,
+  //   required String body,
+  //   required DateTime alarmTime,
+  //   String sound = '',
+  //   String channel = 'default',
+  // }) async {
+  //   final AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //   AndroidNotificationDetails(
+  //     channel,
+  //     channel,
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //     when: DateTime.now().millisecondsSinceEpoch - 120 * 1000,
+  //     usesChronometer: true,
+  //   );
+  //   final NotificationDetails platformChannelSpecifics =
+  //   NotificationDetails(android: androidPlatformChannelSpecifics);
+  //   await _localNotificationsPlugin.show(
+  //       0, title, body, platformChannelSpecifics,
+  //       payload: 'item x');
+  // }
+
+  void cancelNotification({required int id}) {
+    _localNotificationsPlugin.cancel(id);
+  }
+
   Future<void> addNotification({
+      required int id,
       required String title,
       required String body,
       required DateTime alarmTime,
@@ -39,18 +67,16 @@ class LocalNoticeService {
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local,
         alarmTime.millisecondsSinceEpoch);
-
     final androidDetail = AndroidNotificationDetails(
         channel, // channel Id
         channel,  // channel Name
+      usesChronometer: true
     );
-
     const iosDetail = DarwinNotificationDetails();
     final noticeDetail = NotificationDetails(
       iOS: iosDetail,
       android: androidDetail,
     );
-    const id = 0;
     await _localNotificationsPlugin.zonedSchedule(
       id,
       title,
