@@ -10,7 +10,7 @@ class IngredientsSlideView extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  static const _topOffset = 0.06;
+  static const _topOffset = 0.03;
   static const _listOffset = 0.03;
   static const _splitterThickness = 0.5;
 

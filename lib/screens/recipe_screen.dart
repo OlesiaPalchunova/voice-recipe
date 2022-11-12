@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
@@ -74,9 +77,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             toolbarHeight: 60,
-            backgroundColor: Config.backgroundColor(),
+            backgroundColor: Config.getBackColor(widget.recipe.id),
             title: HeaderButtonsPanel(
-              backColor: Config.backgroundColor(),
               id: widget.recipe.id,
               onClose: _onClose,
               onList: () => setState(() {

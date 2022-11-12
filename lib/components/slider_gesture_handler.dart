@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 class SliderGestureHandler extends StatelessWidget {
   SliderGestureHandler({super.key, required this.onLeft,
-  required this.onRight, required this.child});
+  required this.onRight, required this.child, this.handleTaps = true});
 
   final void Function() onRight;
   final void Function() onLeft;
   final Widget child;
-  static const minSlideChangeDelayMillis = 400;
-  var lastSwipeTime = DateTime.now().subtract(const Duration(seconds: 1));
+  final bool handleTaps;
+  static const MIN_SWIPLE_TIME_MILLIS = 400;
+  var lastSwipeTime = DateTime.now();
   var lastTapDownTime = DateTime.now().subtract(const Duration(seconds: 1));
 
   @override
@@ -16,7 +17,8 @@ class SliderGestureHandler extends StatelessWidget {
     return GestureDetector(
       onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
       onPanUpdate: _swipeHandler,
-      onTapUp: (TapUpDetails details) => _tapHandler(details, context),
+      onTapUp: handleTaps ? (TapUpDetails details) => _tapHandler(details, context)
+          : (TapUpDetails details) {},
       child: child,
     );
   }
@@ -40,7 +42,7 @@ class SliderGestureHandler extends StatelessWidget {
     var cur = DateTime.now();
     // debugPrint('${cur.difference(lastSwipeTime).inMilliseconds}/$minSlideChangeDelayMillis');
     if (cur.difference(lastSwipeTime).inMilliseconds <=
-        minSlideChangeDelayMillis) {
+        MIN_SWIPLE_TIME_MILLIS) {
       return;
     }
     if (details.delta.dy.abs() > details.delta.dx.abs()) {

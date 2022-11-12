@@ -13,8 +13,7 @@ class HeaderButtonsPanel extends StatelessWidget {
       required this.onMute,
       required this.onSay,
       required this.onStopSaying,
-      required this.id,
-      required this.backColor});
+      required this.id});
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
@@ -24,7 +23,6 @@ class HeaderButtonsPanel extends StatelessWidget {
   final void Function() onSay;
   final void Function() onStopSaying;
   final int id;
-  final Color backColor;
 
   static Container buildButton(IconButton iconButton, Color color) {
     return Container(

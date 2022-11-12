@@ -18,7 +18,7 @@ class Config {
   static const borderRadiusLarge = 16.0;
   static const padding = 10.0;
   static const margin = 10.0;
-  static var darkModeOn = true;
+  static var darkModeOn = false;
 
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const  _darkIconBackColor = Color(0xFF202124);
