@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 
 class SliderGestureHandler extends StatelessWidget {
   SliderGestureHandler({super.key, required this.onLeft,
-  required this.onRight, required this.child, this.handleTaps = true});
+  required this.onRight, required this.child, this.handleTaps = true,
+  this.ignoreVerticalSwipes = true});
 
   final void Function() onRight;
   final void Function() onLeft;
   final Widget child;
   final bool handleTaps;
+  final bool ignoreVerticalSwipes;
   static const MIN_SWIPLE_TIME_MILLIS = 400;
   var lastSwipeTime = DateTime.now();
   var lastTapDownTime = DateTime.now().subtract(const Duration(seconds: 1));
@@ -45,7 +47,7 @@ class SliderGestureHandler extends StatelessWidget {
         MIN_SWIPLE_TIME_MILLIS) {
       return;
     }
-    if (details.delta.dy.abs() > details.delta.dx.abs()) {
+    if (ignoreVerticalSwipes && details.delta.dy.abs() > details.delta.dx.abs()) {
       return;
     }
     if (details.delta.dx > sensitivity) {
