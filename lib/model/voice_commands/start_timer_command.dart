@@ -1,7 +1,7 @@
 import 'package:voice_recipe/model/voice_commands/command.dart';
 
 class StartTimerCommand implements Command {
-  static const _words = ["старт", "таймер", "пуск"];
+  static const _words = ["старт", "таймер", "пуск", "начать"];
   final void Function() onTriggerFunction;
 
   StartTimerCommand({required this.onTriggerFunction});

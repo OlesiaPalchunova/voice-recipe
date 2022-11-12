@@ -8,18 +8,23 @@ class SliderGestureHandler extends StatelessWidget {
   final void Function() onLeft;
   final Widget child;
   static const minSlideChangeDelayMillis = 400;
-  var lastSwipeTime = DateTime.now();
+  var lastSwipeTime = DateTime.now().subtract(const Duration(seconds: 1));
+  var lastTapDownTime = DateTime.now().subtract(const Duration(seconds: 1));
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
       onPanUpdate: _swipeHandler,
-      onTapDown: (TapDownDetails details) => _tapHandler(details, context),
+      onTapUp: (TapUpDetails details) => _tapHandler(details, context),
       child: child,
     );
   }
 
-  void _tapHandler(TapDownDetails details, BuildContext context) {
+  void _tapHandler(TapUpDetails details, BuildContext context) {
+    if (DateTime.now().difference(lastTapDownTime).inMilliseconds > 1000) {
+      return;
+    }
     RenderBox box = context.findRenderObject() as RenderBox;
     final localOffset = box.globalToLocal(details.globalPosition);
     final x = localOffset.dx;

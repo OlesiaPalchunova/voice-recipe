@@ -77,7 +77,7 @@ class TimerViewState extends State<TimerView> {
       decoration: _getTimerBoxDecoration(),
       height: Config.pageHeight(context) * _height,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildTimerButton(
               onPressed: () {
@@ -152,6 +152,8 @@ class TimerViewState extends State<TimerView> {
       return;
     }
     if (_leftDuration.inSeconds == 0) {
+      resetTimer();
+      startTimer();
       return;
     }
     if (Config.notificationsOn && !_noticed) {
@@ -215,15 +217,15 @@ class TimerViewState extends State<TimerView> {
   }
 
   Widget _buildTimerLabel() {
-    const labelWidth = 0.4;
+    const labelWidth = 0.5;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final hours = strDigits(_leftDuration.inHours.remainder(24));
     final minutes = strDigits(_leftDuration.inMinutes.remainder(60));
     final seconds = strDigits(_leftDuration.inSeconds.remainder(60));
     return Container(
-      alignment: Alignment.center,
-      width: labelWidth * Config.pageWidth(context),
+      // alignment: Alignment.center,
+      // width: labelWidth * Config.pageWidth(context),
       child: Text(
         _leftDuration.inHours == 0
             ? "$minutes:$seconds"

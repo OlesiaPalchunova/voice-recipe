@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/screens/home_screen.dart';
 import 'package:voice_recipe/config.dart';
@@ -9,10 +10,11 @@ class VoiceRecipeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const Home(),
-      theme: ThemeData(
-          primarySwatch: const MaterialColor(0xFFf07800, Config.colorScheme),
-          bottomAppBarColor: const MaterialColor(0xFFf07800, Config.colorScheme)
+      theme: FlexThemeData.light(scheme: FlexScheme.hippieBlue),
+      darkTheme: FlexThemeData.dark(
+          scheme: FlexScheme.hippieBlue,
       ),
+      // themeMode: ThemeMode.dark,
     );
   }
 }

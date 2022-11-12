@@ -19,7 +19,7 @@ class ListenButton extends StatefulWidget {
 }
 
 class ListenButtonState extends State<ListenButton> {
-  var _isListening = false;
+  static var _isListening = false;
   var _locked = false;
   static ListenButtonState? _state;
 

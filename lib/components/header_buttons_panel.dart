@@ -39,7 +39,7 @@ class HeaderButtonsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.all(Config.padding),
+      // padding: const EdgeInsets.all(Config.padding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -41,6 +41,8 @@ final List<Recipe> recipes = [
       cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440),
   Recipe(name: "Соба с курицей и овощами", faceImageUrl: "assets/images/soba13.jpg", id: 4,
       cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270),
+  Recipe(name: "Сырники от Влада", faceImageUrl: "assets/images/syrniki5.png", id: 5,
+      cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340),
 ];
 
 final List<Ingredient> borshIngredients = [
@@ -87,8 +89,17 @@ final List<Ingredient> sobaIngredients = [
   Ingredient(id: 3, name: "Растительное масло", count: "4 ст. л."),
 ];
 
+final List<Ingredient> syrnikiIngredients = [
+  Ingredient(id: 1, name: "Творог", count: "450 г"),
+  Ingredient(id: 2, name: "Ванилин", count: "2 г"),
+  Ingredient(id: 3, name: "Манная крупа", count: "1.5 ст. л."),
+  Ingredient(id: 4, name: "Яйцо", count: "1 шт."),
+  Ingredient(id: 5, name: "Соль", count: "щепотка"),
+  Ingredient(id: 5, name: "Сахар", count: "3 ст. л."),
+];
+
 final List<List<Ingredient>> ingrResolve = [borshIngredients, carbonaraIngredients,
-muffinsIngredients, tefIngredients, sobaIngredients];
+muffinsIngredients, tefIngredients, sobaIngredients, syrnikiIngredients];
 
 class RecipeStep {
   int id;
@@ -146,4 +157,13 @@ final List<RecipeStep> sobaSteps = [
   RecipeStep(id: 13, imgUrl: "assets/images/soba13.jpg", description: "Наша соба с курицей и овощами готова. Разложите сразу по тарелкам, посыпьте порезанным зеленым луком и подавайте.")
 ];
 
-final List<List<RecipeStep>> stepsResolve = [borshSteps, carbonaraSteps, muffinsSteps, tefSteps, sobaSteps];
+final List<RecipeStep> syrnikiSteps = [
+  RecipeStep(id: 1, imgUrl: "assets/images/syrniki1.png", description: "в миску всё скинуть"),
+  RecipeStep(waitTime: 20, id: 2, imgUrl: "assets/images/syrniki2.png", description: "довести до однородной консистенции блендером, миксером или что у вас есть(я юзал дедовский способ и разминал эту массу вилкой минут 20, а потом ещё руками 3 минуты тесто давил)"),
+  RecipeStep(waitTime: 120, id: 3, imgUrl: "assets/images/syrniki3.png", description: "накрываем миску пищевой плёнкой или в пакет целлофановый засовываем и ставим в холодос желательно на ночь, но можно и часа на 2-3, наверное"),
+  RecipeStep(id: 4, imgUrl: "assets/images/syrniki4.png", description: "достаём и рукой формируем сырники как душа пожелает"),
+  RecipeStep(id: 5, imgUrl: "assets/images/syrniki5.png", description: "местами хуйня получалась, но я это сливаю на ручное разминание теста"),
+];
+
+final List<List<RecipeStep>> stepsResolve = [
+  borshSteps, carbonaraSteps, muffinsSteps, tefSteps, sobaSteps, syrnikiSteps];

@@ -52,6 +52,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   void initState() {
     super.initState();
+    _slideId = 0;
     _initCommandsListener();
   }
 
@@ -59,6 +60,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void dispose() {
     super.dispose();
     RecipeScreen.tts.stop();
+    _listener.shutdown();
   }
 
   @override
