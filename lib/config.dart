@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
@@ -25,12 +26,14 @@ class Config {
   static const padding = 10.0;
   static const margin = 10.0;
   static var darkModeOn = false;
+  static const Duration shortAnimationTime = Duration(milliseconds: 150);
+  static const Duration animationTime = Duration(milliseconds: 200);
 
   static init() async {
     darkModeOn = await DarkThemePreference().getTheme();
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarColor: Colors.black,
+          systemNavigationBarColor: _darkThemeBackColor,
           systemNavigationBarIconBrightness:Brightness.light));
     }
   }
@@ -76,6 +79,24 @@ class Config {
     800:Color.fromRGBO(237, 120, 47, .9),
     900:Color.fromRGBO(237, 120, 47, 1),
   };
+
+  static Color appBarColor() {
+    return Config.darkModeOn ? Colors.black87 : const Color(0xfff09702);
+  }
+
+  static Color notPressed() {
+    if (darkModeOn) {
+      return _darkThemeBackColor;
+    }
+    return _iconBackColor;
+  }
+
+  static Color pressed() {
+    if (darkModeOn) {
+      return _darkIconDisabledBackColor;
+    }
+    return Colors.orangeAccent.lighten(10);
+  }
 
   static Color backgroundColor() {
     if (darkModeOn) {

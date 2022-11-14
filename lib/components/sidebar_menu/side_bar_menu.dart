@@ -40,7 +40,7 @@ class SideBarMenu extends StatefulWidget {
         const SizedBox(width: 20),
         Text(
           name,
-          style: TextStyle(fontSize: 16, color: Config.iconColor(),
+          style: TextStyle(fontSize: 20, color: Config.iconColor(),
             fontFamily: Config.fontFamily,),
         ),
       ],
@@ -78,7 +78,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                       color: Config.iconColor(),
                     ),
                     SideBarMenu.buildHeader(
-                        name: "Голосовые команды",
+                        name: "Голосовые\nкоманды",
                         onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const SetsListScreen(),
                         )),

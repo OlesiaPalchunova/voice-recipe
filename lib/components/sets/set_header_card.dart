@@ -4,8 +4,6 @@ import 'package:voice_recipe/components/sets/sets_options_list.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 
-import '../../screens/set_screen.dart';
-
 class SetHeaderCard extends StatefulWidget {
   const SetHeaderCard({Key? key, required this.set, required this.onTap})
       : super(key: key);
@@ -60,11 +58,17 @@ class _SetHeaderCardState extends State<SetHeaderCard>
 
   @override
   Widget build(BuildContext context) {
+    List<Color> gradientColors = Config.darkModeOn ? [
+    Config.backgroundColor(),
+        Config.backgroundColor(),
+    Config.pressed(),
+    Config.backgroundColor(), ] : [Config.backgroundColor(),
+    Config.backgroundColor()];
     return GestureDetector(
-        onTap: () => setState(() {
-              _isPressed = !_isPressed;
-            }),
-        child: AnimatedBuilder(
+      onTap: () => setState(() {
+        _isPressed = !_isPressed;
+      }),
+      child: AnimatedBuilder(
           animation: _staggeredController,
           builder: (context, child) {
             final animationPercent = Curves.elasticOut.transform(
@@ -80,67 +84,68 @@ class _SetHeaderCardState extends State<SetHeaderCard>
             );
           },
           child: Card(
-                color: Colors.white.withOpacity(0),
-                elevation: 0,
-                margin: const EdgeInsets.symmetric(vertical: Config.margin),
-                child: Column(
-                  children: [
-                    Stack(children: [
-                      SizedBox(
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          height: Config.pageHeight(context) / 7,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(Config.borderRadius),
-                              color: _isPressed ? Config.backgroundColor() :
-                                      Config.iconBackColor(),
-                              boxShadow: _isPressed ?
-                                  [
-                                    const BoxShadow(
-                                    color: Colors.white54,
-                                      blurRadius: 12,
-                                      // offset: Offset(16, 16)
+            color: Colors.white.withOpacity(0),
+            elevation: 0,
+            margin: const EdgeInsets.symmetric(vertical: Config.margin),
+            child: Column(
+              children: [
+                Stack(children: [
+                  SizedBox(
+                    child: AnimatedContainer(
+                      duration: Config.animationTime,
+                      height: Config.pageHeight(context) / 7,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: gradientColors,
+                            // begin: Alignment.topCenter,
+                            // end: Alignment.bottomCenter
+                          ),
+                          border: Border.all(color: Config.iconColor(),
+                              width: Config.darkModeOn ? 0.2 : 0.5),
+                          borderRadius:
+                              BorderRadius.circular(Config.borderRadius),
+                          color: _isPressed
+                              ? Config.backgroundColor()
+                              : Config.iconBackColor(),
+                          boxShadow: _isPressed
+                              ? [
+                                  BoxShadow(
+                                    color: Config.getColor(widget.set.id),
+                                    blurRadius: Config.darkModeOn ? 15 : 8,
+                                    // offset: Offset(16, 16)
                                   )
-                                  ] :
-                                  []
+                                ]
+                              : []),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: Config.pageWidth(context) * 0.6,
                           ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: Config.pageWidth(context) * 0.6,
-                              ),
-                              ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(Config.borderRadius),
-                                  child: Image(
-                                    image: AssetImage(widget.set.imageUrl),
-                                    height: _isPressed ? Config.pageHeight(context) / 7
-                                          : Config.pageHeight(context) / 8,
-                                    // fit: BoxFit.fitWidth,
-                                  )),
-                            ],
+                          Image(
+                            image: AssetImage(widget.set.imageUrl),
+                            height: _isPressed
+                                ? Config.pageHeight(context) / 7
+                                : Config.pageHeight(context) / 8,
+                            // fit: BoxFit.fitWidth,
                           ),
-                        ),
+                        ],
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.fromLTRB(30, 35, 0, 50),
-                        child: Text(
-                          widget.set.name,
-                          style: const TextStyle(
-                              fontFamily: Config.fontFamilyBold,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ]),
-                    _isPressed
-                        ? SetsOptionsList(set: widget.set)
-                        : Container()
-                  ],
-                )),
-          ),
-        );
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.fromLTRB(30, 35, 0, 50),
+                    child: Text(widget.set.name,
+                        style: TextStyle(
+                            fontFamily: Config.fontFamily,
+                            fontSize: 25,
+                            color: Config.iconColor())),
+                  ),
+                ]),
+                _isPressed ? SetsOptionsList(set: widget.set) : Container()
+              ],
+            ),
+          )),
+    );
   }
 }

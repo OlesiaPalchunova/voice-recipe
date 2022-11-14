@@ -58,7 +58,9 @@ final List<SetOption> timesSetOptions = [
 
 final List<SetOption> nationalSetOptions = [
   StandardSetOption(name: "Русская кухня", options: [borsh, syrniki]),
-  StandardSetOption(name: "Итальянская кухня", options: [carbonara])
+  StandardSetOption(name: "Итальянская кухня", options: [carbonara]),
+  StandardSetOption(name: "Американская кухня", options: [muffins]),
+  StandardSetOption(name: "Азиатская кухня", options: [soba]),
 ];
 
 final List<List<SetOption>> optionsResolve = [timesSetOptions, nationalSetOptions];

@@ -17,8 +17,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor:
-              Config.darkModeOn ? Colors.black87 : Config.colorScheme[80],
+          backgroundColor: Config.appBarColor(),
           title: const Text(
             "Voice Recipe",
             style: TextStyle(
@@ -56,28 +55,30 @@ class _HomeState extends State<Home> {
                           },
                         ),
                   ),
-                )));
+                )
+        )
+    );
   }
 
   Widget buildSearchField() {
-    const color = Colors.white;
+    final color = Config.iconColor();
     return TextField(
-      style: const TextStyle(
+      style: TextStyle(
           color: color,
           fontFamily: Config.fontFamily
       ),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         hintText: 'Поиск',
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
             color: color,
             fontFamily: Config.fontFamily
         ),
-        prefixIcon: const Icon(Icons.search, color: color),
+        prefixIcon: Icon(Icons.search, color: color),
         filled: true,
         fillColor: Colors.white12,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(Config.borderRadius),
           borderSide: BorderSide(color: color.withOpacity(0.7)),
         ),
         focusedBorder: OutlineInputBorder(

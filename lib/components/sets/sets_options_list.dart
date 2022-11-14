@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/sets/set_option_tile.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
-import '../../screens/set_screen.dart';
 
 class SetsOptionsList extends StatefulWidget {
   const SetsOptionsList({super.key, required this.set});
@@ -28,7 +27,6 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
 
   late AnimationController _staggeredController;
   final List<Interval> _itemSlideIntervals = [];
-  late Interval _buttonInterval;
 
   @override
   void initState() {
@@ -51,12 +49,6 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
         ),
       );
     }
-    final buttonStartTime = Duration(milliseconds: (_setOptions.length * 50)) + _buttonDelayTime;
-    final buttonEndTime = buttonStartTime + _buttonTime;
-    _buttonInterval = Interval(
-      buttonStartTime.inMilliseconds / _animationDuration.inMilliseconds,
-      buttonEndTime.inMilliseconds / _animationDuration.inMilliseconds,
-    );
   }
 
   @override
@@ -86,47 +78,16 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
               ),
             );
           },
-          child: GestureDetector(
-            onTap: () => _navigateToSet(context, widget.set, _setOptions[i]),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: Config.padding * 2,
-              horizontal: Config.padding * 2),
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.circle,
-                    color: Config.iconColor(),
-                    size: 9,
-                  ),
-                  SizedBox(
-                    width: Config.pageWidth(context) / 35
-                  ),
-                  Text(
-                    _setOptions[i].name,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontFamily: Config.fontFamily,
-                        fontWeight: FontWeight.w500,
-                        color: Config.iconColor()
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          child: SetOptionTile(setOption: _setOptions[i],),
         ),
       );
     }
-    return Column(
-      children: listItems,
-    );
-  }
 
-  void _navigateToSet(BuildContext context, RecipesSet set, SetOption setOption) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SetScreen(
-      set: set, setOption: setOption,)));
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, Config.margin, 0, 0),
+      child: Column(
+        children: listItems,
+      ),
+    );
   }
 }

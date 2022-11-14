@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/sets_info.dart';
-import 'package:voice_recipe/components/sidebar_menu/side_bar_menu.dart';
 
+import 'package:voice_recipe/model/sets_info.dart';
 import '../components/recipe_header_card.dart';
-import '../components/slider_gesture_handler.dart';
 import '../config.dart';
 
 class SetScreen extends StatefulWidget {
   const SetScreen({super.key,
     required this.setOption,
-    required this.set
   });
 
   final SetOption setOption;
-  final RecipesSet set;
 
   @override
   State<SetScreen> createState() => _SetScreenState();
@@ -26,8 +22,7 @@ class _SetScreenState extends State<SetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor:
-          Config.darkModeOn ? Colors.black87 : Config.colorScheme[80],
+          backgroundColor: Config.appBarColor(),
           title: Text(
             widget.setOption.name,
             style: const TextStyle(
@@ -41,14 +36,8 @@ class _SetScreenState extends State<SetScreen> {
               padding: const EdgeInsets.all(5),
               child: Image.asset("assets/images/voice_recipe.png")),
         ),
-        drawer: SideBarMenu(onUpdate: () => setState(() {})),
         body: Builder(
-            builder: (context) => SliderGestureHandler(
-              handleTaps: false,
-              ignoreVerticalSwipes: false,
-              onRight: () {},
-              onLeft: () => Scaffold.of(context).openDrawer(),
-              child: Container(
+            builder: (context) => Container(
                 color: Config.backgroundColor(),
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -58,7 +47,6 @@ class _SetScreenState extends State<SetScreen> {
                 ),
               ),
             )
-        )
     );
   }
 }
