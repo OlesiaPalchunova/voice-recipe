@@ -72,7 +72,7 @@ class RecipeFaceSlideView extends StatelessWidget {
                             alignment: Alignment.centerLeft,
                             child: Text("${recipe.cookTimeMins} минут\n",
                                 style: TextStyle(
-                                    fontFamily: "MontserratBold",
+                                    fontFamily: Config.fontFamilyBold,
                                     fontSize:
                                         Config.pageHeight(context) * _timeSize,
                                     fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class RecipeFaceSlideView extends StatelessWidget {
                           child: RichText(
                             text: TextSpan(
                                 style: TextStyle(
-                                    fontFamily: "MontserratBold",
+                                    fontFamily: Config.fontFamilyBold,
                                     fontSize:
                                         Config.pageHeight(context) * _nameSize,
                                     fontWeight: FontWeight.bold,

@@ -67,7 +67,7 @@ class RecipeHeaderCard extends StatelessWidget {
               child: Text(
                 recipe.name,
                 style: const TextStyle(
-                    fontFamily: "MontserratBold",
+                    fontFamily: Config.fontFamilyBold,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),

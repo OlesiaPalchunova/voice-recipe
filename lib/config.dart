@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:voice_recipe/themes/dark_theme_preference.dart';
 
 class GradientColors {
   final List<Color> colors;
@@ -14,11 +18,27 @@ class GradientColors {
 }
 
 class Config {
+  static const fontFamily = "Montserrat";
+  static const fontFamilyBold = "MontserratBold";
   static const borderRadius = 6.0;
   static const borderRadiusLarge = 16.0;
   static const padding = 10.0;
   static const margin = 10.0;
   static var darkModeOn = false;
+
+  static init() async {
+    darkModeOn = await DarkThemePreference().getTheme();
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness:Brightness.light));
+    }
+  }
+
+  static setDarkModeOn(bool on) {
+    darkModeOn = on;
+    DarkThemePreference().setDarkTheme(on);
+  }
 
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const  _darkIconBackColor = Color(0xFF202124);

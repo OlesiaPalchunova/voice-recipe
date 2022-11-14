@@ -88,7 +88,7 @@ class RecipeStepView extends StatelessWidget {
                       child: Text(
                         step.description,
                         style: TextStyle(
-                            fontFamily: "Montserrat",
+                            fontFamily: Config.fontFamily,
                             fontSize: Config.pageHeight(context) *
                                 RecipeStepView._textSize,
                             color: Colors.white),

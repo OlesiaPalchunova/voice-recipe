@@ -75,6 +75,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         onRight: _onNext,
         child: Scaffold(
           appBar: AppBar(
+            shadowColor: Config.darkModeOn ? Colors.black87 : Colors.white.withOpacity(0),
             automaticallyImplyLeading: false,
             toolbarHeight: 60,
             backgroundColor: Config.getBackColor(widget.recipe.id),

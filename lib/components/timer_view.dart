@@ -217,25 +217,20 @@ class TimerViewState extends State<TimerView> {
   }
 
   Widget _buildTimerLabel() {
-    const labelWidth = 0.5;
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final hours = strDigits(_leftDuration.inHours.remainder(24));
     final minutes = strDigits(_leftDuration.inMinutes.remainder(60));
     final seconds = strDigits(_leftDuration.inSeconds.remainder(60));
-    return Container(
-      // alignment: Alignment.center,
-      // width: labelWidth * Config.pageWidth(context),
-      child: Text(
-        _leftDuration.inHours == 0
-            ? "$minutes:$seconds"
-            : "$hours:$minutes:$seconds",
-        style: TextStyle(
-            fontFamily: "Montserrat",
-            fontSize: fontSize * Config.pageHeight(context),
-            color: _getDigitsColor(),
-            ),
-      ),
+    return Text(
+      _leftDuration.inHours == 0
+          ? "$minutes:$seconds"
+          : "$hours:$minutes:$seconds",
+      style: TextStyle(
+          fontFamily: Config.fontFamily,
+          fontSize: fontSize * Config.pageHeight(context),
+          color: _getDigitsColor(),
+          ),
     );
   }
 }

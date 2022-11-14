@@ -16,7 +16,6 @@ class IngredientsSlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //const Color(0xff1a1c24)
     return Container(
       decoration: BoxDecoration(
           color: Config.darkModeOn ? Config.iconBackColor(): Colors.white70,
@@ -67,7 +66,7 @@ class IngredientsList extends StatelessWidget {
           child: Text(
             "Ингредиенты",
             style: TextStyle(
-                fontFamily: "Montserrat",
+                fontFamily: Config.fontFamily,
                 fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.bold,
                 color: _textColor),
@@ -86,7 +85,7 @@ class IngredientsList extends StatelessWidget {
                 Text(
                   ingredients[index].name,
                   style: TextStyle(
-                    fontFamily: "Montserrat",
+                    fontFamily: Config.fontFamily,
                     fontSize: Config.pageHeight(context) * _entitySize,
                     textBaseline: TextBaseline.alphabetic,
                     color: _textColor
@@ -95,7 +94,7 @@ class IngredientsList extends StatelessWidget {
                 Text(
                   ingredients[index].count,
                   style: TextStyle(
-                    fontFamily: "Montserrat",
+                    fontFamily: Config.fontFamily,
                     fontSize: Config.pageHeight(context) * _entitySize,
                     color: _textColor
                   ),
@@ -135,7 +134,7 @@ class GeneralInfo extends StatelessWidget {
           child: Text(
             recipe.name,
             style: TextStyle(
-                fontFamily: "Montserrat",
+                fontFamily: Config.fontFamily,
                 fontSize: Config.pageHeight(context) * _titleSize,
                 fontWeight: FontWeight.w400,
                 color: _textColor),
@@ -206,7 +205,7 @@ class Assignment extends StatelessWidget {
         RichText(
           text: TextSpan(
               style: TextStyle(
-                  fontFamily: "Montserrat",
+                  fontFamily: Config.fontFamily,
                   fontSize: Config.pageHeight(context) * _nameSize,
                   fontWeight: FontWeight.w400,
                   color: _textColor),
