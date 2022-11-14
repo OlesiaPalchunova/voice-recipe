@@ -62,11 +62,17 @@ class _HomeState extends State<Home> {
   Widget buildSearchField() {
     const color = Colors.white;
     return TextField(
-      style: const TextStyle(color: color),
+      style: const TextStyle(
+          color: color,
+          fontFamily: Config.fontFamily
+      ),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         hintText: 'Поиск',
-        hintStyle: const TextStyle(color: color),
+        hintStyle: const TextStyle(
+            color: color,
+            fontFamily: Config.fontFamily
+        ),
         prefixIcon: const Icon(Icons.search, color: color),
         filled: true,
         fillColor: Colors.white12,

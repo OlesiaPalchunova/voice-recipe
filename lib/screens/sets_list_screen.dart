@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/sets_info.dart';
-import 'package:voice_recipe/components/set_header_card.dart';
+import 'package:voice_recipe/components/sets/set_header_card.dart';
 import 'package:voice_recipe/config.dart';
 
 class SetsListScreen extends StatefulWidget {
