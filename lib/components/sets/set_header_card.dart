@@ -82,7 +82,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
           child: Card(
                 color: Colors.white.withOpacity(0),
                 elevation: 0,
-                margin: const EdgeInsets.symmetric(vertical: 7),
+                margin: const EdgeInsets.symmetric(vertical: Config.margin),
                 child: Column(
                   children: [
                     Stack(children: [
@@ -92,7 +92,8 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                           height: Config.pageHeight(context) / 7,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(Config.borderRadius),
-                              color: const Color(0xff101010),
+                              color: _isPressed ? Config.backgroundColor() :
+                                      Config.iconBackColor(),
                               boxShadow: _isPressed ?
                                   [
                                     const BoxShadow(
@@ -113,6 +114,8 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                                       BorderRadius.circular(Config.borderRadius),
                                   child: Image(
                                     image: AssetImage(widget.set.imageUrl),
+                                    height: _isPressed ? Config.pageHeight(context) / 7
+                                          : Config.pageHeight(context) / 8,
                                     // fit: BoxFit.fitWidth,
                                   )),
                             ],
@@ -139,10 +142,5 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                 )),
           ),
         );
-  }
-
-  void _navigateToSet(BuildContext context, RecipesSet set) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SetScreen(set: set)));
   }
 }

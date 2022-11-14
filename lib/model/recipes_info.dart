@@ -29,20 +29,22 @@ RecipeStep getStep(int recipeId, int stepId) {
   return stepsResolve[recipeId][stepId];
 }
 
+final borsh = Recipe(name: "Борщ", faceImageUrl: "assets/images/borsh_face.jpg", id: 0,
+cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140);
+final carbonara = Recipe(
+name: "Карбонара", faceImageUrl: "assets/images/carbonara_face.jpg", id: 1,
+cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320);
+final muffins = Recipe(name: "Маффины", faceImageUrl: "assets/images/muffin6.jpg", id: 2,
+cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240);
+final tefts = Recipe(name: "Фрикадельки", faceImageUrl: "assets/images/tef5.jpg", id: 3,
+cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440);
+final soba = Recipe(name: "Соба с курицей и овощами", faceImageUrl: "assets/images/soba13.jpg", id: 4,
+cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270);
+final syrniki = Recipe(name: "Сырники от Влада", faceImageUrl: "assets/images/syrniki5.png", id: 5,
+cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340);
+
 final List<Recipe> recipes = [
-  Recipe(name: "Борщ", faceImageUrl: "assets/images/borsh_face.jpg", id: 0,
-  cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140),
-  Recipe(
-      name: "Карбонара", faceImageUrl: "assets/images/carbonara_face.jpg", id: 1,
-  cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320),
-  Recipe(name: "Маффины", faceImageUrl: "assets/images/muffin6.jpg", id: 2,
-      cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240),
-  Recipe(name: "Фрикадельки", faceImageUrl: "assets/images/tef5.jpg", id: 3,
-      cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440),
-  Recipe(name: "Соба с курицей и овощами", faceImageUrl: "assets/images/soba13.jpg", id: 4,
-      cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270),
-  Recipe(name: "Сырники от Влада", faceImageUrl: "assets/images/syrniki5.png", id: 5,
-      cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340),
+  borsh, carbonara, muffins, tefts, soba, syrniki
 ];
 
 final List<Ingredient> borshIngredients = [

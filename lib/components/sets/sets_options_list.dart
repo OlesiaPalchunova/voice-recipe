@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
+import '../../screens/set_screen.dart';
 
 class SetsOptionsList extends StatefulWidget {
   const SetsOptionsList({super.key, required this.set});
@@ -14,14 +15,14 @@ class SetsOptionsList extends StatefulWidget {
 }
 
 class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProviderStateMixin {
-  late final _menuTitles = optionsResolve[widget.set.id - 1];
+  late final _setOptions = optionsResolve[widget.set.id - 1];
   static const _initialDelayTime = Duration(milliseconds: 50);
   static const _itemSlideTime = Duration(milliseconds: 250);
   static const _staggerTime = Duration(milliseconds: 50);
   static const _buttonDelayTime = Duration(milliseconds: 150);
   static const _buttonTime = Duration(milliseconds: 300);
   late final _animationDuration = _initialDelayTime +
-      (_staggerTime * _menuTitles.length) +
+      (_staggerTime * _setOptions.length) +
       _buttonDelayTime +
       _buttonTime;
 
@@ -40,7 +41,7 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
   }
 
   void _createAnimationIntervals() {
-    for (var i = 0; i < _menuTitles.length; ++i) {
+    for (var i = 0; i < _setOptions.length; ++i) {
       final startTime = _initialDelayTime + (_staggerTime * i);
       final endTime = startTime + _itemSlideTime;
       _itemSlideIntervals.add(
@@ -50,7 +51,7 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
         ),
       );
     }
-    final buttonStartTime = Duration(milliseconds: (_menuTitles.length * 50)) + _buttonDelayTime;
+    final buttonStartTime = Duration(milliseconds: (_setOptions.length * 50)) + _buttonDelayTime;
     final buttonEndTime = buttonStartTime + _buttonTime;
     _buttonInterval = Interval(
       buttonStartTime.inMilliseconds / _animationDuration.inMilliseconds,
@@ -67,7 +68,7 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     final listItems = <Widget>[];
-    for (var i = 0; i < _menuTitles.length; ++i) {
+    for (var i = 0; i < _setOptions.length; ++i) {
       listItems.add(
         AnimatedBuilder(
           animation: _staggeredController,
@@ -85,31 +86,34 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
               ),
             );
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: Config.padding * 1.5,
-            horizontal: Config.padding * 2),
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.circle,
-                  color: Config.iconColor(),
-                  size: 9,
-                ),
-                SizedBox(
-                  width: Config.pageWidth(context) / 50
-                ),
-                Text(
-                  _menuTitles[i].name,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontFamily: Config.fontFamily,
-                      fontWeight: FontWeight.w500,
-                      color: Config.iconColor()
+          child: GestureDetector(
+            onTap: () => _navigateToSet(context, widget.set, _setOptions[i]),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: Config.padding * 2,
+              horizontal: Config.padding * 2),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.circle,
+                    color: Config.iconColor(),
+                    size: 9,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: Config.pageWidth(context) / 35
+                  ),
+                  Text(
+                    _setOptions[i].name,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontFamily: Config.fontFamily,
+                        fontWeight: FontWeight.w500,
+                        color: Config.iconColor()
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -118,5 +122,11 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
     return Column(
       children: listItems,
     );
+  }
+
+  void _navigateToSet(BuildContext context, RecipesSet set, SetOption setOption) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SetScreen(
+      set: set, setOption: setOption,)));
   }
 }

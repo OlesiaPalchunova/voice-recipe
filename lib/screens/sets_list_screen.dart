@@ -46,10 +46,17 @@ class _SetsListScreen extends State<SetsListScreen> {
                       physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.all(20),
                       itemCount: sets.length,
-                      itemBuilder: (_, index) => SetHeaderCard(
-                        set: sets[index],
-                        onTap: () {
-                        },
+                      itemBuilder: (_, index) => Column(
+                        children: [
+                          SetHeaderCard(
+                            set: sets[index],
+                            onTap: () {
+                            },
+                          ),
+                          index < sets.length - 1 ? Divider(
+                            color: Config.iconColor().withOpacity(0.4)
+                          ) : Container()
+                        ],
                       )
                     ),
                   ),
