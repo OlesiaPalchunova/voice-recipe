@@ -13,12 +13,13 @@ class SetsListScreen extends StatefulWidget {
 }
 
 class _SetsListScreen extends State<SetsListScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor:
-          Config.darkModeOn ? Colors.black87 : Config.colorScheme[80],
+              Config.darkModeOn ? Colors.black87 : Config.colorScheme[80],
           title: const Text(
             "Подборки",
             style: TextStyle(
@@ -35,20 +36,23 @@ class _SetsListScreen extends State<SetsListScreen> {
         drawer: SideBarMenu(onUpdate: () => setState(() {})),
         body: Builder(
             builder: (context) => SliderGestureHandler(
-              handleTaps: false,
-              ignoreVerticalSwipes: false,
-              onRight: () {},
-              onLeft: () => Scaffold.of(context).openDrawer(),
-              child: Container(
-                color: Config.backgroundColor(),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(20),
-                  itemCount: sets.length,
-                  itemBuilder: (_, index) =>
-                      SetHeaderCard(set: sets[index]),
-                ),
-              ),
-            )));
+                  handleTaps: false,
+                  ignoreVerticalSwipes: false,
+                  onRight: () {},
+                  onLeft: () => Scaffold.of(context).openDrawer(),
+                  child: Container(
+                    color: Config.backgroundColor(),
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(20),
+                      itemCount: sets.length,
+                      itemBuilder: (_, index) => SetHeaderCard(
+                        set: sets[index],
+                        onTap: () {
+                        },
+                      )
+                    ),
+                  ),
+                )));
   }
 }

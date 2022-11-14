@@ -10,6 +10,42 @@ class SideBarMenu extends StatefulWidget {
 
   @override
   State<SideBarMenu> createState() => _SideBarMenuState();
+
+  static Widget buildHeader({
+    required String name,
+    required VoidCallback onClicked,
+    required IconData iconData
+  }) => InkWell(
+    onTap: onClicked,
+    child: Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                  color: Config.darkModeOn ? Colors.orangeAccent
+                      : Colors.orangeAccent
+              )
+          ),
+          child: CircleAvatar(
+            radius: 22,
+            backgroundColor: Config.backgroundColor(),
+            child: Icon(
+              iconData,
+              color: Config.iconColor(),
+              size: 26,
+            ),
+          ),
+        ),
+        const SizedBox(width: 20),
+        Text(
+          name,
+          style: TextStyle(fontSize: 16, color: Config.iconColor(),
+            fontFamily: Config.fontFamily,),
+        ),
+      ],
+    ),
+  );
 }
 
 class _SideBarMenuState extends State<SideBarMenu> {
@@ -30,25 +66,27 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     // const Divider(
                     //   color: Colors.white,
                     // ),
-                    buildHeader(
+                    SideBarMenu.buildHeader(
                       name: "Подборки",
                       onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const SetsListScreen(),
                       )),
-                      iconData: Icons.library_books_rounded
+                      iconData: Config.darkModeOn ? Icons.library_books_rounded
+                                                  : Icons.library_books_outlined
                     ),
-                    const Divider(
-                      color: Colors.white70,
+                    Divider(
+                      color: Config.iconColor(),
                     ),
-                    buildHeader(
-                        name: "Голосоввые команды",
+                    SideBarMenu.buildHeader(
+                        name: "Голосовые команды",
                         onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const SetsListScreen(),
                         )),
-                        iconData: Icons.record_voice_over
+                        iconData: Config.darkModeOn ? Icons.record_voice_over_rounded
+                            : Icons.record_voice_over_outlined
                     ),
-                    const Divider(
-                      color: Colors.white70,
+                    Divider(
+                      color: Config.iconColor(),
                     ),
                   ],
                 ),
@@ -83,39 +121,4 @@ class _SideBarMenuState extends State<SideBarMenu> {
           )),
     );
   }
-
-  Widget buildHeader({
-    required String name,
-    required VoidCallback onClicked,
-    required IconData iconData
-  }) => InkWell(
-        onTap: onClicked,
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                    color: Colors.orangeAccent
-                )
-              ),
-              child: CircleAvatar(
-                  radius: 22,
-                  backgroundColor: Colors.black87,
-                  child: Icon(
-                      iconData,
-                      color: Colors.white,
-                      size: 26,
-                  ),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Text(
-              name,
-              style: const TextStyle(fontSize: 16, color: Colors.white,
-              fontFamily: Config.fontFamily),
-            ),
-          ],
-        ),
-      );
 }
