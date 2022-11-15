@@ -11,7 +11,7 @@ class RecipesSet {
 final List<RecipesSet> sets = <RecipesSet>[
   RecipesSet(id: 1, name: "По времени", imageUrl: "assets/images/sets/clock.png"),
   RecipesSet(id: 2, name: "Национальные\nкухни", imageUrl: "assets/images/sets/national.png"),
-  RecipesSet(id: 3, name: "Премиальное\nкачество", imageUrl: "assets/images/sets/premium.png"),
+  RecipesSet(id: 3, name: "Премиальные\nрецепты", imageUrl: "assets/images/sets/premium.png"),
 ];
 
 abstract class SetOption {
