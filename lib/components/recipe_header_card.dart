@@ -40,6 +40,10 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   @override
   Widget build(BuildContext context) {
+    var gradColor = Colors.black87;
+    var endGradColor = gradColor.withOpacity(0);
+    var startGradColor = !_isPressed ? gradColor.withOpacity(0.8)
+      : gradColor.withOpacity(0.5);
     var cardWidth = _getCardWidth(context);
     var cardHeight = _getCardHeight(context);
     return GestureDetector(
@@ -83,7 +87,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                       fit: BoxFit.fitHeight,
                     )),
               ),
-              Container(
+              AnimatedContainer(
+                duration: Config.shortAnimationTime,
                 width: _getCardWidth(context),
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
@@ -91,11 +96,12 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black87.withOpacity(0.8),
-                          Colors.black87.withOpacity(0.0),
+                          startGradColor,
+                          endGradColor,
                         ]),
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(RecipeHeaderCard.borderRadius))),
+                        top: Radius.circular(RecipeHeaderCard.borderRadius))
+                ),
                 // width: double.infinity,
                 padding: EdgeInsets.fromLTRB(cardWidth / 10, cardHeight / 7,
                     0, cardHeight / 5),
@@ -103,12 +109,15 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                   widget.recipe.name,
                   style: TextStyle(
                       fontFamily: Config.fontFamilyBold,
-                      fontSize: widget.fontResizer * cardWidth / 14,
+                      fontSize: widget.fontResizer * cardHeight / 12,
                       fontWeight: FontWeight.w300,
                       color: Colors.white),
                 ),
               ),
-            ])));
+            ]
+            )
+        )
+    );
   }
 
   void _navigateToRecipe(BuildContext context, Recipe recipe) {

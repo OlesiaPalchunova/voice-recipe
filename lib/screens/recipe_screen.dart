@@ -1,19 +1,16 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';
-import 'package:voice_recipe/components/slides/recipe_face.dart';
-import 'package:voice_recipe/components/slides/recipe_ingredients.dart';
-import 'package:voice_recipe/components/slides/recipe_step_view.dart';
+import 'package:voice_recipe/components/slide_views/recipe_face.dart';
+import 'package:voice_recipe/components/slide_views/recipe_ingredients.dart';
+import 'package:voice_recipe/components/slide_views/recipe_step_view.dart';
 import 'package:voice_recipe/components/timer_view.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/components/header_buttons_panel.dart';
+import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
 import 'package:voice_recipe/config.dart';
 
 import 'package:voice_recipe/model/voice_commands/close_command.dart';

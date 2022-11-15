@@ -33,12 +33,13 @@ dependencies:
     sdk: flutter
   flutter_tts: 3.5.0
   speech_to_text:
-  flutter_local_notifications:
+  flutter_local_notifications: ^12.0.3
   audioplayers:
   shared_preferences:
   provider:
   flex_color_scheme: ^4.1.1
   cupertino_icons: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:

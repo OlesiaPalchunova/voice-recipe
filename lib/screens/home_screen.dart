@@ -13,6 +13,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var _recipes = recipes;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,39 +43,40 @@ class _HomeState extends State<Home> {
                   child: Container(
                     color: Config.backgroundColor(),
                     child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(20),
-                          itemCount: recipes.length + 1,
-                          itemBuilder: (_, index) {
-                            if (index == 0) {
-                              return Container(
-                                  margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin),
-                                  child: buildSearchField()
-                              );
-                            }
-                            return RecipeHeaderCard(recipe: recipes[index - 1]);
-                          },
-                        ),
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(20),
+                      itemCount: _recipes.length + 1,
+                      itemBuilder: (_, index) {
+                        if (index == 0) {
+                          return Container(
+                              margin: const EdgeInsets.fromLTRB(
+                                  0, 0, 0, Config.margin),
+                              child: buildSearchField());
+                        }
+                        return RecipeHeaderCard(recipe: _recipes[index - 1]);
+                      },
+                    ),
                   ),
-                )
-        )
-    );
+                )));
   }
 
   Widget buildSearchField() {
     final color = Config.iconColor();
     return TextField(
-      style: TextStyle(
-          color: color,
-          fontFamily: Config.fontFamily
-      ),
+      style: TextStyle(color: color, fontFamily: Config.fontFamily),
+      onChanged: (String string) {
+        setState(() {
+          _recipes = recipes
+              .where((element) =>
+                  element.name.toLowerCase().startsWith(string.toLowerCase()))
+              .toList();
+        });
+      },
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         hintText: 'Поиск',
-        hintStyle: TextStyle(
-            color: color,
-            fontFamily: Config.fontFamily
-        ),
+        hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
         prefixIcon: Icon(Icons.search, color: color),
         filled: true,
         fillColor: Colors.white12,

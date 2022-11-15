@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/components/header_buttons_panel.dart';
+import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
 import 'package:voice_recipe/config.dart';
 
 class SayButton extends StatefulWidget {

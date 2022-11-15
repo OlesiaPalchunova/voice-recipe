@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 import 'package:voice_recipe/components/sets/set_header_card.dart';
@@ -11,6 +13,7 @@ class SetsListScreen extends StatefulWidget {
 }
 
 class _SetsListScreen extends State<SetsListScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +41,11 @@ class _SetsListScreen extends State<SetsListScreen> {
               itemCount: sets.length,
               itemBuilder: (_, index) => SetHeaderCard(
                 set: sets[index],
-                onTap: () {},
+                onTap: () {}
               ),
             ),
           ),
-        ));
+        )
+    );
   }
 }

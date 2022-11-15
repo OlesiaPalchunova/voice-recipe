@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
@@ -95,7 +94,7 @@ class Config {
     if (darkModeOn) {
       return _darkIconDisabledBackColor;
     }
-    return Colors.orangeAccent.lighten(10);
+    return Colors.orangeAccent;
   }
 
   static Color backgroundColor() {

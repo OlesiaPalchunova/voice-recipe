@@ -17,50 +17,14 @@ class SetHeaderCard extends StatefulWidget {
 
 class _SetHeaderCardState extends State<SetHeaderCard>
     with SingleTickerProviderStateMixin {
-  late final _menuTitles = optionsResolve[widget.set.id - 1];
-  static const _initialDelayTime = Duration(milliseconds: 50);
-  static const _staggerTime = Duration(milliseconds: 50);
-  static const _buttonDelayTime = Duration(milliseconds: 150);
-  static const _buttonTime = Duration(milliseconds: 300);
-  late final _animationDuration = _initialDelayTime +
-      (_staggerTime * _menuTitles.length) +
-      _buttonDelayTime +
-      _buttonTime;
-
-  late AnimationController _staggeredController;
-  late Interval _buttonInterval;
   var _isPressed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _createAnimationIntervals();
-    _staggeredController = AnimationController(
-      vsync: this,
-      duration: _animationDuration,
-    )..forward();
-  }
-
-  void _createAnimationIntervals() {
-    const buttonStartTime = _buttonDelayTime;
-    final buttonEndTime = buttonStartTime + _buttonTime;
-    _buttonInterval = Interval(
-      buttonStartTime.inMilliseconds / _animationDuration.inMilliseconds,
-      buttonEndTime.inMilliseconds / _animationDuration.inMilliseconds,
-    );
-  }
-
-  @override
-  void dispose() {
-    _staggeredController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     double cardHeight = Config.pageHeight(context) / 8;
     return GestureDetector(
       onTap: () => setState(() {
+        widget.onTap();
         _isPressed = !_isPressed;
       }),
           child: Card(
