@@ -17,9 +17,10 @@ class SayButton extends StatefulWidget {
   State<SayButton> createState() => SayButtonState();
 }
 
-class SayButtonState extends State<SayButton> {
+class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   var _isSaying = false;
   static SayButtonState? _state;
+  late AnimationController _controller;
 
   static SayButtonState? current() {
     return _state;
@@ -28,7 +29,17 @@ class SayButtonState extends State<SayButton> {
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+        duration: Config.animationTime,
+        vsync: this
+    );
     _state = this;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -64,21 +75,17 @@ class SayButtonState extends State<SayButton> {
             _isSaying = !_isSaying;
           });
           if (_isSaying) {
+            _controller.forward();
             widget.onSay();
           } else {
+            _controller.reverse();
             widget.onStopSaying();
           }
         },
-        icon: _isSaying
-            ? Icon(
-          Icons.pause,
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.play_pause,
+          progress: _controller,
           color: Config.iconColor(),
-          size: widget.iconSize,
-        )
-            : Icon(
-          Icons.play_arrow,
-          color: Config.iconColor(),
-          size: widget.iconSize,
         )
     );
   }

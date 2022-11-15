@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/buttons/timer_start_button.dart';
 import 'package:voice_recipe/local_notice_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:voice_recipe/config.dart';
@@ -27,7 +28,7 @@ class TimerViewState extends State<TimerView> {
   static final AudioPlayer player = AudioPlayer();
   static const alarmAudioPath = "sounds/relax-message-tone.mp3";
 
-  bool _isRunPressed = false;
+  bool _isRunning = false;
   bool _isDisposed = false;
   bool _noticed = false;
   Timer? _timer;
@@ -79,21 +80,11 @@ class TimerViewState extends State<TimerView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildTimerButton(
-              onPressed: () {
-                setState(() {
-                  _isRunPressed = !_isRunPressed;
-                });
-                if (_isRunPressed) {
-                  startTimer();
-                } else {
-                  stopTimer();
-                }
-              },
-              icon: Icon(
-                _isRunPressed ? Icons.pause_outlined : Icons.play_arrow,
-                color: Config.iconColor(),
-              )),
+          TimerStartButton(
+              onStart: startTimer,
+              onStop: stopTimer,
+              iconSize: _iconHeight * Config.pageHeight(context) * 0.9
+          ),
           _buildTimerLabel(),
           _buildTimerButton(
               onPressed: () {
@@ -121,10 +112,10 @@ class TimerViewState extends State<TimerView> {
     }
     if (_prevState != null) {
       _leftDuration = _prevState!._leftDuration;
-      _isRunPressed = _prevState!._isRunPressed;
+      _isRunning = _prevState!._isRunning;
       _noticed = _prevState!._noticed;
       _timer = _prevState!._timer;
-      if (_prevState!._isDisposed && _isRunPressed) {
+      if (_prevState!._isDisposed && _isRunning) {
         var current = DateTime.now();
         var diff = current.difference(_prevState!._lastShown).abs();
         var millisLeft = _leftDuration.inMilliseconds - diff.inMilliseconds;
@@ -166,20 +157,22 @@ class TimerViewState extends State<TimerView> {
     }
     _timer = Timer.periodic(
         const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
-    _isRunPressed = true;
+    _isRunning = true;
+    TimerStartButtonState.current!.update(_isRunning);
   }
 
   void stopTimer() {
     setState(() => _timer?.cancel());
     LocalNoticeService().cancelNotification(id: widget.id);
     _noticed = false;
-    _isRunPressed = false;
+    _isRunning = false;
+    TimerStartButtonState.current!.update(_isRunning);
   }
 
   void resetTimer() {
     if (_isDisposed) return;
     stopTimer();
-    _isRunPressed = false;
+    _isRunning = false;
     setState(() => _leftDuration = Duration(minutes: widget.waitTimeMins));
   }
 
@@ -187,7 +180,7 @@ class TimerViewState extends State<TimerView> {
     final seconds = _leftDuration.inSeconds - _reduceSecondsBy;
     if (seconds < 0) {
       _timer!.cancel();
-      _isRunPressed = false;
+      _isRunning = false;
       player.stop();
       player.play(AssetSource(alarmAudioPath));
     } else {
