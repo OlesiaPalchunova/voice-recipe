@@ -58,31 +58,11 @@ class _SetHeaderCardState extends State<SetHeaderCard>
 
   @override
   Widget build(BuildContext context) {
-    List<Color> gradientColors = Config.darkModeOn ? [
-    Config.backgroundColor(),
-        Config.backgroundColor(),
-    Config.pressed(),
-    Config.backgroundColor(), ] : [Config.backgroundColor(),
-    Config.backgroundColor()];
+    double cardHeight = Config.pageHeight(context) / 8;
     return GestureDetector(
       onTap: () => setState(() {
         _isPressed = !_isPressed;
       }),
-      child: AnimatedBuilder(
-          animation: _staggeredController,
-          builder: (context, child) {
-            final animationPercent = Curves.elasticOut.transform(
-                _buttonInterval.transform(_staggeredController.value));
-            final opacity = animationPercent.clamp(0.0, 1.0);
-            final scale = (animationPercent * 0.5) + 0.5;
-            return Opacity(
-              opacity: opacity,
-              child: Transform.scale(
-                scale: scale,
-                child: child,
-              ),
-            );
-          },
           child: Card(
             color: Colors.white.withOpacity(0),
             elevation: 0,
@@ -93,25 +73,20 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                   SizedBox(
                     child: AnimatedContainer(
                       duration: Config.animationTime,
-                      height: Config.pageHeight(context) / 7,
+                      height: cardHeight,
                       decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: gradientColors,
-                            // begin: Alignment.topCenter,
-                            // end: Alignment.bottomCenter
-                          ),
                           border: Border.all(color: Config.iconColor(),
                               width: Config.darkModeOn ? 0.2 : 0.5),
                           borderRadius:
                               BorderRadius.circular(Config.borderRadius),
                           color: _isPressed
-                              ? Config.backgroundColor()
-                              : Config.iconBackColor(),
+                              ? Config.pressed()
+                              : Config.notPressed(),
                           boxShadow: _isPressed
                               ? [
                                   BoxShadow(
                                     color: Config.getColor(widget.set.id),
-                                    blurRadius: Config.darkModeOn ? 15 : 8,
+                                    blurRadius:8,
                                     // offset: Offset(16, 16)
                                   )
                                 ]
@@ -119,33 +94,39 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                       child: Row(
                         children: [
                           SizedBox(
-                            width: Config.pageWidth(context) * 0.6,
+                            width: Config.pageWidth(context) * 0.5,
                           ),
-                          Image(
-                            image: AssetImage(widget.set.imageUrl),
-                            height: _isPressed
-                                ? Config.pageHeight(context) / 7
-                                : Config.pageHeight(context) / 8,
-                            // fit: BoxFit.fitWidth,
+                          Container(
+                            width: Config.pageWidth(context) * 0.4,
+                            alignment: Alignment.center,
+                            child: Image(
+                              image: AssetImage(widget.set.imageUrl),
+                              height: _isPressed
+                                  ? cardHeight
+                                  : cardHeight * 0.9,
+                              // fit: BoxFit.fitWidth,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
                   Container(
+                    height: cardHeight,
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.fromLTRB(30, 35, 0, 50),
+                    padding: const EdgeInsets.only(left: Config.padding * 2),
                     child: Text(widget.set.name,
                         style: TextStyle(
                             fontFamily: Config.fontFamily,
-                            fontSize: 25,
+                            fontSize: !_isPressed ? 25 : 27,
                             color: Config.iconColor())),
                   ),
                 ]),
                 _isPressed ? SetsOptionsList(set: widget.set) : Container()
               ],
             ),
-          )),
+          )
+    // ),
     );
   }
 }

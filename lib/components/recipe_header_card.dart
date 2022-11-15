@@ -10,12 +10,17 @@ class RecipeHeaderCard extends StatefulWidget {
   const RecipeHeaderCard({
     Key? key,
     required this.recipe,
+    this.width = maxWidth,
+    this.fontResizer = 1
   }) : super(key: key);
 
   final Recipe recipe;
   static const borderRadius = 16.0;
   static const maxWidth = 380.0;
   static const maxHeight = 290.0;
+  static const heightPerWidth = 0.76;
+  final double width;
+  final double fontResizer;
 
   @override
   State<RecipeHeaderCard> createState() => _RecipeHeaderCardState();
@@ -26,16 +31,17 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   double _getCardWidth(BuildContext context) {
     var screenWidth = Config.pageWidth(context);
-    return min(screenWidth * 0.9, RecipeHeaderCard.maxWidth);
+    return min(widget.width, min(screenWidth * 0.9, RecipeHeaderCard.maxWidth));
   }
 
   double _getCardHeight(BuildContext context) {
-    var screenHeight = Config.pageHeight(context);
-    return max(screenHeight * 0.3, RecipeHeaderCard.maxHeight);
+    return _getCardWidth(context) * RecipeHeaderCard.heightPerWidth;
   }
 
   @override
   Widget build(BuildContext context) {
+    var cardWidth = _getCardWidth(context);
+    var cardHeight = _getCardHeight(context);
     return GestureDetector(
         onTap: () {
           setState(() {
@@ -45,7 +51,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
         child: Card(
             color: Colors.white.withOpacity(0),
             elevation: 0,
-            margin: const EdgeInsets.symmetric(vertical: 7),
+            margin: const EdgeInsets.all(Config.margin / 2),
             child: Stack(children: [
               AnimatedContainer(
                 onEnd: () {
@@ -67,8 +73,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                       )
                     ] : []
                 ),
-                height: _getCardHeight(context),
-                width: _getCardWidth(context),
+                height: cardHeight,
+                width: cardWidth,
                 child: ClipRRect(
                     borderRadius:
                         BorderRadius.circular(RecipeHeaderCard.borderRadius),
@@ -91,13 +97,14 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                     borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(RecipeHeaderCard.borderRadius))),
                 // width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(30, 35, 0, 50),
+                padding: EdgeInsets.fromLTRB(cardWidth / 10, cardHeight / 7,
+                    0, cardHeight / 5),
                 child: Text(
                   widget.recipe.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontFamily: Config.fontFamilyBold,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
+                      fontSize: widget.fontResizer * cardWidth / 14,
+                      fontWeight: FontWeight.w300,
                       color: Colors.white),
                 ),
               ),

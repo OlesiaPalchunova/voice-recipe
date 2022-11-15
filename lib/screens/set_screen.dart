@@ -38,13 +38,21 @@ class _SetScreenState extends State<SetScreen> {
         ),
         body: Builder(
             builder: (context) => Container(
+              alignment: Alignment.topCenter,
                 color: Config.backgroundColor(),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(20),
-                  itemCount: recipes.length,
-                  itemBuilder: (_, index) => RecipeHeaderCard(recipe: recipes[index])
-                ),
+                child: Container(
+                  margin: const EdgeInsets.only(top: Config.margin / 2),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    child: Wrap(
+                      children: recipes.map((e) => RecipeHeaderCard(
+                          recipe: e,
+                          width: Config.pageWidth(context) * 0.45,
+                          fontResizer: 1.5,)).toList()
+                    ),
+                  ),
+                )
               ),
             )
     );
