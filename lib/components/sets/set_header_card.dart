@@ -5,11 +5,13 @@ import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 
 class SetHeaderCard extends StatefulWidget {
-  const SetHeaderCard({Key? key, required this.set, required this.onTap})
+  const SetHeaderCard({Key? key, required this.set, required this.onTap,
+  this.parentWidth = 0})
       : super(key: key);
 
   final VoidCallback onTap;
   final RecipesSet set;
+  final double parentWidth;
 
   @override
   State<SetHeaderCard> createState() => _SetHeaderCardState();
@@ -22,6 +24,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
   @override
   Widget build(BuildContext context) {
     double cardHeight = Config.pageHeight(context) / 8;
+    final _width = widget.parentWidth > 0 ? widget.parentWidth : Config.pageWidth(context);
     return GestureDetector(
       onTap: () => setState(() {
         widget.onTap();
@@ -30,7 +33,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
           child: Card(
             color: Colors.white.withOpacity(0),
             elevation: 0,
-            margin: const EdgeInsets.symmetric(vertical: Config.margin),
+            margin: const EdgeInsets.symmetric(vertical: Config.margin / 2),
             child: Column(
               children: [
                 Stack(children: [
@@ -39,6 +42,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                       duration: Config.animationTime,
                       height: cardHeight,
                       decoration: BoxDecoration(
+                          // gradient: LinearGradient(colors: gradColors),
                           border: Border.all(color: Config.iconColor(),
                               width: Config.darkModeOn ? 0.2 : 0.5),
                           borderRadius:
@@ -49,19 +53,19 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                           boxShadow: _isPressed
                               ? [
                                   BoxShadow(
-                                    color: Config.getColor(widget.set.id),
+                                    color: Config.darkModeOn ? Config.getColor(widget.set.id)
+                                    : Config.pressed(),
                                     blurRadius:8,
-                                    // offset: Offset(16, 16)
                                   )
                                 ]
                               : []),
                       child: Row(
                         children: [
                           SizedBox(
-                            width: Config.pageWidth(context) * 0.5,
+                            width: _width * 0.5,
                           ),
                           Container(
-                            width: Config.pageWidth(context) * 0.4,
+                            width: _width * 0.4,
                             alignment: Alignment.center,
                             child: Image(
                               image: AssetImage(widget.set.imageUrl),

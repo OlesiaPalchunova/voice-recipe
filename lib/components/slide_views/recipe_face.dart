@@ -23,11 +23,14 @@ class RecipeFaceSlideView extends StatelessWidget {
     return Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
             image: DecorationImage(
-              image: AssetImage(recipe.faceImageUrl),
-              fit: BoxFit.fitHeight,
+              image: recipe.faceImage,
+              fit: Config.pageHeight(context) > Config.pageWidth(context)
+                  ? BoxFit.fitHeight
+                  : BoxFit.fitHeight,
             ),
-            color: Colors.orangeAccent),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

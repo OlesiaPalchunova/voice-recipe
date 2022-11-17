@@ -40,12 +40,11 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   @override
   Widget build(BuildContext context) {
-    var gradColor = Colors.black87;
-    var endGradColor = gradColor.withOpacity(0);
-    var startGradColor = !_isPressed ? gradColor.withOpacity(0.8)
-      : gradColor.withOpacity(0.5);
-    var cardWidth = _getCardWidth(context);
-    var cardHeight = _getCardHeight(context);
+    const gradColor = Colors.black87;
+    final endGradColor = gradColor.withOpacity(0);
+    final startGradColor = gradColor.withOpacity(0.8);
+    final cardWidth = _getCardWidth(context);
+    final cardHeight = _getCardHeight(context);
     return GestureDetector(
         onTap: () {
           setState(() {
@@ -81,11 +80,13 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                 width: cardWidth,
                 child: ClipRRect(
                     borderRadius:
-                        BorderRadius.circular(RecipeHeaderCard.borderRadius),
+                        BorderRadius.circular(RecipeHeaderCard.borderRadius
+                        ),
                     child: Image(
-                      image: AssetImage(widget.recipe.faceImageUrl),
+                      image: widget.recipe.faceImage,
                       fit: BoxFit.fitHeight,
-                    )),
+                    )
+                ),
               ),
               AnimatedContainer(
                 duration: Config.shortAnimationTime,
@@ -98,9 +99,11 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         colors: [
                           startGradColor,
                           endGradColor,
-                        ]),
+                        ]
+                    ),
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(RecipeHeaderCard.borderRadius))
+                        top: Radius.circular(RecipeHeaderCard.borderRadius)
+                    )
                 ),
                 // width: double.infinity,
                 padding: EdgeInsets.fromLTRB(cardWidth / 10, cardHeight / 7,
@@ -111,7 +114,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                       fontFamily: Config.fontFamilyBold,
                       fontSize: widget.fontResizer * cardHeight / 12,
                       fontWeight: FontWeight.w300,
-                      color: Colors.white),
+                      color: Colors.white
+                  ),
                 ),
               ),
             ]

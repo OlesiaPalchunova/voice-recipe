@@ -38,8 +38,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
         decoration: BoxDecoration(
             border: Border.all(color: Config.iconColor(), width: 0.2),
             borderRadius: BorderRadius.circular(Config.borderRadius),
-            color:
-                _isPressed ? Config.pressed() : Config.notPressed(),
+            color: _isPressed ? Config.pressed() : Config.notPressed(),
         ),
         width: Config.pageWidth(context),
         margin: const EdgeInsets.symmetric(

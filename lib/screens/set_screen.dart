@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 
 import 'package:voice_recipe/model/sets_info.dart';
 import '../components/recipe_header_card.dart';
@@ -17,24 +18,15 @@ class SetScreen extends StatefulWidget {
 
 class _SetScreenState extends State<SetScreen> {
   late final recipes = widget.setOption.getRecipes();
+  late final isLaptopView = Config.pageWidth(context)
+      > Config.pageHeight(context);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Config.appBarColor(),
-          title: Text(
-            widget.setOption.name,
-            style: const TextStyle(
-                fontFamily: Config.fontFamilyBold,
-                fontSize: 22,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-          ),
-          centerTitle: true,
-          leading: Container(
-              padding: const EdgeInsets.all(5),
-              child: Image.asset("assets/images/voice_recipe.png")),
+          title: TitleLogoPanel(title: widget.setOption.name),
         ),
         body: Builder(
             builder: (context) => Container(
@@ -49,7 +41,7 @@ class _SetScreenState extends State<SetScreen> {
                       children: recipes.map((e) => RecipeHeaderCard(
                           recipe: e,
                           width: Config.pageWidth(context) * 0.45,
-                          fontResizer: 1.5,)).toList()
+                          fontResizer: isLaptopView ? 1 : 1.5,)).toList()
                     ),
                   ),
                 )

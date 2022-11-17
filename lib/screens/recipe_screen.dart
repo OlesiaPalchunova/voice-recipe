@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
@@ -89,14 +91,23 @@ class _RecipeScreenState extends State<RecipeScreen> {
             ),
           ),
           body: Container(
+            alignment: Alignment.center,
             color: Config.getBackColor(widget.recipe.id),
             child: Stack(
               children: [
-                Container(
-                  child: _buildCurrentSlide(context, _slideId),
+                Center(
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: Config.MAX_WIDTH,
+                    child: _buildCurrentSlide(context, _slideId),
+                  ),
                 ),
-                Container(
-                    alignment: Alignment.bottomCenter, child: _buildSliderBottom())
+                Center(
+                  child: Container(
+                      alignment: Alignment.bottomCenter,
+                      width: Config.MAX_WIDTH,
+                      child: _buildSliderBottom()),
+                )
               ],
             ),
           ),
@@ -182,7 +193,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   Widget _buildSliderBottom() {
-    var width = Config.pageWidth(context);
+    var width = min(Config.pageWidth(context), Config.MAX_WIDTH);
     var slidesCount = 2 + getStepsCount(widget.recipe.id);
     var sectionWidth = width / slidesCount;
     return Container(

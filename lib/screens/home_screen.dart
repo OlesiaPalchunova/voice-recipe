@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -14,50 +15,42 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var _recipes = recipes;
+  late var recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Config.appBarColor(),
-          title: const Text(
-            "Voice Recipe",
-            style: TextStyle(
-                fontFamily: Config.fontFamilyBold,
-                fontSize: 22,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-          ),
-          centerTitle: true,
-          leading: Container(
-              padding: const EdgeInsets.all(5),
-              child: Image.asset("assets/images/voice_recipe.png")),
+          title: const TitleLogoPanel(title: "Voice Recipe"),
         ),
         drawer: SideBarMenu(onUpdate: () => setState(() {})),
         body: Builder(
-            builder: (context) => SliderGestureHandler(
-                  handleTaps: false,
-                  ignoreVerticalSwipes: false,
-                  onRight: () {},
-                  onLeft: () => Scaffold.of(context).openDrawer(),
-                  child: Container(
-                    color: Config.backgroundColor(),
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(20),
-                      itemCount: _recipes.length + 1,
-                      itemBuilder: (_, index) {
-                        if (index == 0) {
-                          return Container(
-                              margin: const EdgeInsets.fromLTRB(
-                                  0, 0, 0, Config.margin),
-                              child: buildSearchField());
-                        }
-                        return RecipeHeaderCard(recipe: _recipes[index - 1]);
-                      },
-                    ),
+          builder: (context) => SliderGestureHandler(
+            handleTaps: false,
+            ignoreVerticalSwipes: false,
+            onRight: () {},
+            onLeft: () => Scaffold.of(context).openDrawer(),
+            child: Container(
+              alignment: Alignment.topCenter,
+              color: Config.backgroundColor(),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: Column(children: [
+                  Container(
+                    margin: const EdgeInsets.all(Config.margin).add(
+                        const EdgeInsets.symmetric(
+                            horizontal: Config.margin * 2)),
+                    child: SizedBox(width: 500, child: buildSearchField()),
                   ),
-                )));
+                  Wrap(children: recipeViews)
+                ]),
+              ),
+            ),
+          ),
+        )
+    );
   }
 
   Widget buildSearchField() {
@@ -70,6 +63,7 @@ class _HomeState extends State<Home> {
               .where((element) =>
                   element.name.toLowerCase().startsWith(string.toLowerCase()))
               .toList();
+          recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
         });
       },
       decoration: InputDecoration(
@@ -79,13 +73,12 @@ class _HomeState extends State<Home> {
         hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
         prefixIcon: Icon(Icons.search, color: color),
         filled: true,
-        fillColor: Colors.white12,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Config.borderRadius),
+          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
           borderSide: BorderSide(color: color.withOpacity(0.7)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
           borderSide: BorderSide(color: color.withOpacity(0.7)),
         ),
       ),

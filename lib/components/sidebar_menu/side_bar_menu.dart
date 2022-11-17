@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +54,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: Config.pageWidth(context) * 0.7,
+      width: min(Config.pageWidth(context) * 0.7, 400),
       child: Material(
           color: Config.backgroundColor(),
           child: Column(
@@ -79,9 +81,8 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     ),
                     SideBarMenu.buildHeader(
                         name: "Голосовые\nкоманды",
-                        onClicked: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SetsListScreen(),
-                        )),
+                        onClicked: () {
+                        },
                         iconData: Config.darkModeOn ? Icons.record_voice_over_rounded
                             : Icons.record_voice_over_outlined
                     ),

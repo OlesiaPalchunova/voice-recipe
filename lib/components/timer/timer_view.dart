@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/buttons/timer_start_button.dart';
 import 'package:voice_recipe/local_notice_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:voice_recipe/config.dart';
@@ -80,10 +79,22 @@ class TimerViewState extends State<TimerView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TimerStartButton(
-              onStart: startTimer,
-              onStop: stopTimer,
-              iconSize: _iconHeight * Config.pageHeight(context) * 0.9
+          _buildTimerButton(
+              onPressed: () {
+                setState(() {
+                  _isRunning = !_isRunning;
+                });
+                if (_isRunning) {
+                  startTimer();
+                } else {
+                  stopTimer();
+                }
+              },
+              icon: Icon(
+                _isRunning ? Icons.pause : Icons.play_arrow,
+                color: Config.iconColor(),
+                size: _iconHeight * Config.pageHeight(context) * 0.9,
+              )
           ),
           _buildTimerLabel(),
           _buildTimerButton(
@@ -96,7 +107,8 @@ class TimerViewState extends State<TimerView> {
                 Icons.replay,
                 color: Config.iconColor(),
                 size: _iconHeight * Config.pageHeight(context) * 0.9,
-              ))
+              )
+          )
         ],
       ),
     );
@@ -158,7 +170,6 @@ class TimerViewState extends State<TimerView> {
     _timer = Timer.periodic(
         const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
     _isRunning = true;
-    TimerStartButtonState.current!.update(_isRunning);
   }
 
   void stopTimer() {
@@ -166,7 +177,6 @@ class TimerViewState extends State<TimerView> {
     LocalNoticeService().cancelNotification(id: widget.id);
     _noticed = false;
     _isRunning = false;
-    TimerStartButtonState.current!.update(_isRunning);
   }
 
   void resetTimer() {

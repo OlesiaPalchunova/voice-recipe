@@ -35,33 +35,36 @@ class HeaderButtonsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      // padding: const EdgeInsets.all(Config.padding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              _buildAppIcon(),
-              const SizedBox(
-                width: 10,
-              ),
-              ListenButton(
-                  onListen: onListen, onMute: onMute, iconSize: _iconSize)
-            ],
-          ),
-          SayButton(onSay: onSay, onStopSaying: onStopSaying, iconSize: _iconSize),
-          Row(
-            children: [
-              _buildListButton(),
-              const SizedBox(
-                width: 10,
-              ),
-              _buildCloseButton(context)
-            ],
-          )
-        ],
+    return Center(
+      child: Container(
+        alignment: Alignment.center,
+        width: Config.MAX_WIDTH,
+        // padding: const EdgeInsets.all(Config.padding),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                _buildAppIcon(),
+                const SizedBox(
+                  width: 10,
+                ),
+                ListenButton(
+                    onListen: onListen, onMute: onMute, iconSize: _iconSize)
+              ],
+            ),
+            SayButton(onSay: onSay, onStopSaying: onStopSaying, iconSize: _iconSize),
+            Row(
+              children: [
+                _buildListButton(),
+                const SizedBox(
+                  width: 10,
+                ),
+                _buildCloseButton(context)
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

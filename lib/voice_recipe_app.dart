@@ -15,13 +15,18 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
   final DarkThemeProvider themeChangeProvider = DarkThemeProvider();
   final lightTheme = ThemeData(
       primarySwatch: const MaterialColor(0xFFf07800, Config.colorScheme),
-      bottomAppBarColor: const MaterialColor(0xFFf07800, Config.colorScheme));
+      bottomAppBarTheme: BottomAppBarTheme(
+          color: const MaterialColor(0xFFf07800, Config.colorScheme)));
   final darkTheme = ThemeData(
-      primarySwatch: const MaterialColor(0xFFf07800, Config.colorScheme),
-      bottomAppBarColor: const MaterialColor(0xFFf07800, Config.colorScheme),
-      backgroundColor: const MaterialColor(0xff000000, Config.colorScheme)
-    // primarySwatch: const MaterialColor(0xff000000, Config.colorScheme)
-  );
+      bottomAppBarTheme: const BottomAppBarTheme(
+          color: const MaterialColor(0xFFf07800, Config.colorScheme)),
+      colorScheme: ColorScheme.fromSwatch(
+              primarySwatch:
+                  const MaterialColor(0xFFf07800, Config.colorScheme))
+          .copyWith(
+              background: const MaterialColor(0xff000000, Config.colorScheme))
+      // primarySwatch: const MaterialColor(0xff000000, Config.colorScheme)
+      );
 
   @override
   void initState() {
@@ -31,13 +36,14 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
 
   void getCurrentAppTheme() async {
     themeChangeProvider.isDarkTheme =
-    true;//await themeChangeProvider.darkThemePreference.getTheme();
+        true; //await themeChangeProvider.darkThemePreference.getTheme();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const Home(),
-      theme: Config.darkModeOn ? darkTheme : lightTheme);
+            home: const Home(),
+            theme: Config.darkModeOn ? darkTheme : lightTheme
+    );
   }
 }

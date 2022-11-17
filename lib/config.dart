@@ -6,6 +6,7 @@ import 'package:voice_recipe/themes/dark_theme_preference.dart';
 
 class GradientColors {
   final List<Color> colors;
+
   GradientColors(this.colors);
 
   static const List<Color> sky = [Color(0xFF6448FE), Color(0xFF5FC6FF)];
@@ -27,14 +28,13 @@ class Config {
   static var darkModeOn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
+  static const MAX_WIDTH = 700.0;
 
   static init() async {
     darkModeOn = await DarkThemePreference().getTheme();
-    if (Platform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-          systemNavigationBarColor: _darkThemeBackColor,
-          systemNavigationBarIconBrightness:Brightness.light));
-    }
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: _darkThemeBackColor,
+        systemNavigationBarIconBrightness: Brightness.light));
   }
 
   static setDarkModeOn(bool on) {
@@ -43,7 +43,7 @@ class Config {
   }
 
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
-  static const  _darkIconBackColor = Color(0xFF202124);
+  static const _darkIconBackColor = Color(0xFF202124);
   static const _darkIconDisabledBackColor = Color(0xFF242634);
   static const _darkIconColor = Colors.white;
 
@@ -65,18 +65,17 @@ class Config {
     Colors.orangeAccent
   ];
 
-  static const Map<int, Color> colorScheme =
-  {
-    50:Color.fromRGBO (237, 120, 47, .1),
-    100:Color.fromRGBO(237, 120, 47, .2),
-    200:Color.fromRGBO(237, 120, 47, .3),
-    300:Color.fromRGBO(237, 120, 47, .4),
-    400:Color.fromRGBO(237, 120, 47, .5),
-    500:Color.fromRGBO(237, 120, 47, .6),
-    600:Color.fromRGBO(237, 120, 47, .7),
-    700:Color.fromRGBO(237, 120, 47, .8),
-    800:Color.fromRGBO(237, 120, 47, .9),
-    900:Color.fromRGBO(237, 120, 47, 1),
+  static const Map<int, Color> colorScheme = {
+    50: Color.fromRGBO(237, 120, 47, .1),
+    100: Color.fromRGBO(237, 120, 47, .2),
+    200: Color.fromRGBO(237, 120, 47, .3),
+    300: Color.fromRGBO(237, 120, 47, .4),
+    400: Color.fromRGBO(237, 120, 47, .5),
+    500: Color.fromRGBO(237, 120, 47, .6),
+    600: Color.fromRGBO(237, 120, 47, .7),
+    700: Color.fromRGBO(237, 120, 47, .8),
+    800: Color.fromRGBO(237, 120, 47, .9),
+    900: Color.fromRGBO(237, 120, 47, 1),
   };
 
   static Color appBarColor() {
@@ -87,7 +86,7 @@ class Config {
     if (darkModeOn) {
       return _darkThemeBackColor;
     }
-    return _iconBackColor;
+    return Colors.grey.shade100;
   }
 
   static Color pressed() {

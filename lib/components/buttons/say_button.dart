@@ -38,8 +38,8 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
