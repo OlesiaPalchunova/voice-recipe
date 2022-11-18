@@ -13,7 +13,8 @@ class HeaderButtonsPanel extends StatelessWidget {
       required this.onMute,
       required this.onSay,
       required this.onStopSaying,
-      required this.id});
+      required this.id,
+      });
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
@@ -38,8 +39,7 @@ class HeaderButtonsPanel extends StatelessWidget {
     return Center(
       child: Container(
         alignment: Alignment.center,
-        width: Config.MAX_WIDTH,
-        // padding: const EdgeInsets.all(Config.padding),
+        padding: const EdgeInsets.all(Config.padding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -73,7 +73,7 @@ class HeaderButtonsPanel extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: Config.iconBackColor(),
+        color: Config.iconBackColor,
       ),
       child: const Image(
           height: _iconSize * 1.65, image: AssetImage("assets/images/voice_recipe.png")),
@@ -86,11 +86,11 @@ class HeaderButtonsPanel extends StatelessWidget {
           onPressed: () => onList(),
           icon: Icon(
             Icons.list,
-            color: Config.iconColor(),
+            color: Config.iconColor,
             size: HeaderButtonsPanel._iconSize,
           ),
         ),
-        Config.iconBackColor());
+        Config.iconBackColor);
   }
 
   Widget _buildCloseButton(BuildContext context) {
@@ -99,10 +99,10 @@ class HeaderButtonsPanel extends StatelessWidget {
           onPressed: () => onClose(context),
           icon: Icon(
             Icons.close_outlined,
-            color: Config.iconColor(),
+            color: Config.iconColor,
             size: HeaderButtonsPanel._iconSize,
           ),
         ),
-        Config.iconBackColor());
+        Config.iconBackColor);
   }
 }

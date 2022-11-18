@@ -28,7 +28,8 @@ class Config {
   static var darkModeOn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
-  static const MAX_WIDTH = 700.0;
+  static const MAX_SLIDE_WIDTH = 700.0;
+  static const MAX_WIDTH = 1200.0;
 
   static init() async {
     darkModeOn = await DarkThemePreference().getTheme();
@@ -78,46 +79,46 @@ class Config {
     900: Color.fromRGBO(237, 120, 47, 1),
   };
 
-  static Color appBarColor() {
-    return Config.darkModeOn ? Colors.black87 : const Color(0xfff09702);
+  static Color get appBarColor {
+    return Config.darkModeOn ? Colors.black87 : Colors.white;
   }
 
-  static Color notPressed() {
-    if (darkModeOn) {
-      return _darkThemeBackColor;
-    }
-    return Colors.grey.shade100;
-  }
-
-  static Color pressed() {
-    if (darkModeOn) {
-      return _darkIconDisabledBackColor;
-    }
-    return Colors.orangeAccent;
-  }
-
-  static Color backgroundColor() {
+  static Color get notPressed {
     if (darkModeOn) {
       return _darkThemeBackColor;
     }
     return Colors.white;
   }
 
-  static Color iconBackColor() {
+  static Color get pressed {
+    if (darkModeOn) {
+      return _darkIconDisabledBackColor;
+    }
+    return Colors.grey.shade100;
+  }
+
+  static Color get backgroundColor {
+    if (darkModeOn) {
+      return _darkThemeBackColor;
+    }
+    return Colors.white;
+  }
+
+  static Color get iconBackColor {
     if (darkModeOn) {
       return _darkIconBackColor;
     }
     return _iconBackColor;
   }
 
-  static Color disabledIconBackColor() {
+  static Color get disabledIconBackColor {
     if (darkModeOn) {
       return _darkIconDisabledBackColor;
     }
     return _iconDisabledBackColor;
   }
 
-  static Color iconColor() {
+  static Color get iconColor {
     if (darkModeOn) {
       return _darkIconColor;
     }

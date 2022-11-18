@@ -82,15 +82,15 @@ class ListenButtonState extends State<ListenButton> {
             icon: _isListening
                 ? Icon(
               Icons.mic,
-              color: Config.iconColor(),
+              color: Config.iconColor,
               size: widget.iconSize,
             )
                 : Icon(
               Icons.mic_off,
-              color: Config.iconColor(),
+              color: Config.iconColor,
               size: widget.iconSize,
             )),
-        _isListening ? Config.iconBackColor()
-                     : Config.disabledIconBackColor());
+        _isListening ? Config.iconBackColor
+                     : Config.disabledIconBackColor);
   }
 }

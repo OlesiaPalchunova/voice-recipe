@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
 
+import '../../themes/theme_change_notification.dart';
+
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key, required this.onUpdate});
   final VoidCallback onUpdate;
@@ -17,36 +19,44 @@ class SideBarMenu extends StatefulWidget {
     required String name,
     required VoidCallback onClicked,
     required IconData iconData
-  }) => InkWell(
-    onTap: onClicked,
-    child: Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                  color: Config.darkModeOn ? Colors.orangeAccent
-                      : Colors.orangeAccent
-              )
-          ),
-          child: CircleAvatar(
-            radius: 22,
-            backgroundColor: Config.backgroundColor(),
-            child: Icon(
-              iconData,
-              color: Config.iconColor(),
-              size: 26,
+  }) => Column(
+    children: [
+      InkWell(
+        onTap: onClicked,
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: Config.darkModeOn ? Colors.orangeAccent
+                          : Colors.orangeAccent
+                  )
+              ),
+              child: CircleAvatar(
+                radius: 22,
+                backgroundColor: Config.backgroundColor,
+                child: Icon(
+                  iconData,
+                  color: Config.iconColor,
+                  size: 26,
+                ),
+              ),
             ),
-          ),
+            const SizedBox(width: 20),
+            Text(
+              name,
+              style: TextStyle(fontSize: 20, color: Config.iconColor,
+                fontFamily: Config.fontFamily,),
+            ),
+          ],
         ),
-        const SizedBox(width: 20),
-        Text(
-          name,
-          style: TextStyle(fontSize: 20, color: Config.iconColor(),
-            fontFamily: Config.fontFamily,),
-        ),
-      ],
-    ),
+      ),
+      Divider(
+        color: Config.iconColor.withOpacity(0.5),
+        thickness: 0.2,
+      ),
+    ],
   );
 }
 
@@ -56,7 +66,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
     return Drawer(
       width: min(Config.pageWidth(context) * 0.7, 400),
       child: Material(
-          color: Config.backgroundColor(),
+          color: Config.backgroundColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -65,9 +75,6 @@ class _SideBarMenuState extends State<SideBarMenu> {
                 child: Column(
                   children: [
                     SizedBox(height: Config.pageHeight(context) / 7,),
-                    // const Divider(
-                    //   color: Colors.white,
-                    // ),
                     SideBarMenu.buildHeader(
                       name: "Подборки",
                       onClicked: () => Navigator.of(context).push(MaterialPageRoute(
@@ -76,18 +83,12 @@ class _SideBarMenuState extends State<SideBarMenu> {
                       iconData: Config.darkModeOn ? Icons.library_books_rounded
                                                   : Icons.library_books_outlined
                     ),
-                    Divider(
-                      color: Config.iconColor(),
-                    ),
                     SideBarMenu.buildHeader(
                         name: "Голосовые\nкоманды",
                         onClicked: () {
                         },
                         iconData: Config.darkModeOn ? Icons.record_voice_over_rounded
                             : Icons.record_voice_over_outlined
-                    ),
-                    Divider(
-                      color: Config.iconColor(),
                     ),
                   ],
                 ),

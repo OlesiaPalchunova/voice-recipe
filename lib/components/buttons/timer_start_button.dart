@@ -90,7 +90,7 @@ class TimerStartButtonState extends State<TimerStartButton>
           icon: _icon,
           progress: _controller,
           size: widget.iconSize,
-          color: Config.iconColor(),
+          color: Config.iconColor,
         ),
       ),
     );

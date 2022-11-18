@@ -45,7 +45,7 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return HeaderButtonsPanel.buildButton(_buildSayIcon(),
-        !_isSaying ? Config.iconBackColor() : Config.disabledIconBackColor());
+        !_isSaying ? Config.iconBackColor : Config.disabledIconBackColor);
   }
 
   void say() {
@@ -85,7 +85,7 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
         icon: AnimatedIcon(
           icon: AnimatedIcons.play_pause,
           progress: _controller,
-          color: Config.iconColor(),
+          color: Config.iconColor,
         )
     );
   }

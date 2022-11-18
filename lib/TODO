@@ -1,3 +1,5 @@
+-
+
 - make recognition faster (especially for timer), try to use
   another recognition policy
 - try to switch to NetworkImage instead of AssetImage

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/sidebar_menu/side_bar_menu.dart';
@@ -5,6 +7,7 @@ import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/themes/theme_change_notification.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,17 +17,26 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static var count = 0;
   var _recipes = recipes;
-  late var recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+  late var recipeViews =
+      _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+  static const title = TitleLogoPanel(title: "Voice Recipe");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawerScrimColor: Colors.black87.withOpacity(0.6),
         appBar: AppBar(
-          backgroundColor: Config.appBarColor(),
-          title: const TitleLogoPanel(title: "Voice Recipe"),
+          foregroundColor: Config.iconColor,
+          backgroundColor: Config.appBarColor,
+          title: title,
         ),
-        drawer: SideBarMenu(onUpdate: () => setState(() {})),
+        drawer: SideBarMenu(onUpdate: () {
+          setState(() {
+            TitleLogoPanelState.current?.update();
+          });
+        }),
         body: Builder(
           builder: (context) => SliderGestureHandler(
             handleTaps: false,
@@ -33,28 +45,30 @@ class _HomeState extends State<Home> {
             onLeft: () => Scaffold.of(context).openDrawer(),
             child: Container(
               alignment: Alignment.topCenter,
-              color: Config.backgroundColor(),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: Column(children: [
-                  Container(
-                    margin: const EdgeInsets.all(Config.margin).add(
-                        const EdgeInsets.symmetric(
-                            horizontal: Config.margin * 2)),
-                    child: SizedBox(width: 500, child: buildSearchField()),
-                  ),
-                  Wrap(children: recipeViews)
-                ]),
+              color: Config.backgroundColor,
+              child: SizedBox(
+                width: Config.MAX_WIDTH,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  child: Column(children: [
+                    Container(
+                      margin: const EdgeInsets.all(Config.margin).add(
+                          const EdgeInsets.symmetric(
+                              horizontal: Config.margin * 2)),
+                      child: SizedBox(width: 500, child: buildSearchField()),
+                    ),
+                    Wrap(children: recipeViews)
+                  ]),
+                ),
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 
   Widget buildSearchField() {
-    final color = Config.iconColor();
+    final color = Config.iconColor;
     return TextField(
       style: TextStyle(color: color, fontFamily: Config.fontFamily),
       onChanged: (String string) {
@@ -63,7 +77,8 @@ class _HomeState extends State<Home> {
               .where((element) =>
                   element.name.toLowerCase().startsWith(string.toLowerCase()))
               .toList();
-          recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+          recipeViews =
+              _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
         });
       },
       decoration: InputDecoration(

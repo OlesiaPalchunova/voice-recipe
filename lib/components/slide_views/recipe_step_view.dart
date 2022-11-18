@@ -79,7 +79,7 @@ class RecipeStepView extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: !Config.darkModeOn ? Colors.black87
                               .withOpacity(RecipeStepView._textBackgroundOpacity)
-                                  : Config.iconBackColor(),
+                                  : Config.iconBackColor,
                           borderRadius:
                               BorderRadius.circular(RecipeStepView._borderRadius)),
                       // height: 120,

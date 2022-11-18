@@ -25,14 +25,17 @@ class _SetScreenState extends State<SetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Config.appBarColor(),
+          foregroundColor: Config.iconColor,
+          backgroundColor: Config.appBarColor,
           title: TitleLogoPanel(title: widget.setOption.name),
         ),
         body: Builder(
             builder: (context) => Container(
               alignment: Alignment.topCenter,
-                color: Config.backgroundColor(),
+                color: Config.backgroundColor,
                 child: Container(
+                  width: Config.MAX_WIDTH,
+                  alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: Config.margin / 2),
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
@@ -40,8 +43,8 @@ class _SetScreenState extends State<SetScreen> {
                     child: Wrap(
                       children: recipes.map((e) => RecipeHeaderCard(
                           recipe: e,
-                          width: Config.pageWidth(context) * 0.45,
-                          fontResizer: isLaptopView ? 1 : 1.5,)).toList()
+                          sizeDivider: 2)
+                      ).toList()
                     ),
                   ),
                 )

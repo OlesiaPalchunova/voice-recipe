@@ -17,26 +17,32 @@ class IngredientsSlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.topCenter,
       decoration: BoxDecoration(
-          color: Config.darkModeOn ? Config.iconBackColor(): Colors.white70,
-          borderRadius: BorderRadius.circular(Config.borderRadius)),
-      margin: const EdgeInsets.all(Config.margin),
-      padding: const EdgeInsets.all(Config.padding),
-      child: Column(
-        children: [
-          SizedBox(
-            height: Config.pageHeight(context) * _topOffset,
+          color: Config.darkModeOn ? Config.iconBackColor: Colors.white70,
+          borderRadius: BorderRadius.circular(Config.borderRadius)
+      ),
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(Config.margin),
+          padding: const EdgeInsets.all(Config.padding),
+          child: Column(
+            children: [
+              SizedBox(
+                height: Config.pageHeight(context) * _topOffset,
+              ),
+              GeneralInfo(recipe: recipe),
+              Divider(
+                color: Config.darkModeOn ? Colors.white : Colors.black87,
+                thickness: _splitterThickness,
+              ),
+              SizedBox(
+                height: Config.pageHeight(context) * _listOffset,
+              ),
+              IngredientsList(recipe: recipe)
+            ],
           ),
-          GeneralInfo(recipe: recipe),
-          Divider(
-            color: Config.darkModeOn ? Colors.white : Colors.black87,
-            thickness: _splitterThickness,
-          ),
-          SizedBox(
-            height: Config.pageHeight(context) * _listOffset,
-          ),
-          IngredientsList(recipe: recipe)
-        ],
+        ),
       ),
     );
   }

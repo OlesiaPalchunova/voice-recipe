@@ -12,35 +12,37 @@ class SetsListScreen extends StatefulWidget {
 }
 
 class _SetsListScreen extends State<SetsListScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Config.appBarColor(),
-          title: const TitleLogoPanel(title: "Подборки")
-        ),
+            foregroundColor: Config.iconColor,
+            backgroundColor: Config.appBarColor,
+            title: const TitleLogoPanel(title: "Подборки")),
         body: Builder(
           builder: (context) => Container(
-            color: Config.backgroundColor(),
+            color: Config.backgroundColor,
             alignment: Alignment.center,
             child: SizedBox(
-              width: Config.MAX_WIDTH,
-              child: ListView.builder(
+              width: Config.MAX_SLIDE_WIDTH,
+              child: ListView.separated(
+                separatorBuilder: (_, index) => Divider(
+                  color: Config.iconColor,
+                  thickness: 0.2,
+                ),
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(Config.padding),
                 itemCount: sets.length,
                 itemBuilder: (_, index) => SetHeaderCard(
-                  parentWidth: Config.pageWidth(context) > Config.pageHeight(context)
-                    ? 700
-                    : 0,
-                  set: sets[index],
-                  onTap: () {}
-                ),
+                    parentWidth:
+                        Config.pageWidth(context) > Config.pageHeight(context)
+                            ? 700
+                            : 0,
+                    set: sets[index],
+                    onTap: () {}),
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }

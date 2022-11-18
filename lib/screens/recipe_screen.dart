@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
+import 'package:voice_recipe/components/slide_views/review_view.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';
@@ -39,6 +40,7 @@ class RecipeScreen extends StatefulWidget {
   static final FlutterTts tts = FlutterTts();
   late final IngredientsSlideView ingPage = IngredientsSlideView(recipe: recipe);
   late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
+  late final ReviewView reviewPage = ReviewView(recipe: recipe);
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -77,35 +79,44 @@ class _RecipeScreenState extends State<RecipeScreen> {
             shadowColor: Config.darkModeOn ? Colors.black87 : Colors.white.withOpacity(0),
             automaticallyImplyLeading: false,
             toolbarHeight: 60,
-            backgroundColor: Config.getBackColor(widget.recipe.id),
-            title: HeaderButtonsPanel(
-              id: widget.recipe.id,
-              onClose: _onClose,
-              onList: () => setState(() {
-                _slideId = ingredientsSlideId;
-              }),
-              onMute: () => _listener.shutdown(),
-              onListen: () => _listener.start(),
-              onSay: _onSay,
-              onStopSaying: _onStopSaying,
+            foregroundColor: Config.iconColor,
+            backgroundColor: Config.backgroundColor,
+            title: Center(
+              child: Container(
+                alignment: Alignment.center,
+                color: Config.getBackColor(widget.recipe.id),
+                width: Config.MAX_SLIDE_WIDTH,
+                child: HeaderButtonsPanel(
+                  id: widget.recipe.id,
+                  onClose: _onClose,
+                  onList: () => setState(() {
+                    _slideId = ingredientsSlideId;
+                  }),
+                  onMute: () => _listener.shutdown(),
+                  onListen: () => _listener.start(),
+                  onSay: _onSay,
+                  onStopSaying: _onStopSaying,
+                ),
+              ),
             ),
           ),
           body: Container(
             alignment: Alignment.center,
-            color: Config.getBackColor(widget.recipe.id),
+            color: Config.backgroundColor,
             child: Stack(
               children: [
                 Center(
                   child: Container(
+                    color: Config.getBackColor(widget.recipe.id),
                     alignment: Alignment.center,
-                    width: Config.MAX_WIDTH,
+                    width: Config.MAX_SLIDE_WIDTH,
                     child: _buildCurrentSlide(context, _slideId),
                   ),
                 ),
                 Center(
                   child: Container(
                       alignment: Alignment.bottomCenter,
-                      width: Config.MAX_WIDTH,
+                      width: Config.MAX_SLIDE_WIDTH,
                       child: _buildSliderBottom()),
                 )
               ],
@@ -180,11 +191,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   Widget _buildCurrentSlide(BuildContext context, int slideId) {
     if (slideId == faceSlideId) {
-      return RecipeFaceSlideView(
-        recipe: widget.recipe,
-      );
+      return widget.facePage;
     } else if (slideId == ingredientsSlideId) {
-      return IngredientsSlideView(recipe: widget.recipe);
+      return widget.ingPage;
+    } else if (slideId == getStepsCount(widget.recipe.id) + 1 + 1) {
+      return widget.reviewPage;
     }
     return RecipeStepView(
       recipe: widget.recipe,
@@ -193,8 +204,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   Widget _buildSliderBottom() {
-    var width = min(Config.pageWidth(context), Config.MAX_WIDTH);
-    var slidesCount = 2 + getStepsCount(widget.recipe.id);
+    var width = min(Config.pageWidth(context), Config.MAX_SLIDE_WIDTH);
+    var slidesCount = 1 + 1 + 1 + getStepsCount(widget.recipe.id);
     var sectionWidth = width / slidesCount;
     return Container(
       alignment: Alignment.center,
@@ -286,7 +297,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _incrementSlideId() {
     _slideId++;
-    int max = getStepsCount(widget.recipe.id) + 1;
+    int max = getStepsCount(widget.recipe.id) + 1 + 1;
     _slideId = _slideId > max ? max : _slideId;
   }
 }

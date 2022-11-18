@@ -62,23 +62,27 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
     final listItems = <Widget>[];
     for (var i = 0; i < _setOptions.length; ++i) {
       listItems.add(
-        AnimatedBuilder(
-          animation: _staggeredController,
-          builder: (context, child) {
-            final animationPercent = Curves.easeOut.transform(
-              _itemSlideIntervals[i].transform(_staggeredController.value),
-            );
-            final opacity = animationPercent;
-            final slideDistance = (1.0 - animationPercent) * 150;
-            return Opacity(
-              opacity: opacity,
-              child: Transform.translate(
-                offset: Offset(slideDistance, 0),
-                child: child,
-              ),
-            );
-          },
-          child: SetOptionTile(setOption: _setOptions[i],),
+        Column(
+          children: [
+            AnimatedBuilder(
+              animation: _staggeredController,
+              builder: (context, child) {
+                final animationPercent = Curves.easeOut.transform(
+                  _itemSlideIntervals[i].transform(_staggeredController.value),
+                );
+                final opacity = animationPercent;
+                final slideDistance = (1.0 - animationPercent) * 150;
+                return Opacity(
+                  opacity: opacity,
+                  child: Transform.translate(
+                    offset: Offset(slideDistance, 0),
+                    child: child,
+                  ),
+                );
+              },
+              child: SetOptionTile(setOption: _setOptions[i],),
+            ),
+          ],
         ),
       );
     }

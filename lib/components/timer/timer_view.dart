@@ -92,7 +92,7 @@ class TimerViewState extends State<TimerView> {
               },
               icon: Icon(
                 _isRunning ? Icons.pause : Icons.play_arrow,
-                color: Config.iconColor(),
+                color: Config.iconColor,
                 size: _iconHeight * Config.pageHeight(context) * 0.9,
               )
           ),
@@ -105,7 +105,7 @@ class TimerViewState extends State<TimerView> {
               },
               icon: Icon(
                 Icons.replay,
-                color: Config.iconColor(),
+                color: Config.iconColor,
                 size: _iconHeight * Config.pageHeight(context) * 0.9,
               )
           )

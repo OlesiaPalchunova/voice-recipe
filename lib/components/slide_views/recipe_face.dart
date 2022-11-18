@@ -25,7 +25,7 @@ class RecipeFaceSlideView extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
             image: DecorationImage(
-              image: recipe.faceImage,
+              image: AssetImage(recipe.faceImageUrl),
               fit: Config.pageHeight(context) > Config.pageWidth(context)
                   ? BoxFit.fitHeight
                   : BoxFit.fitHeight,

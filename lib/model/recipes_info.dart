@@ -1,21 +1,21 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 
 class Recipe {
   int id;
   String name;
   String faceImageUrl;
-  String cardImageUrl;
   int cookTimeMins;
   int prepTimeMins;
   int kilocalories;
   int? proteins;
   int? fats;
   int? carbohydrates;
-  late final faceImage = AssetImage(faceImageUrl);
 
   Recipe({required this.name, required this.faceImageUrl, required this.id,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
-  required this.cardImageUrl});
+  });
 }
 
 class Ingredient {
@@ -42,22 +42,24 @@ String _imagePath(String name) {
   return "assets/images/$name.jpg";
 }
 
-final borsh = Recipe(name: "Борщ", cardImageUrl: _cardName("borsh"), faceImageUrl: _imagePath("borsh_face"), id: 0,
+final borsh = Recipe(name: "Борщ", faceImageUrl: _imagePath("borsh_face"), id: 0,
 cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140);
-final carbonara = Recipe(
-name: "Карбонара", cardImageUrl: _cardName("carbonara"),faceImageUrl: _imagePath("carbonara_face"), id: 1,
-cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320);
-final muffins = Recipe(name: "Маффины", cardImageUrl: _cardName("muffin"),faceImageUrl: _imagePath("muffin6"), id: 2,
+final cutlets = Recipe(name: "Котлеты", faceImageUrl: _imagePath("cutlets10"), id: 1,
+    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 450);
+final muffins = Recipe(name: "Маффины" ,faceImageUrl: _imagePath("muffin6"), id: 2,
 cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240);
-final tefts = Recipe(name: "Фрикадельки", cardImageUrl: _cardName("tef"),faceImageUrl: _imagePath("tef5"), id: 3,
+final tefts = Recipe(name: "Фрикадельки", faceImageUrl: _imagePath("tef5"), id: 3,
 cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440);
-final soba = Recipe(name: "Соба с курицей и овощами", cardImageUrl: _cardName("soba"),faceImageUrl: _imagePath("soba13"), id: 4,
+final soba = Recipe(name: "Соба с курицей и овощами", faceImageUrl: _imagePath("soba13"), id: 4,
 cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270);
-final syrniki = Recipe(name: "Сырники от Влада", cardImageUrl: _cardName("syrniki"),faceImageUrl: _imagePath("syrniki5"), id: 5,
+final syrniki = Recipe(name: "Сырники от Влада", faceImageUrl: _imagePath("syrniki5"), id: 5,
 cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340);
+final carbonara = Recipe(
+    name: "Карбонара",faceImageUrl: _imagePath("carbonara_face"), id: 6,
+    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320);
 
 final List<Recipe> recipes = [
-  borsh, carbonara, muffins, tefts, soba, syrniki
+  borsh, cutlets, muffins, tefts, soba, syrniki, carbonara
 ];
 
 final List<Ingredient> borshIngredients = [
@@ -68,12 +70,14 @@ final List<Ingredient> borshIngredients = [
   Ingredient(id: 5, name: "Лук", count: "1 шт.")
 ];
 
-final List<Ingredient> carbonaraIngredients = [
-  Ingredient(id: 1, name: "Бекон", count: "100 г"),
-  Ingredient(id: 2, name: "Спагетти", count: "90 г"),
-  Ingredient(id: 3, name: "Вода", count: "150 мл"),
-  Ingredient(id: 4, name: "Соль", count: "щепотка"),
-  Ingredient(id: 5, name: "Яйца куриные", count: "1 шт.")
+final List<Ingredient> cutletsIngredients = [
+  Ingredient(id: 1, name: "Фарш куриный", count: "450 г."),
+  Ingredient(id: 2, name: "Хлеб черный", count: "4 ломтика"),
+  Ingredient(id: 3, name: "Хмели-сунели", count: "2 ч.л."),
+  Ingredient(id: 4, name: "Яйцо", count: "1 шт."),
+  Ingredient(id: 5, name: "Лук", count: "1 шт."),
+  Ingredient(id: 5, name: "Молоко", count: "100 мл."),
+  Ingredient(id: 5, name: "Зелень", count: "50 г."),
 ];
 
 final List<Ingredient> muffinsIngredients = [
@@ -98,6 +102,7 @@ final List<Ingredient> sobaIngredients = [
   Ingredient(id: 2, name: "Болгарский перец", count: "3 шт"),
   Ingredient(id: 3, name: "Гречневая лапша", count: "270 г"),
   Ingredient(id: 3, name: "Морковь", count: "1 шт"),
+  Ingredient(id: 3, name: "Помидор", count: "1 шт"),
   Ingredient(id: 3, name: "Лук репчатый", count: "1 шт"),
   Ingredient(id: 3, name: "Зеленый лук", count: "45 г"),
   Ingredient(id: 3, name: "Соевый соус", count: "9 ст. л."),
@@ -113,8 +118,18 @@ final List<Ingredient> syrnikiIngredients = [
   Ingredient(id: 5, name: "Сахар", count: "3 ст. л."),
 ];
 
-final List<List<Ingredient>> ingrResolve = [borshIngredients, carbonaraIngredients,
-muffinsIngredients, tefIngredients, sobaIngredients, syrnikiIngredients];
+final List<Ingredient> carbonaraIngredients = [
+  Ingredient(id: 1, name: "Бекон", count: "100 г"),
+  Ingredient(id: 2, name: "Спагетти", count: "90 г"),
+  Ingredient(id: 3, name: "Вода", count: "150 мл"),
+  Ingredient(id: 4, name: "Соль", count: "щепотка"),
+  Ingredient(id: 5, name: "Яйца куриные", count: "1 шт."),
+  Ingredient(id: 5, name: "Сыр", count: "100 г."),
+  Ingredient(id: 5, name: "Сливки", count: "50 мл."),
+];
+
+final List<List<Ingredient>> ingrResolve = [borshIngredients, cutletsIngredients,
+muffinsIngredients, tefIngredients, sobaIngredients, syrnikiIngredients, carbonaraIngredients];
 
 class RecipeStep {
   int id;
@@ -166,20 +181,43 @@ final List<RecipeStep> sobaSteps = [
   RecipeStep(id: 7, imgUrl: _imagePath("soba7"), description: "Верните в сковороду обжаренную курицу и перемешайте."),
   RecipeStep(waitTime: 10, id: 8, imgUrl: _imagePath("soba8"), description: "Помидор вымойте и вытрете, нарежьте на крупные дольки и добавьте в сковороду с овощами и курицей. Налейте воду и закройте крышкой, уменьшите огонь и готовьте еще 10 минут."),
   RecipeStep(id: 9, imgUrl: _imagePath("soba9"), description: "В миску налейте соевый соус, растительное масло и добавьте перец чили, перемешайте."),
-  RecipeStep(id: 10, imgUrl: _imagePath("soba10.jpg"), description: "Откройте сковороду и влейте соус, перемешайте."),
-  RecipeStep(id: 11, imgUrl: _imagePath("soba11.jpg"), description: "Добавьте в сковороду отварную гречневую лапшу и все хорошенько перемешайте, чтобы покрылось соусом."),
-  RecipeStep(waitTime: 2, id: 12, imgUrl: _imagePath("soba12.jpg"), description: "Прогрейте лапшу с овощами и курицей на среднем огне в течение 1-2 минут, снимите с огня."),
-  RecipeStep(id: 13, imgUrl: _imagePath("soba13.jpg"), description: "Наша соба с курицей и овощами готова. Разложите сразу по тарелкам, посыпьте порезанным зеленым луком и подавайте.")
+  RecipeStep(id: 10, imgUrl: _imagePath("soba10"), description: "Откройте сковороду и влейте соус, перемешайте."),
+  RecipeStep(id: 11, imgUrl: _imagePath("soba11"), description: "Добавьте в сковороду отварную гречневую лапшу и все хорошенько перемешайте, чтобы покрылось соусом."),
+  RecipeStep(waitTime: 2, id: 12, imgUrl: _imagePath("soba12"), description: "Прогрейте лапшу с овощами и курицей на среднем огне в течение 1-2 минут, снимите с огня."),
+  RecipeStep(id: 13, imgUrl: _imagePath("soba13"), description: "Наша соба с курицей и овощами готова. Разложите сразу по тарелкам, посыпьте порезанным зеленым луком и подавайте.")
 ];
 
 final List<RecipeStep> syrnikiSteps = [
-  RecipeStep(id: 1, imgUrl: _imagePath("syrniki1"), description: "в миску всё скинуть"),
-  RecipeStep(waitTime: 20, id: 2, imgUrl: _imagePath("syrniki2"), description: "довести до однородной консистенции блендером, миксером или что у вас есть(я юзал дедовский способ и разминал эту массу вилкой минут 20, а потом ещё руками 3 минуты тесто давил)"),
-  RecipeStep(waitTime: 120, id: 3, imgUrl: _imagePath("syrniki3"), description: "накрываем миску пищевой плёнкой или в пакет целлофановый засовываем и ставим в холодос желательно на ночь, но можно и часа на 2-3, наверное"),
-  RecipeStep(id: 4, imgUrl: _imagePath("syrniki4"), description: "достаём и рукой формируем сырники как душа пожелает"),
-  RecipeStep(id: 5, imgUrl: _imagePath("syrniki5"), description: "местами хуйня получалась, но я это сливаю на ручное разминание теста"),
+  RecipeStep(id: 1, imgUrl: _imagePath("syrniki1"), description: "Переложите всё в миску."),
+  RecipeStep(waitTime: 20, id: 2, imgUrl: _imagePath("syrniki2"), description: "Доведите до однородной консистенции блендером, миксером или тем, что у вас есть (можно разминать эту массу вилкой минут 20, а потом ещё руками 3 минуты давить тесто)."),
+  RecipeStep(waitTime: 120, id: 3, imgUrl: _imagePath("syrniki3"), description: "Накрываем миску пищевой плёнкой или в пакет целлофановый засовываем и ставим в холодильник, желательно, на ночь, но можно и часа на 2-3."),
+  RecipeStep(id: 4, imgUrl: _imagePath("syrniki4"), description: "Достаём и рукой формируем сырники, как душа пожелает."),
+  RecipeStep(id: 5, imgUrl: _imagePath("syrniki5"), description: "Получается невероятно вкусно, можно подавать со сметаной и угощать друзей!"),
+];
+
+final List<RecipeStep> cutletsSteps = [
+  RecipeStep(id: 1, imgUrl: _imagePath("cutlets1"), description: "Подготовьте ингредиенты."),
+  RecipeStep(id: 2, imgUrl: _imagePath("cutlets2"), description: "Нарежьте лук мелко, чтобы он в дальнейшем хорошо прожарился и не хрустел"),
+  RecipeStep(id: 3, imgUrl: _imagePath("cutlets3"), description: "Возьмите ломтики хлеба и вырежьте из них центр. Получившиеся прямоугольники из корочки можно сохранить и потом приготовить с ними яичницу."),
+  RecipeStep(id: 4, imgUrl: _imagePath("cutlets4"), description: "Нарежьте хлеб небольшими кубиками, как показано на слайде."),
+  RecipeStep(waitTime: 5, id: 5, imgUrl: _imagePath("cutlets5"), description: "Переложите в небольшую ёмкость и залейте молоком, ожидайте в течение 5 минут."),
+  RecipeStep(id: 6, imgUrl: _imagePath("cutlets6"), description: "Затем подготовьте зелень."),
+  RecipeStep(id: 7, imgUrl: _imagePath("cutlets7"), description: "Подготовьте небольшую посуду с мукой, чтобы обвалять в ней котлеты, однако это необязательно."),
+  RecipeStep(id: 8, imgUrl: _imagePath("cutlets8"), description: "Сложите вместе лук, зелень, яйцо, хлеб, приправу и соль, тщательно перемешайте и сформируйте котлеты. Желательная толщина: 1,5 - 2 см."),
+  RecipeStep(id: 9, imgUrl: _imagePath("cutlets9"), description: "Жарьте с каждой стороны на среднем огне по 6 минут", waitTime: 12),
+  RecipeStep(id: 10, imgUrl: _imagePath("cutlets10"), description: "Готово. Приятного аппетита :)"),
 ];
 
 final List<List<RecipeStep>> stepsResolve = [
-  borshSteps, carbonaraSteps, muffinsSteps, tefSteps, sobaSteps, syrnikiSteps
+  borshSteps, cutletsSteps, muffinsSteps, tefSteps, sobaSteps, syrnikiSteps, carbonaraSteps
+];
+
+class Rate {
+
+}
+
+final ratesMap = HashMap<int, int>();
+
+final List<double> rates = [
+  7.9, 9.5, 7.5, 7.8, 9.2, 9.3, 8.7
 ];

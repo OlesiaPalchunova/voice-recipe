@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../model/recipes_info.dart';
@@ -10,17 +8,11 @@ class RecipeHeaderCard extends StatefulWidget {
   const RecipeHeaderCard({
     Key? key,
     required this.recipe,
-    this.width = maxWidth,
-    this.fontResizer = 1
+    this.sizeDivider = 1,
   }) : super(key: key);
 
   final Recipe recipe;
-  static const borderRadius = 16.0;
-  static const maxWidth = 380.0;
-  static const maxHeight = 290.0;
-  static const heightPerWidth = 0.76;
-  final double width;
-  final double fontResizer;
+  final double sizeDivider;
 
   @override
   State<RecipeHeaderCard> createState() => _RecipeHeaderCardState();
@@ -28,46 +20,78 @@ class RecipeHeaderCard extends StatefulWidget {
 
 class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   var _isPressed = false;
+  var _isHovered = false;
+  static const gradColor = Colors.black87;
+  static final endGradColor = gradColor.withOpacity(0);
+  static final startGradColor = gradColor.withOpacity(0.8);
+  static const maxDesktopHeight = 270.0;
+  static bool isDesktop = false;
 
-  double _getCardWidth(BuildContext context) {
-    var screenWidth = Config.pageWidth(context);
-    return min(widget.width, min(screenWidth * 0.9, RecipeHeaderCard.maxWidth));
+  double get height {
+    return isDesktop ? maxDesktopHeight : Config.pageHeight(context) * 0.3;
   }
 
-  double _getCardHeight(BuildContext context) {
-    return _getCardWidth(context) * RecipeHeaderCard.heightPerWidth;
+  double get width {
+    double height = this.height;
+    var supposedWidth = Config.pageWidth(context) * 0.9;
+    if (isDesktop) {
+      if (supposedWidth < 2 * height * 1.2) {
+        return supposedWidth;
+      }
+      return height * 1.2;
+    }
+    return supposedWidth;
   }
+
+  bool get active => _isHovered || _isPressed;
 
   @override
   Widget build(BuildContext context) {
-    const gradColor = Colors.black87;
-    final endGradColor = gradColor.withOpacity(0);
-    final startGradColor = gradColor.withOpacity(0.8);
-    final cardWidth = _getCardWidth(context);
-    final cardHeight = _getCardHeight(context);
-    return GestureDetector(
-        onTap: () {
+    isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
+    var cardWidth =  width;
+    var cardHeight = height;
+    var smallCards = false;
+    if (!isDesktop && widget.sizeDivider != 1) {
+      smallCards = true;
+      cardWidth = cardWidth / widget.sizeDivider;
+      cardHeight = cardWidth;
+    }
+    return InkWell(
+        onHover: (hovered) {
           setState(() {
-            _isPressed = !_isPressed;
+            _isHovered = hovered;
           });
+        },
+        onTap: () async {
+          setState(() {
+            _isPressed = true;
+          });
+          a() {
+            setState(() {
+              _isPressed = false;
+              _isHovered = false;
+            });
+            _navigateToRecipe(context, widget.recipe);
+          }
+          await Future.delayed(Config.animationTime).whenComplete(a);
         },
         child: Card(
             color: Colors.white.withOpacity(0),
             elevation: 0,
-            margin: const EdgeInsets.all(Config.margin / 2),
+            margin: EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
             child: Stack(children: [
               AnimatedContainer(
                 onEnd: () {
-                  if (_isPressed) {
-                    _navigateToRecipe(context, widget.recipe);
-                  }
                   setState(() {
                     _isPressed = false;
                   });
                 },
                 duration: Config.shortAnimationTime,
                 decoration: BoxDecoration(
-                    boxShadow: _isPressed
+                    borderRadius: BorderRadius.circular(
+                        Config.borderRadiusLarge
+                    ),
+                    boxShadow: active
                         ? [
                       BoxShadow(
                           color: Config.getColor(widget.recipe.id),
@@ -80,17 +104,18 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                 width: cardWidth,
                 child: ClipRRect(
                     borderRadius:
-                        BorderRadius.circular(RecipeHeaderCard.borderRadius
+                        BorderRadius.circular(
+                            Config.borderRadiusLarge
                         ),
                     child: Image(
-                      image: widget.recipe.faceImage,
-                      fit: BoxFit.fitHeight,
+                      image: AssetImage(widget.recipe.faceImageUrl),
+                      fit: cardWidth <= cardHeight * 1.2 ? BoxFit.fitHeight : BoxFit.fitWidth
                     )
                 ),
               ),
               AnimatedContainer(
                 duration: Config.shortAnimationTime,
-                width: _getCardWidth(context),
+                width: cardWidth,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -102,7 +127,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         ]
                     ),
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(RecipeHeaderCard.borderRadius)
+                        top: Radius.circular(Config.borderRadiusLarge)
                     )
                 ),
                 // width: double.infinity,
@@ -112,7 +137,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                   widget.recipe.name,
                   style: TextStyle(
                       fontFamily: Config.fontFamilyBold,
-                      fontSize: widget.fontResizer * cardHeight / 12,
+                      fontSize: cardHeight / 12,
                       fontWeight: FontWeight.w300,
                       color: Colors.white
                   ),
