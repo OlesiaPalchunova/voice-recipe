@@ -138,10 +138,14 @@ class Config {
     return colors[id % colors.length];
   }
 
+  static Color lastBackColor = _darkThemeBackColor;
+
   static Color getBackColor(int id) {
     if (darkModeOn) {
+      lastBackColor = _darkThemeBackColor;
       return _darkThemeBackColor;
     }
+    lastBackColor = backColors[id % backColors.length];
     return backColors[id % backColors.length];
   }
 

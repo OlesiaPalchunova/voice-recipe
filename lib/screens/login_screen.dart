@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -17,10 +18,28 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   static const height = 700;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim()
+    );
+  }
+
+  @override
+  dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var width = min(Config.slideWidth(context), 500.0);
+    Color backColor = Config.lastBackColor;
+    Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Config.iconColor,
@@ -29,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           title: "Voice Recipe",
         ),
       ),
-      backgroundColor: Colors.brown[100],
+      backgroundColor: backColor,
       body: SingleChildScrollView(
         child: Center(
           child: SizedBox(
@@ -44,59 +63,66 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             'Еще нет аккаунта?',
                             style: TextStyle(
-                                color: Colors.brown,
-                                fontSize: 20,
+                                color: textColor.withOpacity(0.8),
+                                fontSize: 18,
                                 fontFamily: Config.fontFamily),
                           ),
-                          SizedBox(width: Config.padding,),
+                          const SizedBox(
+                            width: Config.padding,
+                          ),
                           Text(
                             'Создать',
                             style: TextStyle(
-                                color: Colors.brown,
-                                fontSize: 20,
+                                color: textColor.withOpacity(0.8),
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: Config.fontFamilyBold),
                           )
                         ],
                       ),
-                      const InputLabel(
-                        hintText: 'email@example.com',
-                        iconData: Icons.accessibility,
+                      InputLabel(
+                        width: width * 0.8,
+                        hintText: 'Email',
+                        controller: _emailController,
                       ),
-                      const InputLabel(
-                          hintText: "пароль",
-                          iconData: Icons.lock
+                      InputLabel(
+                        width: width * 0.8,
+                        hintText: "Password",
+                        controller: _passwordController,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
                         child: Text(
                           'Забыли пароль?',
                           style: TextStyle(
-                              color: Colors.brown,
-                              fontSize: 20,
-                              fontFamily: Config.fontFamily
-                          ),
+                              color: textColor.withOpacity(0.8),
+                              fontSize: 18,
+                              fontFamily: Config.fontFamily),
                         ),
                       ),
                       SizedBox(
-                        height: height * 0.12,
+                        height: height * 0.15,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 20),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              color: Colors.brown,
-                              child: const Center(
-                                child: Text('Войти',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: Config.fontFamily
-                                    )
+                          padding: const EdgeInsets.only(
+                              left: 40, right: 40, top: 30, bottom: 20),
+                          child: InkWell(
+                            onTap: signIn,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(Config.borderRadius),
+                              child: Container(
+                                width: width * 0.8,
+                                color: Colors.black87,
+                                child: const Center(
+                                  child: Text('Войти',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontFamily: Config.fontFamily)),
                                 ),
                               ),
                             ),
@@ -141,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildIcon() {
     return SizedBox(
-      height: height * 0.4,
+      height: height * 0.35,
       child: SizedBox(
         height: 100,
         width: 100,

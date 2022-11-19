@@ -2,13 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
-import 'package:voice_recipe/components/review/review_card.dart';
+import 'package:voice_recipe/components/review/comment_card.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
 import 'package:voice_recipe/model/reviews_info.dart';
 import 'package:voice_recipe/screens/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
+import '../../screens/auth_screen.dart';
 
 class ReviewView extends StatefulWidget {
   const ReviewView({super.key, required this.recipe});
@@ -34,6 +35,7 @@ class _ReviewViewState extends State<ReviewView> {
   @override
   Widget build(BuildContext context) {
     final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white;
+    final Color color = Config.iconColor.withOpacity(0.8);
     return Container(
       margin: const EdgeInsets.all(Config.margin),
       // color: Config.backgroundColor,
@@ -69,7 +71,7 @@ class _ReviewViewState extends State<ReviewView> {
                           !_isEvaluated ? "Оставьте отзыв" : "Готово",
                           style: TextStyle(
                               fontFamily: Config.fontFamily,
-                              fontSize: 24,
+                              fontSize: 22,
                               color: Config.iconColor),
                         ),
                         !_isEvaluated
@@ -110,42 +112,53 @@ class _ReviewViewState extends State<ReviewView> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: Config.padding),
-                padding: const EdgeInsets.all(Config.padding),
-                decoration: BoxDecoration(
-                    color: backColor,
-                    borderRadius:
-                    BorderRadius.circular(Config.borderRadiusLarge)),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-                  },
-                  child: Text(
-                    "Оставить комментарий",
-                    style: TextStyle(
-                        fontFamily: Config.fontFamily,
-                        fontSize: 24,
-                        color: Config.iconColor),
-                  ),
-                ),
-              ),
-              Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: Config.padding),
                 // padding: const EdgeInsets.all(Config.padding),
                 decoration: BoxDecoration(
-                    color: Config.darkModeOn ? backColor : Colors.white,
+                    color: backColor,
                     borderRadius:
-                    BorderRadius.circular(Config.borderRadiusLarge)),
+                        BorderRadius.circular(Config.borderRadiusLarge)),
                 child: Column(
-                  children: reviews[widget.recipe.id]
-                      .map((e) => ReviewCard(
-                            review: e,
-                          ))
-                      .toList(),
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(Config.padding),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Комментарии",
+                        style: TextStyle(
+                            color:
+                                Config.darkModeOn ? Colors.white : Colors.black,
+                            fontFamily: Config.fontFamily,
+                            fontSize: 22),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          CommentCard.buildCommentFrame(body: TextField(
+                            style: TextStyle(color: color, fontFamily: Config.fontFamily),
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const AuthScreen())),
+                            decoration: InputDecoration(
+                              hintText: 'Оставьте свой комментарий',
+                              hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
+                            ),
+                          )),
+                          Column(
+                            children: reviews[widget.recipe.id]
+                                .map((e) => CommentCard(
+                                      review: e,
+                                    ))
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ),

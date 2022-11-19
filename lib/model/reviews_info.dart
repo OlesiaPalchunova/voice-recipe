@@ -8,8 +8,8 @@ class Review {
 }
 
 final List<Review> borshReviews = [
-  Review(userId: 1, postTime: DateTime(2022, DateTime.december), text: "Неплохо!"),
-  Review(userId: 2, postTime: DateTime(2022, DateTime.december), text: "Знаете ли,"
+  Review(userId: 1, postTime: DateTime(2022, DateTime.april), text: "Неплохо!"),
+  Review(userId: 2, postTime: DateTime(2022, DateTime.november), text: "Знаете ли,"
       "а я еще ботву в конце добавляю, так особенно хорошо получается!"),
 ];
 

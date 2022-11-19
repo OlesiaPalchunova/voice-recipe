@@ -43,6 +43,8 @@ dependencies:
   flutter_appauth:
   flutter_secure_storage:
   flutter_signin_button:
+  firebase_auth:
+  firebase_core:
 
 
 dev_dependencies:

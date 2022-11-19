@@ -4,7 +4,7 @@ class User {
   final String imageProfileUrl;
 
   User({required this.id, required this.name,
-    this.imageProfileUrl = "assets/images/voice_recipe.png"});
+    this.imageProfileUrl = "assets/images/profile.png"});
 }
 
 final List<User> users = [
