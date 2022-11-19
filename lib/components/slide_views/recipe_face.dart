@@ -21,6 +21,7 @@ class RecipeFaceSlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        margin: const EdgeInsets.all(Config.margin),
         alignment: Alignment.center,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Config.borderRadiusLarge),

@@ -101,8 +101,9 @@ flutter:
      - family: VoiceRecipeMedia
        fonts:
          - asset: assets/fonts/VoiceRecipeMedia.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+     - family: VoiceRecipe
+       fonts:
+         - asset: assets/fonts/VoiceRecipe.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/review/RateLabel.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
@@ -48,7 +49,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   @override
   Widget build(BuildContext context) {
     isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
-    var cardWidth =  width;
+    var cardWidth = width;
     var cardHeight = height;
     var smallCards = false;
     if (!isDesktop && widget.sizeDivider != 1) {
@@ -73,12 +74,14 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
             });
             _navigateToRecipe(context, widget.recipe);
           }
+
           await Future.delayed(Config.animationTime).whenComplete(a);
         },
         child: Card(
             color: Colors.white.withOpacity(0),
             elevation: 0,
-            margin: EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
+            margin:
+                EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
             child: Stack(children: [
               AnimatedContainer(
                 onEnd: () {
@@ -88,30 +91,27 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                 },
                 duration: Config.shortAnimationTime,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                        Config.borderRadiusLarge
-                    ),
+                    borderRadius:
+                        BorderRadius.circular(Config.borderRadiusLarge),
                     boxShadow: active
                         ? [
-                      BoxShadow(
-                          color: Config.getColor(widget.recipe.id),
-                          blurRadius: 12,
-                          // offset: const Offset(4, 4)
-                      )
-                    ] : []
-                ),
+                            BoxShadow(
+                              color: Config.getColor(widget.recipe.id),
+                              blurRadius: 12,
+                              // offset: const Offset(4, 4)
+                            )
+                          ]
+                        : []),
                 height: cardHeight,
                 width: cardWidth,
                 child: ClipRRect(
                     borderRadius:
-                        BorderRadius.circular(
-                            Config.borderRadiusLarge
-                        ),
+                        BorderRadius.circular(Config.borderRadiusLarge),
                     child: Image(
-                      image: AssetImage(widget.recipe.faceImageUrl),
-                      fit: cardWidth <= cardHeight * 1.2 ? BoxFit.fitHeight : BoxFit.fitWidth
-                    )
-                ),
+                        image: AssetImage(widget.recipe.faceImageUrl),
+                        fit: cardWidth <= cardHeight * 1.2
+                            ? BoxFit.fitHeight
+                            : BoxFit.fitWidth)),
               ),
               AnimatedContainer(
                 duration: Config.shortAnimationTime,
@@ -124,29 +124,32 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         colors: [
                           startGradColor,
                           endGradColor,
-                        ]
-                    ),
+                        ]),
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(Config.borderRadiusLarge)
-                    )
-                ),
+                        top: Radius.circular(Config.borderRadiusLarge))),
                 // width: double.infinity,
-                padding: EdgeInsets.fromLTRB(cardWidth / 10, cardHeight / 7,
-                    0, cardHeight / 5),
+                padding: EdgeInsets.fromLTRB(
+                    cardWidth / 10, cardHeight / 7, 0, cardHeight / 5),
                 child: Text(
                   widget.recipe.name,
                   style: TextStyle(
                       fontFamily: Config.fontFamilyBold,
                       fontSize: cardHeight / 12,
                       fontWeight: FontWeight.w300,
-                      color: Colors.white
-                  ),
+                      color: Colors.white),
                 ),
               ),
-            ]
-            )
-        )
-    );
+              Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  alignment: Alignment.bottomRight,
+                  padding: const EdgeInsets.all(Config.padding),
+                  child: RateLabel(
+                    justDark: true,
+                    rate: rates[widget.recipe.id],
+                    width: Config.isDesktop(context) ? 65 : 50,
+                  ))
+            ])));
   }
 
   void _navigateToRecipe(BuildContext context, Recipe recipe) {

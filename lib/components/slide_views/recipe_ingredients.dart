@@ -17,6 +17,7 @@ class IngredientsSlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.all(Config.margin),
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
           color: Config.darkModeOn ? Config.iconBackColor: Colors.white70,
@@ -24,7 +25,6 @@ class IngredientsSlideView extends StatelessWidget {
       ),
       child: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.all(Config.margin),
           padding: const EdgeInsets.all(Config.padding),
           child: Column(
             children: [

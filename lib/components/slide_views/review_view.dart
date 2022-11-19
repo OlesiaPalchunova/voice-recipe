@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/review/RateLabel.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
 
 import '../../config.dart';
@@ -15,7 +18,6 @@ class ReviewView extends StatefulWidget {
 
 class _ReviewViewState extends State<ReviewView> {
   var _isEvaluated = false;
-  var _starsCount = 0;
 
   @override
   initState() {
@@ -23,16 +25,16 @@ class _ReviewViewState extends State<ReviewView> {
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
       _isEvaluated = true;
-      _starsCount = rate;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.all(Config.margin),
+      // color: Config.backgroundColor,
       alignment: Alignment.topCenter,
-      padding: const EdgeInsets.fromLTRB(
-          Config.padding, Config.padding, 0, 0),
+      padding: const EdgeInsets.all(Config.padding),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
@@ -41,61 +43,70 @@ class _ReviewViewState extends State<ReviewView> {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                child: _buildRate(),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: Config.padding),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  !_isEvaluated ? "Оставьте отзыв" : "Готово",
-                  style: TextStyle(
-                    fontFamily: Config.fontFamily,
-                    fontSize: 28,
-                    color: Config.iconColor
-                  ),
+                child: RateLabel(
+                  rate: rates[widget.recipe.id],
+                  width: min(90, Config.slideWidth(context) / 6),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(top: Config.padding),
-                child: StarPanel(
-                  onTap: (star) {
-                    setState(() {
-                      _isEvaluated = true;
-                    });
-                    ratesMap[widget.recipe.id] = star;
-                  },
-                  activeStarsCount: _starsCount,
+                padding: const EdgeInsets.all(Config.padding),
+                decoration: BoxDecoration(
+                  color: Config.darkModeOn ? Colors.black12 : Colors.white54,
+                  borderRadius: BorderRadius.circular(Config.borderRadiusLarge)
                 ),
-              )
+                child: Column(
+                  children: [
+                    Row(
+                      textBaseline: TextBaseline.alphabetic,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          !_isEvaluated ? "Оставьте отзыв" : "Готово",
+                          style: TextStyle(
+                              fontFamily: Config.fontFamily,
+                              fontSize: 28,
+                              color: Config.iconColor),
+                        ),
+                        !_isEvaluated ? Container() :
+                        InkWell(
+                          onTap: () {
+                            ratesMap.remove(widget.recipe.id);
+                            setState(() {
+                              StarPanelState.current?.clear();
+                              _isEvaluated = false;
+                            });
+                          },
+                          child: Text(
+                            "Перезаписать ответ",
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontFamily: Config.fontFamily,
+                                fontSize: min(20, Config.slideWidth(context) / 30),
+                                decoration: TextDecoration.underline,
+                                color: Config.iconColor.withOpacity(0.5)),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: Config.padding),
+                      child: StarPanel(
+                        id: widget.recipe.id,
+                        onTap: (star) {
+                          setState(() {
+                            _isEvaluated = true;
+                          });
+                          ratesMap[widget.recipe.id] = star;
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRate() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
-      width: 80,
-      padding: const EdgeInsets.all(Config.padding / 2),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.star,
-            color: Colors.yellow,
-            size: 30,
-          ),
-          Text(
-            rates[widget.recipe.id].toString(),
-            style: const TextStyle(
-                fontFamily: Config.fontFamily,
-                color: Colors.black87,
-                fontSize: 22),
-          )
-        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -52,17 +53,19 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static const firstStepSlideId = 2;
   static int _slideId = 0;
   late CommandsListener _listener;
+  static final stepsMap = HashMap<int, int>();
 
   @override
   void initState() {
     super.initState();
-    _slideId = 0;
+    _slideId = stepsMap[widget.recipe.id]?? 0;
     _initCommandsListener();
   }
 
   @override
   void dispose() {
     super.dispose();
+    stepsMap[widget.recipe.id] = _slideId;
     RecipeScreen.tts.stop();
     _listener.shutdown();
   }

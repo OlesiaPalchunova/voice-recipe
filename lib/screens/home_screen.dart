@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
               alignment: Alignment.topCenter,
               color: Config.backgroundColor,
               child: SizedBox(
-                width: Config.MAX_WIDTH,
+                width: Config.pageWidth(context),
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,

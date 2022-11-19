@@ -1,24 +1,63 @@
+import 'dart:collection';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
 
 class StarPanel extends StatefulWidget {
-  const StarPanel({super.key, required this.onTap, this.activeStarsCount = 0});
+  const StarPanel({super.key, required this.id, required this.onTap});
 
+  final int id;
   final Function(int) onTap;
-  final int activeStarsCount;
 
   @override
-  State<StarPanel> createState() => _StarPanelState();
+  State<StarPanel> createState() => StarPanelState();
 }
 
-class _StarPanelState extends State<StarPanel> {
-  late var _minIdx = widget.activeStarsCount - 1;
+class StarPanelState extends State<StarPanel> {
+  static const _initialMinIdx = - 1;
+  late int _minIdx;
   late var _currentStarIdx = _minIdx;
-  static const starsCount = 10;
+  static const starsCount = 5;
+  static StarPanelState? current;
+  static final starsTable = HashMap<int, int>();
+
+  @override
+  void initState() {
+    current = this;
+    _minIdx = starsTable[widget.id] ?? -1;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    starsTable[widget.id] = _minIdx;
+    super.dispose();
+  }
+
+  void clear() {
+    setState(() {
+      _minIdx = - 1;
+      _currentStarIdx = _minIdx;
+    });
+  }
+
+  Color starColor(int index) {
+    if (_minIdx == _initialMinIdx) {
+      return index <= _currentStarIdx
+          ? Config.darkModeOn ? Colors.white : Colors.yellow.shade400
+          : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
+    }
+    return index <= _currentStarIdx
+        ? Config.darkModeOn ? Colors.yellow : Colors.yellow.shade500
+        : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final width = Config.slideWidth(context);
+    final double starSize = max((width / 2) / (starsCount + 1), 50);
     return Container(
       alignment: Alignment.center,
       child: Row(
@@ -35,6 +74,7 @@ class _StarPanelState extends State<StarPanel> {
                 });
               },
               onTap: () {
+                if (_minIdx >= 0) return;
                 setState(() {
                   widget.onTap(index);
                   _minIdx = index;
@@ -43,15 +83,13 @@ class _StarPanelState extends State<StarPanel> {
               },
               child: AnimatedContainer(
                   duration: Config.animationTime,
+                  height: starSize,
+                  width: starSize,
                   alignment: Alignment.center,
                   child: Icon(
-                    index <= _currentStarIdx
-                        ? Icons.star
-                        : Icons.star_border,
-                    color: index <= _currentStarIdx ? Colors.yellow : Config.iconColor,
-                    size: Config.pageWidth(context) / ((starsCount + 1) * 2),
-                    weight: 0.01,
-                    opticalSize: 0.01,
+                    Icons.star,
+                    color: starColor(index),
+                    size: starSize,
                   ),
               ),
             )

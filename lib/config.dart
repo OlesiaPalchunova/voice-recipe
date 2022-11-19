@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,7 +46,7 @@ class Config {
 
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const _darkIconBackColor = Color(0xFF202124);
-  static const _darkIconDisabledBackColor = Color(0xFF242634);
+  static const darkBlue = Color(0xFF242634);
   static const _darkIconColor = Colors.white;
 
   static const _iconBackColor = Colors.white;
@@ -92,7 +93,7 @@ class Config {
 
   static Color get pressed {
     if (darkModeOn) {
-      return _darkIconDisabledBackColor;
+      return darkBlue;
     }
     return Colors.grey.shade100;
   }
@@ -113,7 +114,7 @@ class Config {
 
   static Color get disabledIconBackColor {
     if (darkModeOn) {
-      return _darkIconDisabledBackColor;
+      return darkBlue;
     }
     return _iconDisabledBackColor;
   }
@@ -148,7 +149,15 @@ class Config {
   }
 
   static double pageWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
+    return min(MAX_WIDTH, MediaQuery.of(context).size.width);
+  }
+
+  static double slideWidth(BuildContext context) {
+    return min(MAX_SLIDE_WIDTH, pageWidth(context));
+  }
+
+  static bool isDesktop(BuildContext context) {
+    return pageWidth(context) >= pageHeight(context);
   }
 
   static var notificationsOn = true;
