@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/review/RateLabel.dart';
+import 'package:voice_recipe/components/review/rate_label.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
