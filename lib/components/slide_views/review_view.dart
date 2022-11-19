@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/review/RateLabel.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
+import 'package:voice_recipe/screens/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
@@ -104,10 +105,29 @@ class _ReviewViewState extends State<ReviewView> {
                   ],
                 ),
               ),
+              Container(
+                margin: const EdgeInsets.only(top: Config.margin * 4),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder:
+                    (context) => const LoginScreen()
+                    ));
+                  },
+                  child: Text(
+                    "Оставить комментарий",
+                    style: TextStyle(
+                        fontFamily: Config.fontFamily,
+                        fontSize: 28,
+                        color: Config.iconColor),
+                  ),
+                ),
+              )
             ],
           ),
         ),
       ),
     );
   }
+
+
 }

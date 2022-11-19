@@ -39,6 +39,10 @@ dependencies:
   provider:
   flex_color_scheme: ^4.1.1
   cupertino_icons: ^1.0.2
+  http:
+  flutter_appauth:
+  flutter_secure_storage:
+  flutter_signin_button:
 
 
 dev_dependencies:

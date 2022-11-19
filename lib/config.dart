@@ -27,6 +27,7 @@ class Config {
   static const padding = 10.0;
   static const margin = 10.0;
   static var darkModeOn = false;
+  static var loggedIn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
   static const MAX_SLIDE_WIDTH = 700.0;
