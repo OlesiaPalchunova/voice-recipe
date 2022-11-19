@@ -27,6 +27,7 @@ migrate_working_dir/
 /web/
 /windows/
 /linux/
+/macos/
 
 **/doc/api/
 **/ios/Flutter/.last_build_id
@@ -51,4 +52,5 @@ app.*.map.json
 
 # my restrictions
 /assets/
+/lib/firebase_options.dart
 
