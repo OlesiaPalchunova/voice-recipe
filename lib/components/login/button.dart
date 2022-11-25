@@ -18,12 +18,13 @@ class Button extends StatefulWidget {
 
 class _ButtonState extends State<Button> {
   bool _hovered = false;
+  bool _pressed = false;
 
-  Color get backColor => _hovered ?
+  Color get backColor => _hovered | _pressed ?
   const Color(0xff101010) :
   const Color(0xff050505);
 
-  List<BoxShadow> get shadow => !_hovered
+  List<BoxShadow> get shadow => !_hovered & !_pressed
       ? []
       : const [BoxShadow(color: Colors.orangeAccent, blurRadius: 12)];
 
@@ -33,7 +34,17 @@ class _ButtonState extends State<Button> {
       onHover: (hovered) => setState(() {
         _hovered = hovered;
       }),
-      onTap: widget.onTap,
+      onTap: () async {
+        setState(() {
+          _pressed = true;
+        });
+        await Future.delayed(Config.shortAnimationTime).whenComplete(() {
+          setState(() {
+            _pressed = false;
+          });
+        });
+        widget.onTap();
+      },
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(

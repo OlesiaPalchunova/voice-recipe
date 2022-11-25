@@ -6,7 +6,7 @@ import 'package:voice_recipe/components/review/rate_label.dart';
 import 'package:voice_recipe/components/review/comment_card.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
 import 'package:voice_recipe/model/reviews_info.dart';
-import 'package:voice_recipe/screens/login_screen.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
@@ -24,6 +24,7 @@ class ReviewView extends StatefulWidget {
 class _ReviewViewState extends State<ReviewView> {
   var _isEvaluated = false;
   final _commentController = TextEditingController();
+  final FocusNode _newCommentNode = FocusNode();
 
   @override
   initState() {
@@ -127,12 +128,16 @@ class _ReviewViewState extends State<ReviewView> {
                         children: [
                           CommentCard.buildCommentFrame(
                               body: TextField(
-                                controller: _commentController,
-                            style: TextStyle(color: color, fontFamily: Config.fontFamily),
+                                focusNode: _newCommentNode,
+                                autofocus: false,
+                            controller: _commentController,
+                            style: TextStyle(
+                                color: color, fontFamily: Config.fontFamily),
                             onTap: () {
-                              if (Config.loggedIn) {
-                                return;
-                              }
+                              // if (Config.loggedIn) {
+                              //   return;
+                              // }
+                              _newCommentNode.unfocus();
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const LoginScreen()));
                             },
@@ -143,19 +148,18 @@ class _ReviewViewState extends State<ReviewView> {
                               for (var element in users) {
                                 debugPrint(element.name);
                               }
-                              reviews[widget.recipe.id].add(
-                                Review(userId: users[users.length - 1].id,
-                                    postTime: DateTime.now(),
-                                    text: result
-                                )
-                              );
+                              reviews[widget.recipe.id].add(Review(
+                                  userId: users[users.length - 1].id,
+                                  postTime: DateTime.now(),
+                                  text: result));
                               setState(() {
                                 _commentController.clear();
                               });
                             },
                             decoration: InputDecoration(
                               hintText: 'Оставьте свой комментарий',
-                              hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
+                              hintStyle: TextStyle(
+                                  color: color, fontFamily: Config.fontFamily),
                             ),
                           )),
                           Column(

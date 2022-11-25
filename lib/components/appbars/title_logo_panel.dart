@@ -9,6 +9,14 @@ class TitleLogoPanel extends StatefulWidget {
 
   @override
   State<TitleLogoPanel> createState() => TitleLogoPanelState();
+
+  AppBar appBar() {
+    return AppBar(
+      foregroundColor: Config.iconColor,
+      backgroundColor: Config.backgroundColor,
+      title: this
+    );
+  }
 }
 
 class TitleLogoPanelState extends State<TitleLogoPanel> {

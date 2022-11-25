@@ -10,7 +10,8 @@ class PasswordLabel extends StatefulWidget {
     required this.width,
     required this.controller,
     required this.onSubmit,
-    this.height = 60
+    this.height = 60,
+    this.focusNode
   });
 
   final String hintText;
@@ -18,6 +19,7 @@ class PasswordLabel extends StatefulWidget {
   final double width;
   final TextEditingController controller;
   final VoidCallback onSubmit;
+  final FocusNode? focusNode;
 
   @override
   State<PasswordLabel> createState() => _PasswordLabelState();
@@ -35,47 +37,48 @@ class _PasswordLabelState extends State<PasswordLabel> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      child: Container(
-        padding: const EdgeInsets.only(left: 40, right: 40, top: Config.padding),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(Config.borderRadius),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(width: Config.padding,),
-              SizedBox(
-                width: widget.width * 0.9,
-                child: TextFormField(
-                  obscureText: _obscureText,
-                  obscuringCharacter: '*',
-                  controller: widget.controller,
-                  decoration: InputLabel.buildInputDecoration(widget.hintText,
-                      InkWell(
-                        onHover: (hover) {
-                          setState(() {
-                            _hovered = hover;
-                          });
-                        },
-                        onTap: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        child: Icon(
-                          _obscureText
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Config.iconColor.withOpacity(opacity),
-                        ),
-                      )),
-                  style: TextStyle(
-                      color: Config.iconColor.withOpacity(0.8),
-                      fontSize: 18,
-                      fontFamily: Config.fontFamily),
-                ),
-              )
-            ],
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Config.borderRadius),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: widget.width,
+              child: TextFormField(
+                onFieldSubmitted: (s) {
+                  widget.onSubmit();
+                  debugPrint('\n\n\nSUBMIT');
+                },
+                focusNode: widget.focusNode,
+                obscureText: _obscureText,
+                obscuringCharacter: '*',
+                controller: widget.controller,
+                decoration: InputLabel.buildInputDecoration(widget.hintText,
+                    InkWell(
+                      onHover: (hover) {
+                        setState(() {
+                          _hovered = hover;
+                        });
+                      },
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Icon(
+                        _obscureText
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Config.iconColor.withOpacity(opacity),
+                      ),
+                    )),
+                style: TextStyle(
+                    color: Config.iconColor.withOpacity(0.8),
+                    fontSize: 18,
+                    fontFamily: Config.fontFamily),
+              ),
+            )
+          ],
         ),
       ),
     );
