@@ -50,7 +50,7 @@ class StarPanelState extends State<StarPanel> {
           : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
     }
     return index <= _currentStarIdx
-        ? Config.darkModeOn ? Colors.yellow : Colors.yellow.shade500
+        ? Colors.yellow.shade600
         : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
   }
 
@@ -64,7 +64,6 @@ class StarPanelState extends State<StarPanel> {
         children: List.generate(starsCount,
             (index) => InkWell(
               onHover: (hovered) {
-                if (_minIdx >= 0) return;
                 setState(() {
                   if (hovered) {
                     _currentStarIdx = index;
@@ -74,7 +73,6 @@ class StarPanelState extends State<StarPanel> {
                 });
               },
               onTap: () {
-                if (_minIdx >= 0) return;
                 setState(() {
                   widget.onTap(index);
                   _minIdx = index;

@@ -74,7 +74,6 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
             });
             _navigateToRecipe(context, widget.recipe);
           }
-
           await Future.delayed(Config.animationTime).whenComplete(a);
         },
         child: Card(
@@ -91,6 +90,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                 },
                 duration: Config.shortAnimationTime,
                 decoration: BoxDecoration(
+                    color: Colors.grey.shade900,
                     borderRadius:
                         BorderRadius.circular(Config.borderRadiusLarge),
                     boxShadow: active

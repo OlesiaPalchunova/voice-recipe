@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:voice_recipe/screens/register_screen.dart';
 
 import '../components/appbars/title_logo_panel.dart';
 import '../components/login/button.dart';
@@ -11,28 +10,29 @@ import '../components/login/input_label.dart';
 import '../components/login/password_label.dart';
 import '../components/login/sign_in_label.dart';
 import '../config.dart';
-import '../model/users_info.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  static const height = 700;
+class _RegisterScreenState extends State<RegisterScreen> {
+  static const height = 800;
+  final _loginController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  static int counter = 3;
+  final _confirmPasswordController = TextEditingController();
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+  Future signUp() async {
+    if (!isPasswordConfirmed()) {
+      return;
+    }
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
-    await Future.microtask(() {
-      users.add(UserAccountInfo(id: counter++, name: _emailController.text.trim()));
-    });
+        password: _passwordController.text.trim()
+    );
     await Future.microtask(() => Navigator.of(context).pop());
   }
 
@@ -41,6 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  bool isPasswordConfirmed() {
+    return _passwordController.text.trim() == _confirmPasswordController
+        .text.trim();
   }
 
   @override
@@ -69,34 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Еще нет аккаунта?',
-                            style: TextStyle(
-                                color: textColor.withOpacity(0.8),
-                                fontSize: 18,
-                                fontFamily: Config.fontFamily),
-                          ),
-                          const SizedBox(
-                            width: Config.padding,
-                          ),
-                          InkWell(
-                            onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterScreen())),
-                            child: Text(
-                              'Создать',
-                              style: TextStyle(
-                                  color: textColor.withOpacity(0.8),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: Config.fontFamilyBold),
-                            ),
-                          )
-                        ],
+                      InputLabel(
+                          hintText: "Логин",
+                          width: width * 0.8,
+                          controller: _loginController
                       ),
                       InputLabel(
                         width: width * 0.8,
@@ -107,25 +88,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: width * 0.8,
                         hintText: "Пароль",
                         controller: _passwordController,
-                        onSubmit: signIn,
+                        onSubmit: () {},
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          'Забыли пароль?',
-                          style: TextStyle(
-                              color: textColor.withOpacity(0.8),
-                              fontSize: 18,
-                              fontFamily: Config.fontFamily),
-                        ),
+                      PasswordLabel(
+                        width: width * 0.8,
+                        hintText: "Подтвердите пароль",
+                        controller: _confirmPasswordController,
+                        onSubmit: signUp,
                       ),
                       SizedBox(
-                        height: height * 0.15,
+                        height: height * 0.12,
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 40, right: 40, top: 30, bottom: 20),
-                          child: Button(onTap: signIn, text: "Войти",
-                            width: width * 0.8,)
+                              left: 40, right: 40, top: 20, bottom: 20),
+                          child: Button(onTap: signUp,
+                          width: width * 0.8, text: "Создать аккаунт",),
                         ),
                       ),
                       Container(
@@ -166,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildIcon() {
     return SizedBox(
-      height: height * 0.35,
+      height: height * 0.25,
       child: SizedBox(
         height: 100,
         width: 100,

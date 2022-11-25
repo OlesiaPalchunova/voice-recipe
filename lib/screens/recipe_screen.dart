@@ -83,11 +83,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
             automaticallyImplyLeading: false,
             toolbarHeight: 60,
             foregroundColor: Config.iconColor,
-            backgroundColor: Config.backgroundColor,
-            title: Center(
-              child: Container(
+            backgroundColor: Config.getBackColor(widget.recipe.id),
+            centerTitle: true,
+            title: Container(
                 alignment: Alignment.center,
-                color: Config.getBackColor(widget.recipe.id),
                 width: Config.MAX_SLIDE_WIDTH,
                 child: HeaderButtonsPanel(
                   id: widget.recipe.id,
@@ -101,7 +100,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   onStopSaying: _onStopSaying,
                 ),
               ),
-            ),
           ),
           body: Container(
             alignment: Alignment.center,

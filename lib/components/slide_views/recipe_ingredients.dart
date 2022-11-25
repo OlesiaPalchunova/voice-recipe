@@ -17,7 +17,9 @@ class IngredientsSlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(Config.margin),
+      margin: const EdgeInsets.all(Config.margin).add(
+          const EdgeInsets.only(bottom: Config.margin)
+      ),
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
           color: Config.darkModeOn ? Config.iconBackColor: Colors.white70,

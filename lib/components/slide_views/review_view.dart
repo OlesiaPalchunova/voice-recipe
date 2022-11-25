@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
 import 'package:voice_recipe/components/review/comment_card.dart';
@@ -9,7 +10,7 @@ import 'package:voice_recipe/screens/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
-import '../../screens/auth_screen.dart';
+import '../../model/users_info.dart';
 
 class ReviewView extends StatefulWidget {
   const ReviewView({super.key, required this.recipe});
@@ -22,6 +23,7 @@ class ReviewView extends StatefulWidget {
 
 class _ReviewViewState extends State<ReviewView> {
   var _isEvaluated = false;
+  final _commentController = TextEditingController();
 
   @override
   initState() {
@@ -30,6 +32,12 @@ class _ReviewViewState extends State<ReviewView> {
     if (rate != null) {
       _isEvaluated = true;
     }
+  }
+
+  @override
+  dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,26 +82,6 @@ class _ReviewViewState extends State<ReviewView> {
                               fontSize: 22,
                               color: Config.iconColor),
                         ),
-                        !_isEvaluated
-                            ? Container()
-                            : InkWell(
-                                onTap: () {
-                                  ratesMap.remove(widget.recipe.id);
-                                  setState(() {
-                                    StarPanelState.current?.clear();
-                                    _isEvaluated = false;
-                                  });
-                                },
-                                child: Text(
-                                  "Перезаписать ответ",
-                                  style: TextStyle(
-                                      fontFamily: Config.fontFamily,
-                                      fontSize: min(
-                                          20, Config.slideWidth(context) / 30),
-                                      decoration: TextDecoration.underline,
-                                      color: Config.iconColor.withOpacity(0.5)),
-                                ),
-                              ),
                       ],
                     ),
                     Container(
@@ -137,10 +125,34 @@ class _ReviewViewState extends State<ReviewView> {
                       scrollDirection: Axis.vertical,
                       child: Column(
                         children: [
-                          CommentCard.buildCommentFrame(body: TextField(
+                          CommentCard.buildCommentFrame(
+                              body: TextField(
+                                controller: _commentController,
                             style: TextStyle(color: color, fontFamily: Config.fontFamily),
-                            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AuthScreen())),
+                            onTap: () {
+                              if (Config.loggedIn) {
+                                return;
+                              }
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                            },
+                            onSubmitted: (String result) {
+                              if (result.isEmpty || !Config.loggedIn) {
+                                return;
+                              }
+                              for (var element in users) {
+                                debugPrint(element.name);
+                              }
+                              reviews[widget.recipe.id].add(
+                                Review(userId: users[users.length - 1].id,
+                                    postTime: DateTime.now(),
+                                    text: result
+                                )
+                              );
+                              setState(() {
+                                _commentController.clear();
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText: 'Оставьте свой комментарий',
                               hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),

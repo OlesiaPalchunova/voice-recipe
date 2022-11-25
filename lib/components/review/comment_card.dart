@@ -12,6 +12,16 @@ class CommentCard extends StatelessWidget {
 
   String get since {
     var diff = DateTime.now().difference(review.postTime);
+    if (diff.inMinutes < 60) {
+      int rest = diff.inMinutes - ((diff.inMinutes / 10).floor()) * 10;
+      var str = "минут";
+      if (rest == 1) {
+        str = "минуту";
+      } else if (rest < 5 && rest >= 1) {
+        str = "минуты";
+      }
+      return "${diff.inMinutes} $str назад";
+    }
     if (diff.inDays > 31) {
       int monthsCount = (diff.inDays / 30).floor();
       int rest = monthsCount - ((monthsCount / 10).floor()) * 10;
@@ -88,7 +98,7 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User user = users[review.userId - 1];
+    UserAccountInfo user = users[review.userId - 1];
     return buildCommentFrame(
       nickname: user.name,
       since: since,

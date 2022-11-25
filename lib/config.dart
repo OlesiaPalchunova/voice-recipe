@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
@@ -27,7 +28,6 @@ class Config {
   static const padding = 10.0;
   static const margin = 10.0;
   static var darkModeOn = false;
-  static var loggedIn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
   static const MAX_SLIDE_WIDTH = 700.0;
@@ -80,6 +80,8 @@ class Config {
     800: Color.fromRGBO(237, 120, 47, .9),
     900: Color.fromRGBO(237, 120, 47, 1),
   };
+
+  static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
   static Color get appBarColor {
     return Config.darkModeOn ? Colors.black87 : Colors.white;

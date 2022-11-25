@@ -1,13 +1,14 @@
-class User {
+class UserAccountInfo {
   final int id;
   final String name;
   final String imageProfileUrl;
 
-  User({required this.id, required this.name,
+  UserAccountInfo({required this.id, required this.name,
     this.imageProfileUrl = "assets/images/profile.png"});
 }
 
-final List<User> users = [
-  User(id: 1, name: "Галина XXL"),
-  User(id: 2, name: "Генрих Шаманов")
+List<UserAccountInfo> users = [
+  UserAccountInfo(id: 1, name: "Галина XXL"),
+  UserAccountInfo(id: 2, name: "Генрих Шаманов", imageProfileUrl:
+  "assets/images/vaccinopower.png")
 ];
