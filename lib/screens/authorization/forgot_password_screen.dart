@@ -33,27 +33,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Config.backgroundColor,
-          content: Text(
-            text,
-            style: TextStyle(
-                color: Config.iconColor,
-                fontFamily: Config.fontFamily,
-                fontSize: 20
-            ),
-          ),
-        )
-    );
+              backgroundColor: Config.backgroundColor,
+              content: Text(
+                text,
+                style: TextStyle(
+                    color: Config.iconColor,
+                    fontFamily: Config.fontFamily,
+                    fontSize: 20),
+              ),
+            ));
   }
 
   Future passwordReset() async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-          email: email
-      );
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       showAlertDialog("Подтверждение отправлено вам на почту.");
-    } on FirebaseException catch(e) {
-      showAlertDialog(e.message?? "Возникла ошибка");
+    } on FirebaseException catch (e) {
+      showAlertDialog(e.message ?? "Возникла ошибка");
     }
   }
 
@@ -68,44 +64,55 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         onTap: () => _emailFocusNode.unfocus(),
         child: Container(
           color: Config.backgroundColor,
-          child: Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.all(Config.margin),
-            padding: const EdgeInsets.all(Config.margin),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(Config.padding).add(
-                      const EdgeInsets.symmetric(horizontal: Config.padding)),
-                  alignment: Alignment.center,
-                  child: Text(
-                      "Введите свой email, чтобы мы прислали вам"
-                      " письмо с инструкцией по смене пароля.",
-                      style: TextStyle(
-                          color: Config.iconColor,
-                          fontFamily: Config.fontFamily,
-                          fontSize: 20)),
-                ),
-                const SizedBox(
-                  height: Config.margin,
-                ),
-                InputLabel(
-                    focusNode: _emailFocusNode,
-                    hintText: "Email",
-                    width: width * 0.8,
-                    controller: _emailController),
-                const SizedBox(
-                  height: Config.margin,
-                ),
-                SizedBox(
-                    height: 60,
-                    child: Button(
-                      onTap: passwordReset,
-                      text: "Сменить пароль",
+          alignment: Alignment.center,
+          child: SingleChildScrollView(
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.all(Config.margin),
+              padding: const EdgeInsets.all(Config.margin),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: Config.pageHeight(context) / 3,
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Image.asset("assets/images/voice_recipe.png"),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(Config.padding).add(
+                        const EdgeInsets.symmetric(horizontal: Config.padding)),
+                    alignment: Alignment.center,
+                    child: Text(
+                        "Введите свой email, чтобы мы прислали вам"
+                        " письмо с инструкцией по смене пароля.",
+                        style: TextStyle(
+                            color: Config.iconColor,
+                            fontFamily: Config.fontFamily,
+                            fontSize: 20)),
+                  ),
+                  const SizedBox(
+                    height: Config.margin,
+                  ),
+                  InputLabel(
+                      focusNode: _emailFocusNode,
+                      hintText: "Email",
                       width: width * 0.8,
-                    ))
-              ],
+                      controller: _emailController),
+                  const SizedBox(
+                    height: Config.margin,
+                  ),
+                  SizedBox(
+                      height: 60,
+                      child: Button(
+                        onTap: passwordReset,
+                        text: "Сменить пароль",
+                        width: width * 0.8,
+                      ))
+                ],
+              ),
             ),
           ),
         ),

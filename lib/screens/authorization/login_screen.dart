@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_vk/flutter_login_vk.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
@@ -29,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   static int counter = 3;
+  final vk = VKLogin();
 
   Future signIn() async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -155,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               SignInLabel(
                                 button: Buttons.Facebook,
-                                onPressed: () {},
+                                onPressed: signInVK,
                                 width: width / 3.5,
                               ),
                             ],
@@ -173,8 +175,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signInVK() {
-
+  void signInVK() async {
+    if (!vk.isInitialized) {
+      var initialized = await vk.initSdk();
+      if (initialized.isError) {
+        debugPrint(initialized.asError!.error.toString());
+        return;
+      }
+    }
+    final res = await vk.logIn(scope: [
+      VKScope.email,
+    ]);
+    if (res.isError) {
+      final errorRes = res.asError;
+      debugPrint(errorRes!.error.toString());
+      return;
+    }
+    final VKLoginResult data = res.asValue!.value;
+    if (data.isCanceled) {
+      return;
+    }
+    // final VKAccessToken accessToken = data.accessToken!;
+    var profile = await vk.getUserProfile();
+    debugPrint('Your name is ${profile.asValue!.value!.firstName}');
+    debugPrint('Your user id is ${profile.asValue!.value!.userId}');
+    debugPrint('Your photo is ${profile.asValue!.value!.photo200}');
   }
 
   void _onForgotPassword(BuildContext context) {

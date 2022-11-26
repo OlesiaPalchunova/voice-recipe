@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -20,28 +21,48 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   static const height = 800;
-  final _loginController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _secondNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  final _loginFocusNode = FocusNode();
+  final _firstNameFocusNode = FocusNode();
+  final _secondNameFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
+
+  String get email => _emailController.text.trim();
+  String get password => _passwordController.text.trim();
+  String get confirmPassword => _confirmPasswordController.text.trim();
+  String get firstName => _firstNameController.text.trim();
+  String get secondName => _secondNameController.text.trim();
 
   Future signUp() async {
     if (!isPasswordConfirmed()) {
       return;
     }
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim()
+        email: email,
+        password: password
     );
     await Future.microtask(() => Navigator.of(context).pop());
   }
 
+  Future addUserDetails() async {
+    await FirebaseFirestore.instance.collection('users')
+        .add({
+      "first_name": firstName,
+      "second_name": secondName,
+      "image_ref": "",
+      "email": email
+    });
+  }
+
   @override
   dispose() {
+    _firstNameController.dispose();
+    _secondNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -69,7 +90,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: GestureDetector(
         onTap: () {
           _emailFocusNode.unfocus();
-          _loginFocusNode.unfocus();
+          _firstNameFocusNode.unfocus();
+          _secondNameFocusNode.unfocus();
           _passwordFocusNode.unfocus();
           _confirmPasswordFocusNode.unfocus();
         },
@@ -81,15 +103,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   _buildIcon(),
                   SizedBox(
-                    height: height * 0.5,
+                    height: height * 0.8,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         InputLabel(
-                          focusNode: _loginFocusNode,
-                            hintText: "Логин",
+                          focusNode: _firstNameFocusNode,
+                            hintText: "Имя",
                             width: width * 0.8,
-                            controller: _loginController
+                            controller: _firstNameController
+                        ),
+                        InputLabel(
+                            focusNode: _secondNameFocusNode,
+                            hintText: "Фамилия",
+                            width: width * 0.8,
+                            controller: _secondNameController
                         ),
                         InputLabel(
                           focusNode: _emailFocusNode,
@@ -158,8 +186,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildIcon() {
-    return SizedBox(
-      height: height * 0.25,
+    return Container(
+      height: height * 0.2,
+      alignment: Alignment.bottomCenter,
       child: SizedBox(
         height: 100,
         width: 100,

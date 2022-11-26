@@ -45,6 +45,7 @@ dependencies:
   flutter_signin_button:
   firebase_auth:
   firebase_core:
+  cloud_firestore:
   flutter_login_vk:
 
 dev_dependencies:
