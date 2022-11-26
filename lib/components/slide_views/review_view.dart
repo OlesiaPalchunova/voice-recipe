@@ -69,7 +69,7 @@ class _ReviewViewState extends State<ReviewView> {
                 decoration: BoxDecoration(
                     color: backColor,
                     borderRadius:
-                        BorderRadius.circular(Config.borderRadiusLarge)),
+                    BorderRadius.circular(Config.borderRadiusLarge)),
                 child: Column(
                   children: [
                     Row(
@@ -107,7 +107,7 @@ class _ReviewViewState extends State<ReviewView> {
                 decoration: BoxDecoration(
                     color: backColor,
                     borderRadius:
-                        BorderRadius.circular(Config.borderRadiusLarge)),
+                    BorderRadius.circular(Config.borderRadiusLarge)),
                 child: Column(
                   children: [
                     Container(
@@ -117,7 +117,7 @@ class _ReviewViewState extends State<ReviewView> {
                         "Комментарии",
                         style: TextStyle(
                             color:
-                                Config.darkModeOn ? Colors.white : Colors.black,
+                            Config.darkModeOn ? Colors.white : Colors.black,
                             fontFamily: Config.fontFamily,
                             fontSize: 22),
                       ),
@@ -130,43 +130,49 @@ class _ReviewViewState extends State<ReviewView> {
                               body: TextField(
                                 focusNode: _newCommentNode,
                                 autofocus: false,
-                            controller: _commentController,
-                            style: TextStyle(
-                                color: color, fontFamily: Config.fontFamily),
-                            onTap: () {
-                              // if (Config.loggedIn) {
-                              //   return;
-                              // }
-                              _newCommentNode.unfocus();
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const LoginScreen()));
-                            },
-                            onSubmitted: (String result) {
-                              if (result.isEmpty || !Config.loggedIn) {
-                                return;
-                              }
-                              for (var element in users) {
-                                debugPrint(element.name);
-                              }
-                              reviews[widget.recipe.id].add(Review(
-                                  userId: users[users.length - 1].id,
-                                  postTime: DateTime.now(),
-                                  text: result));
-                              setState(() {
-                                _commentController.clear();
-                              });
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Оставьте свой комментарий',
-                              hintStyle: TextStyle(
-                                  color: color, fontFamily: Config.fontFamily),
-                            ),
-                          )),
+                                controller: _commentController,
+                                style: TextStyle(
+                                    color: color,
+                                    fontFamily: Config.fontFamily),
+                                onTap: () {
+                                  if (Config.loggedIn) {
+                                    return;
+                                  }
+                                  _newCommentNode.unfocus();
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (
+                                          context) => const LoginScreen()));
+                                },
+                                onSubmitted: (String result) {
+                                  if (result.isEmpty || !Config.loggedIn) {
+                                    return;
+                                  }
+                                  var user = FirebaseAuth.instance.currentUser!;
+                                  reviews[widget.recipe.id].add(Review(
+                                      postTime: DateTime.now(),
+                                      text: result,
+                                      userName: user.displayName ??
+                                          "Пользователь",
+                                      profilePhotoURL: user.photoURL ??
+                                          defaultProfileUrl
+                                  ));
+                                  setState(() {
+                                    _commentController.clear();
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Оставьте свой комментарий',
+                                  hintStyle: TextStyle(
+                                      color: color,
+                                      fontFamily: Config.fontFamily),
+                                ),
+                              )),
                           Column(
                             children: reviews[widget.recipe.id]
-                                .map((e) => CommentCard(
-                                      review: e,
-                                    ))
+                                .map((e) =>
+                                CommentCard(
+                                  review: e,
+                                ))
                                 .toList(),
                           ),
                         ],

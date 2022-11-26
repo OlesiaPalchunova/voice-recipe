@@ -157,7 +157,7 @@ class Config {
         ));
   }
 
-  static Color lastBackColor = _darkThemeBackColor;
+  static Color? lastBackColor;
 
   static Color getBackColor(int id) {
     if (darkModeOn) {

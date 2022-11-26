@@ -98,11 +98,10 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserAccountInfo user = users[review.userId - 1];
     return buildCommentFrame(
-      nickname: user.name,
+      nickname: review.userName,
       since: since,
-      profileImageUrl: user.imageProfileUrl,
+      profileImageUrl: review.profilePhotoURL,
       body: Container(
         alignment: Alignment.topLeft,
         child: Text(

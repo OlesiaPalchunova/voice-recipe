@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/screens/account_screen.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
 
 import '../../themes/theme_change_notification.dart';
@@ -61,6 +64,67 @@ class SideBarMenu extends StatefulWidget {
 }
 
 class _SideBarMenuState extends State<SideBarMenu> {
+
+  Widget buildProfile(User user) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)
+            => const AccountScreen()));
+          },
+          child: Row(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: Config.backgroundColor,
+                  child: Image.asset(user.photoURL??
+                      "assets/images/profile.png"),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Text(
+                "${user.displayName}",
+                style: TextStyle(fontSize: 18, color: Config.iconColor,
+                  fontFamily: Config.fontFamily,),
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          color: Config.iconColor.withOpacity(0.5),
+        ),
+        const SizedBox(height: Config.padding * 2,),
+      ],
+    );
+  }
+
+  Widget buildProfileLabel() {
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildProfile(snapshot.data!);
+          } else {
+            return SideBarMenu.buildHeader(
+                name: "Войти",
+                onClicked: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) =>
+                    const LoginScreen())
+                  );
+                },
+                iconData: Icons.login
+            );
+          }
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -75,6 +139,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                 child: Column(
                   children: [
                     SizedBox(height: Config.pageHeight(context) / 7,),
+                    buildProfileLabel(),
                     SideBarMenu.buildHeader(
                       name: "Подборки",
                       onClicked: () => Navigator.of(context).push(MaterialPageRoute(

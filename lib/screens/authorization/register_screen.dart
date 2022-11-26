@@ -44,8 +44,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     try {
+      String emailCurrent = email;
+      String passCurrent = password;
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(
+          email: emailCurrent, password: passCurrent);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailCurrent,
+          password: passCurrent);
+      var user = FirebaseAuth.instance.currentUser!;
+      user.updateDisplayName("$firstName $secondName");
+      await FirebaseAuth.instance.signOut();
+      // await addUserDetails();
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch(e) {
       Config.showAlertDialog(e.message!, context);
@@ -79,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     var width = min(Config.slideWidth(context), 500.0);
-    Color backColor = Config.lastBackColor;
+    Color backColor = Config.lastBackColor?? Config.backgroundColor;
     Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(

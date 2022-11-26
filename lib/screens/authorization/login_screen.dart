@@ -30,17 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   static int counter = 3;
-  final vk = VKLogin();
 
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
-      await Future.microtask(() {
-        users.add(
-            UserAccountInfo(id: counter++, name: _emailController.text.trim()));
-      });
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch(e) {
       Config.showAlertDialog(e.message!, context);
@@ -57,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     var width = min(Config.slideWidth(context), 500.0);
-    Color backColor = Config.lastBackColor;
+    Color backColor = Config.lastBackColor?? Config.backgroundColor;
     Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(
@@ -180,31 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signInVK() async {
-    if (!vk.isInitialized) {
-      var initialized = await vk.initSdk();
-      if (initialized.isError) {
-        debugPrint(initialized.asError!.error.toString());
-        return;
-      }
-    }
-    final res = await vk.logIn(scope: [
-      VKScope.email,
-    ]);
-    if (res.isError) {
-      final errorRes = res.asError;
-      debugPrint(errorRes!.error.toString());
-      return;
-    }
-    final VKLoginResult data = res.asValue!.value;
-    if (data.isCanceled) {
-      return;
-    }
-    // final VKAccessToken accessToken = data.accessToken!;
-    var profile = await vk.getUserProfile();
-    debugPrint('Your name is ${profile.asValue!.value!.firstName}');
-    debugPrint('Your user id is ${profile.asValue!.value!.userId}');
-    debugPrint('Your photo is ${profile.asValue!.value!.photo200}');
+  void signInVK() {
+
   }
 
   void _onForgotPassword(BuildContext context) {
