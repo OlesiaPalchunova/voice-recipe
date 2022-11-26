@@ -24,7 +24,15 @@ class InputLabel extends StatelessWidget {
           hintStyle: TextStyle(
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily),
-          disabledBorder: const OutlineInputBorder(),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(Config.borderRadiusLarge)
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+              borderSide: BorderSide(
+                color: Config.darkModeOn ? Colors.orangeAccent : Colors.black
+              )
+          ),
           fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
           filled: true,
           suffixIcon: suffixIcon);

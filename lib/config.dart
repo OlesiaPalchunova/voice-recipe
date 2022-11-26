@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
+import 'package:voice_recipe/translator.dart';
 
 class GradientColors {
   final List<Color> colors;
@@ -138,6 +139,22 @@ class Config {
       return GradientColors.sets[id % GradientColors.sets.length].last;
     }
     return colors[id % colors.length];
+  }
+
+  static void showAlertDialog(String text, BuildContext context) async {
+    final russianText = await Translator().translateToRu(text);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Config.backgroundColor,
+          content: Text(
+            russianText,
+            style: TextStyle(
+                color: Config.iconColor,
+                fontFamily: Config.fontFamily,
+                fontSize: 20),
+          ),
+        ));
   }
 
   static Color lastBackColor = _darkThemeBackColor;

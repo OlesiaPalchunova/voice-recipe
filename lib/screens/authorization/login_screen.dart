@@ -33,14 +33,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final vk = VKLogin();
 
   Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
-    await Future.microtask(() {
-      users.add(
-          UserAccountInfo(id: counter++, name: _emailController.text.trim()));
-    });
-    await Future.microtask(() => Navigator.of(context).pop());
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+      await Future.microtask(() {
+        users.add(
+            UserAccountInfo(id: counter++, name: _emailController.text.trim()));
+      });
+      await Future.microtask(() => Navigator.of(context).pop());
+    } on FirebaseException catch(e) {
+      Config.showAlertDialog(e.message!, context);
+    }
   }
 
   @override
@@ -70,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _passwordFocusNode.unfocus();
         },
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Center(
             child: SizedBox(
               width: width,

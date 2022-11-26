@@ -29,27 +29,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String get email => _emailController.text.trim();
 
-  void showAlertDialog(String text) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              backgroundColor: Config.backgroundColor,
-              content: Text(
-                text,
-                style: TextStyle(
-                    color: Config.iconColor,
-                    fontFamily: Config.fontFamily,
-                    fontSize: 20),
-              ),
-            ));
-  }
-
   Future passwordReset() async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      showAlertDialog("Подтверждение отправлено вам на почту.");
+      Config.showAlertDialog("Подтверждение отправлено вам на почту.", context);
     } on FirebaseException catch (e) {
-      showAlertDialog(e.message ?? "Возникла ошибка");
+      Config.showAlertDialog(e.message ?? "Возникла ошибка", context);
     }
   }
 
@@ -66,7 +51,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           color: Config.backgroundColor,
           alignment: Alignment.center,
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Container(
+              width: width,
               alignment: Alignment.center,
               margin: const EdgeInsets.all(Config.margin),
               padding: const EdgeInsets.all(Config.margin),

@@ -40,13 +40,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future signUp() async {
     if (!isPasswordConfirmed()) {
+      Config.showAlertDialog("Пароли не совпадают", context);
       return;
     }
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password
-    );
-    await Future.microtask(() => Navigator.of(context).pop());
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await Future.microtask(() => Navigator.of(context).pop());
+    } on FirebaseException catch(e) {
+      Config.showAlertDialog(e.message!, context);
+    }
   }
 
   Future addUserDetails() async {
@@ -96,6 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _confirmPasswordFocusNode.unfocus();
         },
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Center(
             child: SizedBox(
               width: width,

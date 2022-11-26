@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/sidebar_menu/side_bar_menu.dart';
@@ -7,7 +5,6 @@ import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 import 'package:voice_recipe/config.dart';
-import 'package:voice_recipe/themes/theme_change_notification.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

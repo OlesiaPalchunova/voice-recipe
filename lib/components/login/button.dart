@@ -49,7 +49,7 @@ class _ButtonState extends State<Button> {
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
             color: backColor,
-            borderRadius: BorderRadius.circular(Config.borderRadius),
+            borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
             boxShadow: shadow),
         width: widget.width,
         child: Center(
