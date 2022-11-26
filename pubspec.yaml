@@ -48,6 +48,7 @@ dependencies:
   cloud_firestore:
   flutter_login_vk:
   translator:
+  flutter_web_auth:
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,7 @@ flutter:
     - assets/images/sets/
     - assets/images/cards/
     - assets/images/faces/
+    - assets/images/icons/
     - assets/videos/
     - assets/sounds/
   #   - images/a_dot_ham.jpeg

@@ -24,7 +24,7 @@ class _SetsListScreen extends State<SetsListScreen> {
             color: Config.backgroundColor,
             alignment: Alignment.center,
             child: SizedBox(
-              width: Config.MAX_SLIDE_WIDTH,
+              width: Config.maxRecipeSlideWidth,
               child: ListView.separated(
                 separatorBuilder: (_, index) => Divider(
                   color: Config.iconColor,

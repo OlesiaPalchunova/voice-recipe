@@ -13,6 +13,9 @@ class CommentCard extends StatelessWidget {
   String get since {
     var diff = DateTime.now().difference(review.postTime);
     if (diff.inMinutes < 60) {
+      if (diff.inMinutes == 0) {
+        return "только что";
+      }
       int rest = diff.inMinutes - ((diff.inMinutes / 10).floor()) * 10;
       var str = "минут";
       if (rest == 1) {

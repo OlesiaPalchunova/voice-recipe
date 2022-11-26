@@ -87,7 +87,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             centerTitle: true,
             title: Container(
                 alignment: Alignment.center,
-                width: Config.MAX_SLIDE_WIDTH,
+                width: Config.maxRecipeSlideWidth,
                 child: HeaderButtonsPanel(
                   id: widget.recipe.id,
                   onClose: _onClose,
@@ -110,14 +110,14 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   child: Container(
                     color: Config.getBackColor(widget.recipe.id),
                     alignment: Alignment.center,
-                    width: Config.MAX_SLIDE_WIDTH,
+                    width: Config.maxRecipeSlideWidth,
                     child: _buildCurrentSlide(context, _slideId),
                   ),
                 ),
                 Center(
                   child: Container(
                       alignment: Alignment.bottomCenter,
-                      width: Config.MAX_SLIDE_WIDTH,
+                      width: Config.maxRecipeSlideWidth,
                       child: _buildSliderBottom()),
                 )
               ],
@@ -205,7 +205,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   Widget _buildSliderBottom() {
-    var width = min(Config.pageWidth(context), Config.MAX_SLIDE_WIDTH);
+    var width = min(Config.pageWidth(context), Config.maxRecipeSlideWidth);
     var slidesCount = 1 + 1 + 1 + getStepsCount(widget.recipe.id);
     var sectionWidth = width / slidesCount;
     return Container(

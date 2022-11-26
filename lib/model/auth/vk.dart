@@ -32,3 +32,30 @@ class Vk {
     debugPrint('Your photo is ${profile.asValue!.value!.photo200}');
   }
 }
+
+// const vkClientId = '51487030';
+// const callbackUrlScheme = 'voicerecipe.ru';
+//
+// final url = Uri.https('oauth.vk.com', '/authorize', {
+//   'response_type': 'token',
+//   'client_id': vkClientId,
+//   'redirect_uri': callbackUrlScheme,
+//   'scope': 'email',
+// });
+//
+// debugPrint('auth...');
+// final result = await FlutterWebAuth.authenticate(
+//     url: url.toString(), callbackUrlScheme: callbackUrlScheme.toString());
+// debugPrint('success');
+// final token = Uri.parse(result).queryParameters['token'];
+// debugPrint(token);
+// final response =
+//     await http.post(Uri(scheme: 'https://www.googleapis.com/oauth2/v4/token'), body: {
+//   'client_id': googleClientId,
+//   'redirect_uri': '$callbackUrlScheme:/',
+//   'grant_type': 'authorization_code',
+//   'code': code,
+// });
+
+// Get the access token from the response
+//     final accessToken = jsonDecode(response.body)['access_token'] as String;

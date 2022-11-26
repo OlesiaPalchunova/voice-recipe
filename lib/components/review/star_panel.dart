@@ -56,7 +56,7 @@ class StarPanelState extends State<StarPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final width = Config.slideWidth(context);
+    final width = Config.recipeSlideWidth(context);
     final double starSize = max((width / 2) / (starsCount + 1), 50);
     return Container(
       alignment: Alignment.center,

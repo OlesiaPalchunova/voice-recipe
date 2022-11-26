@@ -60,7 +60,7 @@ class _ReviewViewState extends State<ReviewView> {
                 alignment: Alignment.centerLeft,
                 child: RateLabel(
                   rate: rates[widget.recipe.id],
-                  width: min(90, Config.slideWidth(context) / 6),
+                  width: min(90, Config.recipeSlideWidth(context) / 6),
                 ),
               ),
               Container(

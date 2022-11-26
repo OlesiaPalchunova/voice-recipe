@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_vk/flutter_login_vk.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:voice_recipe/model/auth/vk.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
 
@@ -12,32 +9,71 @@ import '../../components/login/button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../components/login/ref_button.dart';
-import '../../components/login/sign_in_label.dart';
+import '../../components/login/sign_in_button.dart';
 import '../../config.dart';
-import '../../model/users_info.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  static const fontSize = 18.0;
+  static double buttonWidth(BuildContext context)
+  => Config.loginPageWidth(context) * 0.8;
+  static double labelHeight(BuildContext context)
+  => Config.loginPageHeight(context) / 13;
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
+
+  static Widget voiceRecipeIcon(BuildContext context, double height,
+      double iconSize) {
+    return SizedBox(
+      height: height,
+      child: SizedBox(
+        height: iconSize,
+        width: iconSize,
+        child: Image.asset("assets/images/voice_recipe.png"),
+      ),
+    );
+  }
+
+  static List<Widget> signInButtons(BuildContext context) {
+    var res = [
+      SignInButton(
+          width: buttonWidth(context),
+          backgroundColor: Config.darkModeOn ? const Color(0xff202020) : Colors.white,
+          textColor: Config.darkModeOn ? Colors.white : Colors.black,
+          text: "Войти через Google",
+          imageURL: "assets/images/icons/google.png",
+          onPressed: () {})
+    ];
+    if (!Config.isWeb) {
+      res.add(SignInButton(
+          width: buttonWidth(context),
+          textColor: Colors.white,
+          backgroundColor: const Color(0xff4680C2),
+          text: "Войти через VK",
+          imageURL: "assets/images/icons/vk.png",
+          onPressed: () => Vk().signIn()));
+    }
+    return res;
+  }
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static const height = 700;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  static int counter = 3;
 
   Future signIn() async {
     try {
+      Config.showProgressCircle(context);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
       await Future.microtask(() => Navigator.of(context).pop());
-    } on FirebaseException catch(e) {
+      await Future.microtask(() => Navigator.of(context).pop());
+    } on FirebaseException catch (e) {
       Config.showAlertDialog(e.message!, context);
     }
   }
@@ -51,8 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var width = min(Config.slideWidth(context), 500.0);
-    Color backColor = Config.lastBackColor?? Config.backgroundColor;
+    Color backColor = Config.lastBackColor ?? Config.backgroundColor;
     Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(
@@ -70,14 +105,16 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Center(
+          child: Container(
+            alignment: Alignment.center,
             child: SizedBox(
-              width: width,
+              width: Config.maxLoginPageWidth,
               child: Column(
                 children: [
-                  _buildIcon(),
-                  SizedBox(
-                    height: height * 0.5,
+                  LoginScreen.voiceRecipeIcon(context, Config.loginPageHeight(context) / 3,
+                  Config.loginPageHeight(context) / 6),
+                  Container(
+                    alignment: Alignment.center,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -88,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'Еще нет аккаунта?',
                               style: TextStyle(
                                   color: textColor.withOpacity(0.8),
-                                  fontSize: 18,
+                                  fontSize: LoginScreen.fontSize,
                                   fontFamily: Config.fontFamily),
                             ),
                             const SizedBox(
@@ -103,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'Создать',
                                 style: TextStyle(
                                     color: textColor.withOpacity(0.8),
-                                    fontSize: 18,
+                                    fontSize: LoginScreen.fontSize,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: Config.fontFamilyBold),
                               ),
@@ -111,14 +148,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         InputLabel(
+                          height: LoginScreen.labelHeight(context),
                           focusNode: _emailFocusNode,
-                          width: width * 0.8,
+                          width: LoginScreen.buttonWidth(context),
                           hintText: 'Email',
                           controller: _emailController,
                         ),
                         PasswordLabel(
+                          height: LoginScreen.labelHeight(context),
                           focusNode: _passwordFocusNode,
-                          width: width * 0.8,
+                          width: LoginScreen.buttonWidth(context),
                           hintText: "Пароль",
                           controller: _passwordController,
                           onSubmit: signIn,
@@ -128,39 +167,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () => _onForgotPassword(context),
                         ),
                         SizedBox(
-                          height: height * 0.15,
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 40, right: 40, top: 20, bottom: 20),
-                              child: Button(
-                                onTap: signIn,
-                                text: "Войти",
-                                width: width * 0.8,
-                              )),
-                        ),
+                            height: Config.loginPageHeight(context) / 12,
+                            child: Button(
+                              onTap: signIn,
+                              text: "Войти",
+                              width: LoginScreen.buttonWidth(context),
+                            )),
                         Container(
+                          margin: const EdgeInsets.only(top: Config.margin),
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SignInLabel(
-                                button: Buttons.AppleDark,
-                                onPressed: () {},
-                                width: width / 3.5,
-                              ),
-                              SignInLabel(
-                                button: Buttons.Google,
-                                onPressed: () {},
-                                width: width / 3.5,
-                              ),
-                              SignInLabel(
-                                button: Buttons.Facebook,
-                                onPressed: signInVK,
-                                width: width / 3.5,
-                              ),
-                            ],
+                          child: Column(
+                            children: LoginScreen.signInButtons(context),
                           ),
                         )
                       ],
@@ -176,22 +193,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void signInVK() {
-
+    Vk().signIn();
   }
 
   void _onForgotPassword(BuildContext context) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()));
-  }
-
-  Widget _buildIcon() {
-    return SizedBox(
-      height: height * 0.35,
-      child: SizedBox(
-        height: 100,
-        width: 100,
-        child: Image.asset("assets/images/voice_recipe.png"),
-      ),
-    );
   }
 }

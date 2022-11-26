@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
 import 'package:voice_recipe/translator.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GradientColors {
   final List<Color> colors;
@@ -31,8 +31,13 @@ class Config {
   static var darkModeOn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
-  static const MAX_SLIDE_WIDTH = 700.0;
-  static const MAX_WIDTH = 1200.0;
+  static const maxRecipeSlideWidth = 700.0;
+  static const maxPageWidth = 1200.0;
+  static const maxLoginPageWidth = 500.0;
+  static const maxLoginPageHeight = 800.0;
+  static const minLoginPageWidth = 300.0;
+  static const minLoginPageHeight = 500.0;
+  static Color? lastBackColor;
 
   static init() async {
     darkModeOn = await DarkThemePreference().getTheme();
@@ -61,6 +66,8 @@ class Config {
     Color(0xFFf7d2ca),
     Color(0xFFf7ecca)
   ];
+
+  static bool get isWeb => kIsWeb;
 
   static const colors = [
     Color(0xff61cc45),
@@ -157,7 +164,12 @@ class Config {
         ));
   }
 
-  static Color? lastBackColor;
+  static void showProgressCircle(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (content) => const Center(child: CircularProgressIndicator(),)
+    );
+  }
 
   static Color getBackColor(int id) {
     if (darkModeOn) {
@@ -173,11 +185,25 @@ class Config {
   }
 
   static double pageWidth(BuildContext context) {
-    return min(MAX_WIDTH, MediaQuery.of(context).size.width);
+    return min(maxPageWidth, MediaQuery.of(context).size.width);
   }
 
-  static double slideWidth(BuildContext context) {
-    return min(MAX_SLIDE_WIDTH, pageWidth(context));
+  static double recipeSlideWidth(BuildContext context) {
+    return min(maxRecipeSlideWidth, pageWidth(context));
+  }
+
+  static double loginPageWidth(BuildContext context) {
+    var pw = pageWidth(context);
+    if (pw < minLoginPageWidth) return minLoginPageWidth;
+    if (pw > maxLoginPageWidth) return maxLoginPageWidth;
+    return pw;
+  }
+
+  static double loginPageHeight(BuildContext context) {
+    var ph = pageHeight(context);
+    if (ph < minLoginPageHeight) return minLoginPageHeight;
+    if (ph > maxLoginPageHeight) return maxLoginPageHeight;
+    return ph;
   }
 
   static bool isDesktop(BuildContext context) {

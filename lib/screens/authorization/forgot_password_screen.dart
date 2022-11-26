@@ -40,7 +40,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var width = min(Config.slideWidth(context), 500.0);
+    var width = min(Config.recipeSlideWidth(context), 500.0);
     return Scaffold(
       appBar: const TitleLogoPanel(
         title: "Voice Recipe",

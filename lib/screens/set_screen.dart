@@ -34,7 +34,7 @@ class _SetScreenState extends State<SetScreen> {
               alignment: Alignment.topCenter,
                 color: Config.backgroundColor,
                 child: Container(
-                  width: Config.MAX_WIDTH,
+                  width: Config.maxPageWidth,
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: Config.margin / 2),
                   child: SingleChildScrollView(
