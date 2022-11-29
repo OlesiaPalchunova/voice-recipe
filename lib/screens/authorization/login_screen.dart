@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/auth/vk.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
 
@@ -44,18 +45,55 @@ class LoginScreen extends StatefulWidget {
           textColor: Config.darkModeOn ? Colors.white : Colors.black,
           text: "Войти через Google",
           imageURL: "assets/images/icons/google.png",
-          onPressed: () {})
+          onPressed: () => signInWithGoogle(context)
+      )
     ];
-    if (!Config.isWeb) {
-      res.add(SignInButton(
-          width: buttonWidth(context),
-          textColor: Colors.white,
-          backgroundColor: const Color(0xff4680C2),
-          text: "Войти через VK",
-          imageURL: "assets/images/icons/vk.png",
-          onPressed: () => Vk().signIn()));
-    }
+    // if (!Config.isWeb) {
+    //   res.add(SignInButton(
+    //       width: buttonWidth(context),
+    //       textColor: Colors.white,
+    //       backgroundColor: const Color(0xff4680C2),
+    //       text: "Войти через VK",
+    //       imageURL: "assets/images/icons/vk.png",
+    //       onPressed: () => Vk().signIn()));
+    // }
     return res;
+  }
+
+  static Future signInWithGoogle(BuildContext context) async {
+    Config.showProgressCircle(context);
+    try {
+      if (Config.isWeb) {
+        await _signInWithGoogleWeb();
+      } else {
+        await _signInWithGoogleMobile();
+      }
+      await Future.microtask(() => Navigator.of(context).pop());
+    } on FirebaseException catch(e) {
+      Config.showAlertDialog(e.message!, context);
+    }
+    await Future.microtask(() => Navigator.of(context).pop());
+  }
+
+  static Future<UserCredential> _signInWithGoogleWeb() async {
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+    googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
+    return FirebaseAuth.instance.signInWithPopup(googleProvider);
+  }
+
+  static Future<UserCredential> _signInWithGoogleMobile() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
 
@@ -66,16 +104,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordFocusNode = FocusNode();
 
   Future signIn() async {
+    Config.showProgressCircle(context);
     try {
-      Config.showProgressCircle(context);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
       await Future.microtask(() => Navigator.of(context).pop());
-      await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
       Config.showAlertDialog(e.message!, context);
     }
+    await Future.microtask(() => Navigator.of(context).pop());
   }
 
   @override

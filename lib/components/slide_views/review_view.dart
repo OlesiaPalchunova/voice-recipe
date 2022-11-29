@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
 import 'package:voice_recipe/components/review/comment_card.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
-import 'package:voice_recipe/model/reviews_info.dart';
+import 'package:voice_recipe/model/comments_model.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
@@ -25,6 +25,9 @@ class _ReviewViewState extends State<ReviewView> {
   var _isEvaluated = false;
   final _commentController = TextEditingController();
   final FocusNode _newCommentNode = FocusNode();
+
+  double fontSize(BuildContext context) => Config.isDesktop(context)
+      ? 20 : 18;
 
   @override
   initState() {
@@ -80,7 +83,7 @@ class _ReviewViewState extends State<ReviewView> {
                           !_isEvaluated ? "Оставьте отзыв" : "Готово",
                           style: TextStyle(
                               fontFamily: Config.fontFamily,
-                              fontSize: 22,
+                              fontSize: fontSize(context),
                               color: Config.iconColor),
                         ),
                       ],
@@ -119,7 +122,8 @@ class _ReviewViewState extends State<ReviewView> {
                             color:
                             Config.darkModeOn ? Colors.white : Colors.black,
                             fontFamily: Config.fontFamily,
-                            fontSize: 22),
+                            fontSize: fontSize(context)
+                        ),
                       ),
                     ),
                     SingleChildScrollView(
@@ -127,6 +131,11 @@ class _ReviewViewState extends State<ReviewView> {
                       child: Column(
                         children: [
                           CommentCard.buildCommentFrame(
+                            context: context,
+                              profileImageUrl: Config.loggedIn
+                              ? FirebaseAuth.instance.currentUser!.photoURL
+                                  ?? defaultProfileUrl
+                              : defaultProfileUrl,
                               body: TextField(
                                 focusNode: _newCommentNode,
                                 autofocus: false,
@@ -148,7 +157,7 @@ class _ReviewViewState extends State<ReviewView> {
                                     return;
                                   }
                                   var user = FirebaseAuth.instance.currentUser!;
-                                  reviews[widget.recipe.id].add(Review(
+                                  reviews[widget.recipe.id].add(Comment(
                                       postTime: DateTime.now(),
                                       text: result,
                                       userName: user.displayName ??
@@ -164,7 +173,9 @@ class _ReviewViewState extends State<ReviewView> {
                                   hintText: 'Оставьте свой комментарий',
                                   hintStyle: TextStyle(
                                       color: color,
-                                      fontFamily: Config.fontFamily),
+                                      fontFamily: Config.fontFamily,
+                                      fontSize: CommentCard.descFontSize(context)
+                                  ),
                                 ),
                               )),
                           Column(

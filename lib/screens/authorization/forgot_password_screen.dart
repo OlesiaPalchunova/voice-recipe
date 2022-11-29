@@ -30,12 +30,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String get email => _emailController.text.trim();
 
   Future passwordReset() async {
+    Config.showProgressCircle(context);
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       Config.showAlertDialog("Подтверждение отправлено вам на почту.", context);
     } on FirebaseException catch (e) {
       Config.showAlertDialog(e.message ?? "Возникла ошибка", context);
     }
+    await Future.microtask(() => Navigator.of(context).pop());
   }
 
   @override
@@ -84,6 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     height: Config.margin,
                   ),
                   InputLabel(
+                    onSubmit: passwordReset,
                       focusNode: _emailFocusNode,
                       hintText: "Email",
                       width: width * 0.8,

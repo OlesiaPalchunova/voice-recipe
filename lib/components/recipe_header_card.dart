@@ -108,7 +108,9 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                     borderRadius:
                         BorderRadius.circular(Config.borderRadiusLarge),
                     child: Image(
-                        image: AssetImage(widget.recipe.faceImageUrl),
+                        image: widget.recipe.isNetwork ?
+                        NetworkImage(widget.recipe.faceImageUrl)
+                        : AssetImage(widget.recipe.faceImageUrl) as ImageProvider,
                         fit: cardWidth <= cardHeight * 1.2
                             ? BoxFit.fitHeight
                             : BoxFit.fitWidth)),

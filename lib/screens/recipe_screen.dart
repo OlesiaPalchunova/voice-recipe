@@ -161,8 +161,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } else if (_slideId == ingredientsSlideId) {
       text = "Время приготовления: ${widget.recipe.cookTimeMins} минут";
     } else {
-      text = getStep(widget.recipe.id, _slideId -
-          firstStepSlideId).description;
+      text = widget.recipe.steps[_slideId -
+          firstStepSlideId].description;
     }
     if (!ListenButtonState.current()!.isListening()) {
       if (_completed) {
@@ -195,7 +195,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       return widget.facePage;
     } else if (slideId == ingredientsSlideId) {
       return widget.ingPage;
-    } else if (slideId == getStepsCount(widget.recipe.id) + 1 + 1) {
+    } else if (slideId == widget.recipe.steps.length + 1 + 1) {
       return widget.reviewPage;
     }
     return RecipeStepView(
@@ -206,7 +206,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   Widget _buildSliderBottom() {
     var width = min(Config.pageWidth(context), Config.maxRecipeSlideWidth);
-    var slidesCount = 1 + 1 + 1 + getStepsCount(widget.recipe.id);
+    var slidesCount = 1 + 1 + 1 + widget.recipe.steps.length;
     var sectionWidth = width / slidesCount;
     return Container(
       alignment: Alignment.center,
@@ -298,7 +298,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _incrementSlideId() {
     _slideId++;
-    int max = getStepsCount(widget.recipe.id) + 1 + 1;
+    int max = widget.recipe.steps.length + 1 + 1;
     _slideId = _slideId > max ? max : _slideId;
   }
 }

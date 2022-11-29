@@ -15,6 +15,9 @@ final List<RecipesSet> sets = <RecipesSet>[
   RecipesSet(id: 4, name: "По виду блюда", imageUrl: "assets/images/sets/business_lunch.png"),
 ];
 
+final RecipesSet fav = RecipesSet(id: 5, name: "Избранное", imageUrl: "assets/images/sets/favorites.png");
+final RecipesSet created = RecipesSet(id: 6, name: "Мои рецепты", imageUrl: "assets/images/sets/created.png");
+
 abstract class SetOption {
   final int id;
   final String name;
@@ -84,4 +87,4 @@ final List<SetOption> categoriesSetOptions = [
 ];
 
 final List<List<SetOption>> optionsResolve = [timesSetOptions, nationalSetOptions,
-  premiumSetOptions, categoriesSetOptions];
+  premiumSetOptions, categoriesSetOptions, [], []];

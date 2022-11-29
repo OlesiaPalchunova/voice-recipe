@@ -34,7 +34,7 @@ class _SetsListScreen extends State<SetsListScreen> {
                 padding: const EdgeInsets.all(Config.padding),
                 itemCount: sets.length,
                 itemBuilder: (_, index) => SetHeaderCard(
-                    parentWidth:
+                    widthConstraint:
                         Config.pageWidth(context) > Config.pageHeight(context)
                             ? 700
                             : 0,

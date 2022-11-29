@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/config.dart';
-import 'package:voice_recipe/screens/account_screen.dart';
+import 'package:voice_recipe/screens/profile_screen.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
 
-import '../../themes/theme_change_notification.dart';
+import '../../model/users_info.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key, required this.onUpdate});
@@ -18,7 +18,16 @@ class SideBarMenu extends StatefulWidget {
   @override
   State<SideBarMenu> createState() => _SideBarMenuState();
 
+  static double nameFontSize(BuildContext context) => Config.isDesktop(context)
+      ? 18 : 14;
+  static double fontSize(BuildContext context) => Config.isDesktop(context)
+      ? 18 : 16;
+  static double radius(BuildContext context) => Config.isDesktop(context)
+      ? 22 : 20;
+
+
   static Widget buildHeader({
+    required BuildContext context,
     required String name,
     required VoidCallback onClicked,
     required IconData iconData
@@ -37,19 +46,19 @@ class SideBarMenu extends StatefulWidget {
                   )
               ),
               child: CircleAvatar(
-                radius: 22,
+                radius: radius(context),
                 backgroundColor: Config.backgroundColor,
                 child: Icon(
                   iconData,
                   color: Config.iconColor,
-                  size: 26,
+                  size: radius(context),
                 ),
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: Config.margin * 2),
             Text(
               name,
-              style: TextStyle(fontSize: 20, color: Config.iconColor,
+              style: TextStyle(fontSize: fontSize(context), color: Config.iconColor,
                 fontFamily: Config.fontFamily,),
             ),
           ],
@@ -80,16 +89,19 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     shape: BoxShape.circle,
                 ),
                 child: CircleAvatar(
-                  radius: 22,
+                  radius: SideBarMenu.radius(context),
                   backgroundColor: Config.backgroundColor,
-                  child: Image.asset(user.photoURL??
-                      "assets/images/profile.png"),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(SideBarMenu.radius(context)),
+                    child: Image.network(user.photoURL??
+                        defaultProfileUrl),
+                  ),
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: Config.margin),
               Text(
                 "${user.displayName}",
-                style: TextStyle(fontSize: 18, color: Config.iconColor,
+                style: TextStyle(fontSize: SideBarMenu.nameFontSize(context), color: Config.iconColor,
                   fontFamily: Config.fontFamily,),
               ),
             ],
@@ -111,6 +123,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
             return buildProfile(snapshot.data!);
           } else {
             return SideBarMenu.buildHeader(
+              context: context,
                 name: "Войти",
                 onClicked: () {
                   Navigator.of(context).push(
@@ -141,6 +154,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SizedBox(height: Config.pageHeight(context) / 7,),
                     buildProfileLabel(),
                     SideBarMenu.buildHeader(
+                        context: context,
                       name: "Подборки",
                       onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const SetsListScreen(),
@@ -149,6 +163,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                                                   : Icons.library_books_outlined
                     ),
                     SideBarMenu.buildHeader(
+                        context: context,
                         name: "Голосовые\nкоманды",
                         onClicked: () {
                         },
@@ -170,7 +185,8 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           fontFamily: Config.fontFamily,
                           color:
                               Config.darkModeOn ? Colors.white : Colors.black87,
-                          fontSize: 16),
+                          fontSize: SideBarMenu.fontSize(context)
+                      ),
                     ),
                     CupertinoSwitch(
                       value: Config.darkModeOn,

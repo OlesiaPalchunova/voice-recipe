@@ -8,9 +8,9 @@ import 'package:voice_recipe/components/timer/timer_view.dart';
 class RecipeStepView extends StatelessWidget {
   RecipeStepView({Key? key, required this.recipe, required this.slideId})
       : super(key: key) {
-    int len = getStepsCount(recipe.id);
+    int len = recipe.steps.length;
     int idx = min(slideId - 2, len - 1);
-    step = getStep(recipe.id, idx);
+    step = recipe.steps[idx];
   }
 
   static const _imageSize = 0.65;
@@ -66,7 +66,9 @@ class RecipeStepView extends StatelessWidget {
                     borderRadius:
                         BorderRadius.circular(RecipeStepView._borderRadius),
                     child: Image(
-                      image: AssetImage(step.imgUrl),
+                      image: recipe.isNetwork ?
+                      NetworkImage(step.imgUrl)
+                          : AssetImage(step.imgUrl) as ImageProvider,
                       fit: BoxFit.fitHeight,
                     ),
                   ),

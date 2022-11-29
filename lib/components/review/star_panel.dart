@@ -56,14 +56,15 @@ class StarPanelState extends State<StarPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final width = Config.recipeSlideWidth(context);
-    final double starSize = max((width / 2) / (starsCount + 1), 50);
+    final width = Config.loginPageWidth(context);
+    final double starSize = width / 2 / starsCount;
     return Container(
       alignment: Alignment.center,
       child: Row(
         children: List.generate(starsCount,
             (index) => InkWell(
               onHover: (hovered) {
+                if (_minIdx != _initialMinIdx) return;
                 setState(() {
                   if (hovered) {
                     _currentStarIdx = index;

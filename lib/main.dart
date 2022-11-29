@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/recipes_getter.dart';
 import 'package:voice_recipe/voice_recipe_app.dart';
 import 'config.dart';
 import 'local_notice_service.dart';
@@ -12,5 +13,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  // await RecipesGetter().getRecipe(id: 1);
   runApp(const VoiceRecipeApp());
 }

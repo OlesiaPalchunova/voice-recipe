@@ -9,13 +9,15 @@ class InputLabel extends StatelessWidget {
       required this.width,
       required this.controller,
       this.height = 60,
-      this.focusNode});
+      this.focusNode,
+      this.onSubmit});
 
   final String hintText;
   final double height;
   final double width;
   final TextEditingController controller;
   final FocusNode? focusNode;
+  final VoidCallback? onSubmit;
 
   static InputDecoration buildInputDecoration(String hintText,
           [Widget? suffixIcon]) =>
@@ -25,14 +27,12 @@ class InputLabel extends StatelessWidget {
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(Config.borderRadiusLarge)
-          ),
+              borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
               borderSide: BorderSide(
-                color: Config.darkModeOn ? Colors.orangeAccent : Colors.black
-              )
-          ),
+                  color:
+                      Config.darkModeOn ? Colors.orangeAccent : Colors.black)),
           fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
           filled: true,
           suffixIcon: suffixIcon);
@@ -48,7 +48,11 @@ class InputLabel extends StatelessWidget {
           children: [
             SizedBox(
               width: width,
-              child: TextField(
+              child: TextFormField(
+                onFieldSubmitted: (s) {
+                  if (onSubmit == null) return;
+                  onSubmit!();
+                },
                 focusNode: focusNode,
                 controller: controller,
                 decoration: buildInputDecoration(hintText),

@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/reviews_info.dart';
+import 'package:voice_recipe/model/comments_model.dart';
 
 import '../../config.dart';
 import '../../model/users_info.dart';
@@ -8,7 +7,14 @@ import '../../model/users_info.dart';
 class CommentCard extends StatelessWidget {
   const CommentCard({super.key, required this.review});
 
-  final Review review;
+  final Comment review;
+
+  static double nameFontSize(BuildContext context) => Config.isDesktop(context)
+      ? 16 : 14;
+  static double descFontSize(BuildContext context) => Config.isDesktop(context)
+      ? 16 : 14;
+  static double sinceFontSize(BuildContext context) => Config.isDesktop(context)
+      ? 14 : 12;
 
   String get since {
     var diff = DateTime.now().difference(review.postTime);
@@ -40,9 +46,10 @@ class CommentCard extends StatelessWidget {
   }
 
   static Widget buildCommentFrame(
-      {String nickname = "",
+      {required BuildContext context,
+        String nickname = "",
       String since = "",
-      String profileImageUrl = "assets/images/profile.png",
+      String profileImageUrl = defaultProfileUrl,
       required Widget body}) {
     return Container(
       padding: const EdgeInsets.all(Config.padding),
@@ -65,7 +72,7 @@ class CommentCard extends StatelessWidget {
                       style: TextStyle(
                           color: Config.iconColor,
                           fontFamily: Config.fontFamily,
-                          fontSize: 16),
+                          fontSize: nameFontSize(context)),
                     ),
                   ),
                   const SizedBox(
@@ -78,7 +85,7 @@ class CommentCard extends StatelessWidget {
                       style: TextStyle(
                           color: Config.iconColor.withOpacity(0.7),
                           fontFamily: Config.fontFamily,
-                          fontSize: 14),
+                          fontSize: sinceFontSize(context)),
                     ),
                   ),
                 ],
@@ -93,7 +100,7 @@ class CommentCard extends StatelessWidget {
         CircleAvatar(
           radius: Config.padding * 2,
           backgroundColor: Config.pressed,
-          backgroundImage: AssetImage(profileImageUrl),
+          backgroundImage: NetworkImage(profileImageUrl),
         ),
       ]),
     );
@@ -102,6 +109,7 @@ class CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return buildCommentFrame(
+      context: context,
       nickname: review.userName,
       since: since,
       profileImageUrl: review.profilePhotoURL,
@@ -113,7 +121,7 @@ class CommentCard extends StatelessWidget {
           style: TextStyle(
               color: Config.iconColor.withOpacity(0.9),
               fontFamily: Config.fontFamily,
-              fontSize: 16),
+              fontSize: descFontSize(context)),
         ),
       ),
     );

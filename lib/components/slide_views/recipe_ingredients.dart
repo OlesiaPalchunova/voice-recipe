@@ -55,15 +55,18 @@ class IngredientsList extends StatelessWidget {
     Key? key,
     required this.recipe,
   }) : super(key: key) {
-    ingredients = ingrResolve[recipe.id];
+    ingredients = recipe.ingredients;
   }
 
   final Recipe recipe;
   late final List<Ingredient> ingredients;
-  static const _titleSize = 0.032;
-  static const _entitySize = 0.024;
   static const _spaceAfterName = 0.001;
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
+
+  double titleFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 26 : 24;
+  double entityFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 22 : 20;
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +78,13 @@ class IngredientsList extends StatelessWidget {
             "Ингредиенты",
             style: TextStyle(
                 fontFamily: Config.fontFamily,
-                fontSize: Config.pageHeight(context) * _titleSize,
+                fontSize: titleFontSize(context),
                 fontWeight: FontWeight.bold,
                 color: _textColor),
           ),
         ),
-        SizedBox(
-          height: Config.pageHeight(context) * _spaceAfterName,
+        const SizedBox(
+          height: Config.margin,
         ),
         ListView.builder(
           scrollDirection: Axis.vertical,
@@ -94,7 +97,7 @@ class IngredientsList extends StatelessWidget {
                   ingredients[index].name,
                   style: TextStyle(
                     fontFamily: Config.fontFamily,
-                    fontSize: Config.pageHeight(context) * _entitySize,
+                    fontSize: entityFontSize(context),
                     textBaseline: TextBaseline.alphabetic,
                     color: _textColor
                   ),
@@ -103,7 +106,7 @@ class IngredientsList extends StatelessWidget {
                   ingredients[index].count,
                   style: TextStyle(
                     fontFamily: Config.fontFamily,
-                    fontSize: Config.pageHeight(context) * _entitySize,
+                    fontSize: entityFontSize(context),
                     color: _textColor
                   ),
                 ),
@@ -128,9 +131,11 @@ class GeneralInfo extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  static const _titleSize = 0.032;
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
+  double titleFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 26 : 24;
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -143,7 +148,7 @@ class GeneralInfo extends StatelessWidget {
             recipe.name,
             style: TextStyle(
                 fontFamily: Config.fontFamily,
-                fontSize: Config.pageHeight(context) * _titleSize,
+                fontSize: titleFontSize(context),
                 fontWeight: FontWeight.w400,
                 color: _textColor),
           ),
@@ -195,10 +200,13 @@ class Assignment extends StatelessWidget {
   final IconData iconData;
 
   static const _betweenIconAndTextSize = 0.01;
-  static const _nameSize = 0.024;
-  static const _valueSize = 0.020;
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
+  double keyFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 20 : 18;
+  double valueFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 18 : 16;
+  
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -214,7 +222,7 @@ class Assignment extends StatelessWidget {
           text: TextSpan(
               style: TextStyle(
                   fontFamily: Config.fontFamily,
-                  fontSize: Config.pageHeight(context) * _nameSize,
+                  fontSize: keyFontSize(context),
                   fontWeight: FontWeight.w400,
                   color: _textColor),
               children: <TextSpan>[
@@ -224,7 +232,7 @@ class Assignment extends StatelessWidget {
                 TextSpan(
                     text: value,
                     style: TextStyle(
-                        fontSize: Config.pageHeight(context) * _valueSize))
+                        fontSize: valueFontSize(context)))
               ]),
         ),
       ],

@@ -1,0 +1,96 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
+import 'package:voice_recipe/components/login/button.dart';
+import 'package:voice_recipe/components/sets/set_header_card.dart';
+
+import '../config.dart';
+import '../model/sets_info.dart';
+import '../model/users_info.dart';
+
+class AccountScreen extends StatelessWidget {
+  const AccountScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const TitleLogoPanel(title: "Профиль").appBar(),
+      backgroundColor: Config.backgroundColor,
+      body: Center(
+        child: Container(
+          alignment: Alignment.center,
+          width: Config.loginPageWidth(context),
+          child: Column(
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(Config.padding),
+                  alignment: Alignment.center,
+                  child: buildProfile(FirebaseAuth.instance.currentUser!, context)
+              ),
+              Container(
+                  padding: const EdgeInsets.all(Config.padding).add(
+                      const EdgeInsets.only(top: Config.margin * 3)
+                  ),
+                  alignment: Alignment.center,
+                  child: SetHeaderCard(onTap: () {},
+                    showTiles: false,
+                    set: fav,
+                    widthConstraint: Config.loginPageWidth(context),
+                  )
+              ),
+              Container(
+                  padding: const EdgeInsets.all(Config.padding),
+                  alignment: Alignment.center,
+                  child: SetHeaderCard(onTap: () {},
+                    showTiles: false,
+                    set: created,
+                    widthConstraint: Config.loginPageWidth(context),
+                  )
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildProfile(User user, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                radius: 22,
+                backgroundColor: Config.backgroundColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(22),
+                  child: Image.network(user.photoURL ?? defaultProfileUrl),
+                ),
+              ),
+            ),
+            const SizedBox(width: Config.margin * 2),
+            Text(
+              "${user.displayName}",
+              style: TextStyle(
+                fontSize: 18,
+                color: Config.iconColor,
+                fontFamily: Config.fontFamily,
+              ),
+            ),
+          ],
+        ),
+        IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.logout, color: Config.iconColor))
+      ],
+    );
+  }
+}

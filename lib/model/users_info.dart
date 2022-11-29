@@ -9,7 +9,7 @@ class UserAccountInfo {
     this.imageProfileUrl = defaultProfileUrl});
 }
 
-const String defaultProfileUrl = "assets/images/profile.png";
+const String defaultProfileUrl = "https://i.ibb.co/tmxmsTS/profile.png";
 
 List<UserAccountInfo> users = [
   UserAccountInfo(id: 1, name: "Галина XXL", email: ""

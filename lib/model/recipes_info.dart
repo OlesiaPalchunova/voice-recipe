@@ -12,9 +12,14 @@ class Recipe {
   int? proteins;
   int? fats;
   int? carbohydrates;
+  bool isNetwork;
+  List<Ingredient> ingredients;
+  List<RecipeStep> steps;
 
   Recipe({required this.name, required this.faceImageUrl, required this.id,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
+    required this.ingredients, required this.steps,
+    this.isNetwork = false
   });
 }
 
@@ -26,37 +31,32 @@ class Ingredient {
   Ingredient({required this.id, required this.name, required this.count});
 }
 
-int getStepsCount(int recipeId) {
-  return stepsResolve[recipeId].length;
-}
-
-RecipeStep getStep(int recipeId, int stepId) {
-  return stepsResolve[recipeId][stepId];
-}
-
-String _cardName(String name) {
-  return "assets/images/cards/$name.jpg";
-}
-
 String _imagePath(String name) {
   return "assets/images/$name.jpg";
 }
 
 final borsh = Recipe(name: "Борщ", faceImageUrl: _imagePath("borsh_face"), id: 0,
-cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140);
+cookTimeMins: 90, prepTimeMins: 5, kilocalories: 140, ingredients: borshIngredients,
+steps: borshSteps);
 final cutlets = Recipe(name: "Котлеты", faceImageUrl: _imagePath("cutlets10"), id: 1,
-    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 450);
+    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 450, ingredients: cutletsIngredients,
+steps: cutletsSteps);
 final muffins = Recipe(name: "Маффины" ,faceImageUrl: _imagePath("muffin6"), id: 2,
-cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240);
+cookTimeMins: 40, prepTimeMins: 20, kilocalories: 240, ingredients: muffinsIngredients,
+steps: muffinsSteps);
 final tefts = Recipe(name: "Фрикадельки", faceImageUrl: _imagePath("tef5"), id: 3,
-cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440);
+cookTimeMins: 20, prepTimeMins: 0, kilocalories: 440, ingredients: tefIngredients,
+steps: tefSteps);
 final soba = Recipe(name: "Соба с курицей и овощами", faceImageUrl: _imagePath("soba13"), id: 4,
-cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270);
+cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270, ingredients: sobaIngredients,
+steps: sobaSteps);
 final syrniki = Recipe(name: "Сырники от Влада", faceImageUrl: _imagePath("syrniki5"), id: 5,
-cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340);
+cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340, ingredients: syrnikiIngredients,
+steps: syrnikiSteps);
 final carbonara = Recipe(
     name: "Карбонара",faceImageUrl: _imagePath("carbonara_face"), id: 6,
-    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320);
+    cookTimeMins: 30, prepTimeMins: 0, kilocalories: 320,
+ingredients: carbonaraIngredients, steps: carbonaraSteps);
 
 final List<Recipe> recipes = [
   borsh, cutlets, muffins, tefts, soba, syrniki, carbonara
@@ -127,9 +127,6 @@ final List<Ingredient> carbonaraIngredients = [
   Ingredient(id: 5, name: "Сыр", count: "100 г."),
   Ingredient(id: 5, name: "Сливки", count: "50 мл."),
 ];
-
-final List<List<Ingredient>> ingrResolve = [borshIngredients, cutletsIngredients,
-muffinsIngredients, tefIngredients, sobaIngredients, syrnikiIngredients, carbonaraIngredients];
 
 class RecipeStep {
   int id;
@@ -208,10 +205,6 @@ final List<RecipeStep> cutletsSteps = [
   RecipeStep(id: 10, imgUrl: _imagePath("cutlets10"), description: "Готово. Приятного аппетита :)"),
 ];
 
-final List<List<RecipeStep>> stepsResolve = [
-  borshSteps, cutletsSteps, muffinsSteps, tefSteps, sobaSteps, syrnikiSteps, carbonaraSteps
-];
-
 class Rate {
 
 }
@@ -219,5 +212,5 @@ class Rate {
 final ratesMap = HashMap<int, int>();
 
 final List<double> rates = [
-  7.9, 9.5, 7.5, 7.8, 9.2, 9.3, 8.7
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3
 ];

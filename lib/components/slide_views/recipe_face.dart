@@ -15,8 +15,11 @@ class RecipeFaceSlideView extends StatelessWidget {
   static const _betweenTextSize = 0.1;
   static const _betweenIconAndTextSize = 0.01;
   static const _iconSize = 0.03;
-  static const _timeSize = 0.025;
-  static const _nameSize = 0.055;
+  
+  double titleFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 30 : 28;
+  double timeFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 22 : 20;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,9 @@ class RecipeFaceSlideView extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
             image: DecorationImage(
-              image: AssetImage(recipe.faceImageUrl),
+              image: recipe.isNetwork ?
+              NetworkImage(recipe.faceImageUrl)
+                  : AssetImage(recipe.faceImageUrl) as ImageProvider,
               fit: Config.pageHeight(context) > Config.pageWidth(context)
                   ? BoxFit.fitHeight
                   : BoxFit.fitHeight,
@@ -79,8 +84,7 @@ class RecipeFaceSlideView extends StatelessWidget {
                             child: Text("${recipe.cookTimeMins} минут\n",
                                 style: TextStyle(
                                     fontFamily: Config.fontFamilyBold,
-                                    fontSize:
-                                        Config.pageHeight(context) * _timeSize,
+                                    fontSize: timeFontSize(context),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white)),
                           )
@@ -91,8 +95,7 @@ class RecipeFaceSlideView extends StatelessWidget {
                             text: TextSpan(
                                 style: TextStyle(
                                     fontFamily: Config.fontFamilyBold,
-                                    fontSize:
-                                        Config.pageHeight(context) * _nameSize,
+                                    fontSize: titleFontSize(context),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                                 children: <TextSpan>[

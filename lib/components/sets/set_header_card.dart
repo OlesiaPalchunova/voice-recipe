@@ -6,12 +6,14 @@ import 'package:voice_recipe/model/sets_info.dart';
 
 class SetHeaderCard extends StatefulWidget {
   const SetHeaderCard(
-      {Key? key, required this.set, required this.onTap, this.parentWidth = 0})
+      {Key? key, required this.set, required this.onTap, this.widthConstraint = 0,
+      this.showTiles = true})
       : super(key: key);
 
   final VoidCallback onTap;
   final RecipesSet set;
-  final double parentWidth;
+  final double widthConstraint;
+  final bool showTiles;
 
   @override
   State<SetHeaderCard> createState() => _SetHeaderCardState();
@@ -26,17 +28,27 @@ class _SetHeaderCardState extends State<SetHeaderCard>
 
   @override
   Widget build(BuildContext context) {
-    double cardHeight = Config.pageHeight(context) / 8;
+    double cardHeight = Config.pageHeight(context) / 10;
     final width =
-        widget.parentWidth > 0 ? widget.parentWidth : Config.pageWidth(context);
+        widget.widthConstraint > 0 ? widget.widthConstraint : Config.pageWidth(context);
     return InkWell(
       onHover: (hovered) => setState(() {
         _isHovered = hovered;
       }),
-      onTap: () => setState(() {
-        widget.onTap();
-        _isPressed = !_isPressed;
-      }),
+      onTap: () async {
+        setState(() {
+          widget.onTap();
+          _isPressed = !_isPressed;
+        });
+        if (widget.showTiles | !_isPressed) {
+          return;
+        }
+        await Future.delayed(Config.shortAnimationTime).whenComplete(() {
+          setState(() {
+            _isPressed = false;
+          });
+        });
+      },
       child: Card(
         elevation: 0,
         color: Colors.white.withOpacity(0),
@@ -92,15 +104,20 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                 child: Text(widget.set.name,
                     style: TextStyle(
                         fontFamily: Config.fontFamily,
-                        fontSize: !active ? 23 : 25,
+                        fontSize: !active
+                            ? fontSize(context)
+                            : fontSize(context) + 2,
                         color: Config.iconColor)),
               ),
             ]
             ),
-            _isPressed ? SetsOptionsList(set: widget.set) : Container(),
+            _isPressed & widget.showTiles ? SetsOptionsList(set: widget.set) : Container(),
           ],
         ),
       ),
     );
   }
+
+  double fontSize(BuildContext context) => Config.isDesktop(context)
+      ? 22 : 20;
 }

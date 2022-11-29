@@ -42,13 +42,14 @@ dependencies:
   http:
   flutter_appauth:
   flutter_secure_storage:
-  flutter_signin_button:
   firebase_auth:
   firebase_core:
   cloud_firestore:
   flutter_login_vk:
   translator:
   flutter_web_auth:
+  universal_io:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:

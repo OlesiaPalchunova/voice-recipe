@@ -47,7 +47,6 @@ class _PasswordLabelState extends State<PasswordLabel> {
               child: TextFormField(
                 onFieldSubmitted: (s) {
                   widget.onSubmit();
-                  debugPrint('\n\n\nSUBMIT');
                 },
                 focusNode: widget.focusNode,
                 obscureText: _obscureText,

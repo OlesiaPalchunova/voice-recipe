@@ -1,8 +1,11 @@
--
+- add support of google account for android / ios
+- add option to like recipe (add to favorites)
+- add storage of verbose information about user (favorites, liked and so on)
 
-- make recognition faster (especially for timer), try to use
-  another recognition policy
-- try to switch to NetworkImage instead of AssetImage
+- make constructor of recipes
+- add support of a better voice assistant
+- make recognition faster (especially for timer), try to use another recognition policy
 - add small list of ingredients for every step
 - make some more decorations for a recipe header
-- make relative sizes in all widgets using both height and width parameters
+- add vk auth
+

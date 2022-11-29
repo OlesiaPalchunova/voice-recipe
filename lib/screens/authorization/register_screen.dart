@@ -38,12 +38,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String get secondName => _secondNameController.text.trim();
 
   Future signUp() async {
+    Config.showProgressCircle(context);
     if (!isPasswordConfirmed()) {
       Config.showAlertDialog("Пароли не совпадают", context);
       return;
     }
     try {
-      Config.showProgressCircle(context);
       String emailCurrent = email;
       String passCurrent = password;
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -55,10 +55,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await FirebaseAuth.instance.signOut();
       // await addUserDetails();
       await Future.microtask(() => Navigator.of(context).pop());
-      await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
       Config.showAlertDialog(e.message!, context);
     }
+    await Future.microtask(() => Navigator.of(context).pop());
   }
 
   @override

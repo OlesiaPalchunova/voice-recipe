@@ -48,6 +48,7 @@ class Config {
 
   static setDarkModeOn(bool on) {
     darkModeOn = on;
+    lastBackColor = backgroundColor;
     DarkThemePreference().setDarkTheme(on);
   }
 
