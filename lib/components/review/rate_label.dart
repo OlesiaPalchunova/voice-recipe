@@ -4,19 +4,29 @@ import '../../config.dart';
 
 class RateLabel extends StatelessWidget {
   const RateLabel({super.key, required this.rate, this.width = 80,
-  this.justDark = false});
+  this.shadowOn = true});
 
   final double rate;
   final double width;
-  final bool justDark;
+  final bool shadowOn;
+
+  List<BoxShadow> get shadows => shadowOn
+  ? [
+      const BoxShadow(
+        color: Colors.orangeAccent,
+        blurRadius: 4
+      )
+      ]
+  : [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          // border: Border.all(color: Colors.black87, width: 0.1),
-          color: (Config.darkModeOn | justDark) ? Config.darkBlue : Colors.white,
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
+          color: Config.darkModeOn ? Config.darkBlue : Colors.white,
+          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+        boxShadow: shadows
+      ),
       width: width,
       height: width / 2,
       padding: EdgeInsets.all(width / 20).add(EdgeInsets.symmetric(horizontal:
@@ -27,15 +37,17 @@ class RateLabel extends StatelessWidget {
         children: [
           Icon(
             Icons.star,
-            color: Colors.yellow.shade700,
+            color: Colors.yellow.shade900,
             size: width / 3,
           ),
           Text(
             rate.toString(),
             style: TextStyle(
-                fontFamily: Config.fontFamily,
-                color: justDark ? Colors.white : Config.iconColor,
-                fontSize: width / 4),
+                fontFamily: "Roboto",
+                // fontWeight: FontWeight.w700,
+                color: !Config.darkModeOn ? Colors.black87 : Colors.white,
+                fontSize: width / 4
+            ),
           )
         ],
       ),

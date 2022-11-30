@@ -1,6 +1,3 @@
-- add support of google account for android / ios
-- add option to like recipe (add to favorites)
-- add storage of verbose information about user (favorites, liked and so on)
 
 - make constructor of recipes
 - add support of a better voice assistant
@@ -8,4 +5,3 @@
 - add small list of ingredients for every step
 - make some more decorations for a recipe header
 - add vk auth
-

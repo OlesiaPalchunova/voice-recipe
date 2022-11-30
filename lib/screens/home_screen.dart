@@ -10,15 +10,26 @@ class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Home> createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   static var count = 0;
   var _recipes = recipes;
-  late var recipeViews =
-      _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+  late List<RecipeHeaderCard> recipeViews;
   static const title = TitleLogoPanel(title: "Voice Recipe");
+  static HomeState? current;
+
+  @override
+  void initState() {
+    current = this;
+    initRecipeViews();
+    super.initState();
+  }
+
+  void initRecipeViews() {
+    recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +43,7 @@ class _HomeState extends State<Home> {
         drawer: SideBarMenu(onUpdate: () {
           setState(() {
             TitleLogoPanelState.current?.update();
+            initRecipeViews();
           });
         }),
         body: Builder(

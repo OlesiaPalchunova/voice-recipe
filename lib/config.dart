@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voice_recipe/components/login/button.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
 import 'package:voice_recipe/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -149,27 +152,72 @@ class Config {
     return colors[id % colors.length];
   }
 
+  static User? get user => FirebaseAuth.instance.currentUser;
+
+  static void showLoginInviteDialog(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+            backgroundColor: Config.backgroundColor,
+              content: Text(
+                "Войдите, чтобы сохранять понравившиеся рецепты и оставлять комментарии",
+                style: TextStyle(
+                    color: iconColor,
+                    fontFamily: fontFamily,
+                    fontSize: 20
+                ),
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text("Вернуться",
+                    style: TextStyle(
+                        color: iconColor,
+                        fontFamily: fontFamily,
+                        fontSize: 20
+                    ),),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text("Войти",
+                    style: TextStyle(
+                        color: iconColor,
+                        fontFamily: fontFamily,
+                        fontSize: 20
+                    ),),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)
+                    => const LoginScreen()));
+                  },
+                ),
+              ],
+            ));
+  }
+
   static void showAlertDialog(String text, BuildContext context) async {
     final russianText = await Translator().translateToRu(text);
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: Config.backgroundColor,
-          content: Text(
-            russianText,
-            style: TextStyle(
-                color: Config.iconColor,
-                fontFamily: Config.fontFamily,
-                fontSize: 20),
-          ),
-        ));
+              backgroundColor: Config.backgroundColor,
+              content: Text(
+                russianText,
+                style: TextStyle(
+                    color: Config.iconColor,
+                    fontFamily: Config.fontFamily,
+                    fontSize: 20),
+              ),
+            ));
   }
 
   static void showProgressCircle(BuildContext context) {
     showDialog(
         context: context,
-        builder: (content) => const Center(child: CircularProgressIndicator(),)
-    );
+        builder: (content) => const Center(
+              child: CircularProgressIndicator(),
+            ));
   }
 
   static Color getBackColor(int id) {

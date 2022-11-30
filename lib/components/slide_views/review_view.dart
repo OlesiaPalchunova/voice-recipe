@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
 import 'package:voice_recipe/components/review/comment_card.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
@@ -11,6 +12,7 @@ import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
+import '../../widget_storage.dart';
 
 class ReviewView extends StatefulWidget {
   const ReviewView({super.key, required this.recipe});
@@ -44,6 +46,8 @@ class _ReviewViewState extends State<ReviewView> {
     super.dispose();
   }
 
+  double get labelWidth => min(65, Config.recipeSlideWidth(context) / 6);
+
   @override
   Widget build(BuildContext context) {
     final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white;
@@ -59,12 +63,16 @@ class _ReviewViewState extends State<ReviewView> {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                child: RateLabel(
-                  rate: rates[widget.recipe.id],
-                  width: min(90, Config.recipeSlideWidth(context) / 6),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RateLabel(
+                      rate: rates[widget.recipe.id],
+                      width: labelWidth,
+                    shadowOn: false,
+                    ),
+                  Container()
+                ],
               ),
               Container(
                 margin: const EdgeInsets.only(top: Config.padding),
@@ -148,9 +156,7 @@ class _ReviewViewState extends State<ReviewView> {
                                     return;
                                   }
                                   _newCommentNode.unfocus();
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (
-                                          context) => const LoginScreen()));
+                                  Config.showLoginInviteDialog(context);
                                 },
                                 onSubmitted: (String result) {
                                   if (result.isEmpty || !Config.loggedIn) {

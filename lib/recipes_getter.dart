@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:universal_io/io.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:voice_recipe/model/recipes_info.dart';
+
+import 'config.dart';
+import 'model/db/user_db_manager.dart';
 
 class RecipesGetter {
   static RecipesGetter singleton = RecipesGetter._internal();
@@ -17,14 +19,19 @@ class RecipesGetter {
     return "http://185.128.106.56:8080/api/v1/media/$id";
   }
 
+  Future<List<Recipe>> get favoriteRecipes async {
+    if (!Config.loggedIn) return [];
+    var user = Config.user!;
+    var userData = await UserDbManager().getUserData(user.uid);
+    var favIds = userData[UserDbManager.favorites];
+    return recipes.where((element) => favIds.contains(element.id)).toList();
+  }
+
   Future<String> getRecipe({required int id}) async {
     var response = await fetchRecipe(id);
-    debugPrint(response.statusCode.toString());
     var decodedBody = utf8.decode(response.body.codeUnits);
-    debugPrint(decodedBody);
     var recipeJson = jsonDecode(decodedBody);
-    debugPrint(recipeJson["name"]);
-    List<dynamic> ingredientsJson = recipeJson["ingredients"];
+    List<dynamic> ingredientsJson = recipeJson["ingredients_distributions"];
     List<Ingredient> ingredients = [];
     for (dynamic i in ingredientsJson) {
       double count = i["count"];
@@ -36,16 +43,20 @@ class RecipesGetter {
           name: i["name"],
           count: "${i["count"]} ${i["measure_unit_name"]}"
       ));
-      debugPrint(i["name"]);
     }
     List<dynamic> stepsJson = recipeJson["steps"];
     List<RecipeStep> steps = [];
     for (dynamic s in stepsJson) {
-      debugPrint(s["description"]);
+      var waitTimeMinsRef = s["wait_time_mins"];
+      int waitTimeMins = 0;
+      if (waitTimeMinsRef != null) {
+        waitTimeMins = waitTimeMinsRef;
+      }
       steps.add(RecipeStep(
           id: s["step_num"],
           imgUrl: getImageUrl(s["media"]["id"]),
-          description: s["description"]
+          description: s["description"],
+          waitTime: waitTimeMins
       ));
     }
     double cookTimeMins = recipeJson["cook_time_mins"];

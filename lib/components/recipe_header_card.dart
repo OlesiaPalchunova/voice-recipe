@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
+import 'package:voice_recipe/widget_storage.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
@@ -10,10 +12,12 @@ class RecipeHeaderCard extends StatefulWidget {
     Key? key,
     required this.recipe,
     this.sizeDivider = 1,
+    this.showLike = true
   }) : super(key: key);
 
   final Recipe recipe;
   final double sizeDivider;
+  final bool showLike;
 
   @override
   State<RecipeHeaderCard> createState() => _RecipeHeaderCardState();
@@ -45,6 +49,17 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
   bool get active => _isHovered || _isPressed;
+
+  double get labelWidth => 60;
+
+  Widget get rateLabel => RateLabel(
+    rate: rates[widget.recipe.id],
+    width: labelWidth,
+  );
+
+  Widget get favButton => FavoritesButton(
+      recipeId: widget.recipe.id,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +113,6 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                             BoxShadow(
                               color: Config.getColor(widget.recipe.id),
                               blurRadius: 12,
-                              // offset: const Offset(4, 4)
                             )
                           ]
                         : []),
@@ -146,12 +160,19 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                   height: cardHeight,
                   alignment: Alignment.bottomRight,
                   padding: const EdgeInsets.all(Config.padding),
-                  child: RateLabel(
-                    justDark: true,
-                    rate: rates[widget.recipe.id],
-                    width: Config.isDesktop(context) ? 65 : 50,
-                  ))
-            ])));
+                  child: rateLabel
+              ),
+              Container(
+                  width: cardWidth,
+                  height: cardHeight,
+                  alignment: Alignment.bottomLeft,
+                  padding: const EdgeInsets.all(Config.padding),
+                  child: widget.showLike ? favButton : Container()
+              )
+            ]
+            )
+        )
+    );
   }
 
   void _navigateToRecipe(BuildContext context, Recipe recipe) {

@@ -19,7 +19,7 @@ class RecipeFaceSlideView extends StatelessWidget {
   double titleFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 30 : 28;
   double timeFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 22 : 20;
+      Config.isDesktop(context) ? 20 : 18;
 
   @override
   Widget build(BuildContext context) {

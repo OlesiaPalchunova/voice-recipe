@@ -85,6 +85,9 @@ class _SetOptionTileState extends State<SetOptionTile> {
 
   void _navigateToSet(BuildContext context, SetOption setOption) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SetScreen(setOption: setOption)));
+        builder: (context) => SetScreen(
+          recipes: setOption.getRecipes(),
+          setName: setOption.name,
+        )));
   }
 }

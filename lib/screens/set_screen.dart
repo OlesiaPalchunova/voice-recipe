@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 
-import 'package:voice_recipe/model/sets_info.dart';
 import '../components/recipe_header_card.dart';
 import '../config.dart';
+import '../model/recipes_info.dart';
 
 class SetScreen extends StatefulWidget {
   const SetScreen({super.key,
-    required this.setOption,
+    required this.recipes, required this.setName,
+    this.showLikes = true
   });
 
-  final SetOption setOption;
+  final List<Recipe> recipes;
+  final String setName;
+  final bool showLikes;
 
   @override
   State<SetScreen> createState() => _SetScreenState();
 }
 
 class _SetScreenState extends State<SetScreen> {
-  late final recipes = widget.setOption.getRecipes();
+  late final recipes = widget.recipes;
   late final isLaptopView = Config.pageWidth(context)
       > Config.pageHeight(context);
 
@@ -27,7 +30,7 @@ class _SetScreenState extends State<SetScreen> {
         appBar: AppBar(
           foregroundColor: Config.iconColor,
           backgroundColor: Config.appBarColor,
-          title: TitleLogoPanel(title: widget.setOption.name),
+          title: TitleLogoPanel(title: widget.setName),
         ),
         body: Builder(
             builder: (context) => Container(
@@ -43,7 +46,9 @@ class _SetScreenState extends State<SetScreen> {
                     child: Wrap(
                       children: recipes.map((e) => RecipeHeaderCard(
                           recipe: e,
-                          sizeDivider: 2)
+                          sizeDivider: 2,
+                          showLike: widget.showLikes,
+                      )
                       ).toList()
                     ),
                   ),

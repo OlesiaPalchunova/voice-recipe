@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/recipes_getter.dart';
 import 'package:voice_recipe/screens/profile_screen.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
 
 import '../../model/users_info.dart';
+import '../../screens/set_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key, required this.onUpdate});
@@ -38,12 +40,14 @@ class SideBarMenu extends StatefulWidget {
         child: Row(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                      color: Config.darkModeOn ? Colors.orangeAccent
-                          : Colors.orangeAccent
-                  )
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orangeAccent,
+                      blurRadius: 6
+                    )
+                  ],
               ),
               child: CircleAvatar(
                 radius: radius(context),
@@ -169,6 +173,27 @@ class _SideBarMenuState extends State<SideBarMenu> {
                         },
                         iconData: Config.darkModeOn ? Icons.record_voice_over_rounded
                             : Icons.record_voice_over_outlined
+                    ),
+                    SideBarMenu.buildHeader(
+                        context: context,
+                        name: "Понравившиеся",
+                        onClicked: () async {
+                          if (!Config.loggedIn) {
+                            Config.showLoginInviteDialog(context);
+                            return;
+                          }
+                          Config.showProgressCircle(context);
+                          var recipes = await RecipesGetter().favoriteRecipes;
+                          await Future.microtask(() => Navigator.of(context).pop());
+                          await Future.microtask(() => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => SetScreen(
+                                    recipes: recipes,
+                                    setName: "Понравившиеся",
+                                    showLikes: false,))));
+                        },
+                        iconData: Config.darkModeOn ? Icons.thumb_up
+                            : Icons.thumb_up_alt_outlined
                     ),
                   ],
                 ),

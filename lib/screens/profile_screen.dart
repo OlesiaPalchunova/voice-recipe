@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/login/button.dart';
 import 'package:voice_recipe/components/sets/set_header_card.dart';
+import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/recipes_getter.dart';
+import 'package:voice_recipe/screens/set_screen.dart';
 
 import '../config.dart';
+import '../model/recipes_info.dart';
 import '../model/sets_info.dart';
 import '../model/users_info.dart';
 
@@ -21,32 +25,37 @@ class AccountScreen extends StatelessWidget {
           alignment: Alignment.center,
           width: Config.loginPageWidth(context),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                   padding: const EdgeInsets.all(Config.padding),
                   alignment: Alignment.center,
-                  child: buildProfile(FirebaseAuth.instance.currentUser!, context)
+                  child: buildProfile(
+                      FirebaseAuth.instance.currentUser!, context)
               ),
-              Container(
-                  padding: const EdgeInsets.all(Config.padding).add(
-                      const EdgeInsets.only(top: Config.margin * 3)
+              Column(
+                children: [
+                  Divider(
+                    color: Config.iconColor,
+                    thickness: 0.2,
                   ),
-                  alignment: Alignment.center,
-                  child: SetHeaderCard(onTap: () {},
-                    showTiles: false,
-                    set: fav,
-                    widthConstraint: Config.loginPageWidth(context),
-                  )
+                  Container(
+                      padding: const EdgeInsets.all(Config.padding),
+                      alignment: Alignment.center,
+                      child: SetHeaderCard(
+                        onTap: () {},
+                        showTiles: false,
+                        set: created,
+                        widthConstraint: Config.loginPageWidth(context),
+                      )
+                  ),
+                  Divider(
+                    color: Config.iconColor,
+                    thickness: 0.2,
+                  ),
+                ],
               ),
-              Container(
-                  padding: const EdgeInsets.all(Config.padding),
-                  alignment: Alignment.center,
-                  child: SetHeaderCard(onTap: () {},
-                    showTiles: false,
-                    set: created,
-                    widthConstraint: Config.loginPageWidth(context),
-                  )
-              ),
+              Container()
             ],
           ),
         ),
@@ -94,3 +103,30 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
+
+/*
+Container(
+                  padding: const EdgeInsets.all(Config.padding)
+                      .add(const EdgeInsets.only(top: Config.margin * 3)),
+                  alignment: Alignment.center,
+                  child: SetHeaderCard(
+                    onTap: () async {
+                      Config.showProgressCircle(context);
+                      var recipes = await RecipesGetter().favoriteRecipes;
+                      await Future.microtask(() => Navigator.of(context).pop());
+                      await Future.microtask(() => Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => SetScreen(
+                                  recipes: recipes,
+                                  setName: "Избранное",
+                                  showLikes: false,))));
+                    },
+                    showTiles: false,
+                    set: fav,
+                    widthConstraint: Config.loginPageWidth(context),
+                  )),
+              Divider(
+                color: Config.iconColor,
+                thickness: 0.2,
+              ),
+ */

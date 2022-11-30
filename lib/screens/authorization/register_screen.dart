@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/model/db/user_db_manager.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/login/button.dart';
@@ -53,9 +54,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var user = FirebaseAuth.instance.currentUser!;
       user.updateDisplayName("$firstName $secondName");
       await FirebaseAuth.instance.signOut();
-      // await addUserDetails();
+      await UserDbManager().addNewUserData(user.uid);
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
+      debugPrint(e.message);
       Config.showAlertDialog(e.message!, context);
     }
     await Future.microtask(() => Navigator.of(context).pop());

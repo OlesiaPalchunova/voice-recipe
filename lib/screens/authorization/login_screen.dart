@@ -4,6 +4,7 @@ import 'package:voice_recipe/model/auth/vk.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/login/button.dart';
@@ -12,6 +13,7 @@ import '../../components/login/password_label.dart';
 import '../../components/login/ref_button.dart';
 import '../../components/login/sign_in_button.dart';
 import '../../config.dart';
+import '../../model/db/user_db_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -60,6 +62,14 @@ class LoginScreen extends StatefulWidget {
     return res;
   }
 
+  static Future storeUserInDB(UserInfo user) async {
+    var db = FirebaseFirestore.instance;
+    db.collection("users").add({
+      "dfs" : "sd"
+    });
+    // await FirebaseFirestore;
+  }
+
   static Future signInWithGoogle(BuildContext context) async {
     Config.showProgressCircle(context);
     try {
@@ -67,6 +77,11 @@ class LoginScreen extends StatefulWidget {
         await _signInWithGoogleWeb();
       } else {
         await _signInWithGoogleMobile();
+      }
+      var user = FirebaseAuth.instance.currentUser!;
+      bool exists = await UserDbManager().containsUserData(user.uid);
+      if (!exists) {
+        UserDbManager().addNewUserData(user.uid);
       }
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch(e) {

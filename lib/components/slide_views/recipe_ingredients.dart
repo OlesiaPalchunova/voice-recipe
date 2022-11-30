@@ -64,9 +64,9 @@ class IngredientsList extends StatelessWidget {
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   double titleFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 26 : 24;
-  double entityFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 22 : 20;
+  double entityFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 18 : 16;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,7 @@ class IngredientsList extends StatelessWidget {
                 ),
               ]),
               Divider(
-                color: _textColor,
+                color: _textColor.withOpacity(0.8),
                 thickness: IngredientsSlideView._splitterThickness,
               ),
             ],
@@ -134,7 +134,7 @@ class GeneralInfo extends StatelessWidget {
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   double titleFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 26 : 24;
+      Config.isDesktop(context) ? 22 : 20;
   
   @override
   Widget build(BuildContext context) {
