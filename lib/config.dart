@@ -160,25 +160,14 @@ class Config {
         builder: (context) => AlertDialog(
             backgroundColor: Config.backgroundColor,
               content: Text(
-                "Войдите, чтобы сохранять понравившиеся рецепты и оставлять комментарии",
+                "Войдите, чтобы сохранять понравившиеся\nрецепты и оставлять комментарии",
                 style: TextStyle(
                     color: iconColor,
                     fontFamily: fontFamily,
-                    fontSize: 20
+                    fontSize: 18
                 ),
               ),
               actions: [
-                CupertinoDialogAction(
-                  child: Text("Вернуться",
-                    style: TextStyle(
-                        color: iconColor,
-                        fontFamily: fontFamily,
-                        fontSize: 20
-                    ),),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
                 CupertinoDialogAction(
                   child: Text("Войти",
                     style: TextStyle(

@@ -50,7 +50,7 @@ steps: tefSteps);
 final soba = Recipe(name: "Соба с курицей и овощами", faceImageUrl: _imagePath("soba13"), id: 4,
 cookTimeMins: 45, prepTimeMins: 0, kilocalories: 270, ingredients: sobaIngredients,
 steps: sobaSteps);
-final syrniki = Recipe(name: "Сырники от Влада", faceImageUrl: _imagePath("syrniki5"), id: 5,
+final syrniki = Recipe(name: "Сырники", faceImageUrl: _imagePath("syrniki5"), id: 5,
 cookTimeMins: 30, prepTimeMins: 0, kilocalories: 340, ingredients: syrnikiIngredients,
 steps: syrnikiSteps);
 final carbonara = Recipe(
@@ -187,9 +187,9 @@ final List<RecipeStep> sobaSteps = [
 final List<RecipeStep> syrnikiSteps = [
   RecipeStep(id: 1, imgUrl: _imagePath("syrniki1"), description: "Переложите всё в миску."),
   RecipeStep(waitTime: 20, id: 2, imgUrl: _imagePath("syrniki2"), description: "Доведите до однородной консистенции блендером, миксером или тем, что у вас есть (можно разминать эту массу вилкой минут 20, а потом ещё руками 3 минуты давить тесто)."),
-  RecipeStep(waitTime: 120, id: 3, imgUrl: _imagePath("syrniki3"), description: "Накрываем миску пищевой плёнкой или в пакет целлофановый засовываем и ставим в холодильник, желательно, на ночь, но можно и часа на 2-3."),
+  RecipeStep(waitTime: 120, id: 3, imgUrl: _imagePath("syrniki3"), description: "Накрываем миску пищевой плёнкой или помещаем в целлофановый пакет и ставим в холодильник, желательно, на ночь, но можно и на 2-3 часа."),
   RecipeStep(id: 4, imgUrl: _imagePath("syrniki4"), description: "Достаём и рукой формируем сырники, как душа пожелает."),
-  RecipeStep(id: 5, imgUrl: _imagePath("syrniki5"), description: "Получается невероятно вкусно, можно подавать со сметаной и угощать друзей!"),
+  RecipeStep(id: 5, imgUrl: _imagePath("syrniki5"), description: "Получается очень вкусно, можно подавать со сметаной и угощать друзей!"),
 ];
 
 final List<RecipeStep> cutletsSteps = [

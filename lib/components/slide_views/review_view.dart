@@ -2,17 +2,14 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
 import 'package:voice_recipe/components/review/comment_card.dart';
 import 'package:voice_recipe/components/review/star_panel.dart';
 import 'package:voice_recipe/model/comments_model.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
-import '../../widget_storage.dart';
 
 class ReviewView extends StatefulWidget {
   const ReviewView({super.key, required this.recipe});

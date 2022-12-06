@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/recipes_getter.dart';
@@ -26,54 +27,6 @@ class SideBarMenu extends StatefulWidget {
       ? 18 : 16;
   static double radius(BuildContext context) => Config.isDesktop(context)
       ? 22 : 20;
-
-
-  static Widget buildHeader({
-    required BuildContext context,
-    required String name,
-    required VoidCallback onClicked,
-    required IconData iconData
-  }) => Column(
-    children: [
-      InkWell(
-        onTap: onClicked,
-        child: Row(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orangeAccent,
-                      blurRadius: 6
-                    )
-                  ],
-              ),
-              child: CircleAvatar(
-                radius: radius(context),
-                backgroundColor: Config.backgroundColor,
-                child: Icon(
-                  iconData,
-                  color: Config.iconColor,
-                  size: radius(context),
-                ),
-              ),
-            ),
-            const SizedBox(width: Config.margin * 2),
-            Text(
-              name,
-              style: TextStyle(fontSize: fontSize(context), color: Config.iconColor,
-                fontFamily: Config.fontFamily,),
-            ),
-          ],
-        ),
-      ),
-      Divider(
-        color: Config.iconColor.withOpacity(0.5),
-        thickness: 0.2,
-      ),
-    ],
-  );
 }
 
 class _SideBarMenuState extends State<SideBarMenu> {
@@ -112,6 +65,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
           ),
         ),
         Divider(
+          thickness: 0.2,
           color: Config.iconColor.withOpacity(0.5),
         ),
         const SizedBox(height: Config.padding * 2,),
@@ -126,8 +80,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
           if (snapshot.hasData) {
             return buildProfile(snapshot.data!);
           } else {
-            return SideBarMenu.buildHeader(
-              context: context,
+            return SideBarTile(
                 name: "Войти",
                 onClicked: () {
                   Navigator.of(context).push(
@@ -157,25 +110,22 @@ class _SideBarMenuState extends State<SideBarMenu> {
                   children: [
                     SizedBox(height: Config.pageHeight(context) / 7,),
                     buildProfileLabel(),
-                    SideBarMenu.buildHeader(
-                        context: context,
+                    SideBarTile(
                       name: "Подборки",
                       onClicked: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const SetsListScreen(),
                       )),
-                      iconData: Config.darkModeOn ? Icons.library_books_rounded
+                      iconData: Config.darkModeOn ? Icons.library_books_outlined
                                                   : Icons.library_books_outlined
                     ),
-                    SideBarMenu.buildHeader(
-                        context: context,
-                        name: "Голосовые\nкоманды",
+                    SideBarTile(
+                        name: "Голосовые команды",
                         onClicked: () {
                         },
-                        iconData: Config.darkModeOn ? Icons.record_voice_over_rounded
+                        iconData: Config.darkModeOn ? Icons.record_voice_over_outlined
                             : Icons.record_voice_over_outlined
                     ),
-                    SideBarMenu.buildHeader(
-                        context: context,
+                    SideBarTile(
                         name: "Понравившиеся",
                         onClicked: () async {
                           if (!Config.loggedIn) {
@@ -192,7 +142,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                                     setName: "Понравившиеся",
                                     showLikes: false,))));
                         },
-                        iconData: Config.darkModeOn ? Icons.thumb_up
+                        iconData: Config.darkModeOn ? Icons.thumb_up_alt_outlined
                             : Icons.thumb_up_alt_outlined
                     ),
                   ],

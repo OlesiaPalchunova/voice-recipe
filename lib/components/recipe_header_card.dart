@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
-import 'package:voice_recipe/widget_storage.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
@@ -110,8 +109,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         BorderRadius.circular(Config.borderRadiusLarge),
                     boxShadow: active
                         ? [
-                            BoxShadow(
-                              color: Config.getColor(widget.recipe.id),
+                            const BoxShadow(
+                              color: Colors.orange,
                               blurRadius: 12,
                             )
                           ]
