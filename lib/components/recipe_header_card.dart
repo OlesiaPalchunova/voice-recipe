@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review/rate_label.dart';
@@ -26,25 +27,33 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   var _isPressed = false;
   var _isHovered = false;
   static const gradColor = Colors.black87;
-  static final endGradColor = gradColor.withOpacity(0);
+  static const endGradColor = Color.fromRGBO(50, 50, 50, .0);
   static final startGradColor = gradColor.withOpacity(0.8);
   static const maxDesktopHeight = 270.0;
   static bool isDesktop = false;
+  late double height;
+  late double width;
 
-  double get height {
-    return isDesktop ? maxDesktopHeight : Config.pageHeight(context) * 0.3;
+  @override
+  void initState() {
+    super.initState();
   }
 
-  double get width {
-    double height = this.height;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
+    height = isDesktop ? maxDesktopHeight : Config.pageHeight(context) * 0.3;
     var supposedWidth = Config.pageWidth(context) * 0.9;
     if (isDesktop) {
       if (supposedWidth < 2 * height * 1.2) {
-        return supposedWidth;
+        width = supposedWidth;
+      } else {
+        width = height * 1.2;
       }
-      return height * 1.2;
+    } else {
+      width = supposedWidth;
     }
-    return supposedWidth;
   }
 
   bool get active => _isHovered || _isPressed;
@@ -57,12 +66,29 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   );
 
   Widget get favButton => FavoritesButton(
-      recipeId: widget.recipe.id,
+    recipeId: widget.recipe.id,
   );
+
+  void _onTap() async {
+    setState(() {
+      _isPressed = true;
+    });
+    a() {
+      setState(() {
+        _isPressed = false;
+        _isHovered = false;
+      });
+      _navigateToRecipe(context, widget.recipe);
+    }
+
+    await Future.delayed(Config.animationTime).whenComplete(a);
+  }
+
+  double get spreadRadius => Config.darkModeOn ? 1 : 1;
+  double get blurRadius => 6;
 
   @override
   Widget build(BuildContext context) {
-    isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
     var cardWidth = width;
     var cardHeight = height;
     var smallCards = false;
@@ -77,24 +103,12 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
             _isHovered = hovered;
           });
         },
-        onTap: () async {
-          setState(() {
-            _isPressed = true;
-          });
-          a() {
-            setState(() {
-              _isPressed = false;
-              _isHovered = false;
-            });
-            _navigateToRecipe(context, widget.recipe);
-          }
-          await Future.delayed(Config.animationTime).whenComplete(a);
-        },
+        onTap: _onTap,
         child: Card(
-            color: Colors.white.withOpacity(0),
+            color: const Color.fromRGBO(255, 255, 255, 0),
             elevation: 0,
             margin:
-                EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
+            EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
             child: Stack(children: [
               AnimatedContainer(
                 onEnd: () {
@@ -105,31 +119,36 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                 duration: Config.shortAnimationTime,
                 decoration: BoxDecoration(
                     color: Colors.grey.shade900,
-                    borderRadius:
-                        BorderRadius.circular(Config.borderRadiusLarge),
+                    borderRadius: Config.borderRadiusLarge,
                     boxShadow: active
                         ? [
-                            const BoxShadow(
-                              color: Colors.orange,
-                              blurRadius: 12,
-                            )
-                          ]
+                      BoxShadow(
+                        color: Config.getGradientColor(widget.recipe.id).first.darken(12),
+                        spreadRadius: spreadRadius,
+                        blurRadius: blurRadius,
+                        offset: const Offset(2, 2)
+                      ),
+                      BoxShadow(
+                        color: Config.getGradientColor(widget.recipe.id).last.darken(12),
+                        spreadRadius: spreadRadius,
+                        blurRadius: blurRadius,
+                        offset: const Offset(-2, -2)
+                      )
+                    ]
                         : []),
                 height: cardHeight,
                 width: cardWidth,
                 child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(Config.borderRadiusLarge),
+                    borderRadius: Config.borderRadiusLarge,
                     child: Image(
                         image: widget.recipe.isNetwork ?
                         NetworkImage(widget.recipe.faceImageUrl)
-                        : AssetImage(widget.recipe.faceImageUrl) as ImageProvider,
+                            : AssetImage(widget.recipe.faceImageUrl) as ImageProvider,
                         fit: cardWidth <= cardHeight * 1.2
                             ? BoxFit.fitHeight
                             : BoxFit.fitWidth)),
               ),
-              AnimatedContainer(
-                duration: Config.shortAnimationTime,
+              Container(
                 width: cardWidth,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
@@ -141,7 +160,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                           endGradColor,
                         ]),
                     borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(Config.borderRadiusLarge))),
+                        top: Radius.circular(Config.largeRadius))),
                 // width: double.infinity,
                 padding: EdgeInsets.fromLTRB(
                     cardWidth / 10, cardHeight / 7, 0, cardHeight / 5),

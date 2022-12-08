@@ -16,7 +16,7 @@ class RecipesGetter {
   }
 
   String getImageUrl(int id) {
-    return "http://185.128.106.56:8080/api/v1/media/$id";
+    return "https://$serverUrl/api/v1/media/$id";
   }
 
   Future<List<Recipe>> get favoriteRecipes async {
@@ -65,7 +65,7 @@ class RecipesGetter {
     var recipe = Recipe(
         name: recipeJson["name"],
         faceImageUrl: getImageUrl(recipeJson["media"]["id"]),
-        id: id,
+        id: id + recipes.length - 1,
         cookTimeMins: cookTimeMins.floor(),
         prepTimeMins: prepTimeMins == null ? 0 : prepTimeMins.floor(),
         kilocalories: kilocalories.floor(),
@@ -77,10 +77,10 @@ class RecipesGetter {
     return response.statusCode.toString();
   }
 
-  static const serverUrl = "185.128.106.56:8080";
+  static const serverUrl = "server.voicerecipe.ru";
 
   Future<http.Response> fetchRecipe(int id) async {
-    var recipeUrl = Uri.parse('http://185.128.106.56:8080/api/v1/recipe/$id');
+    var recipeUrl = Uri.parse('https://server.voicerecipe.ru/api/v1/recipe/$id');
     return http.get(recipeUrl);
   }
 }

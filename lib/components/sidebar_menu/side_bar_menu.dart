@@ -24,7 +24,7 @@ class SideBarMenu extends StatefulWidget {
   static double nameFontSize(BuildContext context) => Config.isDesktop(context)
       ? 18 : 14;
   static double fontSize(BuildContext context) => Config.isDesktop(context)
-      ? 18 : 16;
+      ? 18 : 14;
   static double radius(BuildContext context) => Config.isDesktop(context)
       ? 22 : 20;
 }

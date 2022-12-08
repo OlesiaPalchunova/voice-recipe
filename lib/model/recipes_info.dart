@@ -212,5 +212,5 @@ class Rate {
 final ratesMap = HashMap<int, int>();
 
 final List<double> rates = [
-  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3, -4.3, -4.3
 ];

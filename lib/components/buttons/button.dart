@@ -1,30 +1,36 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
 
-class Button extends StatefulWidget {
-  const Button(
-      {super.key, required this.onTap, required this.text, this.width = 300});
+class ClassicButton extends StatefulWidget {
+  const ClassicButton(
+      {super.key, required this.onTap, required this.text, this.width = 300,
+      this.fontSize = 20, this.color = const Color(0xff050505),
+      this.hoverColor = const Color(0xff101010), this.shadowOn = true,
+      this.textColor = Colors.white});
 
   final VoidCallback onTap;
   final String text;
   final double width;
+  final double fontSize;
+  final Color color;
+  final Color hoverColor;
+  final Color textColor;
+  final bool shadowOn;
 
   @override
-  State<Button> createState() => _ButtonState();
+  State<ClassicButton> createState() => _ClassicButtonState();
 }
 
-class _ButtonState extends State<Button> {
+class _ClassicButtonState extends State<ClassicButton> {
   bool _hovered = false;
   bool _pressed = false;
 
   Color get backColor => _hovered | _pressed ?
-  const Color(0xff101010) :
-  const Color(0xff050505);
+  widget.hoverColor :
+  widget.color;
 
-  List<BoxShadow> get shadow => !_hovered & !_pressed
+  List<BoxShadow> get shadow => !_hovered & !_pressed | !widget.shadowOn
       ? []
       : const [BoxShadow(color: Colors.orangeAccent, blurRadius: 12)];
 
@@ -49,14 +55,15 @@ class _ButtonState extends State<Button> {
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
             color: backColor,
-            borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+            borderRadius: Config.borderRadiusLarge,
             boxShadow: shadow),
         width: widget.width,
+        padding: const EdgeInsets.all(Config.padding),
         child: Center(
           child: Text(widget.text,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
+              style: TextStyle(
+                  color: widget.textColor,
+                  fontSize: widget.fontSize,
                   fontFamily: Config.fontFamily)),
         ),
       ),

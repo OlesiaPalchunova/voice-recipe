@@ -23,7 +23,7 @@ class IngredientsSlideView extends StatelessWidget {
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
           color: Config.darkModeOn ? Config.iconBackColor: Colors.white70,
-          borderRadius: BorderRadius.circular(Config.borderRadius)
+          borderRadius: Config.borderRadius
       ),
       child: SingleChildScrollView(
         child: Container(

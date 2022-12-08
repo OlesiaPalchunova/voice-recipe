@@ -29,7 +29,7 @@ class RecipeFaceSlideView extends StatelessWidget {
         ),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+            borderRadius: Config.borderRadiusLarge,
             image: DecorationImage(
               image: recipe.isNetwork ?
               NetworkImage(recipe.faceImageUrl)

@@ -7,7 +7,7 @@ import 'package:voice_recipe/screens/authorization/register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
-import '../../components/login/button.dart';
+import '../../components/buttons/button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../components/login/ref_button.dart';
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
         foregroundColor: Config.iconColor,
         backgroundColor: Config.backgroundColor,
         title: const TitleLogoPanel(
-          title: "Voice Recipe",
+          title: Config.appName,
         ),
       ),
       backgroundColor: backColor,
@@ -221,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(
                             height: Config.loginPageHeight(context) / 12,
-                            child: Button(
+                            child: ClassicButton(
                               onTap: signIn,
                               text: "Войти",
                               width: LoginScreen.buttonWidth(context),

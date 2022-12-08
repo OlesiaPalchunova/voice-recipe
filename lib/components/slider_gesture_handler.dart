@@ -1,27 +1,53 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class SliderGestureHandler extends StatelessWidget {
+
   SliderGestureHandler({super.key, required this.onLeft,
   required this.onRight, required this.child, this.handleTaps = true,
   this.ignoreVerticalSwipes = true});
 
+  final _focusNode = FocusNode();
   final void Function() onRight;
   final void Function() onLeft;
   final Widget child;
   final bool handleTaps;
   final bool ignoreVerticalSwipes;
-  static const MIN_SWIPLE_TIME_MILLIS = 400;
+  static const minSwipeTimeMillis = 400;
+  static const minKeyboardSwipeTimeMillis = 200;
   var lastSwipeTime = DateTime.now();
   var lastTapDownTime = DateTime.now().subtract(const Duration(seconds: 1));
 
+  void _handleKeyEvent(RawKeyEvent event) {
+    var cur = DateTime.now();
+    if (cur.difference(lastSwipeTime).inMilliseconds <=
+        minKeyboardSwipeTimeMillis) {
+      return;
+    }
+    if (event.physicalKey == PhysicalKeyboardKey.arrowRight) {
+        //|| event.physicalKey == PhysicalKeyboardKey.keyD) {
+      onRight();
+      lastSwipeTime = cur;
+    } else if (event.physicalKey == PhysicalKeyboardKey.arrowLeft) {
+        // || event.physicalKey == PhysicalKeyboardKey.keyA) {
+      onLeft();
+      lastSwipeTime = cur;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
-      onPanUpdate: _swipeHandler,
-      onTapUp: handleTaps ? (TapUpDetails details) => _tapHandler(details, context)
-          : (TapUpDetails details) {},
-      child: child,
+    return RawKeyboardListener(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKey: _handleKeyEvent,
+      child: GestureDetector(
+        onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
+        onPanUpdate: _swipeHandler,
+        onTapUp: handleTaps ? (TapUpDetails details) => _tapHandler(details, context)
+            : (TapUpDetails details) {},
+        child: child,
+      ),
     );
   }
 
@@ -44,7 +70,7 @@ class SliderGestureHandler extends StatelessWidget {
     var cur = DateTime.now();
     // debugPrint('${cur.difference(lastSwipeTime).inMilliseconds}/$minSlideChangeDelayMillis');
     if (cur.difference(lastSwipeTime).inMilliseconds <=
-        MIN_SWIPLE_TIME_MILLIS) {
+        minSwipeTimeMillis) {
       return;
     }
     if (ignoreVerticalSwipes && details.delta.dy.abs() > details.delta.dx.abs()) {

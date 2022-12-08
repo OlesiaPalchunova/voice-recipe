@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voice_recipe/components/login/button.dart';
+import 'package:voice_recipe/recipes_getter.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
 import 'package:voice_recipe/translator.dart';
@@ -25,10 +25,11 @@ class GradientColors {
 }
 
 class Config {
+  static const appName = "Talky Chef";
   static const fontFamily = "Montserrat";
   static const fontFamilyBold = "MontserratBold";
-  static const borderRadius = 6.0;
-  static const borderRadiusLarge = 16.0;
+  static const radius = 6.0;
+  static const largeRadius = 16.0;
   static const padding = 10.0;
   static const margin = 10.0;
   static var darkModeOn = false;
@@ -41,8 +42,11 @@ class Config {
   static const minLoginPageWidth = 300.0;
   static const minLoginPageHeight = 500.0;
   static Color? lastBackColor;
+  static const borderRadius = BorderRadius.all(Radius.circular(radius));
+  static const borderRadiusLarge = BorderRadius.all(Radius.circular(largeRadius));
 
   static init() async {
+    await RecipesGetter().getRecipe(id: 1);
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,

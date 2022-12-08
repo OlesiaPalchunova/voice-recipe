@@ -1,14 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/login/button.dart';
 import 'package:voice_recipe/components/sets/set_header_card.dart';
-import 'package:voice_recipe/model/db/user_db_manager.dart';
-import 'package:voice_recipe/recipes_getter.dart';
-import 'package:voice_recipe/screens/set_screen.dart';
 
 import '../config.dart';
-import '../model/recipes_info.dart';
 import '../model/sets_info.dart';
 import '../model/users_info.dart';
 

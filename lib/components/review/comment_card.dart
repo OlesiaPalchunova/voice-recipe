@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/comments_model.dart';
+import 'package:voice_recipe/model/db/comment_db_manager.dart';
 
 import '../../config.dart';
 import '../../model/users_info.dart';
 
 class CommentCard extends StatelessWidget {
-  const CommentCard({super.key, required this.review});
+  const CommentCard({super.key, required this.review, required this.recipeId,
+  required this.onDelete});
 
   final Comment review;
+  final int recipeId;
+  final VoidCallback onDelete;
 
-  static double nameFontSize(BuildContext context) => Config.isDesktop(context)
-      ? 16 : 14;
-  static double descFontSize(BuildContext context) => Config.isDesktop(context)
-      ? 16 : 14;
-  static double sinceFontSize(BuildContext context) => Config.isDesktop(context)
-      ? 14 : 12;
+  static double nameFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 16 : 14;
+
+  static double descFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 16 : 14;
+
+  static double sinceFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 14 : 12;
 
   String get since {
     var diff = DateTime.now().difference(review.postTime);
@@ -45,51 +51,53 @@ class CommentCard extends StatelessWidget {
     return "${diff.inDays} дней назад";
   }
 
-  static Widget buildCommentFrame(
+  Widget buildCommentFrame(
       {required BuildContext context,
-        String nickname = "",
+      String nickname = "",
       String since = "",
       String profileImageUrl = defaultProfileUrl,
       required Widget body}) {
     return Container(
       padding: const EdgeInsets.all(Config.padding),
       margin: const EdgeInsets.symmetric(vertical: Config.margin),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           // color: Config.pressed,
-          borderRadius: BorderRadius.circular(Config.borderRadius)),
+          borderRadius: Config.borderRadius),
       child: Stack(children: [
         Padding(
           padding: const EdgeInsets.only(left: Config.padding * 5),
           // .add(const EdgeInsets.symmetric(vertical: Config.padding)),
           child: Column(
             children: [
-              nickname.isNotEmpty ? Row(
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      nickname,
-                      style: TextStyle(
-                          color: Config.iconColor,
-                          fontFamily: Config.fontFamily,
-                          fontSize: nameFontSize(context)),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: Config.padding,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      since,
-                      style: TextStyle(
-                          color: Config.iconColor.withOpacity(0.7),
-                          fontFamily: Config.fontFamily,
-                          fontSize: sinceFontSize(context)),
-                    ),
-                  ),
-                ],
-              ) : Container(),
+              nickname.isNotEmpty
+                  ? Row(
+                      children: [
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            nickname,
+                            style: TextStyle(
+                                color: Config.iconColor,
+                                fontFamily: Config.fontFamily,
+                                fontSize: nameFontSize(context)),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: Config.padding,
+                        ),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            since,
+                            style: TextStyle(
+                                color: Config.iconColor.withOpacity(0.7),
+                                fontFamily: Config.fontFamily,
+                                fontSize: sinceFontSize(context)),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
               const SizedBox(
                 height: Config.padding,
               ),
@@ -102,7 +110,55 @@ class CommentCard extends StatelessWidget {
           backgroundColor: Config.pressed,
           backgroundImage: NetworkImage(profileImageUrl),
         ),
+        Container(
+          alignment: Alignment.centerRight,
+          child: PopupMenuButton<int>(
+            color: Config.backgroundColor,
+            tooltip: '',
+            itemBuilder: (context) => getCommentOptions(),
+            icon: Icon(
+              Icons.more_vert,
+              color: Config.iconColor,
+            ),
+          ),
+        )
       ]),
+    );
+  }
+
+  List<PopupMenuEntry<int>> getCommentOptions() {
+    if (!Config.loggedIn) {
+      return <PopupMenuEntry<int>>[
+        PopupMenuItem(value: 1, child: getOption("Пожаловаться"),),
+      ];
+    }
+    String uid = Config.user!.uid;
+    if (review.uid == uid) {
+      return <PopupMenuEntry<int>>[
+        PopupMenuItem(value: 1, child: getOption("Редактировать")),
+        PopupMenuItem(value: 2,
+        onTap: deleteComment, child: getOption("Удалить"),),
+      ];
+    }
+    return <PopupMenuEntry<int>>[
+      PopupMenuItem(value: 1, child: getOption("Пожаловаться"),),
+    ];
+  }
+
+  Future deleteComment() async {
+    await CommentDbManager().deleteComment(review.uid, recipeId, 1);
+    onDelete();
+  }
+
+  Widget getOption(String name) {
+    return Container(
+      color: Config.backgroundColor,
+      child: Text(name,
+      style: TextStyle(
+          fontFamily: Config.fontFamily,
+          fontSize: 16,
+        color: Config.iconColor
+      ),),
     );
   }
 

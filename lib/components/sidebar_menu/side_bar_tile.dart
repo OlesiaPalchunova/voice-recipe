@@ -21,7 +21,7 @@ class SideBarTile extends StatefulWidget {
 class _SideBarTileState extends State<SideBarTile> {
 
   static double fontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 18 : 16;
+      Config.isDesktop(context) ? 18 : 14;
 
   static double radius(BuildContext context) =>
       Config.isDesktop(context) ? 22 : 20;
@@ -32,7 +32,7 @@ class _SideBarTileState extends State<SideBarTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+      borderRadius: Config.borderRadiusLarge,
       hoverColor: pressedColor,
       onTap: widget.onClicked,
       child: Container(

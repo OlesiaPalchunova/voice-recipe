@@ -38,7 +38,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
           await Future.delayed(Config.animationTime).whenComplete(a);
         },
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Config.borderRadius),
+          borderRadius: Config.borderRadius,
           color: _isPressed ? Config.pressed : Config.notPressed,
         ),
         width: Config.pageWidth(context),
@@ -57,7 +57,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
                   Text(widget.setOption.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 22,
+                          fontSize: fontSize(context),
                           fontFamily: Config.fontFamily,
                           fontWeight: FontWeight.w500,
                           color: Config.iconColor)),
@@ -65,7 +65,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
                     widget.setOption.getRecipes().length.toString(),
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                        fontSize: 22,
+                        fontSize: fontSize(context),
                         fontFamily: Config.fontFamily,
                         fontWeight: FontWeight.w500,
                         color: Config.iconColor),
@@ -82,6 +82,9 @@ class _SetOptionTileState extends State<SetOptionTile> {
       ),
     );
   }
+
+  double fontSize(BuildContext context) => Config.isDesktop(context)
+      ? 20 : 18;
 
   void _navigateToSet(BuildContext context, SetOption setOption) {
     Navigator.of(context).push(MaterialPageRoute(

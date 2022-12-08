@@ -17,8 +17,9 @@ class HomeState extends State<Home> {
   static var count = 0;
   var _recipes = recipes;
   late List<RecipeHeaderCard> recipeViews;
-  static const title = TitleLogoPanel(title: "Voice Recipe");
+  static const title = TitleLogoPanel(title: Config.appName);
   static HomeState? current;
+  static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawerScrimColor: Colors.black87.withOpacity(0.6),
+      drawerScrimColor: drawerScrimColor,
         appBar: AppBar(
           foregroundColor: Config.iconColor,
           backgroundColor: Config.appBarColor,
@@ -96,13 +97,12 @@ class HomeState extends State<Home> {
         hintText: 'Поиск',
         hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
         prefixIcon: Icon(Icons.search, color: color),
-        filled: true,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+          borderRadius: Config.borderRadiusLarge,
           borderSide: BorderSide(color: color.withOpacity(0.7)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+          borderRadius: Config.borderRadiusLarge,
           borderSide: BorderSide(color: color.withOpacity(0.7)),
         ),
       ),

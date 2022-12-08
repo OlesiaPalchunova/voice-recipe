@@ -11,20 +11,15 @@ class RateLabel extends StatelessWidget {
   final bool shadowOn;
 
   List<BoxShadow> get shadows => shadowOn
-  ? [
-      const BoxShadow(
-        color: Colors.orangeAccent,
-        blurRadius: 4
-      )
-      ]
-  : [];
+      ? [BoxShadow(color: Config.iconColor.withOpacity(0.5), blurRadius: 0, spreadRadius: 0.5)]
+      : [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           color: Config.darkModeOn ? Config.darkBlue : Colors.white,
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+          borderRadius: Config.borderRadiusLarge,
         boxShadow: shadows
       ),
       width: width,

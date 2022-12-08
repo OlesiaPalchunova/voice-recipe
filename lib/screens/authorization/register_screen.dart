@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
-import '../../components/login/button.dart';
+import '../../components/buttons/button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../config.dart';
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         foregroundColor: Config.iconColor,
         backgroundColor: Config.backgroundColor,
         title: const TitleLogoPanel(
-          title: "Voice Recipe",
+          title: Config.appName,
         ),
       ),
       backgroundColor: backColor,
@@ -150,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: Config.margin),
                           height: Config.loginPageHeight(context) / 12,
-                          child: Button(
+                          child: ClassicButton(
                             onTap: signUp,
                             width: LoginScreen.buttonWidth(context),
                             text: "Создать аккаунт",

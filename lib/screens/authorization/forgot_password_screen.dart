@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/login/button.dart';
+import 'package:voice_recipe/components/buttons/button.dart';
 import 'package:voice_recipe/components/login/input_label.dart';
 
 import '../../config.dart';
@@ -45,7 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     var width = min(Config.recipeSlideWidth(context), 500.0);
     return Scaffold(
       appBar: const TitleLogoPanel(
-        title: "Voice Recipe",
+        title: Config.appName,
       ).appBar(),
       body: GestureDetector(
         onTap: () => _emailFocusNode.unfocus(),
@@ -96,7 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   SizedBox(
                       height: 60,
-                      child: Button(
+                      child: ClassicButton(
                         onTap: passwordReset,
                         text: "Сменить пароль",
                         width: width * 0.8,

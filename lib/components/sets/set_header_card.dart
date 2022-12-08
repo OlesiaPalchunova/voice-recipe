@@ -61,14 +61,8 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                   duration: Config.animationTime,
                   height: cardHeight,
                   decoration: BoxDecoration(
-                      border: Border.all(
-                          color: active
-                              ? Config.iconColor
-                              : Config.notPressed,
-                          width: 0.2),
-                      borderRadius: BorderRadius.circular(Config.borderRadius),
-                      color:
-                          active ? Config.pressed : Config.notPressed,
+                      borderRadius: Config.borderRadius,
+                      color: Config.backgroundColor,
                       boxShadow: active
                           ? [
                               BoxShadow(

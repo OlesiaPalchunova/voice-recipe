@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
@@ -39,7 +40,8 @@ class RecipeScreen extends StatefulWidget {
 
   final Recipe recipe;
   static final FlutterTts tts = FlutterTts();
-  late final IngredientsSlideView ingPage = IngredientsSlideView(recipe: recipe);
+  late final IngredientsSlideView ingPage =
+      IngredientsSlideView(recipe: recipe);
   late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
   late final ReviewView reviewPage = ReviewView(recipe: recipe);
 
@@ -58,7 +60,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   void initState() {
     super.initState();
-    _slideId = stepsMap[widget.recipe.id]?? 0;
+    _slideId = stepsMap[widget.recipe.id] ?? 0;
     _initCommandsListener();
   }
 
@@ -73,19 +75,21 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop,
-      child: SliderGestureHandler(
-        onLeft: _onPrev,
-        onRight: _onNext,
-        child: Scaffold(
-          appBar: AppBar(
-            shadowColor: Config.darkModeOn ? Colors.black87 : Colors.white.withOpacity(0),
-            automaticallyImplyLeading: false,
-            toolbarHeight: 60,
-            foregroundColor: Config.iconColor,
-            backgroundColor: Config.getBackColor(widget.recipe.id),
-            centerTitle: true,
-            title: Container(
+        onWillPop: _onWillPop,
+        child: SliderGestureHandler(
+          onLeft: _onPrev,
+          onRight: _onNext,
+          child: Scaffold(
+            appBar: AppBar(
+              shadowColor: Config.darkModeOn
+                  ? Colors.black87
+                  : Colors.white.withOpacity(0),
+              automaticallyImplyLeading: false,
+              toolbarHeight: 60,
+              foregroundColor: Config.iconColor,
+              backgroundColor: Config.getBackColor(widget.recipe.id),
+              centerTitle: true,
+              title: Container(
                 alignment: Alignment.center,
                 width: Config.maxRecipeSlideWidth,
                 child: HeaderButtonsPanel(
@@ -100,30 +104,32 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   onStopSaying: _onStopSaying,
                 ),
               ),
-          ),
-          body: Container(
-            alignment: Alignment.center,
-            color: Config.backgroundColor,
-            child: Stack(
-              children: [
-                Center(
-                  child: Container(
-                    color: Config.getBackColor(widget.recipe.id),
-                    alignment: Alignment.center,
-                    width: Config.maxRecipeSlideWidth,
-                    child: _buildCurrentSlide(context, _slideId),
-                  ),
-                ),
-                Center(
-                  child: Container(
-                      alignment: Alignment.bottomCenter,
+            ),
+            body: Container(
+              alignment: Alignment.center,
+              color: Config.darkModeOn
+                  ? Config.backgroundColor
+                  : Config.getBackColor(widget.recipe.id),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      color: Config.getBackColor(widget.recipe.id),
+                      alignment: Alignment.center,
                       width: Config.maxRecipeSlideWidth,
-                      child: _buildSliderBottom()),
-                )
-              ],
+                      child: _buildCurrentSlide(context, _slideId),
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                        alignment: Alignment.bottomCenter,
+                        width: Config.maxRecipeSlideWidth,
+                        child: _buildSliderBottom()),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
       ),
     );
   }
@@ -147,6 +153,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       }
       slideId = _slideId;
     }
+
     RecipeScreen.tts.setCancelHandler(a);
     RecipeScreen.tts.setPauseHandler(a);
   }
@@ -161,8 +168,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     } else if (_slideId == ingredientsSlideId) {
       text = "Время приготовления: ${widget.recipe.cookTimeMins} минут";
     } else {
-      text = widget.recipe.steps[_slideId -
-          firstStepSlideId].description;
+      text = widget.recipe.steps[_slideId - firstStepSlideId].description;
     }
     if (!ListenButtonState.current()!.isListening()) {
       if (_completed) {
@@ -211,17 +217,17 @@ class _RecipeScreenState extends State<RecipeScreen> {
     return Container(
       alignment: Alignment.center,
       height: 10,
-      color: Colors.black87,
+      color: Config.backgroundColor,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         // padding: const EdgeInsets.symmetric(horizontal: 10),
         itemCount: slidesCount,
         itemBuilder: (_, index) => Container(
           decoration: BoxDecoration(
-              color: index == _slideId ? Config.getColor(widget.recipe.id)
-                  : Colors.black87,
-            borderRadius: BorderRadius.circular(Config.borderRadius)
-          ),
+              color: index == _slideId
+                  ? Config.getColor(widget.recipe.id)
+                  : null,
+              borderRadius: Config.borderRadius),
           width: sectionWidth,
         ),
       ),
@@ -249,36 +255,35 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   void _initCommandsListener() {
-    _listener = CommandsListener(
-        commandsList: <Command>[
-          NextCommand(onTriggerFunction: _onNext),
-          BackCommand(onTriggerFunction: _onPrev),
-          SayCommand(onTriggerFunction: () => SayButtonState.current()!.say()),
-          StartCommand(onTriggerFunction: () => setState(() {
-            _slideId = firstStepSlideId;
-          })),
-          CloseCommand(onTriggerFunction: () => _onClose(context)),
-          StopSayCommand(onTriggerFunction: _onStopSaying),
-          StartTimerCommand(onTriggerFunction: () {
-            TimerViewState? state = TimerViewState.getCurrent();
-            if (state != null) {
-              state.startTimer();
-            }
-          }),
-          StopTimerCommand(onTriggerFunction: () {
-            TimerViewState? state = TimerViewState.getCurrent();
-            if (state != null) {
-              state.stopTimer();
-            }
-          }),
-          ResetTimerCommand(onTriggerFunction: () {
-            TimerViewState? state = TimerViewState.getCurrent();
-            if (state != null) {
-              state.resetTimer();
-            }
-          }),
-        ]
-    );
+    _listener = CommandsListener(commandsList: <Command>[
+      NextCommand(onTriggerFunction: _onNext),
+      BackCommand(onTriggerFunction: _onPrev),
+      SayCommand(onTriggerFunction: () => SayButtonState.current()!.say()),
+      StartCommand(
+          onTriggerFunction: () => setState(() {
+                _slideId = firstStepSlideId;
+              })),
+      CloseCommand(onTriggerFunction: () => _onClose(context)),
+      StopSayCommand(onTriggerFunction: _onStopSaying),
+      StartTimerCommand(onTriggerFunction: () {
+        TimerViewState? state = TimerViewState.getCurrent();
+        if (state != null) {
+          state.startTimer();
+        }
+      }),
+      StopTimerCommand(onTriggerFunction: () {
+        TimerViewState? state = TimerViewState.getCurrent();
+        if (state != null) {
+          state.stopTimer();
+        }
+      }),
+      ResetTimerCommand(onTriggerFunction: () {
+        TimerViewState? state = TimerViewState.getCurrent();
+        if (state != null) {
+          state.resetTimer();
+        }
+      }),
+    ]);
   }
 
   Future<bool> _onWillPop() async {

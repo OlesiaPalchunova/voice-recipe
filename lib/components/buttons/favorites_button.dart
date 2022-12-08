@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
-import 'package:voice_recipe/screens/home_screen.dart';
 
 import '../../config.dart';
 
@@ -25,12 +24,14 @@ class _FavoritesButtonState extends State<FavoritesButton>
   late final AnimationController animationController;
   bool _pressed = false;
   bool _listen = false;
+  bool _disposed = false;
 
   @override
   void initState(){
     if (Config.loggedIn) {
       checkIfIsFavorite();
     }
+    _disposed = false;
     setAuthListener();
     animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1))
           ..addStatusListener((status) {
@@ -43,6 +44,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
 
   @override
   void dispose() {
+    _disposed = true;
     animationController.dispose();
     super.dispose();
   }
@@ -54,15 +56,15 @@ class _FavoritesButtonState extends State<FavoritesButton>
           size: widget.width / 3,
         )
       : Icon(
-          Icons.favorite,
-          color: Config.iconColor.withOpacity(0.2),
+          Icons.favorite_outline_outlined,
+          color: Config.iconColor.withOpacity(.5),
           size: widget.width / 3,
         );
 
   double get width => widget.width;
 
   List<BoxShadow> get shadows => widget.shadowOn
-  ? [const BoxShadow(color: Colors.orangeAccent, blurRadius: 4)]
+  ? [BoxShadow(color: Config.iconColor.withOpacity(0.5), blurRadius: 0, spreadRadius: 0.5)]
   : [];
 
   @override
@@ -73,7 +75,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
           decoration: BoxDecoration(
               boxShadow: shadows,
               color: Config.darkModeOn ? Config.darkBlue : Colors.white,
-              borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
+              borderRadius: Config.borderRadiusLarge),
           width: width,
           height: width / 2,
           margin: EdgeInsets.only(top: width / 15),
@@ -140,6 +142,9 @@ class _FavoritesButtonState extends State<FavoritesButton>
   }
 
   void checkIfIsFavorite() async {
+    if (_disposed) {
+      return;
+    }
     _pressed = await isFavorite();
     setState(() {
     });

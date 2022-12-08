@@ -62,12 +62,12 @@ class TimerViewState extends State<TimerView> {
             offset: const Offset(4, 4),
           ),
         ],
-        borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+        borderRadius: Config.borderRadiusLarge,
       );
     }
     return BoxDecoration(
         color: Colors.white.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(Config.borderRadiusLarge)
+        borderRadius: Config.borderRadiusLarge
     );
   }
 

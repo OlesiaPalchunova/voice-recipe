@@ -26,10 +26,10 @@ class InputLabel extends StatelessWidget {
           hintStyle: TextStyle(
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Config.borderRadiusLarge)),
+          enabledBorder: const OutlineInputBorder(
+              borderRadius: Config.borderRadiusLarge),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+              borderRadius: Config.borderRadiusLarge,
               borderSide: BorderSide(
                   color:
                       Config.darkModeOn ? Colors.orangeAccent : Colors.black)),
@@ -42,7 +42,7 @@ class InputLabel extends StatelessWidget {
     return SizedBox(
       height: height,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Config.borderRadius),
+        borderRadius: Config.borderRadius,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

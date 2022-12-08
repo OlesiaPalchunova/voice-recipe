@@ -38,7 +38,7 @@ class _PasswordLabelState extends State<PasswordLabel> {
     return SizedBox(
       height: widget.height,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Config.borderRadius),
+        borderRadius: Config.borderRadius,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

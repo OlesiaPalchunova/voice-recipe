@@ -42,7 +42,7 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-            title: "Голосовые рецепты",
+            title: Config.appName,
             home: const Home(),
             theme: Config.darkModeOn ? darkTheme : lightTheme
     );

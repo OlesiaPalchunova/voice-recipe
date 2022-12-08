@@ -58,7 +58,7 @@ class _SignInButtonState extends State<SignInButton> {
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Config.borderRadiusLarge),
+          borderRadius: Config.borderRadiusLarge,
           color: backgroundColor,
           border: Border.all(
             color: Colors.black87,
