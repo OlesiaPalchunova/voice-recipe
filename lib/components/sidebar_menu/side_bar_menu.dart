@@ -121,6 +121,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Голосовые команды",
                         onClicked: () {
+                          Config.showAlertDialog("В стадии разработки", context);
                         },
                         iconData: Config.darkModeOn ? Icons.record_voice_over_outlined
                             : Icons.record_voice_over_outlined

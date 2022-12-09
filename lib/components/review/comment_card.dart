@@ -4,15 +4,22 @@ import 'package:voice_recipe/model/db/comment_db_manager.dart';
 
 import '../../config.dart';
 import '../../model/users_info.dart';
+import 'new_comment_card.dart';
 
-class CommentCard extends StatelessWidget {
-  const CommentCard({super.key, required this.commentId, required this.comment, required this.recipeId,
-  required this.onDelete});
+class CommentCard extends StatefulWidget {
+  const CommentCard(
+      {super.key,
+      required this.commentId,
+      required this.comment,
+      required this.recipeId,
+      required this.onDelete,
+      required this.onUpdate});
 
   final String commentId;
   final Comment comment;
   final int recipeId;
   final VoidCallback onDelete;
+  final void Function(String, String) onUpdate;
 
   static double nameFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 16 : 14;
@@ -23,34 +30,14 @@ class CommentCard extends StatelessWidget {
   static double sinceFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 14 : 12;
 
-  String get since {
-    var diff = DateTime.now().difference(comment.postTime);
-    if (diff.inMinutes < 60) {
-      if (diff.inMinutes == 0) {
-        return "только что";
-      }
-      int rest = diff.inMinutes - ((diff.inMinutes / 10).floor()) * 10;
-      var str = "минут";
-      if (rest == 1) {
-        str = "минуту";
-      } else if (rest < 5 && rest >= 1) {
-        str = "минуты";
-      }
-      return "${diff.inMinutes} $str назад";
-    }
-    if (diff.inDays > 31) {
-      int monthsCount = (diff.inDays / 30).floor();
-      int rest = monthsCount - ((monthsCount / 10).floor()) * 10;
-      var str = "месяцев";
-      if (rest == 1) {
-        str = "месяц";
-      } else if (rest < 5) {
-        str = "месяца";
-      }
-      return "$monthsCount $str назад";
-    }
-    return "${diff.inDays} дней назад";
-  }
+  @override
+  State<CommentCard> createState() => _CommentCardState();
+}
+
+class _CommentCardState extends State<CommentCard> {
+  bool editMode = false;
+  final editNode = FocusNode();
+  final editController = TextEditingController();
 
   Widget buildCommentFrame(
       {required BuildContext context,
@@ -66,7 +53,8 @@ class CommentCard extends StatelessWidget {
           borderRadius: Config.borderRadius),
       child: Stack(children: [
         Padding(
-          padding: const EdgeInsets.only(left: Config.padding * 5),
+          padding: const EdgeInsets.only(left: Config.padding * 5).
+          add(const EdgeInsets.only(right: Config.padding * 2)),
           // .add(const EdgeInsets.symmetric(vertical: Config.padding)),
           child: Column(
             children: [
@@ -80,7 +68,7 @@ class CommentCard extends StatelessWidget {
                             style: TextStyle(
                                 color: Config.iconColor,
                                 fontFamily: Config.fontFamily,
-                                fontSize: nameFontSize(context)),
+                                fontSize: CommentCard.nameFontSize(context)),
                           ),
                         ),
                         const SizedBox(
@@ -93,7 +81,7 @@ class CommentCard extends StatelessWidget {
                             style: TextStyle(
                                 color: Config.iconColor.withOpacity(0.7),
                                 fontFamily: Config.fontFamily,
-                                fontSize: sinceFontSize(context)),
+                                fontSize: CommentCard.sinceFontSize(context)),
                           ),
                         ),
                       ],
@@ -112,11 +100,14 @@ class CommentCard extends StatelessWidget {
           backgroundImage: NetworkImage(profileImageUrl),
         ),
         Container(
-          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(top: Config.padding),
+          alignment: Alignment.bottomRight,
           child: PopupMenuButton<int>(
-            color: Config.backgroundColor,
+            padding: const EdgeInsets.all(0),
+            position: PopupMenuPosition.under,
+            color: Config.pressed,
             tooltip: '',
-            itemBuilder: (context) => getCommentOptions(),
+            itemBuilder: (context) => getCommentOptions(context),
             icon: Icon(
               Icons.more_vert,
               color: Config.iconColor,
@@ -127,58 +118,87 @@ class CommentCard extends StatelessWidget {
     );
   }
 
-  List<PopupMenuEntry<int>> getCommentOptions() {
-    if (!Config.loggedIn) {
-      return <PopupMenuEntry<int>>[
-        PopupMenuItem(value: 1, child: getOption("Пожаловаться"),),
-      ];
-    }
-    String uid = Config.user!.uid;
-    if (comment.uid == uid) {
-      return <PopupMenuEntry<int>>[
-        PopupMenuItem(value: 1, child: getOption("Редактировать")),
-        PopupMenuItem(value: 2,
-        onTap: deleteComment, child: getOption("Удалить"),),
-      ];
+  List<PopupMenuEntry<int>> getCommentOptions(BuildContext context) {
+    if (Config.loggedIn) {
+      String uid = Config.user!.uid;
+      if (widget.comment.uid == uid) {
+        return <PopupMenuEntry<int>>[
+          PopupMenuItem(
+            value: 1,
+            onTap: editComment,
+            child: getOption("Редактировать"),
+          ),
+          PopupMenuItem(
+            value: 2,
+            onTap: deleteComment,
+            child: getOption("Удалить"),
+          ),
+        ];
+      }
     }
     return <PopupMenuEntry<int>>[
-      PopupMenuItem(value: 1, child: getOption("Пожаловаться"),),
+      PopupMenuItem(
+        value: 1,
+        child: getOption("Пожаловаться"),
+        onTap: () =>
+            Config.showAlertDialog("Ваша жалоба будет рассмотрена", context),
+      ),
     ];
   }
 
+  void editComment() {
+    setState(() {
+      editMode = true;
+      editController.text = widget.comment.text;
+    });
+  }
+
   Future deleteComment() async {
-    await CommentDbManager().deleteComment(recipeId, commentId);
-    onDelete();
+    await CommentDbManager().deleteComment(widget.recipeId, widget.commentId);
+    widget.onDelete();
   }
 
   Widget getOption(String name) {
-    return Container(
-      color: Config.backgroundColor,
-      child: Text(name,
+    return Text(
+      name,
       style: TextStyle(
-          fontFamily: Config.fontFamily,
-          fontSize: 16,
-        color: Config.iconColor
-      ),),
+          fontFamily: Config.fontFamily, fontSize: 16, color: Config.iconColor),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (editMode) {
+      return NewCommentCard(
+        initialFocused: true,
+        focusNode: editNode,
+        textController: editController,
+        profileImageUrl: Config.profileImageUrl,
+        onSubmit: (text) {
+          if (text.trim() != widget.comment.text.trim()) {
+            widget.onUpdate(text, widget.commentId);
+          }
+          setState(() {
+            editMode = false;
+          });
+        },
+        onCancel: () => setState(() => editMode = false),
+      );
+    }
     return buildCommentFrame(
       context: context,
-      nickname: comment.userName,
-      since: since,
-      profileImageUrl: comment.profileUrl,
+      nickname: widget.comment.userName,
+      since: since(widget.comment.postTime),
+      profileImageUrl: widget.comment.profileUrl,
       body: Container(
         alignment: Alignment.topLeft,
         child: Text(
-          comment.text,
+          widget.comment.text,
           textAlign: TextAlign.left,
           style: TextStyle(
               color: Config.iconColor.withOpacity(0.9),
               fontFamily: Config.fontFamily,
-              fontSize: descFontSize(context)),
+              fontSize: CommentCard.descFontSize(context)),
         ),
       ),
     );

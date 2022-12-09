@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,11 +22,17 @@ class ReviewsSlide extends StatefulWidget {
   @override
   State<ReviewsSlide> createState() => _ReviewsSlideState();
 
+  final StreamController<MapEntry<String, Comment>> commentsController =
+      StreamController.broadcast();
   final Map<String, Comment> comments = {};
 
   Future updateComments() async {
     var commentsDb = await CommentDbManager().getComments(recipe.id);
-    comments.addEntries(commentsDb.entries);
+    for (MapEntry<String, Comment> entry in commentsDb.entries) {
+      commentsController.add(entry);
+      comments[entry.key] = entry.value;
+    }
+    commentsController.add(commentsDb.entries.first);
   }
 }
 
@@ -34,8 +41,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   final _commentController = TextEditingController();
   final FocusNode _newCommentNode = FocusNode();
   bool _disposed = false;
+  StreamSubscription<MapEntry<String, Comment>>? subscription;
 
   double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
+
+  Map<String, Comment> get comments => widget.comments;
 
   @override
   initState() {
@@ -45,6 +55,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     if (rate != null) {
       _isEvaluated = true;
     }
+    subscription ??= widget.commentsController.stream.listen((event) {
+      comments[event.key] = event.value;
+      if (_disposed) return;
+      setState(() {});
+    });
   }
 
   @override
@@ -144,25 +159,24 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                         child: Column(
                           children: [
                             NewCommentCard(
-                                themeColor: Config.darkModeOn
-                                    ? Colors.orangeAccent
-                                    : Config.getColor(widget.recipe.id),
                                 focusNode: _newCommentNode,
                                 textController: _commentController,
                                 onSubmit: _submitComment,
+                                onCancel: () {},
                                 profileImageUrl: Config.loggedIn
                                     ? FirebaseAuth
                                             .instance.currentUser!.photoURL ??
                                         defaultProfileUrl
                                     : defaultProfileUrl),
                             Column(
-                              children: widget.comments.keys
+                              children: comments.keys
                                   .map((id) => CommentCard(
+                                        onUpdate: _updateComment,
                                         commentId: id,
-                                        comment: widget.comments[id]!,
+                                        comment: comments[id]!,
                                         recipeId: widget.recipe.id,
                                         onDelete: () => setState(() {
-                                          widget.comments.remove(id);
+                                          comments.remove(id);
                                         }),
                                       ))
                                   .toList(),
@@ -181,27 +195,39 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     );
   }
 
+  Future _updateComment(String newText, String commentId) async {
+    if (newText.isEmpty || !Config.loggedIn) {
+      return;
+    }
+    await CommentDbManager().updateComment(
+        newText: newText,
+        recipeId: widget.recipe.id,
+        commentId: commentId
+    );
+    await widget.updateComments();
+    if (_disposed) return;
+    setState(() {});
+  }
+
   Future _submitComment(String result) async {
     if (result.isEmpty || !Config.loggedIn) {
       return;
     }
     var user = FirebaseAuth.instance.currentUser!;
     await CommentDbManager().addNewComment(
-        comment: Comment(
-            profileUrl: user.photoURL?? defaultProfileUrl,
-            userName: user.displayName?? "Пользователь",
-            postTime: DateTime.now(),
-            text: result,
-            uid: user.uid
-        ),
-        recipeId: widget.recipe.id,
+      comment: Comment(
+          profileUrl: user.photoURL ?? defaultProfileUrl,
+          userName: user.displayName ?? "Пользователь",
+          postTime: DateTime.now(),
+          text: result,
+          uid: user.uid),
+      recipeId: widget.recipe.id,
     );
     setState(() {
       _commentController.clear();
     });
     await widget.updateComments();
     if (_disposed) return;
-    setState(() {
-    });
+    setState(() {});
   }
 }

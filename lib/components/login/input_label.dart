@@ -27,6 +27,10 @@ class InputLabel extends StatelessWidget {
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily),
           enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 0.2,
+                color: Colors.black87
+              ),
               borderRadius: Config.borderRadiusLarge),
           focusedBorder: OutlineInputBorder(
               borderRadius: Config.borderRadiusLarge,

@@ -51,6 +51,9 @@ class RecipeStepView extends StatelessWidget {
     );
   }
 
+  double fontSize(BuildContext ctx) =>
+      Config.isDesktop(ctx) ? 18 : 16;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,8 +94,7 @@ class RecipeStepView extends StatelessWidget {
                         step.description,
                         style: TextStyle(
                             fontFamily: Config.fontFamily,
-                            fontSize: Config.pageHeight(context) *
-                                RecipeStepView._textSize,
+                            fontSize: fontSize(context),
                             color: Colors.white),
                       ),
                     )

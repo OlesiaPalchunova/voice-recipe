@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
-import 'package:voice_recipe/components/slide_views/review_view.dart';
+import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';

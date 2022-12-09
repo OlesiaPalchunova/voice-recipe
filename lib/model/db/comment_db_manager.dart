@@ -32,6 +32,22 @@ class CommentDbManager {
     }
   }
 
+  Future updateComment({
+  required String newText, required int recipeId, required String commentId}) async {
+    try {
+      await _db
+          .collection(recipesPath)
+          .doc(recipeId.toString())
+          .collection(commentsPath)
+          .doc(commentId)
+          .update({
+        textField: newText
+      });
+    } on Error catch(e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<Map<String, Comment>> getComments(int recipeId) async {
     QuerySnapshot<Map<String, dynamic>> res;
     try {
@@ -67,7 +83,7 @@ class CommentDbManager {
           .collection(commentsPath)
           .get();
       return res;
-    } on Error catch(e) {
+    } on Error catch(_) {
       rethrow;
     }
   }

@@ -9,26 +9,49 @@ class NewCommentCard extends StatefulWidget {
     required this.focusNode,
     required this.textController,
     required this.onSubmit,
+    required this.onCancel,
     required this.profileImageUrl,
-    required this.themeColor
+    this.initialFocused = false
   });
 
   final FocusNode focusNode;
-  final Color themeColor;
   final TextEditingController textController;
   final void Function(String) onSubmit;
+  final void Function() onCancel;
   final String profileImageUrl;
+  final bool initialFocused;
 
   @override
-  State<NewCommentCard> createState() => _NewCommentCardState();
+  State<NewCommentCard> createState() => NewCommentCardState();
 }
 
-class _NewCommentCardState extends State<NewCommentCard> {
-  bool focused = false;
+class NewCommentCardState extends State<NewCommentCard> {
+  late bool _focused = widget.initialFocused;
+  bool _disposed = false;
+  static NewCommentCardState? current;
+
+  @override
+  void initState() {
+    current = this;
+    _disposed = false;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void setText(String text) {
+    if (_disposed) return;
+    setState(() {
+      widget.textController.text = text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    double width = Config.recipeSlideWidth(context);
     List<Widget> columnChildren = [
       TextField(
           focusNode: widget.focusNode,
@@ -41,7 +64,7 @@ class _NewCommentCardState extends State<NewCommentCard> {
           onTap: () {
             if (Config.loggedIn) {
               setState(() {
-                focused = true;
+                _focused = true;
               });
               return;
             }
@@ -63,13 +86,13 @@ class _NewCommentCardState extends State<NewCommentCard> {
               ),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: widget.themeColor
+                      color: Config.iconColor
                   )
               ),
           )
       ),
     ];
-    if (focused) {
+    if (_focused) {
       columnChildren.addAll([
         const SizedBox(height: Config.padding,),
         Row(
@@ -131,8 +154,10 @@ class _NewCommentCardState extends State<NewCommentCard> {
 
   void onCancel() {
     setState(() {
+      widget.onCancel();
+      widget.focusNode.unfocus();
       widget.textController.clear();
-      focused = false;
+      _focused = false;
     });
   }
 
@@ -143,7 +168,8 @@ class _NewCommentCardState extends State<NewCommentCard> {
       return;
     }
     setState(() {
-      focused = false;
+      widget.focusNode.unfocus();
+      _focused = false;
     });
     widget.onSubmit(text);
   }

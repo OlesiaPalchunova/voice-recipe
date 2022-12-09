@@ -60,7 +60,6 @@ class IngredientsList extends StatelessWidget {
 
   final Recipe recipe;
   late final List<Ingredient> ingredients;
-  static const _spaceAfterName = 0.001;
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
   double titleFontSize(BuildContext context) =>
@@ -86,38 +85,36 @@ class IngredientsList extends StatelessWidget {
         const SizedBox(
           height: Config.margin,
         ),
-        ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: ingredients.length,
-          itemBuilder: (_, index) => Column(
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text(
-                  ingredients[index].name,
-                  style: TextStyle(
-                    fontFamily: Config.fontFamily,
-                    fontSize: entityFontSize(context),
-                    textBaseline: TextBaseline.alphabetic,
-                    color: _textColor
-                  ),
-                ),
-                Text(
-                  ingredients[index].count,
-                  style: TextStyle(
-                    fontFamily: Config.fontFamily,
-                    fontSize: entityFontSize(context),
-                    color: _textColor
-                  ),
-                ),
-              ]),
-              Divider(
-                color: _textColor.withOpacity(0.8),
-                thickness: IngredientsSlideView._splitterThickness,
-              ),
-            ],
+        Column(
+          children: ingredients.map((i) =>
+              Column(
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Text(
+                      i.name,
+                      style: TextStyle(
+                          fontFamily: Config.fontFamily,
+                          fontSize: entityFontSize(context),
+                          textBaseline: TextBaseline.alphabetic,
+                          color: _textColor
+                      ),
+                    ),
+                    Text(
+                      i.count,
+                      style: TextStyle(
+                          fontFamily: Config.fontFamily,
+                          fontSize: entityFontSize(context),
+                          color: _textColor
+                      ),
+                    ),
+                  ]),
+            Divider(
+            color: _textColor.withOpacity(0.8),
+            thickness: IngredientsSlideView._splitterThickness,
+            )
+                ],
+              ),).toList(),
           ),
-        )
       ],
     );
   }

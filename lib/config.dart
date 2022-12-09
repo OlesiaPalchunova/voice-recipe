@@ -1,11 +1,10 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/components/buttons/button.dart';
-import 'package:voice_recipe/recipes_getter.dart';
+import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
 import 'package:voice_recipe/translator.dart';
@@ -22,7 +21,7 @@ class GradientColors {
   static const List<Color> sea = [Color(0xFF61A3FE), Color(0xFF63FFD5)];
   static const List<Color> mango = [Color(0xFFFFA738), Color(0xFFfcdd1e)];
   static const List<Color> fire = [Color(0xFFFF5DCD), Color(0xFFFF8484)];
-  static const List<List<Color>> sets = [sky, sunset, sea, mango, fire];
+  static const List<List<Color>> sets = [forest, sky, sunset, sea, mango, fire];
 }
 
 class Config {
@@ -96,6 +95,9 @@ class Config {
     900: Color.fromRGBO(237, 120, 47, 1),
   };
 
+  static String get profileImageUrl => loggedIn ?
+      user!.photoURL?? defaultProfileUrl : defaultProfileUrl;
+
   static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
   static Color get appBarColor {
@@ -150,7 +152,8 @@ class Config {
 
   static Color getColor(int id) {
     if (darkModeOn) {
-      return GradientColors.sets[id % GradientColors.sets.length].last;
+      return Colors.orange;
+      // return GradientColors.sets[id % GradientColors.sets.length].last;
     }
     return colors[id % colors.length];
   }

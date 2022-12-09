@@ -21,7 +21,7 @@ class ClassicButton extends StatefulWidget {
   static Color get buttonColor => Config.darkModeOn ? Colors.grey.shade900
       : Colors.grey.shade200;
 
-  static Color get buttonHoverColor => Config.darkModeOn ? const Color(0xffa34c05)
+  static Color get buttonHoverColor => Config.darkModeOn ? const Color(0xffc77202)
       : Colors.blueGrey.shade100;
 }
 
@@ -40,6 +40,7 @@ class _ClassicButtonState extends State<ClassicButton> {
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Config.borderRadiusLarge,
       hoverColor: ClassicButton.buttonHoverColor,
+      focusColor: ClassicButton.buttonHoverColor,
       onTap: widget.onTap,
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,

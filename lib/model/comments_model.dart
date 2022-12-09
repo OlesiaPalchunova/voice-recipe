@@ -16,6 +16,35 @@ class Comment {
   });
 }
 
+String since(DateTime time) {
+  var diff = DateTime.now().difference(time);
+  if (diff.inMinutes < 60) {
+    if (diff.inMinutes == 0) {
+      return "только что";
+    }
+    int rest = diff.inMinutes - ((diff.inMinutes / 10).floor()) * 10;
+    var str = "минут";
+    if (rest == 1) {
+      str = "минуту";
+    } else if (rest < 5 && rest >= 1) {
+      str = "минуты";
+    }
+    return "${diff.inMinutes} $str назад";
+  }
+  if (diff.inDays > 31) {
+    int monthsCount = (diff.inDays / 30).floor();
+    int rest = monthsCount - ((monthsCount / 10).floor()) * 10;
+    var str = "месяцев";
+    if (rest == 1) {
+      str = "месяц";
+    } else if (rest < 5) {
+      str = "месяца";
+    }
+    return "$monthsCount $str назад";
+  }
+  return "${diff.inDays} дней назад";
+}
+
 // final List<Comment> borshReviews = [
 //   Comment(postTime: DateTime(2022, DateTime.april), text: "Неплохо!",
 //   userName: "Галина Воронина", uid : "voronina"),
