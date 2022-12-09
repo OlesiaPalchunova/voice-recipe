@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
@@ -36,6 +35,7 @@ class RecipeScreen extends StatefulWidget {
     required this.recipe,
   }) : super(key: key) {
     tts.setLanguage("ru");
+    reviewPage.updateComments();
   }
 
   final Recipe recipe;
@@ -43,7 +43,7 @@ class RecipeScreen extends StatefulWidget {
   late final IngredientsSlideView ingPage =
       IngredientsSlideView(recipe: recipe);
   late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
-  late final ReviewView reviewPage = ReviewView(recipe: recipe);
+  late final ReviewsSlide reviewPage = ReviewsSlide(recipe: recipe);
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -217,7 +217,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
     return Container(
       alignment: Alignment.center,
       height: 10,
-      color: Config.backgroundColor,
+      decoration: BoxDecoration(
+        color: Config.darkModeOn ? Config.backgroundColor : Colors.grey.shade800,
+        borderRadius: Config.borderRadius
+      ),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         // padding: const EdgeInsets.symmetric(horizontal: 10),

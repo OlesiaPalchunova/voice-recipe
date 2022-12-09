@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
+import '../buttons/button.dart';
 
 class SignInButton extends StatefulWidget {
   const SignInButton(
@@ -31,12 +32,8 @@ class _SignInButtonState extends State<SignInButton> {
   var pressed = false;
 
   Color get backgroundColor => hovered | pressed
-      ? widget.backgroundColor//.withOpacity(0.8)
-      : widget.backgroundColor;
-
-  List<BoxShadow> get shadow => !hovered & !pressed
-      ? []
-      : const [BoxShadow(color: Colors.orangeAccent, blurRadius: 6)];
+      ? ClassicButton.buttonHoverColor
+      : ClassicButton.buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +61,6 @@ class _SignInButtonState extends State<SignInButton> {
             color: Colors.black87,
             width: 0.1
           ),
-          boxShadow: shadow
         ),
         alignment: Alignment.center,
         height: widget.height,

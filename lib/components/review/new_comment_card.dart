@@ -9,10 +9,12 @@ class NewCommentCard extends StatefulWidget {
     required this.focusNode,
     required this.textController,
     required this.onSubmit,
-    required this.profileImageUrl
+    required this.profileImageUrl,
+    required this.themeColor
   });
 
   final FocusNode focusNode;
+  final Color themeColor;
   final TextEditingController textController;
   final void Function(String) onSubmit;
   final String profileImageUrl;
@@ -58,7 +60,12 @@ class _NewCommentCardState extends State<NewCommentCard> {
                   borderSide: BorderSide(
                       color: Config.iconColor.withOpacity(0.5)
                   )
-              )
+              ),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: widget.themeColor
+                  )
+              ),
           )
       ),
     ];
@@ -74,21 +81,13 @@ class _NewCommentCardState extends State<NewCommentCard> {
                   ClassicButton(
                     text: "Отмена",
                     onTap: onCancel,
-                    width: width / 6,
                     fontSize: fontSize(context),
-                    color: buttonColor,
-                    hoverColor: buttonHoverColor,
-                    shadowOn: false,
                   ),
                   const SizedBox(width: Config.padding,),
                   ClassicButton(
                     text: "Оставить комментарий",
                     onTap: onSubmit,
-                    width: width / submitButtonDiv(context),
                     fontSize: fontSize(context),
-                    color: buttonColor,
-                    hoverColor: buttonHoverColor,
-                    shadowOn: false,
                   ),
                 ]
             )
@@ -116,13 +115,6 @@ class _NewCommentCardState extends State<NewCommentCard> {
       ]),
     );
   }
-  
-  double submitButtonDiv(BuildContext context) {
-    if (Config.isDesktop(context)) {
-      return 3;
-    }
-    return 2;
-  }
 
   Color get buttonColor => Config.darkModeOn ? Colors.grey.shade900
   : Colors.grey.shade800;
@@ -134,7 +126,7 @@ class _NewCommentCardState extends State<NewCommentCard> {
     if (Config.isDesktop(context)) {
       return 16;
     }
-    return 14;
+    return 13;
   }
 
   void onCancel() {

@@ -96,10 +96,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
                   SizedBox(
                       height: 60,
+                      width: width * 0.8,
                       child: ClassicButton(
                         onTap: passwordReset,
                         text: "Сменить пароль",
-                        width: width * 0.8,
                       ))
                 ],
               ),

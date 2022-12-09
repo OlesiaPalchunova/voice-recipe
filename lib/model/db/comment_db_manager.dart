@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:voice_recipe/model/comments_model.dart';
-
-import '../users_info.dart';
 
 class CommentDbManager {
   static const recipesPath = "recipes";
@@ -21,60 +20,78 @@ class CommentDbManager {
   CommentDbManager._internal();
 
   Future addNewComment(
-      {required Comment comment,
-      required int recipeId,
-      required int commentId}) async {
-    await _db
-        .collection(recipesPath)
-        .doc(recipeId.toString())
-        .collection(commentsPath)
-        .doc(commentId.toString())
-        .set(_buildCommentData(comment, comment.userName, comment.profilePhotoURL));
+      {required Comment comment, required int recipeId}) async {
+    try {
+      await _db
+          .collection(recipesPath)
+          .doc(recipeId.toString())
+          .collection(commentsPath)
+          .add(_buildCommentData(comment));
+    } on Error catch(e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Future<List<Comment>> getComments(int recipeId) async {
-    QuerySnapshot<Map<String, dynamic>> res =
-        await CommentDbManager().getCommentsDocs(recipeId);
-    List<Comment> comments = [];
+  Future<Map<String, Comment>> getComments(int recipeId) async {
+    QuerySnapshot<Map<String, dynamic>> res;
+    try {
+      res = await CommentDbManager().getCommentsDocs(recipeId);
+    } on Error catch(e) {
+      debugPrint('Failed to get comments');
+      debugPrint(e.toString());
+      return {};
+    }
+    var comments = <String, Comment>{};
     for (QueryDocumentSnapshot<Map<String, dynamic>> doc in res.docs) {
-      comments.add(Comment(
-          postTime:
-              DateTime.fromMillisecondsSinceEpoch(doc.data()[postTimeField]),
-          text: doc.data()[textField],
-          userName: doc.data()[nameField],
-          uid: doc.data()[uidField],
-          profilePhotoURL: doc.data()[photoField]));
+      try {
+        comments[doc.id] = Comment(
+            postTime: DateTime.fromMillisecondsSinceEpoch(doc.data()[postTimeField]),
+            text: doc.data()[textField],
+            uid: doc.data()[uidField],
+            userName: doc.data()[nameField],
+            profileUrl: doc.data()[photoField]
+        );
+      } on Error catch(e) {
+        debugPrint(e.toString());
+    }
     }
     return comments;
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getCommentsDocs(
-      int recipeId) async {
-    var res = await _db
-        .collection(recipesPath)
-        .doc(recipeId.toString())
-        .collection(commentsPath)
-        .get();
-    return res;
+      int recipeId) async{
+    try {
+      var res = await _db
+          .collection(recipesPath)
+          .doc(recipeId.toString())
+          .collection(commentsPath)
+          .get();
+      return res;
+    } on Error catch(e) {
+      rethrow;
+    }
   }
 
-  Future deleteComment(String uid, int recipeId, int commentId) async {
-    await _db
-        .collection(recipesPath)
-        .doc(recipeId.toString())
-        .collection(commentsPath)
-        .doc(commentId.toString())
-        .delete();
+  Future deleteComment(int recipeId, String id) async {
+    try {
+      await _db
+          .collection(recipesPath)
+          .doc(recipeId.toString())
+          .collection(commentsPath)
+          .doc(id)
+          .delete();
+    } on Error catch(e) {
+      debugPrint(e.toString());
+    }
   }
 
-  Map<String, dynamic> _buildCommentData(
-      Comment comment, String name, String photoUrl) {
+  Map<String, dynamic> _buildCommentData(Comment comment) {
     return {
       uidField: comment.uid,
       postTimeField: comment.postTime.millisecondsSinceEpoch,
       textField: comment.text,
-      nameField: name,
-      photoField: photoUrl
+      nameField: comment.userName,
+      photoField: comment.profileUrl
     };
   }
 }

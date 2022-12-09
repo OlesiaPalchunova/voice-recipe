@@ -25,11 +25,7 @@ class _SetsListScreen extends State<SetsListScreen> {
             alignment: Alignment.center,
             child: SizedBox(
               width: Config.maxRecipeSlideWidth,
-              child: ListView.separated(
-                separatorBuilder: (_, index) => Divider(
-                  color: Config.iconColor,
-                  thickness: 0.2,
-                ),
+              child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(Config.padding),
                 itemCount: sets.length,

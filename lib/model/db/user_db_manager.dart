@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class UserDbManager {
   static const usersPath = "users";
@@ -8,6 +9,8 @@ class UserDbManager {
   static const info = "info";
   static const favorites = "favorites";
   static const created = "created";
+  static const displayName = "display_name";
+  static const imageUrl = "image_url";
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   factory UserDbManager() {
@@ -16,19 +19,32 @@ class UserDbManager {
 
   UserDbManager._internal();
 
-  Future addNewUserData(String uid) async {
-    await _db.collection(usersPath)
-    .doc(uid).set(_buildInitialUserData());
+  Future addNewUserData(String uid, String displayName, String profileImageUrl) async {
+    try {
+      await _db.collection(usersPath)
+          .doc(uid).set(_buildInitialUserData(displayName, profileImageUrl));
+    } on Error catch(e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<dynamic> getUserData(String uid) async {
-    var res = await _db.collection(usersPath).doc(uid).get();
-    return res;
+    try {
+      var res = await _db.collection(usersPath).doc(uid).get();
+      return res;
+    } on Error catch(_) {
+      rethrow;
+    }
   }
 
   Future<bool> containsUserData(String uid) async {
-    var res = await _db.collection(usersPath).doc(uid).get();
-    return res.exists;
+    try {
+      var res = await _db.collection(usersPath).doc(uid).get();
+      return res.exists;
+    } on Error catch(e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 
   Future<bool> addNewFavorite(String uid, int recipeId) async {
@@ -52,13 +68,18 @@ class UserDbManager {
     if (!contains) {
       return false;
     }
-    var userData = await getUserData(uid);
-    var list = userData[listName];
-    if (list.contains(recipeId)) {
-      return true;
+    try {
+      var userData = await getUserData(uid);
+      var list = userData[listName];
+      if (list.contains(recipeId)) {
+        return true;
+      }
+      list.add(recipeId);
+      return updateField(uid, listName, list);
+    } on Error catch(e) {
+      debugPrint(e.toString());
+      return false;
     }
-    list.add(recipeId);
-    return updateField(uid, listName, list);
   }
 
   Future<bool> _removeRecipeFromList(String uid, int recipeId, String listName) async {
@@ -66,13 +87,18 @@ class UserDbManager {
     if (!contains) {
       return false;
     }
-    var userData = await getUserData(uid);
-    var list = userData[listName];
-    if (!list.contains(recipeId)) {
-      return true;
+    try {
+      var userData = await getUserData(uid);
+      var list = userData[listName];
+      if (!list.contains(recipeId)) {
+        return true;
+      }
+      list.remove(recipeId);
+      return updateField(uid, listName, list);
+    } on Error catch(e) {
+      debugPrint(e.toString());
+      return false;
     }
-    list.remove(recipeId);
-    return updateField(uid, listName, list);
   }
 
   Future<bool> updateField(String uid, String field, dynamic value) async {
@@ -80,20 +106,27 @@ class UserDbManager {
     if (!contains) {
       return false;
     }
-    _db.collection(usersPath).doc(uid).update({
-      field : value
-    });
-    return true;
+    try {
+      _db.collection(usersPath).doc(uid).update({
+        field : value
+      });
+      return true;
+    } on Error catch(e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 
-  Map<String, dynamic> _buildInitialUserData() {
+  Map<String, dynamic> _buildInitialUserData(String name, String profileImageUrl) {
     return {
       vkLink : "",
       okLink : "",
       tgLink : "",
       info : "",
       favorites : <int>[],
-      created : <int>[]
+      created : <int>[],
+      displayName : name,
+      imageUrl : profileImageUrl
     };
   }
 }

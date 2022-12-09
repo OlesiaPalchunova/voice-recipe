@@ -13,24 +13,29 @@ import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
 
-class ReviewView extends StatefulWidget {
-  const ReviewView({super.key, required this.recipe});
+class ReviewsSlide extends StatefulWidget {
+  ReviewsSlide({super.key, required this.recipe});
 
   final Recipe recipe;
 
   @override
-  State<ReviewView> createState() => _ReviewViewState();
+  State<ReviewsSlide> createState() => _ReviewsSlideState();
+
+  final Map<String, Comment> comments = {};
+
+  Future updateComments() async {
+    var commentsDb = await CommentDbManager().getComments(recipe.id);
+    comments.addEntries(commentsDb.entries);
+  }
 }
 
-class _ReviewViewState extends State<ReviewView> {
+class _ReviewsSlideState extends State<ReviewsSlide> {
   var _isEvaluated = false;
   final _commentController = TextEditingController();
   final FocusNode _newCommentNode = FocusNode();
-  late List<Comment> comments = [];
   bool _disposed = false;
 
-  double fontSize(BuildContext context) => Config.isDesktop(context)
-      ? 20 : 18;
+  double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
   @override
   initState() {
@@ -51,16 +56,8 @@ class _ReviewViewState extends State<ReviewView> {
 
   double get labelWidth => min(65, Config.recipeSlideWidth(context) / 6);
 
-  Future updateComments() async {
-    comments = await CommentDbManager().getComments(widget.recipe.id);
-    if (_disposed) return;
-    setState(() {
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    updateComments();
     final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white;
     return GestureDetector(
       onTap: () => _newCommentNode.unfocus(),
@@ -79,10 +76,10 @@ class _ReviewViewState extends State<ReviewView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RateLabel(
-                        rate: rates[widget.recipe.id],
-                        width: labelWidth,
+                      rate: rates[widget.recipe.id],
+                      width: labelWidth,
                       shadowOn: false,
-                      ),
+                    ),
                     Container()
                   ],
                 ),
@@ -90,9 +87,7 @@ class _ReviewViewState extends State<ReviewView> {
                   margin: const EdgeInsets.only(top: Config.padding),
                   padding: const EdgeInsets.all(Config.padding),
                   decoration: BoxDecoration(
-                      color: backColor,
-                      borderRadius: Config.borderRadiusLarge
-                  ),
+                      color: backColor, borderRadius: Config.borderRadiusLarge),
                   child: Column(
                     children: [
                       Row(
@@ -128,9 +123,7 @@ class _ReviewViewState extends State<ReviewView> {
                   margin: const EdgeInsets.only(top: Config.padding),
                   // padding: const EdgeInsets.all(Config.padding),
                   decoration: BoxDecoration(
-                      color: backColor,
-                      borderRadius: Config.borderRadiusLarge
-                  ),
+                      color: backColor, borderRadius: Config.borderRadiusLarge),
                   child: Column(
                     children: [
                       Container(
@@ -139,11 +132,11 @@ class _ReviewViewState extends State<ReviewView> {
                         child: Text(
                           "Комментарии",
                           style: TextStyle(
-                              color:
-                              Config.darkModeOn ? Colors.white : Colors.black,
+                              color: Config.darkModeOn
+                                  ? Colors.white
+                                  : Colors.black,
                               fontFamily: Config.fontFamily,
-                              fontSize: fontSize(context)
-                          ),
+                              fontSize: fontSize(context)),
                         ),
                       ),
                       SingleChildScrollView(
@@ -151,24 +144,27 @@ class _ReviewViewState extends State<ReviewView> {
                         child: Column(
                           children: [
                             NewCommentCard(
+                                themeColor: Config.darkModeOn
+                                    ? Colors.orangeAccent
+                                    : Config.getColor(widget.recipe.id),
                                 focusNode: _newCommentNode,
                                 textController: _commentController,
                                 onSubmit: _submitComment,
                                 profileImageUrl: Config.loggedIn
-                                    ? FirebaseAuth.instance.currentUser!.photoURL
-                                    ?? defaultProfileUrl
-                                    : defaultProfileUrl
-                            ),
+                                    ? FirebaseAuth
+                                            .instance.currentUser!.photoURL ??
+                                        defaultProfileUrl
+                                    : defaultProfileUrl),
                             Column(
-                              children: comments
-                                  .map((e) =>
-                                  CommentCard(
-                                    review: e,
-                                    recipeId: widget.recipe.id,
-                                    onDelete: () => setState(() {
-                                      comments.remove(e);
-                                    }),
-                                  ))
+                              children: widget.comments.keys
+                                  .map((id) => CommentCard(
+                                        commentId: id,
+                                        comment: widget.comments[id]!,
+                                        recipeId: widget.recipe.id,
+                                        onDelete: () => setState(() {
+                                          widget.comments.remove(id);
+                                        }),
+                                      ))
                                   .toList(),
                             ),
                           ],
@@ -192,20 +188,20 @@ class _ReviewViewState extends State<ReviewView> {
     var user = FirebaseAuth.instance.currentUser!;
     await CommentDbManager().addNewComment(
         comment: Comment(
+            profileUrl: user.photoURL?? defaultProfileUrl,
+            userName: user.displayName?? "Пользователь",
             postTime: DateTime.now(),
             text: result,
-            userName: user.displayName ??
-                "Пользователь",
-            profilePhotoURL: user.photoURL ??
-                defaultProfileUrl,
             uid: user.uid
         ),
         recipeId: widget.recipe.id,
-        commentId: 1
     );
-    updateComments();
     setState(() {
       _commentController.clear();
+    });
+    await widget.updateComments();
+    if (_disposed) return;
+    setState(() {
     });
   }
 }

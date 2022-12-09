@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/auth/vk.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,7 +82,10 @@ class LoginScreen extends StatefulWidget {
       var user = FirebaseAuth.instance.currentUser!;
       bool exists = await UserDbManager().containsUserData(user.uid);
       if (!exists) {
-        UserDbManager().addNewUserData(user.uid);
+        UserDbManager().addNewUserData(user.uid,
+            user.displayName?? "Пользователь",
+            user.photoURL?? defaultProfileUrl
+        );
       }
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch(e) {
@@ -140,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color backColor = Config.lastBackColor ?? Config.backgroundColor;
+    Color backColor = Config.backgroundColor;
     Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(
@@ -221,10 +225,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(
                             height: Config.loginPageHeight(context) / 12,
+                            width: LoginScreen.buttonWidth(context),
                             child: ClassicButton(
                               onTap: signIn,
                               text: "Войти",
-                              width: LoginScreen.buttonWidth(context),
                             )),
                         Container(
                           margin: const EdgeInsets.only(top: Config.margin),

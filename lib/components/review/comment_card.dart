@@ -6,10 +6,11 @@ import '../../config.dart';
 import '../../model/users_info.dart';
 
 class CommentCard extends StatelessWidget {
-  const CommentCard({super.key, required this.review, required this.recipeId,
+  const CommentCard({super.key, required this.commentId, required this.comment, required this.recipeId,
   required this.onDelete});
 
-  final Comment review;
+  final String commentId;
+  final Comment comment;
   final int recipeId;
   final VoidCallback onDelete;
 
@@ -23,7 +24,7 @@ class CommentCard extends StatelessWidget {
       Config.isDesktop(context) ? 14 : 12;
 
   String get since {
-    var diff = DateTime.now().difference(review.postTime);
+    var diff = DateTime.now().difference(comment.postTime);
     if (diff.inMinutes < 60) {
       if (diff.inMinutes == 0) {
         return "только что";
@@ -133,7 +134,7 @@ class CommentCard extends StatelessWidget {
       ];
     }
     String uid = Config.user!.uid;
-    if (review.uid == uid) {
+    if (comment.uid == uid) {
       return <PopupMenuEntry<int>>[
         PopupMenuItem(value: 1, child: getOption("Редактировать")),
         PopupMenuItem(value: 2,
@@ -146,7 +147,7 @@ class CommentCard extends StatelessWidget {
   }
 
   Future deleteComment() async {
-    await CommentDbManager().deleteComment(review.uid, recipeId, 1);
+    await CommentDbManager().deleteComment(recipeId, commentId);
     onDelete();
   }
 
@@ -166,13 +167,13 @@ class CommentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return buildCommentFrame(
       context: context,
-      nickname: review.userName,
+      nickname: comment.userName,
       since: since,
-      profileImageUrl: review.profilePhotoURL,
+      profileImageUrl: comment.profileUrl,
       body: Container(
         alignment: Alignment.topLeft,
         child: Text(
-          review.text,
+          comment.text,
           textAlign: TextAlign.left,
           style: TextStyle(
               color: Config.iconColor.withOpacity(0.9),

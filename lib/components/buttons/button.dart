@@ -1,68 +1,62 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
 
 class ClassicButton extends StatefulWidget {
   const ClassicButton(
-      {super.key, required this.onTap, required this.text, this.width = 300,
-      this.fontSize = 20, this.color = const Color(0xff050505),
-      this.hoverColor = const Color(0xff101010), this.shadowOn = true,
-      this.textColor = Colors.white});
+      {super.key,
+      required this.onTap,
+      required this.text,
+      this.fontSize = 20,
+      });
 
   final VoidCallback onTap;
   final String text;
-  final double width;
   final double fontSize;
-  final Color color;
-  final Color hoverColor;
-  final Color textColor;
-  final bool shadowOn;
 
   @override
   State<ClassicButton> createState() => _ClassicButtonState();
+
+  static Color get buttonColor => Config.darkModeOn ? Colors.grey.shade900
+      : Colors.grey.shade200;
+
+  static Color get buttonHoverColor => Config.darkModeOn ? const Color(0xffa34c05)
+      : Colors.blueGrey.shade100;
 }
 
 class _ClassicButtonState extends State<ClassicButton> {
   bool _hovered = false;
   bool _pressed = false;
 
-  Color get backColor => _hovered | _pressed ?
-  widget.hoverColor :
-  widget.color;
-
-  List<BoxShadow> get shadow => !_hovered & !_pressed | !widget.shadowOn
-      ? []
-      : const [BoxShadow(color: Colors.orangeAccent, blurRadius: 12)];
+  void _onTap() {
+    widget.onTap();
+    setState(() => _pressed = !_pressed);
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onHover: (hovered) => setState(() {
-        _hovered = hovered;
-      }),
-      onTap: () async {
-        setState(() {
-          _pressed = true;
-        });
-        await Future.delayed(Config.shortAnimationTime).whenComplete(() {
-          setState(() {
-            _pressed = false;
-          });
-        });
-        widget.onTap();
-      },
+      onHover: (h) => setState(() => _hovered = h),
+      borderRadius: Config.borderRadiusLarge,
+      hoverColor: ClassicButton.buttonHoverColor,
+      onTap: widget.onTap,
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
-            color: backColor,
-            borderRadius: Config.borderRadiusLarge,
-            boxShadow: shadow),
-        width: widget.width,
-        padding: const EdgeInsets.all(Config.padding),
+          color: !_hovered & !_pressed ? ClassicButton.buttonColor : ClassicButton.buttonHoverColor,
+              borderRadius: Config.borderRadiusLarge,
+          border: Border.all(
+              color: Colors.black87,
+              width: 0.1
+          ),
+        ),
+        padding: const EdgeInsets.all(Config.padding)
+            .add(const EdgeInsets.symmetric(horizontal: Config.padding)),
         child: Center(
           child: Text(widget.text,
               style: TextStyle(
-                  color: widget.textColor,
+                  color: Config.iconColor,
                   fontSize: widget.fontSize,
                   fontFamily: Config.fontFamily)),
         ),

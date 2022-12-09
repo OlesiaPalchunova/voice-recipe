@@ -7,6 +7,7 @@ import '../../components/buttons/button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../config.dart';
+import '../../model/users_info.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -54,7 +55,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var user = FirebaseAuth.instance.currentUser!;
       user.updateDisplayName("$firstName $secondName");
       await FirebaseAuth.instance.signOut();
-      await UserDbManager().addNewUserData(user.uid);
+      await UserDbManager().addNewUserData(user.uid,
+          "$firstName $secondName",
+          user.photoURL?? defaultProfileUrl
+      );
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
       debugPrint(e.message);
@@ -79,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color backColor = Config.lastBackColor ?? Config.backgroundColor;
+    Color backColor = Config.backgroundColor;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Config.iconColor,
@@ -150,9 +154,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: Config.margin),
                           height: Config.loginPageHeight(context) / 12,
+                          width: LoginScreen.buttonWidth(context),
                           child: ClassicButton(
                             onTap: signUp,
-                            width: LoginScreen.buttonWidth(context),
                             text: "Создать аккаунт",
                           ),
                         ),

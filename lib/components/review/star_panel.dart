@@ -46,7 +46,7 @@ class StarPanelState extends State<StarPanel> {
   Color starColor(int index) {
     if (_minIdx == _initialMinIdx) {
       return index <= _currentStarIdx
-          ? Config.darkModeOn ? Colors.white : Colors.yellow.shade400
+          ? Config.darkModeOn ? Colors.white : Colors.yellow.shade600
           : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
     }
     return index <= _currentStarIdx

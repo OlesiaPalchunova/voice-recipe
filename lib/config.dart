@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voice_recipe/components/buttons/button.dart';
 import 'package:voice_recipe/recipes_getter.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
@@ -41,12 +42,11 @@ class Config {
   static const maxLoginPageHeight = 800.0;
   static const minLoginPageWidth = 300.0;
   static const minLoginPageHeight = 500.0;
-  static Color? lastBackColor;
   static const borderRadius = BorderRadius.all(Radius.circular(radius));
   static const borderRadiusLarge = BorderRadius.all(Radius.circular(largeRadius));
 
   static init() async {
-    await RecipesGetter().getRecipe(id: 1);
+    // await RecipesGetter().getRecipe(id: 1);
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,
@@ -55,7 +55,6 @@ class Config {
 
   static setDarkModeOn(bool on) {
     darkModeOn = on;
-    lastBackColor = backgroundColor;
     DarkThemePreference().setDarkTheme(on);
   }
 
@@ -162,6 +161,8 @@ class Config {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
+            contentPadding: const EdgeInsets.all(Config.padding * 2),
+            actionsPadding: const EdgeInsets.all(Config.padding * 2),
             backgroundColor: Config.backgroundColor,
               content: Text(
                 "Войдите, чтобы сохранять понравившиеся\nрецепты и оставлять комментарии",
@@ -172,19 +173,15 @@ class Config {
                 ),
               ),
               actions: [
-                CupertinoDialogAction(
-                  child: Text("Войти",
-                    style: TextStyle(
-                        color: iconColor,
-                        fontFamily: fontFamily,
-                        fontSize: 20
-                    ),),
-                  onPressed: () {
+                ClassicButton(
+                  text: "Войти",
+                  fontSize: 20,
+                  onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)
                     => const LoginScreen()));
                   },
-                ),
+                )
               ],
             ));
   }
@@ -215,10 +212,8 @@ class Config {
 
   static Color getBackColor(int id) {
     if (darkModeOn) {
-      lastBackColor = _darkThemeBackColor;
       return _darkThemeBackColor;
     }
-    lastBackColor = backColors[id % backColors.length];
     return backColors[id % backColors.length];
   }
 

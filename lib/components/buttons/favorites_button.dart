@@ -153,9 +153,14 @@ class _FavoritesButtonState extends State<FavoritesButton>
   Future<bool> isFavorite() async {
     if (!Config.loggedIn) return false;
     var user = Config.user!;
-    var userData = await UserDbManager().getUserData(user.uid);
-    List favIds = userData[UserDbManager.favorites];
-    return favIds.contains(widget.recipeId);
+    try {
+      var userData = await UserDbManager().getUserData(user.uid);
+      List favIds = userData[UserDbManager.favorites];
+      return favIds.contains(widget.recipeId);
+    } on Error catch(e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 
   void removeFromFavorites() {

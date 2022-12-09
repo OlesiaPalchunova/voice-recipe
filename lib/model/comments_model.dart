@@ -1,15 +1,19 @@
 import 'package:voice_recipe/model/users_info.dart';
 
 class Comment {
-  final String profilePhotoURL;
-  final String userName;
   final DateTime postTime;
   final String text;
   final String uid;
+  final String userName;
+  final String profileUrl;
 
-  Comment({required this.postTime,
-  required this.text, required this.userName, this.profilePhotoURL = defaultProfileUrl,
-  required this.uid});
+  Comment({
+    required this.postTime,
+    required this.text,
+    required this.uid,
+    required this.userName,
+    required this.profileUrl
+  });
 }
 
 // final List<Comment> borshReviews = [

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/buttons/button.dart';
 
 import '../../config.dart';
 
@@ -26,7 +27,7 @@ class _SideBarTileState extends State<SideBarTile> {
   static double radius(BuildContext context) =>
       Config.isDesktop(context) ? 22 : 20;
 
-  Color get pressedColor => Config.darkModeOn ? Config.darkBlue :
+  Color get pressedColor => Config.darkModeOn ? ClassicButton.buttonHoverColor :
       Colors.grey.shade200;
 
   @override
