@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/button.dart';
 import 'package:voice_recipe/components/login/input_label.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
 
@@ -85,12 +86,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(
                     height: Config.margin,
                   ),
-                  InputLabel(
+                  LoginScreen.inputWrapper(InputLabel(
                     onSubmit: passwordReset,
                       focusNode: _emailFocusNode,
                       hintText: "Email",
-                      width: width * 0.8,
-                      controller: _emailController),
+                      controller: _emailController), context),
                   const SizedBox(
                     height: Config.margin,
                   ),

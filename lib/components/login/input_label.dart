@@ -6,15 +6,11 @@ class InputLabel extends StatelessWidget {
   const InputLabel(
       {super.key,
       required this.hintText,
-      required this.width,
       required this.controller,
-      this.height = 60,
       this.focusNode,
       this.onSubmit});
 
   final String hintText;
-  final double height;
-  final double width;
   final TextEditingController controller;
   final FocusNode? focusNode;
   final VoidCallback? onSubmit;
@@ -27,10 +23,7 @@ class InputLabel extends StatelessWidget {
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily),
           enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 0.2,
-                color: Colors.black87
-              ),
+              borderSide: BorderSide(width: 0.5, color: Colors.black87),
               borderRadius: Config.borderRadiusLarge),
           focusedBorder: OutlineInputBorder(
               borderRadius: Config.borderRadiusLarge,
@@ -43,32 +36,22 @@ class InputLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ClipRRect(
-        borderRadius: Config.borderRadius,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: width,
-              child: TextFormField(
-                onFieldSubmitted: (s) {
-                  if (onSubmit == null) return;
-                  onSubmit!();
-                },
-                focusNode: focusNode,
-                controller: controller,
-                decoration: buildInputDecoration(hintText),
-                style: TextStyle(
-                    color: Config.iconColor.withOpacity(0.8),
-                    fontSize: 18,
-                    fontFamily: Config.fontFamily),
-              ),
-            )
-          ],
-        ),
-      ),
+    return ClipRRect(
+      borderRadius: Config.borderRadius,
+      child: TextFormField(
+            onFieldSubmitted: (s) {
+              if (onSubmit == null) return;
+              onSubmit!();
+            },
+            focusNode: focusNode,
+            controller: controller,
+            decoration: buildInputDecoration(hintText),
+            style: TextStyle(
+                color: Config.iconColor.withOpacity(0.8),
+                fontSize: 18,
+                fontFamily: Config.fontFamily),
+          ),
+
     );
   }
 }

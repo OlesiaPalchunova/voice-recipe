@@ -55,10 +55,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var user = FirebaseAuth.instance.currentUser!;
       user.updateDisplayName("$firstName $secondName");
       await FirebaseAuth.instance.signOut();
-      await UserDbManager().addNewUserData(user.uid,
-          "$firstName $secondName",
-          user.photoURL?? defaultProfileUrl
-      );
+      await UserDbManager().addNewUserData(user.uid, "$firstName $secondName",
+          user.photoURL ?? defaultProfileUrl);
       await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
       debugPrint(e.message);
@@ -109,50 +107,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: [
                   LoginScreen.voiceRecipeIcon(
-                      context, Config.loginPageHeight(context) / 5,
-                  Config.loginPageHeight(context) / 6),
+                      context,
+                      Config.loginPageHeight(context) / 5,
+                      Config.loginPageHeight(context) / 6),
                   SizedBox(
                     height: Config.loginPageHeight(context) * 0.8,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        InputLabel(
-                            height: LoginScreen.labelHeight(context),
-                            focusNode: _firstNameFocusNode,
-                            hintText: "Имя",
-                            width: LoginScreen.buttonWidth(context),
-                            controller: _firstNameController),
-                        InputLabel(
-                            height: LoginScreen.labelHeight(context),
-                            focusNode: _secondNameFocusNode,
-                            hintText: "Фамилия",
-                            width: LoginScreen.buttonWidth(context),
-                            controller: _secondNameController),
-                        InputLabel(
-                          height: LoginScreen.labelHeight(context),
-                          focusNode: _emailFocusNode,
-                          width: LoginScreen.buttonWidth(context),
-                          hintText: 'Email',
-                          controller: _emailController,
-                        ),
-                        PasswordLabel(
-                          height: LoginScreen.labelHeight(context),
-                          focusNode: _passwordFocusNode,
-                          width: LoginScreen.buttonWidth(context),
-                          hintText: "Пароль",
-                          controller: _passwordController,
-                          onSubmit: () {},
-                        ),
-                        PasswordLabel(
-                          height: LoginScreen.labelHeight(context),
-                          focusNode: _confirmPasswordFocusNode,
-                          width: LoginScreen.buttonWidth(context),
-                          hintText: "Подтвердите пароль",
-                          controller: _confirmPasswordController,
-                          onSubmit: signUp,
-                        ),
+                        LoginScreen.inputWrapper(
+                            InputLabel(
+                                focusNode: _firstNameFocusNode,
+                                hintText: "Имя",
+                                controller: _firstNameController),
+                            context),
+                        LoginScreen.inputWrapper(
+                            InputLabel(
+                                focusNode: _secondNameFocusNode,
+                                hintText: "Фамилия",
+                                controller: _secondNameController),
+                            context),
+                        LoginScreen.inputWrapper(
+                            InputLabel(
+                              focusNode: _emailFocusNode,
+                              hintText: 'Email',
+                              controller: _emailController,
+                            ),
+                            context),
+                        LoginScreen.inputWrapper(
+                            PasswordLabel(
+                              focusNode: _passwordFocusNode,
+                              hintText: "Пароль",
+                              controller: _passwordController,
+                              onSubmit: () {},
+                            ),
+                            context),
+                        LoginScreen.inputWrapper(
+                            PasswordLabel(
+                              focusNode: _confirmPasswordFocusNode,
+                              hintText: "Подтвердите пароль",
+                              controller: _confirmPasswordController,
+                              onSubmit: signUp,
+                            ),
+                            context),
                         Container(
-                          margin: const EdgeInsets.symmetric(vertical: Config.margin),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: Config.margin),
                           height: Config.loginPageHeight(context) / 12,
                           width: LoginScreen.buttonWidth(context),
                           child: ClassicButton(

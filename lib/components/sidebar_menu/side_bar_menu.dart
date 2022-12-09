@@ -7,6 +7,7 @@ import 'package:voice_recipe/components/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/recipes_getter.dart';
+import 'package:voice_recipe/screens/create_recipe_screen.dart';
 import 'package:voice_recipe/screens/profile_screen.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
@@ -117,6 +118,15 @@ class _SideBarMenuState extends State<SideBarMenu> {
                       )),
                       iconData: Config.darkModeOn ? Icons.library_books_outlined
                                                   : Icons.library_books_outlined
+                    ),
+                    SideBarTile(
+                        name: "Создать рецепт",
+                        onClicked: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const CreateRecipeScreen()));
+                        },
+                        iconData: Config.darkModeOn ? Icons.create_outlined
+                            : Icons.create_outlined
                     ),
                     SideBarTile(
                         name: "Голосовые команды",

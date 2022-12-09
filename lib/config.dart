@@ -57,6 +57,8 @@ class Config {
     DarkThemePreference().setDarkTheme(on);
   }
 
+  static EdgeInsetsGeometry get paddingAll => const EdgeInsets.all(padding);
+
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const _darkIconBackColor = Color(0xFF202124);
   static const darkBlue = Color(0xFF242634);

@@ -47,10 +47,12 @@ class _ClassicButtonState extends State<ClassicButton> {
         decoration: BoxDecoration(
           color: !_hovered & !_pressed ? ClassicButton.buttonColor : ClassicButton.buttonHoverColor,
               borderRadius: Config.borderRadiusLarge,
-          border: Border.all(
-              color: Colors.black87,
-              width: 0.1
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: Config.iconColor.withOpacity(0.5),
+              spreadRadius: 0.5
+            )
+          ]
         ),
         padding: const EdgeInsets.all(Config.padding)
             .add(const EdgeInsets.symmetric(horizontal: Config.padding)),

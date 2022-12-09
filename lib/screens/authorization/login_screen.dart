@@ -63,6 +63,14 @@ class LoginScreen extends StatefulWidget {
     return res;
   }
 
+  static SizedBox inputWrapper(Widget child, BuildContext context) {
+    return SizedBox(
+      height: labelHeight(context),
+      width: buttonWidth(context),
+      child: child,
+    );
+  }
+
   static Future storeUserInDB(UserInfo user) async {
     var db = FirebaseFirestore.instance;
     db.collection("users").add({
@@ -204,21 +212,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                           ],
                         ),
-                        InputLabel(
-                          height: LoginScreen.labelHeight(context),
+                        LoginScreen.inputWrapper(InputLabel(
                           focusNode: _emailFocusNode,
-                          width: LoginScreen.buttonWidth(context),
                           hintText: 'Email',
                           controller: _emailController,
-                        ),
-                        PasswordLabel(
-                          height: LoginScreen.labelHeight(context),
+                        ), context),
+                        LoginScreen.inputWrapper(PasswordLabel(
                           focusNode: _passwordFocusNode,
-                          width: LoginScreen.buttonWidth(context),
                           hintText: "Пароль",
                           controller: _passwordController,
                           onSubmit: signIn,
-                        ),
+                        ), context),
                         RefButton(
                           text: "Забыли пароль?",
                           onTap: () => _onForgotPassword(context),
