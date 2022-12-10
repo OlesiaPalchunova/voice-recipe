@@ -8,7 +8,7 @@ import 'package:voice_recipe/screens/authorization/register_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
-import '../../components/buttons/button.dart';
+import '../../components/buttons/classic_button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../components/login/ref_button.dart';

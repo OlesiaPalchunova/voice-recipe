@@ -1,4 +1,3 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
@@ -9,43 +8,43 @@ class ClassicButton extends StatefulWidget {
       required this.onTap,
       required this.text,
       this.fontSize = 20,
+        this.customColor
       });
 
   final VoidCallback onTap;
   final String text;
   final double fontSize;
+  final Color? customColor;
 
   @override
   State<ClassicButton> createState() => _ClassicButtonState();
 
-  static Color get buttonColor => Config.darkModeOn ? Colors.grey.shade900
+  static Color get color => Config.darkModeOn ? Colors.grey.shade900
       : Colors.grey.shade200;
 
-  static Color get buttonHoverColor => Config.darkModeOn ? const Color(0xffc77202)
+  static Color get hoverColor => Config.darkModeOn ? const Color(0xffc77202)
       : Colors.blueGrey.shade100;
 }
 
 class _ClassicButtonState extends State<ClassicButton> {
   bool _hovered = false;
-  bool _pressed = false;
 
-  void _onTap() {
-    widget.onTap();
-    setState(() => _pressed = !_pressed);
-  }
+  Color get color => !_hovered
+      ? widget.customColor?? ClassicButton.color
+      : ClassicButton.hoverColor;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Config.borderRadiusLarge,
-      hoverColor: ClassicButton.buttonHoverColor,
-      focusColor: ClassicButton.buttonHoverColor,
+      hoverColor: ClassicButton.hoverColor,
+      focusColor: ClassicButton.hoverColor.withOpacity(.5),
       onTap: widget.onTap,
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
-          color: !_hovered & !_pressed ? ClassicButton.buttonColor : ClassicButton.buttonHoverColor,
+          color: color,
               borderRadius: Config.borderRadiusLarge,
           boxShadow: Config.darkModeOn ? [] : [
             BoxShadow(

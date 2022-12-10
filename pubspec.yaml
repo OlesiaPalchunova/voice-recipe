@@ -50,7 +50,7 @@ dependencies:
   flutter_web_auth:
   universal_io:
   google_sign_in:
-  flutter_dropzone:
+  flutter_dropzone: 3.0.0
   dotted_border:
 
 dev_dependencies:

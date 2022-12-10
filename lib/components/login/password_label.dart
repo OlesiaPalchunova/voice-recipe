@@ -30,9 +30,7 @@ class _PasswordLabelState extends State<PasswordLabel> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: Config.borderRadius,
-      child: TextFormField(
+    return TextFormField(
             onFieldSubmitted: (s) {
               widget.onSubmit();
             },
@@ -64,7 +62,7 @@ class _PasswordLabelState extends State<PasswordLabel> {
                 color: Config.iconColor.withOpacity(0.8),
                 fontSize: 18,
                 fontFamily: Config.fontFamily),
-          ),
+
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
-import '../../components/buttons/button.dart';
+import '../../components/buttons/classic_button.dart';
 import '../../components/login/input_label.dart';
 import '../../components/login/password_label.dart';
 import '../../config.dart';

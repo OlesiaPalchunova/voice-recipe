@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
-import 'button.dart';
+import 'classic_button.dart';
 
 class DeleteButton extends StatelessWidget {
   const DeleteButton({super.key, required this.onPressed,
@@ -18,7 +18,7 @@ class DeleteButton extends StatelessWidget {
       width: buttonSize,
       height: buttonSize,
       decoration: BoxDecoration(
-          color: ClassicButton.buttonColor,
+          color: ClassicButton.color,
           borderRadius: Config.borderRadius
       ),
       margin: margin?? Config.paddingAll,

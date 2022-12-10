@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:voice_recipe/components/buttons/button.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/drop_zone.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
 import '../../model/dropped_file.dart';
@@ -21,7 +22,25 @@ class _HeaderLabelState extends State<HeaderLabel> {
   final nameController = TextEditingController();
   final cookTimeController = TextEditingController();
   final prepTimeController = TextEditingController();
-  DroppedFile? currentImageFile;
+  static DroppedFile? currentImageFile;
+
+  @override
+  void initState() {
+    if (widget.headers.containsKey(HeaderField.name)) {
+      nameController.text = widget.headers[HeaderField.name];
+    }
+    if (widget.headers.containsKey(HeaderField.cookTimeMins)) {
+      cookTimeController.text =
+          widget.headers[HeaderField.cookTimeMins].toString();
+    }
+    if (widget.headers.containsKey(HeaderField.prepTimeMins)) {
+      if (widget.headers[HeaderField.prepTimeMins] > 0) {
+        prepTimeController.text =
+            widget.headers[HeaderField.prepTimeMins].toString();
+      }
+    }
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -42,14 +61,14 @@ class _HeaderLabelState extends State<HeaderLabel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CreateRecipeScreen.title(context, "Название рецепта"),
+        CreateRecipeScreen.title(context, "Основное"),
         const SizedBox(
           height: Config.padding,
         ),
         Container(
           padding: Config.paddingAll,
           child: InputLabel(
-            hintText: "Введите название рецепта",
+            hintText: "Название рецепта",
             controller: nameController,
             fontSize: CreateRecipeScreen.generalFontSize(context),
             onSubmit: () {
@@ -68,39 +87,84 @@ class _HeaderLabelState extends State<HeaderLabel> {
         ),
         Row(
             children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                      width: CreateRecipeScreen.pageWidth(context) * .5,
-                      child: currentImageFile == null
-                      ? ImageDropZone(
-                          onDrop: onDrop,
-                          fontSize: CreateRecipeScreen.generalFontSize(context)
-                        )
-                      : stepImagePreview()
-                  )
-              ),
-              const SizedBox(width: Config.margin,),
               SizedBox(
-                width: CreateRecipeScreen.pageWidth(context) * .4,
+                width: CreateRecipeScreen.pageWidth(context) * .5,
+                child: currentImageFile == null
+                    ? ImageDropZone(
+                    customButtonColor: CreateRecipeScreen.buttonColor,
+                        onDrop: onDrop,
+                        fontSize: CreateRecipeScreen.generalFontSize(context))
+                    : stepImagePreview()
+              ),
+              Container(
+                width: CreateRecipeScreen.pageWidth(context) * .45,
+                alignment: Alignment.center,
                 child: Column(
                   children: [
-                    InputLabel(hintText: "Время приготовления, мин.", controller: cookTimeController,
-                    fontSize: CreateRecipeScreen.generalFontSize(context) - 4,),
-                    const SizedBox(height: Config.margin,),
-                    InputLabel(hintText: "Время подготовки, мин. (опционально)", controller: prepTimeController,
-                        fontSize: CreateRecipeScreen.generalFontSize(context) - 4),
-                    const SizedBox(height: Config.margin * 2,),
-                    ClassicButton(onTap: saveHeaders, text: "Сохранить",
-                    fontSize: CreateRecipeScreen.generalFontSize(context),)
+                    LoginScreen.voiceRecipeIcon(
+                        context, 150, 130),
+                    Text(Config.appName,
+                    style: TextStyle(
+                      color: Config.iconColor,
+                      fontFamily: Config.fontFamily,
+                      fontSize: CreateRecipeScreen.titleFontSize(context)
+                    ),)
                   ],
                 ),
               )
-          ]
-        )
+            ]
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: Config.margin).
+          add(const EdgeInsets.only(top: Config.margin)),
+          alignment: Alignment.centerLeft,
+          child: Column(
+            children: [
+              SizedBox(
+                // width: CreateRecipeScreen.pageWidth(context) * .7,
+                child: InputLabel(
+                  hintText: "Время приготовления, в минутах",
+                  controller: cookTimeController,
+                  fontSize: CreateRecipeScreen.generalFontSize(context),
+                  onSubmit: saveHeaders,
+                ),
+              ),
+              const SizedBox(
+                height: Config.margin,
+              ),
+              SizedBox(
+                // width: CreateRecipeScreen.pageWidth(context) * .7,
+                child: InputLabel(
+                    hintText: "Время подготовки, в минутах (необязательно)",
+                    controller: prepTimeController,
+                    fontSize: CreateRecipeScreen.generalFontSize(context),
+                    onSubmit: saveHeaders),
+              ),
+              const SizedBox(
+                height: Config.margin,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                    width: CreateRecipeScreen.pageWidth(context) * .5,
+                    child: ClassicButton(
+                      customColor: CreateRecipeScreen.buttonColor,
+                      onTap: saveHeaders,
+                      text: "Сохранить",
+                      fontSize: CreateRecipeScreen.generalFontSize(context),
+                    )),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
+
+  TextStyle get textStyle => TextStyle(
+      fontFamily: Config.fontFamily,
+      color: Config.iconColor,
+      fontSize: CreateRecipeScreen.generalFontSize(context));
 
   void saveHeaders() {
     if (currentImageFile == null) {
@@ -114,12 +178,14 @@ class _HeaderLabelState extends State<HeaderLabel> {
     }
     String cookTimeMinsStr = cookTimeController.text.trim();
     if (cookTimeMinsStr.isEmpty) {
-      Config.showAlertDialog("Введите время приготовления (в минутах)", context);
+      Config.showAlertDialog(
+          "Введите время приготовления (в минутах)", context);
       return;
     }
     int? cookTimeMins = int.tryParse(cookTimeMinsStr);
     if (cookTimeMins == null) {
-      Config.showAlertDialog("Время приготовление должно быть числом (минут)", context);
+      Config.showAlertDialog(
+          "Время приготовление должно быть числом (минут)", context);
       return;
     }
     String prepTimeMinStr = prepTimeController.text.trim();
@@ -127,12 +193,13 @@ class _HeaderLabelState extends State<HeaderLabel> {
     if (prepTimeMinStr.isNotEmpty) {
       prepTimeMins = int.tryParse(prepTimeMinStr);
       if (prepTimeMins == null) {
-        Config.showAlertDialog("Время подготовки должно быть числом (минут)", context);
+        Config.showAlertDialog(
+            "Время подготовки должно быть числом (минут)", context);
         return;
       }
     }
     int cookTimeMinsFinal = cookTimeMins;
-    int prepTimeMinsFinal = prepTimeMins?? 0;
+    int prepTimeMinsFinal = prepTimeMins ?? 0;
     widget.headers[HeaderField.name] = recipeName;
     widget.headers[HeaderField.faceImageUrl] = currentImageFile!.url;
     widget.headers[HeaderField.cookTimeMins] = cookTimeMinsFinal;
@@ -144,26 +211,29 @@ class _HeaderLabelState extends State<HeaderLabel> {
     if (currentImageFile == null) {
       return Container();
     }
-    return Stack(
-          children: [
-            SizedBox(
-              child: ClipRRect(
-                  borderRadius: Config.borderRadiusLarge,
-                  child: Image(
-                    image: NetworkImage(currentImageFile!.url),
-                    fit: BoxFit.fitWidth,
-                  )),
-            ),
-            Container(
-                alignment: Alignment.topRight,
-                child: DeleteButton(
-                    onPressed: () => setState(() {
-                          if (currentImageFile == null) return;
-                          widget.headers.remove(HeaderField.faceImageUrl);
-                          currentImageFile = null;
-                        }),
-                    toolTip: "Убрать изображение"))
-          ],
+    return Container(
+      margin: Config.paddingAll,
+      child: Stack(
+        children: [
+          SizedBox(
+            child: ClipRRect(
+                borderRadius: Config.borderRadiusLarge,
+                child: Image(
+                  image: NetworkImage(currentImageFile!.url),
+                  fit: BoxFit.fitWidth,
+                )),
+          ),
+          Container(
+              alignment: Alignment.topRight,
+              child: DeleteButton(
+                  onPressed: () => setState(() {
+                        if (currentImageFile == null) return;
+                        widget.headers.remove(HeaderField.faceImageUrl);
+                        currentImageFile = null;
+                      }),
+                  toolTip: "Убрать изображение"))
+        ],
+      ),
     );
   }
 }

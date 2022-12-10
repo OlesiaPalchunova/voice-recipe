@@ -4,7 +4,7 @@ import 'package:voice_recipe/components/buttons/delete_button.dart';
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../screens/create_recipe_screen.dart';
-import '../buttons/button.dart';
+import '../buttons/classic_button.dart';
 import '../login/input_label.dart';
 
 class IngredientsLabel extends StatefulWidget {
@@ -98,11 +98,13 @@ class _IngredientsLabelState extends State<IngredientsLabel> {
               hintText: "Количество",
               controller: ingCountController,
               fontSize: CreateRecipeScreen.generalFontSize(context),
+              onSubmit: addNewIngredient,
             ),
           ),
           SizedBox(
               width: CreateRecipeScreen.pageWidth(context) * .3,
-              child: ClassicButton(onTap: addNewIngredient, text: "Добавить",
+              child: ClassicButton(
+                customColor: CreateRecipeScreen.buttonColor, onTap: addNewIngredient, text: "Добавить",
     fontSize: CreateRecipeScreen.generalFontSize(context),))
         ]),
       ),

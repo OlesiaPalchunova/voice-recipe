@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
-import '../buttons/button.dart';
+import '../buttons/classic_button.dart';
 
 class SignInButton extends StatefulWidget {
   const SignInButton(
@@ -32,8 +32,8 @@ class _SignInButtonState extends State<SignInButton> {
   var pressed = false;
 
   Color get backgroundColor => hovered | pressed
-      ? ClassicButton.buttonHoverColor
-      : ClassicButton.buttonColor;
+      ? ClassicButton.hoverColor
+      : ClassicButton.color;
 
   @override
   Widget build(BuildContext context) {

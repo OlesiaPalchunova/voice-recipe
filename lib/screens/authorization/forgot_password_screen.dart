@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/buttons/button.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/login/input_label.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 

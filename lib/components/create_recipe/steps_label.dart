@@ -5,7 +5,7 @@ import '../../config.dart';
 import '../../model/dropped_file.dart';
 import '../../model/recipes_info.dart';
 import '../../screens/create_recipe_screen.dart';
-import '../buttons/button.dart';
+import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
 import '../drop_zone.dart';
 import '../login/input_label.dart';
@@ -140,6 +140,7 @@ class _StepsLabelState extends State<StepsLabel> {
           child: Column(
             children: [
               currentImageFile == null ? ImageDropZone(
+                customButtonColor: CreateRecipeScreen.buttonColor,
                 onDrop: handleDropFile,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
               ) : stepImagePreview(),
@@ -147,16 +148,18 @@ class _StepsLabelState extends State<StepsLabel> {
                 height: Config.padding,
               ),
               InputLabel(
-                  hintText: "Введите описание шага",
+                  hintText: "Описание шага",
                   controller: stepController,
-                fontSize: CreateRecipeScreen.generalFontSize(context),),
+                fontSize: CreateRecipeScreen.generalFontSize(context),
+                onSubmit: addNewStep,),
               const SizedBox(
                 height: Config.padding,
               ),
               InputLabel(
-                  hintText: "Время ожидания, мин. (опционально)",
+                  hintText: "Время ожидания, в минутах (опционально)",
                   controller: waitTimeController,
-                fontSize: CreateRecipeScreen.generalFontSize(context),),
+                fontSize: CreateRecipeScreen.generalFontSize(context),
+                onSubmit: addNewStep,),
               const SizedBox(
                 height: Config.padding,
               ),
@@ -164,7 +167,8 @@ class _StepsLabelState extends State<StepsLabel> {
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
                     width: CreateRecipeScreen.pageWidth(context) * .5,
-                    child: ClassicButton(onTap: addNewStep, text: "Добавить шаг",
+                    child: ClassicButton(
+                      customColor: CreateRecipeScreen.buttonColor,onTap: addNewStep, text: "Добавить шаг",
                       fontSize: CreateRecipeScreen.generalFontSize(context),)
                 ),
               )
@@ -179,23 +183,27 @@ class _StepsLabelState extends State<StepsLabel> {
     if (currentImageFile == null) {
       return Container();
     }
-    return Stack(
-      children: [
-        ClipRRect(
-            borderRadius: Config.borderRadiusLarge,
-            child: Image(
-              image: NetworkImage(currentImageFile!.url),
-              fit: BoxFit.fitWidth,
+    return Container(
+      margin: Config.paddingAll,
+      child: Stack(
+        children: [
+          ClipRRect(
+              borderRadius: Config.borderRadiusLarge,
+              child: Image(
+                image: NetworkImage(currentImageFile!.url),
+                fit: BoxFit.fitWidth,
+              )
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            margin: Config.paddingAll,
+            child: DeleteButton(
+                onPressed: () => setState(() => currentImageFile = null),
+                toolTip: "Убрать изображение"
             )
-        ),
-        Container(
-          alignment: Alignment.topRight,
-          child: DeleteButton(
-              onPressed: () => setState(() => currentImageFile = null),
-              toolTip: "Убрать изображение"
           )
-        )
-      ],
+        ],
+      ),
     );
   }
 

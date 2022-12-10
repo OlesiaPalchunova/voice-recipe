@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/buttons/button.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/create_recipe/header_label.dart';
 import 'package:voice_recipe/components/create_recipe/ingredients_label.dart';
 import 'package:voice_recipe/components/create_recipe/steps_label.dart';
@@ -22,6 +22,10 @@ class CreateRecipeScreen extends StatefulWidget {
 
   static double titleFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 19 : 17;
+
+  static Color get buttonColor => Config.darkModeOn
+  ? const Color(0xff474645)
+  : const Color(0xeecccccc);
 
   static Widget title(BuildContext context, String text) {
     return Container(
@@ -47,10 +51,10 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   static final Map<HeaderField, dynamic> headers = {};
 
   Color get backgroundColor =>
-      Config.darkModeOn ? Config.backgroundColor : ClassicButton.buttonColor;
+      Config.darkModeOn ? Config.backgroundColor : ClassicButton.color;
 
   Color get labelColor =>
-      !Config.darkModeOn ? Config.backgroundColor : ClassicButton.buttonColor;
+      !Config.darkModeOn ? Config.backgroundColor : ClassicButton.color;
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +141,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
             width: CreateRecipeScreen.pageWidth(context) / 2,
             child: SizedBox(
                 child: ClassicButton(
+                  customColor: CreateRecipeScreen.buttonColor,
               onTap: submitRecipe,
               text: "Сохранить рецепт",
               fontSize: CreateRecipeScreen.generalFontSize(context),
@@ -151,6 +156,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
               width: CreateRecipeScreen.pageWidth(context) / 2,
               child: SizedBox(
                   child: ClassicButton(
+                    customColor: CreateRecipeScreen.buttonColor,
                     onTap: showCreatedRecipe,
                     text: "Превью",
                     fontSize: CreateRecipeScreen.generalFontSize(context),

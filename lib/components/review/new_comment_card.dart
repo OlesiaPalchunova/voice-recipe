@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
-import '../buttons/button.dart';
+import '../buttons/classic_button.dart';
 import 'comment_card.dart';
 
 class NewCommentCard extends StatefulWidget {

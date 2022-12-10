@@ -20,10 +20,12 @@ class InputLabel extends StatelessWidget {
   static InputDecoration buildInputDecoration(String hintText,
           [Widget? suffixIcon]) =>
       InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
+          labelText: hintText,
+          labelStyle: TextStyle(
               color: Config.iconColor.withOpacity(0.7),
-              fontFamily: Config.fontFamily),
+              fontFamily: Config.fontFamily
+          ),
+          floatingLabelAlignment: FloatingLabelAlignment.start,
           enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(width: 0.5, color: Colors.black87),
               borderRadius: Config.borderRadiusLarge),
@@ -38,9 +40,7 @@ class InputLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: Config.borderRadius,
-      child: TextFormField(
+    return TextFormField(
             onFieldSubmitted: (s) {
               if (onSubmit == null) return;
               onSubmit!();
@@ -51,9 +51,8 @@ class InputLabel extends StatelessWidget {
             style: TextStyle(
                 color: Config.iconColor.withOpacity(0.8),
                 fontSize: fontSize,
-                fontFamily: Config.fontFamily),
-          ),
-
+                fontFamily: Config.fontFamily
+            ),
     );
   }
 }

@@ -4,12 +4,13 @@ import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
 
 import '../config.dart';
-import 'buttons/button.dart';
+import 'buttons/classic_button.dart';
 
 class ImageDropZone extends StatefulWidget {
   const ImageDropZone({super.key, required this.onDrop,
-  this.fontSize = 18});
+  this.fontSize = 18, this.customButtonColor});
 
+  final Color? customButtonColor;
   final void Function(DroppedFile) onDrop;
   final double fontSize;
 
@@ -26,7 +27,7 @@ class _ImageDropZoneState extends State<ImageDropZone> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: highlighted ? ClassicButton.buttonHoverColor : null),
+          color: highlighted ? ClassicButton.hoverColor : null),
       height: 200,
       padding: Config.paddingAll,
       child: Stack(
@@ -67,6 +68,7 @@ class _ImageDropZoneState extends State<ImageDropZone> {
                   SizedBox(
                       width: Config.recipeSlideWidth(context) * .4,
                       child: ClassicButton(
+                        customColor: widget.customButtonColor,
                           onTap: () async {
                             final events = await dropController.pickFiles();
                             if (events.isEmpty) return;

@@ -1,5 +1,5 @@
 
-- make constructor of recipes
+- add handle of last labels submit
 - add support of a better voice assistant
 - make recognition faster (especially for timer), try to use another recognition policy
 - add small list of ingredients for every step

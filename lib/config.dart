@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voice_recipe/components/buttons/button.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/recipes_getter.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
 import 'package:voice_recipe/translator.dart';
@@ -45,7 +46,7 @@ class Config {
   static const borderRadiusLarge = BorderRadius.all(Radius.circular(largeRadius));
 
   static init() async {
-    // await RecipesGetter().getRecipe(id: 1);
+    await RecipesGetter().getRecipe(id: 1);
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,
