@@ -51,7 +51,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   initState() {
     super.initState();
     _disposed = false;
-    int? rate = ratesMap[widget.recipe.id];
+    int? rate = ratesMap[widget.recipe.id % ratesMap.length];
     if (rate != null) {
       _isEvaluated = true;
     }
@@ -91,7 +91,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RateLabel(
-                      rate: rates[widget.recipe.id],
+                      rate: rates[widget.recipe.id % rates.length],
                       width: labelWidth,
                       shadowOn: false,
                     ),

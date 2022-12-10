@@ -85,9 +85,7 @@ class RecipeStepView extends StatelessWidget {
                           color: !Config.darkModeOn ? Colors.black87
                               .withOpacity(RecipeStepView._textBackgroundOpacity)
                                   : Config.iconBackColor,
-                          borderRadius:
-                              BorderRadius.circular(RecipeStepView._borderRadius)),
-                      // height: 120,
+                          borderRadius: Config.borderRadiusLarge),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(Config.padding),
                       child: Text(

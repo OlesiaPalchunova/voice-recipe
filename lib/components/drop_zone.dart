@@ -6,16 +6,18 @@ import 'package:voice_recipe/model/dropped_file.dart';
 import '../config.dart';
 import 'buttons/button.dart';
 
-class DropZone extends StatefulWidget {
-  const DropZone({super.key, required this.onDrop});
+class ImageDropZone extends StatefulWidget {
+  const ImageDropZone({super.key, required this.onDrop,
+  this.fontSize = 18});
 
   final void Function(DroppedFile) onDrop;
+  final double fontSize;
 
   @override
-  State<DropZone> createState() => _DropZoneState();
+  State<ImageDropZone> createState() => _ImageDropZoneState();
 }
 
-class _DropZoneState extends State<DropZone> {
+class _ImageDropZoneState extends State<ImageDropZone> {
   late DropzoneViewController dropController;
   bool highlighted = false;
 
@@ -24,7 +26,7 @@ class _DropZoneState extends State<DropZone> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: highlighted ? Config.pressed : null),
+          color: highlighted ? ClassicButton.buttonHoverColor : null),
       height: 200,
       padding: Config.paddingAll,
       child: Stack(
@@ -37,7 +39,7 @@ class _DropZoneState extends State<DropZone> {
           ),
           DottedBorder(
             borderType: BorderType.RRect,
-            color: Config.iconColor.withOpacity(.7),
+            color: Config.iconColor.withOpacity(.5),
             strokeWidth: 3,
             radius: const Radius.circular(Config.largeRadius),
             dashPattern: const [8, 4],
@@ -53,23 +55,25 @@ class _DropZoneState extends State<DropZone> {
                   ),
                   Text(
                     "Перетащите изображение сюда",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Config.iconColor,
                         fontFamily: Config.fontFamily,
-                        fontSize: 18),
+                        fontSize: widget.fontSize),
                   ),
                   const SizedBox(
                     height: Config.padding,
                   ),
                   SizedBox(
-                      width: Config.recipeSlideWidth(context) * .3,
+                      width: Config.recipeSlideWidth(context) * .4,
                       child: ClassicButton(
                           onTap: () async {
                             final events = await dropController.pickFiles();
                             if (events.isEmpty) return;
                             loadFile(events.first);
                           },
-                          text: "Выбрать файл"))
+                          text: "Выбрать файл",
+                          fontSize: widget.fontSize,))
                 ],
               ),
             ),
@@ -79,14 +83,20 @@ class _DropZoneState extends State<DropZone> {
     );
   }
 
+  static const allowedMimes = ["image/jpeg", "image/jpg", "image/png"];
+
   Future loadFile(dynamic file) async {
     final name = file.name;
     final mime = await dropController.getFileMIME(file);
     final size = await dropController.getFileSize(file);
     final url = await dropController.createFileUrl(file);
-    widget.onDrop(DroppedFile(name: name, mime: mime, url: url, size: size));
     setState(() {
       highlighted = false;
     });
+    if (!allowedMimes.contains(mime)) {
+      Future.microtask(() => Config.showAlertDialog("Допустимые форматы: jpeg, jpg, png", context));
+      return;
+    }
+    widget.onDrop(DroppedFile(name: name, mime: mime, url: url, size: size));
   }
 }

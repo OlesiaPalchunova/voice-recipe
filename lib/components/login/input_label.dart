@@ -8,12 +8,14 @@ class InputLabel extends StatelessWidget {
       required this.hintText,
       required this.controller,
       this.focusNode,
-      this.onSubmit});
+      this.onSubmit,
+      this.fontSize = 18});
 
   final String hintText;
   final TextEditingController controller;
   final FocusNode? focusNode;
   final VoidCallback? onSubmit;
+  final double fontSize;
 
   static InputDecoration buildInputDecoration(String hintText,
           [Widget? suffixIcon]) =>
@@ -48,7 +50,7 @@ class InputLabel extends StatelessWidget {
             decoration: buildInputDecoration(hintText),
             style: TextStyle(
                 color: Config.iconColor.withOpacity(0.8),
-                fontSize: 18,
+                fontSize: fontSize,
                 fontFamily: Config.fontFamily),
           ),
 

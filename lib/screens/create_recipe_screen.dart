@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/button.dart';
-import 'package:voice_recipe/components/drop_zone.dart';
-import 'package:voice_recipe/components/login/input_label.dart';
-import 'package:voice_recipe/model/dropped_file.dart';
+import 'package:voice_recipe/components/create_recipe/header_label.dart';
+import 'package:voice_recipe/components/create_recipe/ingredients_label.dart';
+import 'package:voice_recipe/components/create_recipe/steps_label.dart';
+import 'package:voice_recipe/screens/recipe_screen.dart';
 
 import '../config.dart';
 import '../model/recipes_info.dart';
@@ -13,34 +16,41 @@ class CreateRecipeScreen extends StatefulWidget {
 
   @override
   State<CreateRecipeScreen> createState() => _CreateRecipeScreenState();
+
+  static double generalFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 18 : 16;
+
+  static double titleFontSize(BuildContext context) =>
+      Config.isDesktop(context) ? 19 : 17;
+
+  static Widget title(BuildContext context, String text) {
+    return Container(
+      padding: const EdgeInsets.only(left: Config.padding),
+      alignment: Alignment.centerLeft,
+      child: Text(text,
+          style: TextStyle(
+              fontFamily: Config.fontFamily,
+              color: Config.iconColor,
+              fontSize: titleFontSize(context))),
+    );
+  }
+
+  static double pageWidth(BuildContext context) =>
+      Config.recipeSlideWidth(context);
 }
 
-class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
-  final nameController = TextEditingController();
-  final ingNameController = TextEditingController();
-  final ingCountController = TextEditingController();
-  final stepController = TextEditingController();
-  final waitTimeController = TextEditingController();
-  final List<Ingredient> ingredients = [];
-  final List<RecipeStep> steps = [];
+enum HeaderField { name, faceImageUrl, cookTimeMins, prepTimeMins }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    ingNameController.dispose();
-    ingCountController.dispose();
-    stepController.dispose();
-    waitTimeController.dispose();
-    super.dispose();
-  }
+class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
+  static final List<Ingredient> ingredients = [];
+  static final List<RecipeStep> steps = [];
+  static final Map<HeaderField, dynamic> headers = {};
 
   Color get backgroundColor =>
       Config.darkModeOn ? Config.backgroundColor : ClassicButton.buttonColor;
 
   Color get labelColor =>
       !Config.darkModeOn ? Config.backgroundColor : ClassicButton.buttonColor;
-
-  double pageWidth(BuildContext context) => Config.recipeSlideWidth(context);
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +64,12 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
             image: DecorationImage(
                 image: AssetImage("assets/images/decorations/create_back.jpg"),
                 fit: BoxFit.cover)),
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.only(top: Config.margin * 2),
-            alignment: Alignment.topCenter,
-            width: pageWidth(context),
-            child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
+              alignment: Alignment.topCenter,
+              width: CreateRecipeScreen.pageWidth(context),
               child: Column(
                 children: allLabels(context),
               ),
@@ -70,13 +80,94 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     );
   }
 
+  Recipe? createdRecipe;
+
+  void submitRecipe() {
+    if (!headers.containsKey(HeaderField.name)) {
+      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+      return;
+    }
+    if (!headers.containsKey(HeaderField.faceImageUrl)) {
+      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+      return;
+    }
+    if (!headers.containsKey(HeaderField.cookTimeMins)) {
+      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+      return;
+    }
+    if (!headers.containsKey(HeaderField.prepTimeMins)) {
+      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+      return;
+    }
+    if (ingredients.isEmpty) {
+      Config.showAlertDialog("У рецепта должны быть ингридиенты", context);
+      return;
+    }
+    if (steps.isEmpty) {
+      Config.showAlertDialog("У рецепта должен быть хотя бы один шаг", context);
+      return;
+    }
+    createdRecipe = Recipe(
+      isNetwork: true,
+        name: headers[HeaderField.name],
+        faceImageUrl: headers[HeaderField.faceImageUrl],
+        id: Random().nextInt(1000),
+        cookTimeMins: headers[HeaderField.cookTimeMins],
+        prepTimeMins: headers[HeaderField.prepTimeMins],
+        kilocalories: 0,
+        ingredients: ingredients,
+        steps: steps,);
+    Config.showAlertDialog("Ваш рецепт был успешно сохранен!", context);
+    setState(() {
+    });
+  }
+
   List<Widget> allLabels(BuildContext context) {
     var labels = <Widget>[
-      enterNameLabel(context),
-      ingredientsLabel(context),
-      stepsLabel(context)
+      HeaderLabel(
+        headers: headers,
+      ),
+      IngredientsLabel(insertList: ingredients),
+      StepsLabel(
+        insertList: steps,
+      ),
+      Container(
+        margin: Config.paddingAll,
+        child: SizedBox(
+            width: CreateRecipeScreen.pageWidth(context) / 2,
+            child: SizedBox(
+                child: ClassicButton(
+              onTap: submitRecipe,
+              text: "Сохранить рецепт",
+              fontSize: CreateRecipeScreen.generalFontSize(context),
+            ))),
+      ),
     ];
+    if (createdRecipe != null) {
+      labels.add(
+        Container(
+          margin: Config.paddingAll,
+          child: SizedBox(
+              width: CreateRecipeScreen.pageWidth(context) / 2,
+              child: SizedBox(
+                  child: ClassicButton(
+                    onTap: showCreatedRecipe,
+                    text: "Превью",
+                    fontSize: CreateRecipeScreen.generalFontSize(context),
+                  ))),
+        ),
+      );
+    }
     return labels.map((e) => roundWrapper(e)).toList();
+  }
+
+  void showCreatedRecipe() {
+    if (createdRecipe == null) {
+      Config.showAlertDialog("Рецепт не создан", context);
+      return;
+    }
+    Navigator.of(context).push(MaterialPageRoute(builder: (context)
+    => RecipeScreen(recipe: createdRecipe!)));
   }
 
   Container roundWrapper(Widget child) {
@@ -93,264 +184,8 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     );
   }
 
-  double generalFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 20 : 18;
-
-  double titleFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 21 : 19;
-
-  Widget enterNameLabel(BuildContext context) {
-    return Column(
-      children: [
-        title(context, "Название рецепта"),
-        const SizedBox(
-          height: Config.padding,
-        ),
-        Container(
-          padding: Config.paddingAll,
-          child: InputLabel(
-              hintText: "Введите название рецепта", controller: nameController),
-        )
-      ],
-    );
-  }
-
-  Widget title(BuildContext context, String text) {
-    return Container(
-      padding: const EdgeInsets.only(left: Config.padding),
-      alignment: Alignment.centerLeft,
-      child: Text(text,
-          style: TextStyle(
-              fontFamily: Config.fontFamily,
-              color: Config.iconColor,
-              fontSize: titleFontSize(context))),
-    );
-  }
-
-  Widget stepsLabel(BuildContext context) {
-    return Column(
-      children: [
-        title(context, "Шаги"),
-        const SizedBox(
-          height: Config.padding,
-        ),
-        Container(
-          padding: Config.paddingAll,
-          child: Column(
-            children: steps
-                .map((step) => Container(
-                decoration: BoxDecoration(
-                    color: Config.backgroundColor,
-                    borderRadius: Config.borderRadiusLarge
-                ),
-                padding: Config.paddingAll,
-                margin: const EdgeInsets.only(bottom: Config.margin),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                        borderRadius: Config.borderRadiusLarge,
-                        child: Image(
-                          image: NetworkImage(step.imgUrl),
-                          fit: BoxFit.fitWidth,
-                        )),
-                    const SizedBox(
-                      height: Config.padding,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Шаг ${step.id}",
-                        style: ingStyle,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: Config.padding,
-                    ),
-                    Text(
-                      step.description,
-                      style: TextStyle(
-                        color: Config.iconColor,
-                        fontFamily: Config.fontFamily,
-                        fontSize: 16
-                      ),
-                    )
-                  ],
-                )))
-                .toList(),
-          ),
-        ),
-        Container(
-          padding: Config.paddingAll,
-          child: Column(
-            children: [
-              DropZone(
-                onDrop: handleDropFile,
-              ),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              InputLabel(
-                  hintText: "Введите описание шага",
-                  controller: stepController),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              InputLabel(
-                  hintText: "Время ожидания, в минутах (опционально)",
-                  controller: waitTimeController),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              stepImagePreview(),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              ClassicButton(onTap: addNewStep, text: "Добавить этот шаг")
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget stepImagePreview() {
-    if (currentImageFile == null) {
-      return Container();
-    }
-    return ClipRRect(
-        borderRadius: Config.borderRadiusLarge,
-        child: Image(
-          image: NetworkImage(currentImageFile!.url),
-          fit: BoxFit.fitWidth,
-        ));
-  }
-
-  DroppedFile? currentImageFile;
-
-  void handleDropFile(DroppedFile file) {
-    setState(() {
-      currentImageFile = file;
-    });
-  }
-
-  Widget ingredientsLabel(BuildContext context) {
-    return Column(children: [
-      title(context, "Ингредиенты"),
-      const SizedBox(
-        height: Config.padding,
-      ),
-      Container(
-        padding: Config.paddingAll,
-        child: Column(
-          children: ingredients
-              .map((e) => Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    e.name,
-                    style: ingStyle,
-                  ),
-                  Text(
-                    e.count,
-                    style: ingStyle,
-                  )
-                ],
-              ),
-              Divider(
-                color: Config.iconColor.withOpacity(0.5),
-                thickness: 0.3,
-              )
-            ],
-          ),
-          )
-              .toList(),
-        ),
-      ),
-      Container(
-        padding: Config.paddingAll,
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          SizedBox(
-            width: pageWidth(context) * .3,
-            child:
-                InputLabel(hintText: "Название", controller: ingNameController),
-          ),
-          SizedBox(
-            width: pageWidth(context) * .3,
-            child: InputLabel(
-              hintText: "Количество",
-              controller: ingCountController,
-            ),
-          ),
-          SizedBox(
-              width: pageWidth(context) * .3,
-              child: ClassicButton(onTap: addNewIngredient, text: "Добавить"))
-        ]),
-      ),
-    ]);
-  }
-
   TextStyle get ingStyle => TextStyle(
       color: Config.iconColor,
       fontFamily: Config.fontFamily,
-      fontSize: generalFontSize(context));
-
-  void addNewStep() {
-    if (currentImageFile == null) {
-      Config.showAlertDialog(
-          "К шагу должно быть приложено изображение", context);
-      return;
-    }
-    String desc = stepController.text.trim();
-    String waitTimeStr = waitTimeController.text.trim();
-    if (desc.isEmpty) {
-      Config.showAlertDialog("Описание не может быть пустым", context);
-      return;
-    }
-    int waitTimeFinal = 0;
-    if (waitTimeStr.isNotEmpty) {
-      int? waitTime = int.tryParse(waitTimeStr);
-      if (waitTime == null) {
-        Config.showAlertDialog(
-            "Время ожидания должно быть числом минут", context);
-        return;
-      }
-      if (waitTime > 24 * 60) {
-        Config.showAlertDialog(
-            "Время ожидания не может превышать сутки", context);
-        return;
-      }
-      waitTimeFinal = waitTime;
-    }
-    stepController.clear();
-    waitTimeController.clear();
-    setState(() {
-      steps.add(RecipeStep(
-          waitTime: waitTimeFinal,
-          id: steps.length + 1,
-          imgUrl: currentImageFile!.url,
-          description: desc));
-      currentImageFile = null;
-    });
-  }
-
-  void addNewIngredient() {
-    String ingName = ingNameController.text.trim();
-    String ingCount = ingCountController.text.trim();
-    if (ingName.isEmpty | ingCount.isEmpty) {
-      Config.showAlertDialog(
-          "Ингредиент или его количество\n"
-          "не может быть пустым",
-          context);
-      return;
-    }
-    ingNameController.clear();
-    ingCountController.clear();
-    setState(() {
-      ingredients.add(
-          Ingredient(id: ingredients.length, name: ingName, count: ingCount));
-    });
-  }
+      fontSize: CreateRecipeScreen.generalFontSize(context));
 }
