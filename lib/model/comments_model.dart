@@ -53,7 +53,7 @@ String since(DateTime time) {
     } else if (rest < 5 && rest >= 1 && (diff.inDays > 20 || diff.inDays < 10)) {
       str = "дня";
     }
-    return "${diff.inHours} $str назад";
+    return "${diff.inDays} $str назад";
   }
   if (diff.inDays > 31) {
     int monthsCount = (diff.inDays / 30).floor();

@@ -8,8 +8,7 @@ class ClassicButton extends StatefulWidget {
       required this.onTap,
       required this.text,
       this.fontSize = 20,
-        this.customColor
-      });
+        this.customColor});
 
   final VoidCallback onTap;
   final String text;
@@ -60,7 +59,9 @@ class _ClassicButtonState extends State<ClassicButton> {
               style: TextStyle(
                   color: Config.iconColor,
                   fontSize: widget.fontSize,
-                  fontFamily: Config.fontFamily)),
+                  fontFamily: Config.fontFamily
+              )
+          ),
         ),
       ),
     );

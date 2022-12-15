@@ -118,19 +118,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         LoginScreen.inputWrapper(
                             InputLabel(
                                 focusNode: _firstNameFocusNode,
-                                hintText: "Имя",
+                                labelText: "Имя",
                                 controller: _firstNameController),
                             context),
                         LoginScreen.inputWrapper(
                             InputLabel(
                                 focusNode: _secondNameFocusNode,
-                                hintText: "Фамилия",
+                                labelText: "Фамилия",
                                 controller: _secondNameController),
                             context),
                         LoginScreen.inputWrapper(
                             InputLabel(
                               focusNode: _emailFocusNode,
-                              hintText: 'Email',
+                              labelText: 'Email',
                               controller: _emailController,
                             ),
                             context),

@@ -5,25 +5,32 @@ import '../../config.dart';
 class InputLabel extends StatelessWidget {
   const InputLabel(
       {super.key,
-      required this.hintText,
+      required this.labelText,
       required this.controller,
       this.focusNode,
       this.onSubmit,
+        this.hintText,
       this.fontSize = 18});
 
-  final String hintText;
+  final String? hintText;
+  final String labelText;
   final TextEditingController controller;
   final FocusNode? focusNode;
   final VoidCallback? onSubmit;
   final double fontSize;
 
-  static InputDecoration buildInputDecoration(String hintText,
-          [Widget? suffixIcon]) =>
+  static InputDecoration buildInputDecoration(
+          {required String labelText, Widget? suffixIcon, String? hintText}) =>
       InputDecoration(
-          labelText: hintText,
+          hintText: hintText,
+          labelText: labelText,
           labelStyle: TextStyle(
               color: Config.iconColor.withOpacity(0.7),
               fontFamily: Config.fontFamily
+          ),
+          hintStyle: TextStyle(
+              color: Config.iconColor.withOpacity(0.7),
+              fontFamily: Config.fontFamily,
           ),
           floatingLabelAlignment: FloatingLabelAlignment.start,
           enabledBorder: const OutlineInputBorder(
@@ -47,7 +54,8 @@ class InputLabel extends StatelessWidget {
             },
             focusNode: focusNode,
             controller: controller,
-            decoration: buildInputDecoration(hintText),
+            decoration: buildInputDecoration(
+            labelText: labelText, hintText: hintText),
             style: TextStyle(
                 color: Config.iconColor.withOpacity(0.8),
                 fontSize: fontSize,

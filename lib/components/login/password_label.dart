@@ -39,8 +39,8 @@ class _PasswordLabelState extends State<PasswordLabel> {
             obscuringCharacter: '*',
             controller: widget.controller,
             decoration: InputLabel.buildInputDecoration(
-                widget.hintText,
-                InkWell(
+                labelText: widget.hintText,
+                suffixIcon: InkWell(
                   onHover: (hover) {
                     setState(() {
                       _hovered = hover;

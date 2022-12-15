@@ -32,7 +32,6 @@ class ReviewsSlide extends StatefulWidget {
       commentsController.add(entry);
       comments[entry.key] = entry.value;
     }
-    commentsController.add(commentsDb.entries.first);
   }
 }
 

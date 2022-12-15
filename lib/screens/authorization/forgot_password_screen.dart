@@ -89,7 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   LoginScreen.inputWrapper(InputLabel(
                     onSubmit: passwordReset,
                       focusNode: _emailFocusNode,
-                      hintText: "Email",
+                      labelText: "Email",
                       controller: _emailController), context),
                   const SizedBox(
                     height: Config.margin,

@@ -1,0 +1,31 @@
+{
+  "name": "Рис от типочка",
+  "media": {
+    "id": 1
+  },
+  "cook_time_mins": 30.0,
+  "author_id": 1,
+  "prep_time_mins": null,
+  "kilocalories": 268.0,
+  "proteins": 5.0,
+  "fats": 9.0,
+  "carbohydrates": 52.0,
+  "ingredients_distributions": [
+    {
+      "name": "морковь",
+      "measure_unit_name": "граммов",
+      "count": 200.0,
+      "ingredient_id": 1
+    }
+  ],
+  "steps": [
+    {
+      "media": {
+        "id": 1
+      },
+      "description": "Нарезать морковь на трехосные эллипсоиды, лук на гиперболические параболоиды, чеснок на двуполостные гиперболоиды.",
+      "step_num": 1,
+      "wait_time_mins": null
+    }
+  ]
+}

@@ -13,10 +13,12 @@ final List<RecipesSet> sets = <RecipesSet>[
   RecipesSet(id: 2, name: "Национальные\nкухни", imageUrl: "assets/images/sets/national.png"),
   RecipesSet(id: 3, name: "Премиальные\nрецепты", imageUrl: "assets/images/sets/premium.png"),
   RecipesSet(id: 4, name: "По виду блюда", imageUrl: "assets/images/sets/business_lunch.png"),
+
 ];
 
 final RecipesSet fav = RecipesSet(id: 5, name: "Избранное", imageUrl: "assets/images/sets/favorites.png");
 final RecipesSet created = RecipesSet(id: 6, name: "Мои рецепты", imageUrl: "assets/images/sets/created.png");
+final RecipesSet gachiSet = RecipesSet(id: 5, name: "Гачи рецепты", imageUrl: "assets/images/sets/gachi.png");
 
 abstract class SetOption {
   final int id;
@@ -84,6 +86,10 @@ final List<SetOption> categoriesSetOptions = [
   StandardSetOption(id: 2, name: "Супы", options: [borsh]),
   StandardSetOption(id: 3, name: "Основные блюда", options: [carbonara, tefts, soba]),
   StandardSetOption(id: 4, name: "Салаты", options: []),
+];
+
+final List<SetOption> gachiSetOptions = [
+  StandardSetOption(id: 1, name: "Коллекция Main Page", options: [syrniki])
 ];
 
 final List<List<SetOption>> optionsResolve = [timesSetOptions, nationalSetOptions,

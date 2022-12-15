@@ -1,0 +1,30 @@
+{
+  "name": "Windows 10",
+  "media": {
+    "id": 11
+  },
+  "cook_time_mins": 20000,
+  "author_id": 1,
+  "prep_time_mins": null,
+  "kilocalories": null,
+  "proteins": null,
+  "fats": null,
+  "carbohydrates": null,
+  "ingredients_distributions": [
+    {
+      "name": "масло",
+      "measure_unit_name": "л",
+      "count": 1
+    }
+  ],
+  "steps": [
+    {
+      "media": {
+        "id": 12
+      },
+      "description": "Ну привет, сладенький)",
+      "step_num": 1,
+      "wait_time_mins": 44
+    }
+  ]
+}

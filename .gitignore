@@ -10,7 +10,15 @@
 .svn/
 migrate_working_dir/
 
+TODO
 api.yaml
+linux
+windows
+web
+macos
+test
+build_web
+
 
 # IntelliJ related
 *.iml
@@ -54,5 +62,5 @@ app.*.map.json
 
 # my restrictions
 /assets/
-/lib/firebase_options.dart
+/lib/services/firebase_options.dart
 

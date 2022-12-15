@@ -68,7 +68,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
         Container(
           padding: Config.paddingAll,
           child: InputLabel(
-            hintText: "Название рецепта",
+            labelText: "Название рецепта",
             controller: nameController,
             fontSize: CreateRecipeScreen.generalFontSize(context),
             onSubmit: () {
@@ -81,49 +81,61 @@ class _HeaderLabelState extends State<HeaderLabel> {
         const SizedBox(
           height: Config.padding,
         ),
-        CreateRecipeScreen.title(context, "Изображение для обложки"),
-        const SizedBox(
-          height: Config.padding,
-        ),
-        Row(
+        Row(children: [
+          Column(
             children: [
-              SizedBox(
-                width: CreateRecipeScreen.pageWidth(context) * .5,
-                child: currentImageFile == null
-                    ? ImageDropZone(
-                    customButtonColor: CreateRecipeScreen.buttonColor,
-                        onDrop: onDrop,
-                        fontSize: CreateRecipeScreen.generalFontSize(context))
-                    : stepImagePreview()
-              ),
               Container(
-                width: CreateRecipeScreen.pageWidth(context) * .45,
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    LoginScreen.voiceRecipeIcon(
-                        context, 150, 130),
-                    Text(Config.appName,
-                    style: TextStyle(
+                  width: CreateRecipeScreen.pageWidth(context) * .5,
+                  margin: const EdgeInsets.only(left: Config.margin),
+                  alignment: Alignment.centerLeft,
+                  child: Text("Изображение для обложки",
+                      style: TextStyle(
+                          fontFamily: Config.fontFamily,
+                          color: Config.iconColor,
+                          fontSize: CreateRecipeScreen.titleFontSize(context)
+                      )
+                  ),
+              ),
+              const SizedBox(
+                height: Config.padding,
+              ),
+              SizedBox(
+                  width: CreateRecipeScreen.pageWidth(context) * .5,
+                  child: currentImageFile == null
+                      ? ImageDropZone(
+                          customButtonColor: CreateRecipeScreen.buttonColor,
+                          onDrop: onDrop,
+                          fontSize: CreateRecipeScreen.generalFontSize(context))
+                      : stepImagePreview()),
+            ],
+          ),
+          Container(
+            width: CreateRecipeScreen.pageWidth(context) * .4,
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                LoginScreen.voiceRecipeIcon(context, 150, 130),
+                Text(
+                  Config.appName,
+                  style: TextStyle(
                       color: Config.iconColor,
                       fontFamily: Config.fontFamily,
-                      fontSize: CreateRecipeScreen.titleFontSize(context)
-                    ),)
-                  ],
-                ),
-              )
-            ]
-        ),
+                      fontSize: CreateRecipeScreen.titleFontSize(context)),
+                )
+              ],
+            ),
+          )
+        ]),
         Container(
-          margin: const EdgeInsets.only(left: Config.margin).
-          add(const EdgeInsets.only(top: Config.margin)),
+          margin: const EdgeInsets.only(left: Config.margin)
+              .add(const EdgeInsets.only(top: Config.margin)),
           alignment: Alignment.centerLeft,
           child: Column(
             children: [
               SizedBox(
                 // width: CreateRecipeScreen.pageWidth(context) * .7,
                 child: InputLabel(
-                  hintText: "Время приготовления, в минутах",
+                  labelText: "Время приготовления, в минутах",
                   controller: cookTimeController,
                   fontSize: CreateRecipeScreen.generalFontSize(context),
                   onSubmit: saveHeaders,
@@ -135,7 +147,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
               SizedBox(
                 // width: CreateRecipeScreen.pageWidth(context) * .7,
                 child: InputLabel(
-                    hintText: "Время подготовки, в минутах (необязательно)",
+                    labelText: "Время подготовки, в минутах (необязательно)",
                     controller: prepTimeController,
                     fontSize: CreateRecipeScreen.generalFontSize(context),
                     onSubmit: saveHeaders),
@@ -204,7 +216,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
     widget.headers[HeaderField.faceImageUrl] = currentImageFile!.url;
     widget.headers[HeaderField.cookTimeMins] = cookTimeMinsFinal;
     widget.headers[HeaderField.prepTimeMins] = prepTimeMinsFinal;
-    Config.showAlertDialog("Сохранено", context);
+    Config.showAlertDialog("Готово, не забудьте сохранить рецепт внизу", context);
   }
 
   Widget stepImagePreview() {

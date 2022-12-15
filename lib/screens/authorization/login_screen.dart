@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         LoginScreen.inputWrapper(InputLabel(
                           focusNode: _emailFocusNode,
-                          hintText: 'Email',
+                          labelText: 'Email',
                           controller: _emailController,
                         ), context),
                         LoginScreen.inputWrapper(PasswordLabel(

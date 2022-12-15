@@ -100,7 +100,7 @@ class IngredientsList extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      i.count,
+                      "${i.count} ${i.measureUnit}",
                       style: TextStyle(
                           fontFamily: Config.fontFamily,
                           fontSize: entityFontSize(context),

@@ -148,7 +148,7 @@ class _StepsLabelState extends State<StepsLabel> {
                 height: Config.padding,
               ),
               InputLabel(
-                  hintText: "Описание шага",
+                  labelText: "Описание шага",
                   controller: stepController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
                 onSubmit: addNewStep,),
@@ -156,7 +156,7 @@ class _StepsLabelState extends State<StepsLabel> {
                 height: Config.padding,
               ),
               InputLabel(
-                  hintText: "Время ожидания, в минутах (опционально)",
+                  labelText: "Время ожидания, в минутах (опционально)",
                   controller: waitTimeController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
                 onSubmit: addNewStep,),

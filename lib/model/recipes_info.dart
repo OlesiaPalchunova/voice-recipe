@@ -8,7 +8,7 @@ class Recipe {
   String faceImageUrl;
   int cookTimeMins;
   int prepTimeMins;
-  int kilocalories;
+  double kilocalories;
   int? proteins;
   int? fats;
   int? carbohydrates;
@@ -26,9 +26,10 @@ class Recipe {
 class Ingredient {
   int id;
   String name;
-  String count;
+  double count;
+  String measureUnit;
 
-  Ingredient({required this.id, required this.name, required this.count});
+  Ingredient({required this.id, required this.name, required this.count, required this.measureUnit});
 }
 
 String _imagePath(String name) {
@@ -63,69 +64,69 @@ final List<Recipe> recipes = [
 ];
 
 final List<Ingredient> borshIngredients = [
-  Ingredient(id: 1, name: "Свекла", count: "1 шт."),
-  Ingredient(id: 2, name: "Капуста белокочанная", count: "200 г"),
-  Ingredient(id: 3, name: "Морковь", count: "50 г"),
-  Ingredient(id: 4, name: "Помидоры", count: "1 шт."),
-  Ingredient(id: 5, name: "Лук", count: "1 шт.")
+  Ingredient(id: 1, name: "Свекла", measureUnit: "шт.", count: 1),
+  Ingredient(id: 2, name: "Капуста белокочанная", measureUnit: "г", count: 200),
+  Ingredient(id: 3, name: "Морковь", measureUnit: "г", count: 50),
+  Ingredient(id: 4, name: "Помидоры", measureUnit: "шт.", count: 1),
+  Ingredient(id: 5, name: "Лук", measureUnit: "шт.", count: 1)
 ];
 
 final List<Ingredient> cutletsIngredients = [
-  Ingredient(id: 1, name: "Фарш куриный", count: "450 г."),
-  Ingredient(id: 2, name: "Хлеб черный", count: "4 ломтика"),
-  Ingredient(id: 3, name: "Хмели-сунели", count: "2 ч.л."),
-  Ingredient(id: 4, name: "Яйцо", count: "1 шт."),
-  Ingredient(id: 5, name: "Лук", count: "1 шт."),
-  Ingredient(id: 5, name: "Молоко", count: "100 мл."),
-  Ingredient(id: 5, name: "Зелень", count: "50 г."),
+  Ingredient(id: 1, name: "Фарш куриный", measureUnit: "г.", count: 450),
+  Ingredient(id: 2, name: "Хлеб черный", measureUnit: "ломтика", count: 4),
+  Ingredient(id: 3, name: "Хмели-сунели", measureUnit: "ч.л.", count: 2),
+  Ingredient(id: 4, name: "Яйцо", measureUnit: "шт.", count: 1),
+  Ingredient(id: 5, name: "Лук", measureUnit: "шт.", count: 1),
+  Ingredient(id: 5, name: "Молоко", measureUnit: "мл.", count: 100),
+  Ingredient(id: 5, name: "Зелень", measureUnit: "г.", count: 50),
 ];
 
 final List<Ingredient> muffinsIngredients = [
-  Ingredient(id: 1, name: "Масло сливочное", count: "180 г"),
-  Ingredient(id: 2, name: "Шоколад", count: "100 г"),
-  Ingredient(id: 3, name: "Сахар", count: "200 г"),
-  Ingredient(id: 4, name: "Яйцо", count: "4 шт."),
-  Ingredient(id: 5, name: "Мука", count: "100 г"),
-  Ingredient(id: 5, name: "Какао", count: "40 г"),
-  Ingredient(id: 5, name: "Разрыхлитель", count: "1 ч.л.")
+  Ingredient(id: 1, name: "Масло сливочное", measureUnit: "г", count: 180),
+  Ingredient(id: 2, name: "Шоколад", measureUnit: "г", count: 100),
+  Ingredient(id: 3, name: "Сахар", measureUnit: "г", count: 200),
+  Ingredient(id: 4, name: "Яйцо", measureUnit: "шт.", count: 4),
+  Ingredient(id: 5, name: "Мука", measureUnit: "г", count: 100),
+  Ingredient(id: 5, name: "Какао", measureUnit: "г", count: 40),
+  Ingredient(id: 5, name: "Разрыхлитель", measureUnit: "ч.л.", count: 1)
 ];
 
 final List<Ingredient> tefIngredients = [
-  Ingredient(id: 1, name: "Фрикадельки", count: "300 г"),
-  Ingredient(id: 2, name: "Томатная паста", count: "100 мл"),
-  Ingredient(id: 3, name: "Зелень", count: "50 г"),
-  Ingredient(id: 3, name: "Растительное масло", count: "2 ст. л."),
+  Ingredient(id: 1, name: "Фрикадельки", measureUnit: "г", count: 300),
+  Ingredient(id: 2, name: "Томатная паста", measureUnit: "мл", count: 100),
+  Ingredient(id: 3, name: "Зелень", measureUnit: "г", count: 50),
+  Ingredient(id: 3, name: "Растительное масло", measureUnit: "ст. л.", count: 2),
 ];
 
 final List<Ingredient> sobaIngredients = [
-  Ingredient(id: 1, name: "Куриное филе", count: "450 г"),
-  Ingredient(id: 2, name: "Болгарский перец", count: "3 шт"),
-  Ingredient(id: 3, name: "Гречневая лапша", count: "270 г"),
-  Ingredient(id: 3, name: "Морковь", count: "1 шт"),
-  Ingredient(id: 3, name: "Помидор", count: "1 шт"),
-  Ingredient(id: 3, name: "Лук репчатый", count: "1 шт"),
-  Ingredient(id: 3, name: "Зеленый лук", count: "45 г"),
-  Ingredient(id: 3, name: "Соевый соус", count: "9 ст. л."),
-  Ingredient(id: 3, name: "Растительное масло", count: "4 ст. л."),
+  Ingredient(id: 1, name: "Куриное филе", measureUnit: "г", count: 450),
+  Ingredient(id: 2, name: "Болгарский перец", measureUnit: "шт", count: 3),
+  Ingredient(id: 3, name: "Гречневая лапша", measureUnit: "г", count: 270),
+  Ingredient(id: 3, name: "Морковь", measureUnit: "шт", count: 1),
+  Ingredient(id: 3, name: "Помидор", measureUnit: "шт", count: 1),
+  Ingredient(id: 3, name: "Лук репчатый", measureUnit: "шт", count: 1),
+  Ingredient(id: 3, name: "Зеленый лук", measureUnit: "г", count: 45),
+  Ingredient(id: 3, name: "Соевый соус", measureUnit: "ст. л.", count: 9),
+  Ingredient(id: 3, name: "Растительное масло", measureUnit: "ст. л.", count: 4),
 ];
 
 final List<Ingredient> syrnikiIngredients = [
-  Ingredient(id: 1, name: "Творог", count: "450 г"),
-  Ingredient(id: 2, name: "Ванилин", count: "2 г"),
-  Ingredient(id: 3, name: "Манная крупа", count: "1.5 ст. л."),
-  Ingredient(id: 4, name: "Яйцо", count: "1 шт."),
-  Ingredient(id: 5, name: "Соль", count: "щепотка"),
-  Ingredient(id: 5, name: "Сахар", count: "3 ст. л."),
+  Ingredient(id: 1, name: "Творог", measureUnit: "г", count: 450),
+  Ingredient(id: 2, name: "Ванилин", measureUnit: "г", count: 2),
+  Ingredient(id: 3, name: "Манная крупа", measureUnit: "ст. л.", count: 1.5),
+  Ingredient(id: 4, name: "Яйцо", measureUnit: "шт.", count: 1),
+  Ingredient(id: 5, name: "Соль", measureUnit: "щепотка", count: 1),
+  Ingredient(id: 5, name: "Сахар", measureUnit: "ст. л.", count: 3),
 ];
 
 final List<Ingredient> carbonaraIngredients = [
-  Ingredient(id: 1, name: "Бекон", count: "100 г"),
-  Ingredient(id: 2, name: "Спагетти", count: "90 г"),
-  Ingredient(id: 3, name: "Вода", count: "150 мл"),
-  Ingredient(id: 4, name: "Соль", count: "щепотка"),
-  Ingredient(id: 5, name: "Яйца куриные", count: "1 шт."),
-  Ingredient(id: 5, name: "Сыр", count: "100 г."),
-  Ingredient(id: 5, name: "Сливки", count: "50 мл."),
+  Ingredient(id: 1, name: "Бекон", measureUnit: "г", count: 100),
+  Ingredient(id: 2, name: "Спагетти", measureUnit: "г", count: 90),
+  Ingredient(id: 3, name: "Вода", measureUnit: "мл", count: 150),
+  Ingredient(id: 4, name: "Соль", measureUnit: "щепотка", count: 1),
+  Ingredient(id: 5, name: "Яйца куриные", measureUnit: "шт.", count: 1),
+  Ingredient(id: 5, name: "Сыр", measureUnit: "г.", count: 100),
+  Ingredient(id: 5, name: "Сливки", measureUnit: "мл.", count: 50),
 ];
 
 class RecipeStep {
@@ -212,5 +213,20 @@ class Rate {
 final ratesMap = HashMap<int, int>();
 
 final List<double> rates = [
-  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3, -4.3, -4.3
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
+  4.1, 4.7, 4.0, 4.2, 4.4, 4.9, 4.3,
 ];

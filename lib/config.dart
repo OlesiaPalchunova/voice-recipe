@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/recipes_getter.dart';
+import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/themes/dark_theme_preference.dart';
-import 'package:voice_recipe/translator.dart';
+import 'package:voice_recipe/services/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GradientColors {
@@ -36,7 +36,7 @@ class Config {
   static var darkModeOn = false;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
-  static const maxRecipeSlideWidth = 700.0;
+  static const maxRecipeSlideWidth = 600.0;
   static const maxPageWidth = 1200.0;
   static const maxLoginPageWidth = 500.0;
   static const maxLoginPageHeight = 800.0;
@@ -44,9 +44,12 @@ class Config {
   static const minLoginPageHeight = 500.0;
   static const borderRadius = BorderRadius.all(Radius.circular(radius));
   static const borderRadiusLarge = BorderRadius.all(Radius.circular(largeRadius));
+  static const backGroundDecorationImage = DecorationImage(
+      image: AssetImage("assets/images/decorations/create_back.jpg"),
+      fit: BoxFit.cover);
 
   static init() async {
-    await RecipesGetter().getRecipe(id: 1);
+    RecipesGetter().getRecipe(id: 30);
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,

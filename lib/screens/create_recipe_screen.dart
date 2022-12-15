@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/create_recipe/header_label.dart';
 import 'package:voice_recipe/components/create_recipe/ingredients_label.dart';
 import 'package:voice_recipe/components/create_recipe/steps_label.dart';
+import 'package:voice_recipe/model/db/user_db_manager.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
 
 import '../config.dart';
@@ -65,9 +67,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       backgroundColor: backgroundColor,
       body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/decorations/create_back.jpg"),
-                fit: BoxFit.cover)),
+            image: Config.backGroundDecorationImage),
         child: SingleChildScrollView(
           child: Center(
             child: Container(
@@ -86,7 +86,11 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
 
   Recipe? createdRecipe;
 
-  void submitRecipe() {
+  void submitRecipe() async {
+    if (!Config.loggedIn) {
+      Config.showLoginInviteDialog(context);
+      return;
+    }
     if (!headers.containsKey(HeaderField.name)) {
       Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
       return;
@@ -121,7 +125,19 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         kilocalories: 0,
         ingredients: ingredients,
         steps: steps,);
-    Config.showAlertDialog("Ваш рецепт был успешно сохранен!", context);
+    Config.showProgressCircle(context);
+    int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
+    await Future.microtask(() {
+      Navigator.of(context).pop();
+      if (recipeId == RecipesSender.fail) {
+        Config.showAlertDialog("Приносим свои извинения, сервер не отвечает", context);
+      } else {
+        UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+        Config.showAlertDialog("Ваш рецепт был успешно сохранен!\n"
+            "Вы всегда можете его просмотреть в разделе\n"
+            "Профиль > Мои рецепты", context);
+      }
+    });
     setState(() {
     });
   }
