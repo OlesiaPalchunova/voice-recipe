@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/sets/set_option_tile.dart';
+import 'package:voice_recipe/components/recipe_collection_views/set_option_tile.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';

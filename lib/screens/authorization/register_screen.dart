@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/model/auth/auth.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
-import '../../components/login/input_label.dart';
-import '../../components/login/password_label.dart';
+import '../../components/labels/input_label.dart';
+import '../../components/labels/password_label.dart';
 import '../../config.dart';
-import '../../model/users_info.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -30,40 +28,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordFocusNode = FocusNode();
 
   String get email => _emailController.text.trim();
-
   String get password => _passwordController.text.trim();
-
   String get confirmPassword => _confirmPasswordController.text.trim();
-
   String get firstName => _firstNameController.text.trim();
-
   String get secondName => _secondNameController.text.trim();
-
-  Future signUp() async {
-    Config.showProgressCircle(context);
-    if (!isPasswordConfirmed()) {
-      Config.showAlertDialog("Пароли не совпадают", context);
-      return;
-    }
-    try {
-      String emailCurrent = email;
-      String passCurrent = password;
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailCurrent, password: passCurrent);
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailCurrent, password: passCurrent);
-      var user = FirebaseAuth.instance.currentUser!;
-      user.updateDisplayName("$firstName $secondName");
-      await FirebaseAuth.instance.signOut();
-      await UserDbManager().addNewUserData(user.uid, "$firstName $secondName",
-          user.photoURL ?? defaultProfileUrl);
-      await Future.microtask(() => Navigator.of(context).pop());
-    } on FirebaseException catch (e) {
-      debugPrint(e.message);
-      Config.showAlertDialog(e.message!, context);
-    }
-    await Future.microtask(() => Navigator.of(context).pop());
-  }
 
   @override
   dispose() {
@@ -147,7 +115,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               focusNode: _confirmPasswordFocusNode,
                               hintText: "Подтвердите пароль",
                               controller: _confirmPasswordController,
-                              onSubmit: signUp,
+                              onSubmit: () => AuthenticationManager().signUp(
+                                  context, email, password, confirmPassword, firstName, secondName),
                             ),
                             context),
                         Container(
@@ -156,7 +125,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: Config.loginPageHeight(context) / 12,
                           width: LoginScreen.buttonWidth(context),
                           child: ClassicButton(
-                            onTap: signUp,
+                            onTap: () => AuthenticationManager().signUp(
+                                context, email, password, confirmPassword, firstName, secondName),
                             text: "Создать аккаунт",
                           ),
                         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/model/sets_info.dart';
-import 'package:voice_recipe/components/sets/set_header_card.dart';
+import 'package:voice_recipe/components/recipe_collection_views/set_header_card.dart';
 import 'package:voice_recipe/config.dart';
 
 class SetsListScreen extends StatefulWidget {
@@ -32,7 +32,7 @@ class _SetsListScreen extends State<SetsListScreen> {
                 itemBuilder: (_, index) => SetHeaderCard(
                     widthConstraint:
                         Config.pageWidth(context) > Config.pageHeight(context)
-                            ? 700
+                            ? Config.maxRecipeSlideWidth
                             : 0,
                     set: sets[index],
                     onTap: () {}),

@@ -34,70 +34,6 @@ class SideBarMenu extends StatefulWidget {
 }
 
 class _SideBarMenuState extends State<SideBarMenu> {
-  Widget buildProfile(User user) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AccountScreen()));
-          },
-          child: Row(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: SideBarMenu.radius(context),
-                  backgroundColor: Config.backgroundColor,
-                  child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(SideBarMenu.radius(context)),
-                    child: Image.network(user.photoURL ?? defaultProfileUrl),
-                  ),
-                ),
-              ),
-              const SizedBox(width: Config.margin),
-              Text(
-                "${user.displayName}",
-                style: TextStyle(
-                  fontSize: SideBarMenu.nameFontSize(context),
-                  color: Config.iconColor,
-                  fontFamily: Config.fontFamily,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          thickness: 0.2,
-          color: Config.iconColor.withOpacity(0.5),
-        ),
-        const SizedBox(
-          height: Config.padding * 2,
-        ),
-      ],
-    );
-  }
-
-  Widget buildProfileLabel() {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildProfile(snapshot.data!);
-          } else {
-            return SideBarTile(
-                name: "Войти",
-                onClicked: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginScreen()));
-                },
-                iconData: Icons.login);
-          }
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,5 +133,70 @@ class _SideBarMenuState extends State<SideBarMenu> {
             ],
           )),
     );
+  }
+
+  Widget buildProfile(User user) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AccountScreen()));
+          },
+          child: Row(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: SideBarMenu.radius(context),
+                  backgroundColor: Config.backgroundColor,
+                  child: ClipRRect(
+                    borderRadius:
+                    BorderRadius.circular(SideBarMenu.radius(context)),
+                    child: Image.network(user.photoURL ?? defaultProfileUrl),
+                  ),
+                ),
+              ),
+              const SizedBox(width: Config.margin),
+              Text(
+                "${user.displayName}",
+                style: TextStyle(
+                  fontSize: SideBarMenu.nameFontSize(context),
+                  color: Config.iconColor,
+                  fontFamily: Config.fontFamily,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          thickness: 0.2,
+          color: Config.iconColor.withOpacity(0.5),
+        ),
+        const SizedBox(
+          height: Config.padding * 2,
+        ),
+      ],
+    );
+  }
+
+  Widget buildProfileLabel() {
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildProfile(snapshot.data!);
+          } else {
+            return SideBarTile(
+                name: "Войти",
+                onClicked: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginScreen()));
+                },
+                iconData: Icons.login);
+          }
+        });
   }
 }

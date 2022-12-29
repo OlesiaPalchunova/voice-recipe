@@ -8,7 +8,7 @@ import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../screens/create_recipe_screen.dart';
 import '../buttons/classic_button.dart';
-import '../login/input_label.dart';
+import '../labels/input_label.dart';
 
 class IngredientsLabel extends StatefulWidget {
   const IngredientsLabel({super.key, required this.insertList});

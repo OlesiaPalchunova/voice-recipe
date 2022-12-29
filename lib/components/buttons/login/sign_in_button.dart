@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
-import '../buttons/classic_button.dart';
+import '../../../config.dart';
+import '../classic_button.dart';
+
 
 class SignInButton extends StatefulWidget {
   const SignInButton(

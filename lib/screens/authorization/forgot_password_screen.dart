@@ -1,12 +1,10 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
-import 'package:voice_recipe/components/login/input_label.dart';
+import 'package:voice_recipe/components/labels/input_label.dart';
+import 'package:voice_recipe/model/auth/auth.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 import '../../config.dart';
@@ -30,20 +28,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String get email => _emailController.text.trim();
 
-  Future passwordReset() async {
-    Config.showProgressCircle(context);
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Config.showAlertDialog("Подтверждение отправлено вам на почту.", context);
-    } on FirebaseException catch (e) {
-      Config.showAlertDialog(e.message ?? "Возникла ошибка", context);
-    }
-    await Future.microtask(() => Navigator.of(context).pop());
-  }
-
   @override
   Widget build(BuildContext context) {
-    var width = min(Config.recipeSlideWidth(context), 500.0);
+    var width = min(Config.recipeSlideWidth(context), Config.maxLoginPageWidth);
     return Scaffold(
       appBar: const TitleLogoPanel(
         title: Config.appName,
@@ -86,11 +73,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(
                     height: Config.margin,
                   ),
-                  LoginScreen.inputWrapper(InputLabel(
-                    onSubmit: passwordReset,
-                      focusNode: _emailFocusNode,
-                      labelText: "Email",
-                      controller: _emailController), context),
+                  LoginScreen.inputWrapper(
+                      InputLabel(
+                          onSubmit: () => AuthenticationManager()
+                              .passwordReset(context, email),
+                          focusNode: _emailFocusNode,
+                          labelText: "Email",
+                          controller: _emailController),
+                      context),
                   const SizedBox(
                     height: Config.margin,
                   ),
@@ -98,7 +88,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: 60,
                       width: width * 0.8,
                       child: ClassicButton(
-                        onTap: passwordReset,
+                        onTap: () => AuthenticationManager()
+                            .passwordReset(context, email),
                         text: "Сменить пароль",
                       ))
                 ],

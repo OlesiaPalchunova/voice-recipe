@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
-import 'package:voice_recipe/components/create_recipe/header_label.dart';
-import 'package:voice_recipe/components/create_recipe/ingredients_label.dart';
-import 'package:voice_recipe/components/create_recipe/steps_label.dart';
+import 'package:voice_recipe/components/constructor_views/header_label.dart';
+import 'package:voice_recipe/components/constructor_views/ingredients_label.dart';
+import 'package:voice_recipe/components/constructor_views/steps_label.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
 

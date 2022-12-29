@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../../config.dart';
 
 class RefButton extends StatefulWidget {
   const RefButton({super.key, required this.text, required this.onTap});

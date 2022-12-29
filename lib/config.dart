@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
-import 'package:voice_recipe/themes/dark_theme_preference.dart';
+import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
 import 'package:voice_recipe/services/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -49,7 +48,6 @@ class Config {
       fit: BoxFit.cover);
 
   static init() async {
-    RecipesGetter().getRecipe(id: 30);
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,
@@ -100,6 +98,28 @@ class Config {
     800: Color.fromRGBO(237, 120, 47, .9),
     900: Color.fromRGBO(237, 120, 47, 1),
   };
+
+  static final lightTheme = ThemeData(
+      primarySwatch: const MaterialColor(
+          0xFFf07800,
+          Config.colorScheme
+      ),
+      bottomAppBarTheme: const BottomAppBarTheme(
+          color: MaterialColor(
+              0xFFf07800,
+              Config.colorScheme
+          )
+      )
+  );
+
+  static final darkTheme = ThemeData(
+      bottomAppBarTheme: const BottomAppBarTheme(
+          color: MaterialColor(0xFFf07800, Config.colorScheme)),
+      colorScheme: ColorScheme.fromSwatch(
+          primarySwatch:
+          const MaterialColor(0xFFf07800, Config.colorScheme))
+          .copyWith(
+          background: const MaterialColor(0xff000000, Config.colorScheme)));
 
   static String get profileImageUrl => loggedIn ?
       user!.photoURL?? defaultProfileUrl : defaultProfileUrl;

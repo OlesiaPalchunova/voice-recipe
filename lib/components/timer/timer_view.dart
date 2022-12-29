@@ -167,8 +167,7 @@ class TimerViewState extends State<TimerView> {
           alarmTime: DateTime.now().add(_leftDuration));
       _noticed = true;
     }
-    _timer = Timer.periodic(
-        const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
+    _timer = Timer.periodic(const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
     _isRunning = true;
   }
 

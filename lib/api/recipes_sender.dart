@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:voice_recipe/model/recipes_info.dart';
+import 'package:voice_recipe/api/recipe_fields.dart';
 
 class RecipesSender {
   static const String mediaPostUrl =
@@ -14,29 +15,6 @@ class RecipesSender {
       "https://server.voicerecipe.ru/api/v1/ingredient";
   static const int fail = -1;
   static RecipesSender singleton = RecipesSender._internal();
-
-  static const name = "name";
-  static const faceMedia = "media";
-  static const id = "id";
-  static const cookTimeMins = "cook_time_mins";
-  static const authorId = "author_id";
-  static const prepTimeMins = "prep_time_mins";
-  static const kilocalories = "kilocalories";
-  static const proteins = "proteins";
-  static const fats = "fats";
-  static const carbohydrates = "carbohydrates";
-  static const ingredientsDistributions = "ingredients_distributions";
-
-  static const ingName = "name";
-  static const ingUnitName = "measure_unit_name";
-  static const ingCount = "count";
-  static const ingredientId = "ingredient_id";
-
-  static const steps = "steps";
-  static const stepMedia = "media";
-  static const stepDescription = "description";
-  static const stepNum = "step_num";
-  static const stepWaitTime = "wait_time_mins";
 
   RecipesSender._internal();
 
@@ -78,7 +56,6 @@ class RecipesSender {
     if (mediaIds == null) {
       return null;
     }
-    var rand = Random();
     List<Map<String, dynamic>> ingsDto = [];
     int count = 0;
     for (Ingredient ing in recipe.ingredients) {
@@ -185,13 +162,6 @@ class RecipesSender {
       debugPrint(imageResponse.body);
       return fail;
     }
-    /*
-    for (String header in imageResponse.headers.keys) {
-      debugPrint("$header : ${imageResponse.headers[header]}");
-    }
-    debugPrint(imageResponse.bodyBytes.length.toString());
-    debugPrint(imageResponse.body.length.toString());
-     */
     var response = await http.post(
       Uri.parse(mediaPostUrl),
       headers: imageResponse.headers,

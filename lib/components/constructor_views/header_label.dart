@@ -7,7 +7,7 @@ import '../../config.dart';
 import '../../model/dropped_file.dart';
 import '../../screens/create_recipe_screen.dart';
 import '../buttons/delete_button.dart';
-import '../login/input_label.dart';
+import '../labels/input_label.dart';
 
 class HeaderLabel extends StatefulWidget {
   const HeaderLabel({super.key, required this.headers});

@@ -1,7 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
-import 'package:voice_recipe/components/review/rate_label.dart';
+import 'package:voice_recipe/components/review_views/rate_label.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';

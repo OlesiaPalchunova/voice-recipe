@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/sets/set_header_card.dart';
+import 'package:voice_recipe/components/recipe_collection_views/set_header_card.dart';
 import 'package:voice_recipe/screens/set_screen.dart';
 
 import '../api/recipes_getter.dart';
@@ -66,36 +66,6 @@ class AccountScreen extends StatelessWidget {
                     color: Config.iconColor,
                     thickness: 0.2,
                   ),
-                  // Container(
-                  //     padding: const EdgeInsets.all(Config.padding),
-                  //     alignment: Alignment.center,
-                  //     child: SetHeaderCard(
-                  //       onTap: () async {
-                  //         if (!Config.loggedIn) {
-                  //           Config.showLoginInviteDialog(context);
-                  //           return;
-                  //         }
-                  //         Config.showProgressCircle(context);
-                  //         var recipes = await RecipesGetter().createdRecipes;
-                  //         await Future.microtask(() => Navigator.of(context).pop());
-                  //         await Future.microtask(() => Navigator.of(context).push(
-                  //             MaterialPageRoute(
-                  //                 builder: (context) => SetScreen(
-                  //                   recipes: recipes,
-                  //                   setName: "Гачи рецепты",
-                  //                   showLikes: false,)
-                  //             )
-                  //         ));
-                  //       },
-                  //       showTiles: false,
-                  //       set: gachiSet,
-                  //       widthConstraint: Config.loginPageWidth(context),
-                  //     )
-                  // ),
-                  // Divider(
-                  //   color: Config.iconColor,
-                  //   thickness: 0.2,
-                  // ),
                 ],
               ),
               Container()
@@ -146,30 +116,3 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
-
-/*
-Container(
-                  padding: const EdgeInsets.all(Config.padding)
-                      .add(const EdgeInsets.only(top: Config.margin * 3)),
-                  alignment: Alignment.center,
-                  child: SetHeaderCard(
-                    onTap: () async {
-                      Config.showProgressCircle(context);
-                      var recipes = await RecipesGetter().favoriteRecipes;
-                      await Future.microtask(() => Navigator.of(context).pop());
-                      await Future.microtask(() => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => SetScreen(
-                                  recipes: recipes,
-                                  setName: "Избранное",
-                                  showLikes: false,))));
-                    },
-                    showTiles: false,
-                    set: fav,
-                    widthConstraint: Config.loginPageWidth(context),
-                  )),
-              Divider(
-                color: Config.iconColor,
-                thickness: 0.2,
-              ),
- */

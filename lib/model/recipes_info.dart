@@ -1,7 +1,5 @@
 import 'dart:collection';
 
-import 'package:flutter/cupertino.dart';
-
 class Recipe {
   int id;
   String name;

@@ -14,7 +14,6 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  static var count = 0;
   var _recipes = recipes;
   late List<RecipeHeaderCard> recipeViews;
   static const title = TitleLogoPanel(title: Config.appName);
@@ -74,7 +73,8 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-        ));
+        )
+    );
   }
 
   Widget buildSearchField() {
@@ -92,8 +92,7 @@ class HomeState extends State<Home> {
         });
       },
       decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        contentPadding: Config.paddingAll,
         hintText: 'Поиск',
         hintStyle: TextStyle(color: color, fontFamily: Config.fontFamily),
         prefixIcon: Icon(Icons.search, color: color),

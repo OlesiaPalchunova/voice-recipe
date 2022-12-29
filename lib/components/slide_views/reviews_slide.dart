@@ -3,10 +3,10 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/review/new_comment_card.dart';
-import 'package:voice_recipe/components/review/rate_label.dart';
-import 'package:voice_recipe/components/review/comment_card.dart';
-import 'package:voice_recipe/components/review/star_panel.dart';
+import 'package:voice_recipe/components/review_views/new_comment_card.dart';
+import 'package:voice_recipe/components/review_views/rate_label.dart';
+import 'package:voice_recipe/components/review_views/comment_card.dart';
+import 'package:voice_recipe/components/review_views/star_panel.dart';
 import 'package:voice_recipe/model/comments_model.dart';
 import 'package:voice_recipe/model/db/comment_db_manager.dart';
 
@@ -125,7 +125,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                             setState(() {
                               _isEvaluated = true;
                             });
-                            ratesMap[widget.recipe.id] = star;
+                            ratesMap[widget.recipe.id % ratesMap.keys.length] = star;
                           },
                         ),
                       )
@@ -166,7 +166,8 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                                     ? FirebaseAuth
                                             .instance.currentUser!.photoURL ??
                                         defaultProfileUrl
-                                    : defaultProfileUrl),
+                                    : defaultProfileUrl
+                            ),
                             Column(
                               children: comments.keys
                                   .map((id) => CommentCard(

@@ -8,7 +8,7 @@ import '../../screens/create_recipe_screen.dart';
 import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
 import '../drop_zone.dart';
-import '../login/input_label.dart';
+import '../labels/input_label.dart';
 
 class StepsLabel extends StatefulWidget {
   const StepsLabel({super.key, required this.insertList});

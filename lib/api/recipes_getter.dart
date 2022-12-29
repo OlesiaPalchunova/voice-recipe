@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:voice_recipe/model/recipes_info.dart';
 
 import '../config.dart';
 import '../model/db/user_db_manager.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
+import 'package:voice_recipe/api/recipe_fields.dart';
 
 class RecipesGetter {
   static RecipesGetter singleton = RecipesGetter._internal();
@@ -33,7 +34,7 @@ class RecipesGetter {
     var favIds = userData[UserDbManager.created];
     List<Recipe> result = [];
     for (int id in favIds) {
-      Recipe? recipe = await RecipesGetter().getRecipe(id: id);
+      Recipe? recipe = await RecipesGetter().getRecipe(recipeId: id);
       if (recipe == null) {
         continue;
       }
@@ -42,8 +43,8 @@ class RecipesGetter {
     return result;
   }
 
-  Future<Recipe?> getRecipe({required int id}) async {
-    var response = await fetchRecipe(id);
+  Future<Recipe?> getRecipe({required int recipeId}) async {
+    var response = await fetchRecipe(recipeId);
     if (response.statusCode != 200) {
       return null;
     }
@@ -52,44 +53,44 @@ class RecipesGetter {
     List<dynamic> ingredientsJson = recipeJson["ingredients_distributions"];
     List<Ingredient> ingredients = [];
     for (dynamic i in ingredientsJson) {
-      double count = i["count"];
+      double count = i[ingCount];
       if (count.floor() == count) {
 
       }
       ingredients.add(Ingredient(
-          id: i["ingredient_id"],
-          name: i["name"],
-          measureUnit: i["measure_unit_name"],
-          count: i["count"]
+          id: i[ingredientId],
+          name: i[ingName],
+          measureUnit: i[ingUnitName],
+          count: i[ingCount]
       ));
     }
-    List<dynamic> stepsJson = recipeJson["steps"];
-    List<RecipeStep> steps = [];
+    List<dynamic> stepsJson = recipeJson[steps];
+    List<RecipeStep> recipeSteps = [];
     for (dynamic s in stepsJson) {
-      var waitTimeMinsRef = s["wait_time_mins"];
+      var waitTimeMinsRef = s[stepWaitTime];
       int waitTimeMins = 0;
       if (waitTimeMinsRef != null) {
         waitTimeMins = waitTimeMinsRef;
       }
-      steps.add(RecipeStep(
-          id: s["step_num"],
-          imgUrl: getImageUrl(s["media"]["id"]),
-          description: s["description"],
+      recipeSteps.add(RecipeStep(
+          id: s[stepNum],
+          imgUrl: getImageUrl(s[stepMedia][id]),
+          description: s[stepDescription],
           waitTime: waitTimeMins
       ));
     }
-    double cookTimeMins = recipeJson["cook_time_mins"];
-    double? prepTimeMins = recipeJson["prep_time_mins"];
-    double? kilocalories = recipeJson["kilocalories"];
+    double cookTime = recipeJson[cookTimeMins];
+    double? prepTime = recipeJson[prepTimeMins];
+    double? kilocaloriesCount = recipeJson[kilocalories];
     var recipe = Recipe(
-        name: recipeJson["name"],
-        faceImageUrl: getImageUrl(recipeJson["media"]["id"]),
-        id: id + recipes.length - 1,
-        cookTimeMins: cookTimeMins.floor(),
-        prepTimeMins: prepTimeMins == null ? 0 : prepTimeMins.floor(),
-        kilocalories: kilocalories?? 0,
+        name: recipeJson[name],
+        faceImageUrl: getImageUrl(recipeJson[faceMedia][id]),
+        id: recipeId + recipes.length - 1,
+        cookTimeMins: cookTime.floor(),
+        prepTimeMins: prepTime == null ? 0 : prepTime.floor(),
+        kilocalories: kilocaloriesCount?? 0,
         ingredients: ingredients,
-        steps: steps,
+        steps: recipeSteps,
         isNetwork: true
     );
     return recipe;

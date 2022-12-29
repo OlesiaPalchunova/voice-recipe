@@ -1,35 +1,32 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/auth/vk.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/model/auth/auth.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
-import '../../components/login/input_label.dart';
-import '../../components/login/password_label.dart';
-import '../../components/login/ref_button.dart';
-import '../../components/login/sign_in_button.dart';
+import '../../components/labels/input_label.dart';
+import '../../components/labels/password_label.dart';
+import '../../components/buttons/login/ref_button.dart';
+import '../../components/buttons/login/sign_in_button.dart';
 import '../../config.dart';
-import '../../model/db/user_db_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   static const fontSize = 18.0;
-  static double buttonWidth(BuildContext context)
-  => Config.loginPageWidth(context) * 0.8;
-  static double labelHeight(BuildContext context)
-  => Config.loginPageHeight(context) / 13;
+
+  static double buttonWidth(BuildContext context) =>
+      Config.loginPageWidth(context) * 0.8;
+
+  static double labelHeight(BuildContext context) =>
+      Config.loginPageHeight(context) / 13;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 
-  static Widget voiceRecipeIcon(BuildContext context, double height,
-      double iconSize) {
+  static Widget voiceRecipeIcon(
+      BuildContext context, double height, double iconSize) {
     return SizedBox(
       height: height,
       child: SizedBox(
@@ -44,22 +41,13 @@ class LoginScreen extends StatefulWidget {
     var res = [
       SignInButton(
           width: buttonWidth(context),
-          backgroundColor: Config.darkModeOn ? const Color(0xff202020) : Colors.white,
+          backgroundColor:
+              Config.darkModeOn ? const Color(0xff202020) : Colors.white,
           textColor: Config.darkModeOn ? Colors.white : Colors.black,
           text: "Войти через Google",
           imageURL: "assets/images/icons/google.png",
-          onPressed: () => signInWithGoogle(context)
-      )
+          onPressed: () => AuthenticationManager().signInWithGoogle(context))
     ];
-    // if (!Config.isWeb) {
-    //   res.add(SignInButton(
-    //       width: buttonWidth(context),
-    //       textColor: Colors.white,
-    //       backgroundColor: const Color(0xff4680C2),
-    //       text: "Войти через VK",
-    //       imageURL: "assets/images/icons/vk.png",
-    //       onPressed: () => Vk().signIn()));
-    // }
     return res;
   }
 
@@ -70,58 +58,6 @@ class LoginScreen extends StatefulWidget {
       child: child,
     );
   }
-
-  static Future storeUserInDB(UserInfo user) async {
-    var db = FirebaseFirestore.instance;
-    db.collection("users").add({
-      "dfs" : "sd"
-    });
-    // await FirebaseFirestore;
-  }
-
-  static Future signInWithGoogle(BuildContext context) async {
-    Config.showProgressCircle(context);
-    try {
-      if (Config.isWeb) {
-        await _signInWithGoogleWeb();
-      } else {
-        await _signInWithGoogleMobile();
-      }
-      var user = FirebaseAuth.instance.currentUser!;
-      bool exists = await UserDbManager().containsUserData(user.uid);
-      if (!exists) {
-        UserDbManager().addNewUserData(user.uid,
-            user.displayName?? "Пользователь",
-            user.photoURL?? defaultProfileUrl
-        );
-      }
-      await Future.microtask(() => Navigator.of(context).pop());
-    } on FirebaseException catch(e) {
-      Config.showAlertDialog(e.message!, context);
-    }
-    await Future.microtask(() => Navigator.of(context).pop());
-  }
-
-  static Future<UserCredential> _signInWithGoogleWeb() async {
-    GoogleAuthProvider googleProvider = GoogleAuthProvider();
-    googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    googleProvider.setCustomParameters({'login_hint': 'user@example.com'});
-    return FirebaseAuth.instance.signInWithPopup(googleProvider);
-  }
-
-  static Future<UserCredential> _signInWithGoogleMobile() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -130,18 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
 
-  Future signIn() async {
-    Config.showProgressCircle(context);
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-      await Future.microtask(() => Navigator.of(context).pop());
-    } on FirebaseException catch (e) {
-      Config.showAlertDialog(e.message!, context);
-    }
-    await Future.microtask(() => Navigator.of(context).pop());
-  }
+  String get email => _emailController.text.trim();
+
+  String get password => _passwordController.text.trim();
 
   @override
   dispose() {
@@ -176,8 +103,10 @@ class _LoginScreenState extends State<LoginScreen> {
               width: Config.maxLoginPageWidth,
               child: Column(
                 children: [
-                  LoginScreen.voiceRecipeIcon(context, Config.loginPageHeight(context) / 3,
-                  Config.loginPageHeight(context) / 6),
+                  LoginScreen.voiceRecipeIcon(
+                      context,
+                      Config.loginPageHeight(context) / 3,
+                      Config.loginPageHeight(context) / 6),
                   Container(
                     alignment: Alignment.center,
                     child: Column(
@@ -212,17 +141,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             )
                           ],
                         ),
-                        LoginScreen.inputWrapper(InputLabel(
-                          focusNode: _emailFocusNode,
-                          labelText: 'Email',
-                          controller: _emailController,
-                        ), context),
-                        LoginScreen.inputWrapper(PasswordLabel(
-                          focusNode: _passwordFocusNode,
-                          hintText: "Пароль",
-                          controller: _passwordController,
-                          onSubmit: signIn,
-                        ), context),
+                        LoginScreen.inputWrapper(
+                            InputLabel(
+                              focusNode: _emailFocusNode,
+                              labelText: 'Email',
+                              controller: _emailController,
+                            ),
+                            context),
+                        LoginScreen.inputWrapper(
+                            PasswordLabel(
+                              focusNode: _passwordFocusNode,
+                              hintText: "Пароль",
+                              controller: _passwordController,
+                              onSubmit: () => AuthenticationManager()
+                                  .signIn(context, email, password),
+                            ),
+                            context),
                         RefButton(
                           text: "Забыли пароль?",
                           onTap: () => _onForgotPassword(context),
@@ -231,7 +165,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: Config.loginPageHeight(context) / 12,
                             width: LoginScreen.buttonWidth(context),
                             child: ClassicButton(
-                              onTap: signIn,
+                              onTap: () => AuthenticationManager()
+                                  .signIn(context, email, password),
                               text: "Войти",
                             )),
                         Container(
@@ -251,10 +186,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  void signInVK() {
-    Vk().signIn();
   }
 
   void _onForgotPassword(BuildContext context) {
