@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:http/http.dart';
+import 'package:voice_recipe/components/buttons/arrow.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
@@ -72,64 +74,75 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _listener.shutdown();
   }
 
+  List<Widget> getBodyWidgets() {
+    List<Widget> list = [];
+    if (Config.isWeb && _slideId != 0) {
+      list.add(ArrowButton(direction: Direction.left, onTap: _onPrev,),);
+    }
+    list.addAll([
+      Center(
+        child: Container(
+          color: Config.getBackColor(widget.recipe.id),
+          alignment: Alignment.center,
+          width: Config.maxRecipeSlideWidth,
+          child: _buildCurrentSlide(context, _slideId),
+        ),
+      ),
+      Center(
+        child: Container(
+            alignment: Alignment.bottomCenter,
+            width: Config.maxRecipeSlideWidth,
+            child: _buildSliderBottom()),
+      )
+    ]);
+    if (Config.isWeb && _slideId != widget.recipe.steps.length + 1 + 1) {
+      list.add(ArrowButton(direction: Direction.right, onTap: _onNext,));
+    }
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: _onWillPop,
-        child: SliderGestureHandler(
-          onLeft: _onPrev,
-          onRight: _onNext,
-          child: Scaffold(
-            appBar: AppBar(
-              shadowColor: Config.darkModeOn
-                  ? Colors.black87
-                  : Colors.white.withOpacity(0),
-              automaticallyImplyLeading: false,
-              toolbarHeight: 60,
-              foregroundColor: Config.iconColor,
-              backgroundColor: Config.getBackColor(widget.recipe.id),
-              centerTitle: true,
-              title: Container(
-                alignment: Alignment.center,
-                width: Config.maxRecipeSlideWidth,
-                child: HeaderButtonsPanel(
-                  id: widget.recipe.id,
-                  onClose: _onClose,
-                  onList: () => setState(() {
-                    _slideId = ingredientsSlideId;
-                  }),
-                  onMute: () => _listener.shutdown(),
-                  onListen: () => _listener.start(),
-                  onSay: _onSay,
-                  onStopSaying: _onStopSaying,
-                ),
+      onWillPop: _onWillPop,
+      child: SliderGestureHandler(
+        onLeft: _onPrev,
+        onRight: _onNext,
+        child: Scaffold(
+          appBar: AppBar(
+            shadowColor: Config.darkModeOn
+                ? Colors.black87
+                : Colors.white.withOpacity(0),
+            automaticallyImplyLeading: false,
+            toolbarHeight: 60,
+            foregroundColor: Config.iconColor,
+            backgroundColor: Config.getBackColor(widget.recipe.id),
+            centerTitle: true,
+            title: Container(
+              alignment: Alignment.center,
+              width: Config.maxRecipeSlideWidth,
+              child: HeaderButtonsPanel(
+                id: widget.recipe.id,
+                onClose: _onClose,
+                onList: () => setState(() {
+                  _slideId = ingredientsSlideId;
+                }),
+                onMute: () => _listener.shutdown(),
+                onListen: () => _listener.start(),
+                onSay: _onSay,
+                onStopSaying: _onStopSaying,
               ),
             ),
-            body: Container(
+          ),
+          body: Container(
               alignment: Alignment.center,
               color: Config.darkModeOn
                   ? Config.backgroundColor
                   : Config.getBackColor(widget.recipe.id),
               child: Stack(
-                children: [
-                  Center(
-                    child: Container(
-                      color: Config.getBackColor(widget.recipe.id),
-                      alignment: Alignment.center,
-                      width: Config.maxRecipeSlideWidth,
-                      child: _buildCurrentSlide(context, _slideId),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                        alignment: Alignment.bottomCenter,
-                        width: Config.maxRecipeSlideWidth,
-                        child: _buildSliderBottom()),
-                  )
-                ],
-              ),
-            ),
-          ),
+                children: getBodyWidgets(),
+              )),
+        ),
       ),
     );
   }
@@ -218,18 +231,17 @@ class _RecipeScreenState extends State<RecipeScreen> {
       alignment: Alignment.center,
       height: 10,
       decoration: BoxDecoration(
-        color: Config.darkModeOn ? Config.backgroundColor : Colors.grey.shade800,
-        borderRadius: Config.borderRadius
-      ),
+          color:
+              Config.darkModeOn ? Config.backgroundColor : Colors.grey.shade800,
+          borderRadius: Config.borderRadius),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         // padding: const EdgeInsets.symmetric(horizontal: 10),
         itemCount: slidesCount,
         itemBuilder: (_, index) => Container(
           decoration: BoxDecoration(
-              color: index == _slideId
-                  ? Config.getColor(widget.recipe.id)
-                  : null,
+              color:
+                  index == _slideId ? Config.getColor(widget.recipe.id) : null,
               borderRadius: Config.borderRadius),
           width: sectionWidth,
         ),

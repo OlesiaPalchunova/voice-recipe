@@ -82,6 +82,7 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
             widget.onStopSaying();
           }
         },
+        tooltip: "Произнести",
         icon: AnimatedIcon(
           icon: AnimatedIcons.play_pause,
           progress: _controller,

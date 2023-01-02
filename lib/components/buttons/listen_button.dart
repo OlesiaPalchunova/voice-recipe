@@ -79,6 +79,7 @@ class ListenButtonState extends State<ListenButton> {
                 widget.onMute();
               }
             },
+            tooltip: "Голосовое управление",
             icon: _isListening
                 ? Icon(
               Icons.mic,

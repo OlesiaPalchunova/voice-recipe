@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
@@ -53,10 +54,6 @@ class RecipesGetter {
     List<dynamic> ingredientsJson = recipeJson["ingredients_distributions"];
     List<Ingredient> ingredients = [];
     for (dynamic i in ingredientsJson) {
-      double count = i[ingCount];
-      if (count.floor() == count) {
-
-      }
       ingredients.add(Ingredient(
           id: i[ingredientId],
           name: i[ingName],

@@ -83,6 +83,7 @@ class HeaderButtonsPanel extends StatelessWidget {
   Widget _buildListButton() {
     return HeaderButtonsPanel.buildButton(
         IconButton(
+          tooltip: "Список ингредиентов",
           onPressed: () => onList(),
           icon: Icon(
             Icons.list,
@@ -96,6 +97,7 @@ class HeaderButtonsPanel extends StatelessWidget {
   Widget _buildCloseButton(BuildContext context) {
     return HeaderButtonsPanel.buildButton(
         IconButton(
+          tooltip: "Закрыть рецепт",
           onPressed: () => onClose(context),
           icon: Icon(
             Icons.close_outlined,
