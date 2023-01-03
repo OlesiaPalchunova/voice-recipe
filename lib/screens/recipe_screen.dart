@@ -253,8 +253,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
       alignment: Alignment.center,
       height: 10,
       decoration: BoxDecoration(
-          color:
-              Config.darkModeOn ? Config.backgroundColor : Colors.grey.shade800,
           borderRadius: Config.borderRadius),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,

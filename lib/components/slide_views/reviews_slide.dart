@@ -50,7 +50,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   initState() {
     super.initState();
     _disposed = false;
-    int? rate = ratesMap[widget.recipe.id % ratesMap.length];
+    int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
       _isEvaluated = true;
     }
@@ -125,7 +125,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                             setState(() {
                               _isEvaluated = true;
                             });
-                            ratesMap[widget.recipe.id % ratesMap.keys.length] = star;
+                            ratesMap[widget.recipe.id] = star;
                           },
                         ),
                       )

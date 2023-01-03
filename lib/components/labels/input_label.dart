@@ -39,8 +39,7 @@ class InputLabel extends StatelessWidget {
           focusedBorder: OutlineInputBorder(
               borderRadius: Config.borderRadiusLarge,
               borderSide: BorderSide(
-                  color:
-                      Config.darkModeOn ? Colors.orangeAccent : Colors.black)),
+                  color: Config.darkModeOn ? Colors.orangeAccent : Colors.black)),
           fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
           filled: true,
           suffixIcon: suffixIcon);

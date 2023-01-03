@@ -75,7 +75,7 @@ class StarPanelState extends State<StarPanel> {
               },
               onTap: () {
                 setState(() {
-                  widget.onTap(index);
+                  widget.onTap(index as int);
                   _minIdx = index;
                   _currentStarIdx = index;
                 });

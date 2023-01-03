@@ -60,6 +60,7 @@ class Config {
   }
 
   static EdgeInsetsGeometry get paddingAll => const EdgeInsets.all(padding);
+  static EdgeInsetsGeometry get paddingVert => const EdgeInsets.symmetric(vertical: padding);
 
   static const _darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const _darkIconBackColor = Color(0xFF202124);
@@ -171,6 +172,8 @@ class Config {
     }
     return _iconColor;
   }
+
+  static Color get edgeColor => darkModeOn ? darkBlue : Colors.white;
 
   static List<Color> getGradientColor(int id) {
     return GradientColors.sets[id % GradientColors.sets.length];

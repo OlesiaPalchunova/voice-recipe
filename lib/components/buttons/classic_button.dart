@@ -22,7 +22,7 @@ class ClassicButton extends StatefulWidget {
       : Colors.grey.shade200;
 
   static Color get hoverColor => Config.darkModeOn ? const Color(0xffc77202)
-      : Colors.blueGrey.shade100;
+      : Colors.white;    
 }
 
 class _ClassicButtonState extends State<ClassicButton> {

@@ -109,86 +109,92 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
             elevation: 0,
             margin:
             EdgeInsets.all(smallCards ? Config.margin / 2 : Config.margin),
-            child: Stack(children: [
-              AnimatedContainer(
-                onEnd: () {
+            child: AnimatedContainer(
+              onEnd: () {
                   setState(() {
                     _isPressed = false;
                   });
                 },
-                duration: Config.shortAnimationTime,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade900,
-                    borderRadius: Config.borderRadiusLarge,
-                    boxShadow: active
-                        ? [
-                      BoxShadow(
-                        color: Config.getGradientColor(widget.recipe.id).first.darken(12),
-                        spreadRadius: spreadRadius,
-                        blurRadius: blurRadius,
-                        offset: const Offset(2, 2)
-                      ),
-                      BoxShadow(
-                        color: Config.getGradientColor(widget.recipe.id).last.darken(12),
-                        spreadRadius: spreadRadius,
-                        blurRadius: blurRadius,
-                        offset: const Offset(-2, -2)
-                      )
-                    ]
-                        : []),
-                height: cardHeight,
-                width: cardWidth,
-                child: ClipRRect(
-                    borderRadius: Config.borderRadiusLarge,
-                    child: Image(
-                        image: widget.recipe.isNetwork ?
-                        NetworkImage(widget.recipe.faceImageUrl)
-                            : AssetImage(widget.recipe.faceImageUrl) as ImageProvider,
-                        fit: cardWidth <= cardHeight * 1.2
-                            ? BoxFit.fitHeight
-                            : BoxFit.fitWidth)),
+              duration: Config.shortAnimationTime,
+              // height: cardHeight,
+              decoration: BoxDecoration(
+                borderRadius: Config.borderRadiusLarge,
+                boxShadow: active
+                    ? [
+                  BoxShadow(
+                    color: Config.getGradientColor(widget.recipe.id).first.darken(12),
+                    spreadRadius: spreadRadius,
+                    blurRadius: blurRadius,
+                    offset: const Offset(2, 2)
+                  ),
+                  BoxShadow(
+                    color: Config.getGradientColor(widget.recipe.id).last.darken(12),
+                    spreadRadius: spreadRadius,
+                    blurRadius: blurRadius,
+                    offset: const Offset(-2, -2)
+                  )
+                      ]
+                    : [
+                  BoxShadow(
+                      color: Config.iconColor,
+                      spreadRadius: 0.4
+                    )
+                      ]
               ),
-              Container(
-                width: cardWidth,
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          startGradColor,
-                          endGradColor,
-                        ]),
-                    borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(Config.largeRadius))),
-                // width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                    cardWidth / 10, cardHeight / 7, 0, cardHeight / 5),
-                child: Text(
-                  widget.recipe.name,
-                  style: TextStyle(
-                      fontFamily: Config.fontFamilyBold,
-                      fontSize: cardHeight / 12,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white),
-                ),
-              ),
-              Container(
-                  width: cardWidth,
-                  height: cardHeight,
-                  alignment: Alignment.bottomRight,
-                  padding: const EdgeInsets.all(Config.padding),
-                  child: rateLabel
-              ),
-              Container(
-                  width: cardWidth,
-                  height: cardHeight,
-                  alignment: Alignment.bottomLeft,
-                  padding: const EdgeInsets.all(Config.padding),
-                  child: widget.showLike ? favButton : Container()
-              )
-            ]
+              child: Column(
+                children: [
+                  Container(
+                      // height: cardHeight * 0.2,
+                    width: cardWidth,
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        color: Config.edgeColor,
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(Config.largeRadius))),
+                    padding: Config.paddingAll.add(Config.paddingVert),
+                    child: Text(
+                      widget.recipe.name,
+                      style: TextStyle(
+                          fontFamily: Config.fontFamily,
+                          fontSize: cardHeight / 12,
+                          color: Config.iconColor
+                          ),
+                    ),
+                  ),
+                  Stack(children: [
+                    Container(
+                      height: cardHeight,
+                      width: cardWidth,
+                      child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            bottom: Radius.circular(Config.largeRadius)),
+                          child: Image(
+                              image: widget.recipe.isNetwork ?
+                              NetworkImage(widget.recipe.faceImageUrl)
+                                  : AssetImage(widget.recipe.faceImageUrl) as ImageProvider,
+                              fit: cardWidth <= cardHeight * 1.2
+                                  ? BoxFit.fitHeight
+                                  : BoxFit.fitWidth)),
+                    ),
+                    Container(
+                        width: cardWidth,
+                        height: cardHeight,
+                        alignment: Alignment.bottomRight,
+                        padding: const EdgeInsets.all(Config.padding),
+                        child: rateLabel
+                    ),
+                    Container(
+                        width: cardWidth,
+                        height: cardHeight,
+                        alignment: Alignment.bottomLeft,
+                        padding: const EdgeInsets.all(Config.padding),
+                        child: widget.showLike ? favButton : Container()
+                    )
+                  ]
+                )
+              ]
             )
+          )
         )
     );
   }
