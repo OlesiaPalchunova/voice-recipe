@@ -69,11 +69,7 @@ final List<SetOption> nationalSetOptions = [
   StandardSetOption(id: 2, name: "Итальянская кухня", options: [carbonara]),
   StandardSetOption(id: 3, name: "Американская кухня", options: [muffins]),
   StandardSetOption(id: 4, name: "Азиатская кухня", options: [
-    soba, borsh, carbonara, tefts,
-    borsh, syrniki, soba, muffins,
-    tefts, carbonara, soba, tefts,
-    muffins, carbonara, borsh, soba,
-    borsh, soba, syrniki, soba,
+    soba
   ]),
 ];
 

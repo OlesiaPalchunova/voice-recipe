@@ -32,10 +32,6 @@ class AccountScreen extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Divider(
-                    color: Config.iconColor,
-                    thickness: 0.2,
-                  ),
                   Container(
                       padding: const EdgeInsets.all(Config.padding),
                       alignment: Alignment.center,
@@ -61,11 +57,7 @@ class AccountScreen extends StatelessWidget {
                         set: created,
                         widthConstraint: Config.loginPageWidth(context),
                       )
-                  ),
-                  Divider(
-                    color: Config.iconColor,
-                    thickness: 0.2,
-                  ),
+                  )
                 ],
               ),
               Container()
@@ -111,6 +103,7 @@ class AccountScreen extends StatelessWidget {
               FirebaseAuth.instance.signOut();
               Navigator.of(context).pop();
             },
+            tooltip: "Выйти из аккаунта",
             icon: Icon(Icons.logout, color: Config.iconColor))
       ],
     );

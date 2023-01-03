@@ -65,14 +65,22 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                       color: Config.backgroundColor,
                       boxShadow: active
                           ? [
+                            BoxShadow(
+                                color: Config.iconColor.withOpacity(0.5),
+                                spreadRadius: 0.5
+                              ),
                               BoxShadow(
-                                color: Config.darkModeOn
-                                    ? Config.getColor(widget.set.id)
-                                    : Config.getColor(widget.set.id),
-                                blurRadius: 8,
+                                color: Config.getColor(widget.set.id),
+                                blurRadius: 6,
+                                spreadRadius: 2
                               )
                             ]
-                          : []),
+                          : [
+                            BoxShadow(
+                                color: Config.iconColor,
+                                spreadRadius: 0.4
+                              )
+                          ]),
                   child: Row(
                     children: [
                       SizedBox(

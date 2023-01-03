@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/db/user_db_manager.dart';
 
 import '../../config.dart';
+import '../../model/db/favorite_recipes_db_manager.dart';
 
 class FavoritesButton extends StatefulWidget {
   const FavoritesButton(
@@ -116,9 +116,9 @@ class _FavoritesButtonState extends State<FavoritesButton>
                 _pressed = !_pressed;
                 animationController.forward();
                 if (_pressed) {
-                  addToFavorites();
+                  FavoriteRecipesDbManager().add(widget.recipeId);
                 } else {
-                  removeFromFavorites();
+                  FavoriteRecipesDbManager().remove(widget.recipeId);
                 }
               });
             },
@@ -126,12 +126,6 @@ class _FavoritesButtonState extends State<FavoritesButton>
         ),
       ],
     );
-  }
-
-  void addToFavorites() {
-    if (!Config.loggedIn) return;
-    var user = Config.user!;
-    UserDbManager().addNewFavorite(user.uid, widget.recipeId);
   }
 
   void setAuthListener() {
@@ -145,27 +139,11 @@ class _FavoritesButtonState extends State<FavoritesButton>
     if (_disposed) {
       return;
     }
-    _pressed = await isFavorite();
+    _pressed = await FavoriteRecipesDbManager().isFavorite(widget.recipeId);
+    if (_disposed) {
+      return;
+    }
     setState(() {
     });
-  }
-
-  Future<bool> isFavorite() async {
-    if (!Config.loggedIn) return false;
-    var user = Config.user!;
-    try {
-      var userData = await UserDbManager().getUserData(user.uid);
-      List favIds = userData[UserDbManager.favorites];
-      return favIds.contains(widget.recipeId);
-    } on Error catch(e) {
-      debugPrint(e.toString());
-      return false;
-    }
-  }
-
-  void removeFromFavorites() {
-    if (!Config.loggedIn) return;
-    var user = Config.user!;
-    UserDbManager().removeFavorite(user.uid, widget.recipeId);
   }
 }

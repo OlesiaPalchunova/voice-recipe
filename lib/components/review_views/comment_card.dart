@@ -150,6 +150,7 @@ class _CommentCardState extends State<CommentCard> {
     setState(() {
       editMode = true;
       editController.text = widget.comment.text;
+      editNode.requestFocus();
     });
   }
 

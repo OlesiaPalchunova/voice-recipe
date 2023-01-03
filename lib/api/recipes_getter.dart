@@ -7,6 +7,7 @@ import '../config.dart';
 import '../model/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/recipe_fields.dart';
+import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
 
 class RecipesGetter {
   static RecipesGetter singleton = RecipesGetter._internal();
@@ -22,9 +23,7 @@ class RecipesGetter {
 
   Future<List<Recipe>> get favoriteRecipes async {
     if (!Config.loggedIn) return [];
-    var user = Config.user!;
-    var userData = await UserDbManager().getUserData(user.uid);
-    var favIds = userData[UserDbManager.favorites];
+    var favIds = await FavoriteRecipesDbManager().getList();
     return recipes.where((element) => favIds.contains(element.id)).toList();
   }
 

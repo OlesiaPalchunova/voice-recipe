@@ -178,8 +178,8 @@ class Config {
 
   static Color getColor(int id) {
     if (darkModeOn) {
-      return Colors.orange;
-      // return GradientColors.sets[id % GradientColors.sets.length].last;
+      // return Colors.orange;
+      return GradientColors.sets[id % GradientColors.sets.length].last;
     }
     return colors[id % colors.length];
   }
@@ -251,7 +251,7 @@ class Config {
   }
 
   static double pageWidth(BuildContext context) {
-    return min(maxPageWidth, MediaQuery.of(context).size.width);
+    return MediaQuery.of(context).size.width;
   }
 
   static double recipeSlideWidth(BuildContext context) {

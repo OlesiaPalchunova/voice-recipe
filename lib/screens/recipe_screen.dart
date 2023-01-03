@@ -76,27 +76,48 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   List<Widget> getBodyWidgets() {
     List<Widget> list = [];
-    if (Config.isWeb && _slideId != 0) {
-      list.add(ArrowButton(direction: Direction.left, onTap: _onPrev,),);
+    bool showButtons = Config.isWeb && Config.pageWidth(context) > 800;
+    double arrowSize = Config.pageWidth(context) / 8;
+    if (showButtons) {
+      list.add(
+        SizedBox(
+          height: arrowSize,
+          width: arrowSize,
+          child: _slideId != 0
+              ? ArrowButton(
+                  direction: Direction.left,
+                  onTap: _onPrev,
+                )
+              : null,
+        ),
+      );
     }
-    list.addAll([
+    list.add(Stack(children: [
       Center(
         child: Container(
           color: Config.getBackColor(widget.recipe.id),
           alignment: Alignment.center,
-          width: Config.maxRecipeSlideWidth,
+          width: Config.recipeSlideWidth(context),
           child: _buildCurrentSlide(context, _slideId),
         ),
       ),
       Center(
         child: Container(
             alignment: Alignment.bottomCenter,
-            width: Config.maxRecipeSlideWidth,
+            width: Config.recipeSlideWidth(context),
             child: _buildSliderBottom()),
       )
-    ]);
-    if (Config.isWeb && _slideId != widget.recipe.steps.length + 1 + 1) {
-      list.add(ArrowButton(direction: Direction.right, onTap: _onNext,));
+    ]));
+    if (showButtons) {
+      list.add(SizedBox(
+          height: arrowSize,
+          width: arrowSize,
+          child: _slideId != widget.recipe.steps.length + 1 + 1
+              ? ArrowButton(
+                  direction: Direction.right,
+                  onTap: _onNext,
+                )
+              : null));
     }
     return list;
   }
@@ -139,7 +160,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
               color: Config.darkModeOn
                   ? Config.backgroundColor
                   : Config.getBackColor(widget.recipe.id),
-              child: Stack(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: getBodyWidgets(),
               )),
         ),
