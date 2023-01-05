@@ -85,8 +85,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/sets/
-    - assets/images/cards/
-    - assets/images/faces/
     - assets/images/icons/
     - assets/videos/
     - assets/sounds/

@@ -14,7 +14,7 @@ class SetsOptionsList extends StatefulWidget {
 }
 
 class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProviderStateMixin {
-  late final _setOptions = optionsResolve[widget.set.id - 1];
+  late final _setOptions = widget.set.options;
   static const _initialDelayTime = Duration(milliseconds: 20);
   static const _itemSlideTime = Duration(milliseconds: 250);
   static const _staggerTime = Duration(milliseconds: 40);

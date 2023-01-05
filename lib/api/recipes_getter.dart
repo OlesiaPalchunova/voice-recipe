@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
@@ -10,6 +9,7 @@ import 'package:voice_recipe/api/recipe_fields.dart';
 import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
 
 class RecipesGetter {
+  final Map<String, int> recipeIds = {};
   static RecipesGetter singleton = RecipesGetter._internal();
   RecipesGetter._internal();
 
@@ -43,14 +43,23 @@ class RecipesGetter {
     return result;
   }
 
-  Future<Recipe?> getRecipe({required int recipeId}) async {
-    var response = await fetchRecipe(recipeId);
+  Future<List<Recipe>?> getCollection(String name) async {
+    var response = await fetchCollection(name);
     if (response.statusCode != 200) {
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
-    var recipeJson = jsonDecode(decodedBody);
-    List<dynamic> ingredientsJson = recipeJson["ingredients_distributions"];
+    var collectionJson = jsonDecode(decodedBody);
+    List<dynamic> recipesJson = collectionJson["recipes"];
+    List<Recipe> recipes = [];
+    for (dynamic recipeJson in recipesJson) {
+      recipes.add(recipeFromJson(recipeJson));
+    }
+    return recipes;
+  }
+
+  Recipe recipeFromJson(dynamic recipeJson) {
+    List<dynamic> ingredientsJson = recipeJson[ingredientsDistributions];
     List<Ingredient> ingredients = [];
     for (dynamic i in ingredientsJson) {
       ingredients.add(Ingredient(
@@ -78,10 +87,18 @@ class RecipesGetter {
     double cookTime = recipeJson[cookTimeMins];
     double? prepTime = recipeJson[prepTimeMins];
     double? kilocaloriesCount = recipeJson[kilocalories];
+    int recipeId = 0;
+    String recipeName = recipeJson[name];
+    if (recipeIds.containsKey(recipeName)) {
+      recipeId = recipeIds[recipeName]!;
+    } else {
+      recipeId = recipesCounter++;
+      recipeIds[recipeName] = recipeId;
+    }
     var recipe = Recipe(
-        name: recipeJson[name],
+        name: recipeName,
         faceImageUrl: getImageUrl(recipeJson[faceMedia][id]),
-        id: recipeId + recipes.length - 1,
+        id: recipeId,
         cookTimeMins: cookTime.floor(),
         prepTimeMins: prepTime == null ? 0 : prepTime.floor(),
         kilocalories: kilocaloriesCount?? 0,
@@ -92,10 +109,25 @@ class RecipesGetter {
     return recipe;
   }
 
+  Future<Recipe?> getRecipe({required int recipeId}) async {
+    var response = await fetchRecipe(recipeId);
+    if (response.statusCode != 200) {
+      return null;
+    }
+    var decodedBody = utf8.decode(response.body.codeUnits);
+    var recipeJson = jsonDecode(decodedBody);
+    return recipeFromJson(recipeJson);
+  }
+
   static const serverUrl = "server.voicerecipe.ru";
 
   Future<http.Response> fetchRecipe(int id) async {
     var recipeUrl = Uri.parse('https://server.voicerecipe.ru/api/v1/recipe/$id');
     return http.get(recipeUrl);
+  }
+
+  Future<http.Response> fetchCollection(String name) async {
+    var collectionUri = Uri.parse('https://server.voicerecipe.ru/api/v1/collection/search?name=$name');
+    return http.get(collectionUri);
   }
 }

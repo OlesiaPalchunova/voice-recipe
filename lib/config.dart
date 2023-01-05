@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
 import 'package:voice_recipe/services/translator.dart';
+import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GradientColors {
@@ -48,6 +50,10 @@ class Config {
       fit: BoxFit.cover);
 
   static init() async {
+    var mainPage = await RecipesGetter().getCollection('mainpage');
+    if (mainPage != null) {
+      recipes.addAll(mainPage);
+    }
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,

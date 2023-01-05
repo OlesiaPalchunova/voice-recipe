@@ -62,7 +62,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
                           fontWeight: FontWeight.w500,
                           color: Config.iconColor)),
                   Text(
-                    widget.setOption.getRecipes().length.toString(),
+                    "",
                     textAlign: TextAlign.right,
                     style: TextStyle(
                         fontSize: fontSize(context),
@@ -86,11 +86,14 @@ class _SetOptionTileState extends State<SetOptionTile> {
   double fontSize(BuildContext context) => Config.isDesktop(context)
       ? 20 : 18;
 
-  void _navigateToSet(BuildContext context, SetOption setOption) {
-    Navigator.of(context).push(MaterialPageRoute(
+  void _navigateToSet(BuildContext context, SetOption setOption) async {
+    Config.showProgressCircle(context);
+    var recipes = await setOption.getRecipes();
+    Future.microtask(() => Navigator.of(context).pop());
+    Future.microtask(() => Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SetScreen(
-          recipes: setOption.getRecipes(),
+          recipes: recipes,
           setName: setOption.name,
-        )));
+        ))));
   }
 }
