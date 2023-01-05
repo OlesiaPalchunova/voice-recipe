@@ -9,6 +9,7 @@ import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
+import 'package:voice_recipe/components/mini_ing_list.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';
 import 'package:voice_recipe/components/slide_views/recipe_face.dart';
@@ -58,6 +59,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static int _slideId = 0;
   late CommandsListener _listener;
   static final stepsMap = HashMap<int, int>();
+  bool showMiniIngList = false;
 
   @override
   void initState() {
@@ -101,6 +103,12 @@ class _RecipeScreenState extends State<RecipeScreen> {
           child: _buildCurrentSlide(context, _slideId),
         ),
       ),
+      showMiniIngList ? Container(
+        width: Config.recipeSlideWidth(context),
+        alignment: Alignment.topRight,
+        padding: Config.paddingAll,
+        child: MiniIngredientsList(recipe: widget.recipe)
+      ) : Container(),
       Center(
         child: Container(
             alignment: Alignment.bottomCenter,
@@ -146,7 +154,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                 id: widget.recipe.id,
                 onClose: _onClose,
                 onList: () => setState(() {
-                  _slideId = ingredientsSlideId;
+                  showMiniIngList = !showMiniIngList;
                 }),
                 onMute: () => _listener.shutdown(),
                 onListen: () => _listener.start(),

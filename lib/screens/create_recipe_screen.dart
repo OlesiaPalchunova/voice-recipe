@@ -69,6 +69,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         decoration: const BoxDecoration(
             image: Config.backGroundDecorationImage),
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Center(
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),

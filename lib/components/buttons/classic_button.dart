@@ -38,6 +38,7 @@ class _ClassicButtonState extends State<ClassicButton> {
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Config.borderRadiusLarge,
       hoverColor: ClassicButton.hoverColor,
+      highlightColor: ClassicButton.hoverColor,
       focusColor: ClassicButton.hoverColor.withOpacity(.5),
       onTap: widget.onTap,
       child: AnimatedContainer(

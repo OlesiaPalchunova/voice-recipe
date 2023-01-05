@@ -152,7 +152,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         color: Config.edgeColor,
                         borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(Config.largeRadius))),
-                    padding: Config.paddingAll.add(Config.paddingVert),
+                    padding: Config.isDesktop(context) ? Config.paddingAll.add(Config.paddingVert)
+                              : Config.paddingAll,
                     child: Text(
                       widget.recipe.name,
                       style: TextStyle(
