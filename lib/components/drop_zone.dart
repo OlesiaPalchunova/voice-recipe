@@ -28,7 +28,7 @@ class _ImageDropZoneState extends State<ImageDropZone> {
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
           color: highlighted ? ClassicButton.hoverColor : null),
-      height: 300,
+      height: Config.isDesktop(context) ? 300 : 200,
       padding: Config.paddingAll,
       child: Stack(
         children: [
@@ -46,6 +46,16 @@ class _ImageDropZoneState extends State<ImageDropZone> {
             dashPattern: const [8, 4],
             child: Container(
               alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: Config.borderRadiusLarge,
+                boxShadow: [
+                  BoxShadow(
+                      color: Config.darkModeOn ? Colors.black87.withOpacity(.2)
+                       : Colors.white.withOpacity(.2),
+                      spreadRadius: 0.5
+                    )
+                      ]
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

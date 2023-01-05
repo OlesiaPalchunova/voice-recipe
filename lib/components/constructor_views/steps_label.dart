@@ -16,20 +16,36 @@ class StepsLabel extends StatefulWidget {
   final List<RecipeStep> insertList;
 
   @override
-  State<StepsLabel> createState() => _StepsLabelState();
+  State<StepsLabel> createState() => StepsLabelState();
 }
 
-class _StepsLabelState extends State<StepsLabel> {
+class StepsLabelState extends State<StepsLabel> {
   final stepController = TextEditingController();
   final waitTimeController = TextEditingController();
+  static StepsLabelState? current;
 
   List<RecipeStep> get steps => widget.insertList;
 
   @override
+  void initState() {
+    current = this;
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    current = null;
     stepController.dispose();
     waitTimeController.dispose();
     super.dispose();
+  }
+
+    void clear() {
+    if (current == null) return;
+    stepController.clear();
+    waitTimeController.clear();
+    widget.insertList.clear();
+    setState(() {});
   }
 
   Widget buildStep(RecipeStep step) {

@@ -91,24 +91,16 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       Config.showLoginInviteDialog(context);
       return;
     }
-    if (!headers.containsKey(HeaderField.name)) {
-      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+    if (HeaderLabelState.current == null) {
+      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
       return;
     }
-    if (!headers.containsKey(HeaderField.faceImageUrl)) {
-      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
-      return;
-    }
-    if (!headers.containsKey(HeaderField.cookTimeMins)) {
-      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
-      return;
-    }
-    if (!headers.containsKey(HeaderField.prepTimeMins)) {
-      Config.showAlertDialog("Нажмите сохранить вверху экрана", context);
+    bool gotHeaders = HeaderLabelState.current!.saveHeaders();
+    if (!gotHeaders) {
       return;
     }
     if (ingredients.isEmpty) {
-      Config.showAlertDialog("У рецепта должны быть ингридиенты", context);
+      Config.showAlertDialog("У рецепта должны быть ингредиенты", context);
       return;
     }
     if (steps.isEmpty) {
@@ -125,21 +117,37 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         kilocalories: 0,
         ingredients: ingredients,
         steps: steps,);
-    Config.showProgressCircle(context);
-    int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
-    await Future.microtask(() {
-      Navigator.of(context).pop();
-      if (recipeId == RecipesSender.fail) {
-        Config.showAlertDialog("Приносим свои извинения, сервер не отвечает", context);
-      } else {
-        UserDbManager().addNewCreated(Config.user!.uid, recipeId);
-        Config.showAlertDialog("Ваш рецепт был успешно сохранен!\n"
-            "Вы всегда можете его просмотреть в разделе\n"
-            "Профиль > Мои рецепты", context);
-      }
-    });
-    setState(() {
-    });
+    if (HeaderLabelState.current == null) {
+      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+      return;
+    }
+    HeaderLabelState.current!.clear();
+    if (IngredientsLabelState.current == null) {
+      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+      return;
+    }
+    IngredientsLabelState.current!.clear();   
+    if (StepsLabelState.current == null) {
+      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+      return;
+    }
+    StepsLabelState.current!.clear(); 
+    Config.showAlertDialog("*рецепт создали*", context);
+    // Config.showProgressCircle(context);
+    // int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
+    // await Future.microtask(() {
+    //   Navigator.of(context).pop();
+    //   if (recipeId == RecipesSender.fail) {
+    //     Config.showAlertDialog("Приносим свои извинения, сервер не отвечает", context);
+    //   } else {
+    //     UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+    //     Config.showAlertDialog("Ваш рецепт был успешно сохранен!\n"
+    //         "Вы всегда можете его просмотреть в разделе\n"
+    //         "Профиль > Мои рецепты", context);
+    //   }
+    // });
+    // setState(() {
+    // });
   }
 
   List<Widget> allLabels(BuildContext context) {

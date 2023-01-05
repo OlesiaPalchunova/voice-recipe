@@ -16,10 +16,10 @@ class IngredientsLabel extends StatefulWidget {
   final List<Ingredient> insertList;
 
   @override
-  State<IngredientsLabel> createState() => _IngredientsLabelState();
+  State<IngredientsLabel> createState() => IngredientsLabelState();
 }
 
-class _IngredientsLabelState extends State<IngredientsLabel> {
+class IngredientsLabelState extends State<IngredientsLabel> {
   final ingNameController = TextEditingController();
   final ingCountController = TextEditingController();
   final nameFocusNode = FocusNode();
@@ -28,14 +28,30 @@ class _IngredientsLabelState extends State<IngredientsLabel> {
   ];
   static final regExp = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
   static final random = Random();
+  static IngredientsLabelState? current;
 
   String get example => examples[random.nextInt(examples.length)];
 
   @override
+  void initState() {
+    current = this;
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    current = null;
     ingNameController.dispose();
     ingCountController.dispose();
     super.dispose();
+  }
+
+  void clear() {
+    if (current == null) return;
+    ingNameController.clear();
+    ingCountController.clear();
+    widget.insertList.clear();
+    setState(() {});
   }
 
   Widget buildIngredient(Ingredient ingredient) {

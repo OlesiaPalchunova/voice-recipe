@@ -118,6 +118,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
               duration: Config.shortAnimationTime,
               // height: cardHeight,
               decoration: BoxDecoration(
+                color: Config.backgroundColor,
                 borderRadius: Config.borderRadiusLarge,
                 boxShadow: active
                     ? [
@@ -137,7 +138,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                     : [
                   BoxShadow(
                       color: Config.iconColor,
-                      spreadRadius: 0.4
+                      spreadRadius: 1
                     )
                       ]
               ),

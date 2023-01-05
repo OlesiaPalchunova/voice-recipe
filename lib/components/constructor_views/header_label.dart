@@ -15,17 +15,19 @@ class HeaderLabel extends StatefulWidget {
   final Map<HeaderField, dynamic> headers;
 
   @override
-  State<HeaderLabel> createState() => _HeaderLabelState();
+  State<HeaderLabel> createState() => HeaderLabelState();
 }
 
-class _HeaderLabelState extends State<HeaderLabel> {
+class HeaderLabelState extends State<HeaderLabel> {
   final nameController = TextEditingController();
   final cookTimeController = TextEditingController();
   final prepTimeController = TextEditingController();
   static DroppedFile? currentImageFile;
+  static HeaderLabelState? current;
 
   @override
   void initState() {
+    current = this;
     if (widget.headers.containsKey(HeaderField.name)) {
       nameController.text = widget.headers[HeaderField.name];
     }
@@ -44,6 +46,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
 
   @override
   void dispose() {
+    current = null;
     nameController.dispose();
     cookTimeController.dispose();
     prepTimeController.dispose();
@@ -151,20 +154,6 @@ class _HeaderLabelState extends State<HeaderLabel> {
                     controller: prepTimeController,
                     fontSize: CreateRecipeScreen.generalFontSize(context),
                     onSubmit: saveHeaders),
-              ),
-              const SizedBox(
-                height: Config.margin,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                    width: CreateRecipeScreen.pageWidth(context) * .5,
-                    child: ClassicButton(
-                      customColor: CreateRecipeScreen.buttonColor,
-                      onTap: saveHeaders,
-                      text: "Сохранить",
-                      fontSize: CreateRecipeScreen.generalFontSize(context),
-                    )),
               )
             ],
           ),
@@ -178,27 +167,41 @@ class _HeaderLabelState extends State<HeaderLabel> {
       color: Config.iconColor,
       fontSize: CreateRecipeScreen.generalFontSize(context));
 
-  void saveHeaders() {
+  void clear() {
+    currentImageFile = null;
+    nameController.clear();
+    cookTimeController.clear();
+    prepTimeController.clear();
+    widget.headers.remove(HeaderField.name);
+    widget.headers.remove(HeaderField.faceImageUrl);
+    widget.headers.remove(HeaderField.cookTimeMins);
+    widget.headers.remove(HeaderField.prepTimeMins);
+    if (current != null) {
+      setState(() {});
+    }
+  }
+
+  bool saveHeaders() {
     if (currentImageFile == null) {
       Config.showAlertDialog("Прикрепите изображение обложки", context);
-      return;
+      return false;
     }
     String recipeName = nameController.text.trim();
     if (recipeName.isEmpty) {
       Config.showAlertDialog("Введите название рецепта", context);
-      return;
+      return false;
     }
     String cookTimeMinsStr = cookTimeController.text.trim();
     if (cookTimeMinsStr.isEmpty) {
       Config.showAlertDialog(
           "Введите время приготовления (в минутах)", context);
-      return;
+      return false;
     }
     int? cookTimeMins = int.tryParse(cookTimeMinsStr);
     if (cookTimeMins == null) {
       Config.showAlertDialog(
           "Время приготовление должно быть числом (минут)", context);
-      return;
+      return false;
     }
     String prepTimeMinStr = prepTimeController.text.trim();
     int? prepTimeMins;
@@ -207,7 +210,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
       if (prepTimeMins == null) {
         Config.showAlertDialog(
             "Время подготовки должно быть числом (минут)", context);
-        return;
+        return false;
       }
     }
     int cookTimeMinsFinal = cookTimeMins;
@@ -216,7 +219,7 @@ class _HeaderLabelState extends State<HeaderLabel> {
     widget.headers[HeaderField.faceImageUrl] = currentImageFile!.url;
     widget.headers[HeaderField.cookTimeMins] = cookTimeMinsFinal;
     widget.headers[HeaderField.prepTimeMins] = prepTimeMinsFinal;
-    Config.showAlertDialog("Готово, не забудьте сохранить рецепт внизу", context);
+    return true;
   }
 
   Widget stepImagePreview() {
