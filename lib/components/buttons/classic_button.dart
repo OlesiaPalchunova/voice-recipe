@@ -45,7 +45,13 @@ class _ClassicButtonState extends State<ClassicButton> {
         decoration: BoxDecoration(
           color: color,
               borderRadius: Config.borderRadiusLarge,
-          boxShadow: Config.darkModeOn ? [] : [
+          boxShadow: Config.darkModeOn ? [] : _hovered ?
+            [
+            BoxShadow(
+              color: Colors.orangeAccent,
+              spreadRadius: 1
+            )
+            ] : [
             BoxShadow(
               color: Config.iconColor.withOpacity(0.5),
               spreadRadius: 0.5

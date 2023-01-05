@@ -27,7 +27,7 @@ class CreateRecipeScreen extends StatefulWidget {
 
   static Color get buttonColor => Config.darkModeOn
   ? const Color(0xff474645)
-  : const Color(0xeecccccc);
+  : ClassicButton.color;
 
   static Widget title(BuildContext context, String text) {
     return Container(
@@ -42,7 +42,7 @@ class CreateRecipeScreen extends StatefulWidget {
   }
 
   static double pageWidth(BuildContext context) =>
-      Config.recipeSlideWidth(context);
+      Config.constructorWidth(context);
 }
 
 enum HeaderField { name, faceImageUrl, cookTimeMins, prepTimeMins }

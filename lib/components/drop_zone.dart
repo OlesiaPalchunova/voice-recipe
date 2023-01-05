@@ -28,7 +28,7 @@ class _ImageDropZoneState extends State<ImageDropZone> {
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
           color: highlighted ? ClassicButton.hoverColor : null),
-      height: 200,
+      height: 300,
       padding: Config.paddingAll,
       child: Stack(
         children: [

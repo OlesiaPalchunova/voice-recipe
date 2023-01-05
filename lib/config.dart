@@ -38,6 +38,7 @@ class Config {
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
   static const maxRecipeSlideWidth = 600.0;
+  static const maxConstructorWidth = 1000.0;
   static const maxPageWidth = 1200.0;
   static const maxLoginPageWidth = 500.0;
   static const maxLoginPageHeight = 800.0;
@@ -265,6 +266,10 @@ class Config {
 
   static double recipeSlideWidth(BuildContext context) {
     return min(maxRecipeSlideWidth, pageWidth(context));
+  }
+
+  static double constructorWidth(BuildContext context) {
+    return min(maxConstructorWidth, pageWidth(context));
   }
 
   static double loginPageWidth(BuildContext context) {
