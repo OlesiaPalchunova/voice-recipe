@@ -61,7 +61,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                         iconData: Config.darkModeOn
                             ? Icons.library_books_outlined
                             : Icons.library_books_outlined),
-                    SideBarTile(
+                    Config.isWeb ? SideBarTile(
                         name: "Создать рецепт",
                         onClicked: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -69,7 +69,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                         },
                         iconData: Config.darkModeOn
                             ? Icons.create_outlined
-                            : Icons.create_outlined),
+                            : Icons.create_outlined) : Container(),
                     SideBarTile(
                         name: "Голосовые команды",
                         onClicked: () {

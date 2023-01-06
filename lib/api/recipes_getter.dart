@@ -84,9 +84,9 @@ class RecipesGetter {
           waitTime: waitTimeMins
       ));
     }
-    double cookTime = recipeJson[cookTimeMins];
-    double? prepTime = recipeJson[prepTimeMins];
-    double? kilocaloriesCount = recipeJson[kilocalories];
+    num cookTime = recipeJson[cookTimeMins];
+    num? prepTime = recipeJson[prepTimeMins];
+    num? kilocaloriesCount = recipeJson[kilocalories];
     int recipeId = 0;
     String recipeName = recipeJson[name];
     if (recipeIds.containsKey(recipeName)) {
@@ -101,7 +101,7 @@ class RecipesGetter {
         id: recipeId,
         cookTimeMins: cookTime.floor(),
         prepTimeMins: prepTime == null ? 0 : prepTime.floor(),
-        kilocalories: kilocaloriesCount?? 0,
+        kilocalories: kilocaloriesCount == null ? 0.0 : kilocaloriesCount as double,
         ingredients: ingredients,
         steps: recipeSteps,
         isNetwork: true

@@ -19,6 +19,14 @@ class SideBarTile extends StatefulWidget {
 }
 
 class _SideBarTileState extends State<SideBarTile> {
+  bool _pressed = false;
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 
   static double fontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 14;
@@ -29,14 +37,31 @@ class _SideBarTileState extends State<SideBarTile> {
   Color get pressedColor => Config.darkModeOn ? ClassicButton.hoverColor :
       Colors.grey.shade200;
 
+  Color get color => _pressed ? ClassicButton.hoverColor : Colors.transparent;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: Config.borderRadiusLarge,
       hoverColor: pressedColor,
-      onTap: widget.onClicked,
+      onTap: () {
+        setState(() {
+          _pressed = true;
+        });
+        Future.delayed(Config.shortAnimationTime, () {
+          widget.onClicked();
+          _pressed = false;
+          if (_disposed) return;
+          setState(() {
+          });
+        });
+      },
       child: Container(
         padding: const EdgeInsets.all(Config.padding),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: Config.borderRadiusLarge
+        ),
         child: Column(
           children: [
             Row(

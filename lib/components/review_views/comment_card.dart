@@ -22,7 +22,7 @@ class CommentCard extends StatefulWidget {
   final void Function(String, String) onUpdate;
 
   static double nameFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 16 : 14;
+      Config.isDesktop(context) ? 14 : 12;
 
   static double descFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 16 : 14;

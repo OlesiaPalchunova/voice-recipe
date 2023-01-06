@@ -27,8 +27,16 @@ class ClassicButton extends StatefulWidget {
 
 class _ClassicButtonState extends State<ClassicButton> {
   bool _hovered = false;
+  bool _pressed = false;
+  bool _disposed = false;
 
-  Color get color => !_hovered
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  Color get color => !_hovered & !_pressed
       ? widget.customColor?? ClassicButton.color
       : ClassicButton.hoverColor;
 
@@ -38,9 +46,19 @@ class _ClassicButtonState extends State<ClassicButton> {
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Config.borderRadiusLarge,
       hoverColor: ClassicButton.hoverColor,
-      highlightColor: ClassicButton.hoverColor,
       focusColor: ClassicButton.hoverColor.withOpacity(.5),
-      onTap: widget.onTap,
+      onTap: () {
+        setState(() {
+          _pressed = true;
+        });
+        Future.delayed(Config.animationTime, () {
+          if (_disposed) return;
+          setState(() {
+            _pressed = false;
+            widget.onTap();
+          });
+        });
+      },
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
@@ -48,7 +66,7 @@ class _ClassicButtonState extends State<ClassicButton> {
               borderRadius: Config.borderRadiusLarge,
           boxShadow: Config.darkModeOn ? [] : _hovered ?
             [
-            BoxShadow(
+            const BoxShadow(
               color: Colors.orangeAccent,
               spreadRadius: 1
             )

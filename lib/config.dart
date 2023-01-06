@@ -80,7 +80,7 @@ class Config {
 
   static const backColors = [
     Color(0xFFE9F7CA),
-    Color(0xFFF9C784),
+    Color(0xffffce8c),
     Color(0xFFf7d2ca),
     Color(0xFFf7ecca)
   ];
@@ -89,7 +89,7 @@ class Config {
 
   static const colors = [
     Color(0xff61cc45),
-    Colors.orange,
+    Color(0xffcc9245),
     Colors.redAccent,
     Colors.orangeAccent
   ];
