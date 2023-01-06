@@ -103,18 +103,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
           child: _buildCurrentSlide(context, _slideId),
         ),
       ),
-      showMiniIngList ? Container(
-        width: Config.recipeSlideWidth(context),
-        alignment: Alignment.topRight,
-        padding: Config.paddingAll,
-        child: MiniIngredientsList(recipe: widget.recipe)
-      ) : Container(),
       Center(
         child: Container(
             alignment: Alignment.bottomCenter,
             width: Config.recipeSlideWidth(context),
             child: _buildSliderBottom()),
-      )
+      ),
+      Container(
+          width: Config.recipeSlideWidth(context),
+          alignment: Alignment.topRight,
+          padding: Config.paddingAll,
+          child: MiniIngredientsList(recipe: widget.recipe)
+      ),
     ]));
     if (showButtons) {
       list.add(SizedBox(
@@ -153,9 +153,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
               child: HeaderButtonsPanel(
                 id: widget.recipe.id,
                 onClose: _onClose,
-                onList: () => setState(() {
+                onList: () {
+                  if (MiniIngredientsListState.current == null) return;
                   showMiniIngList = !showMiniIngList;
-                }),
+                  if (showMiniIngList) {
+                    MiniIngredientsListState.current!.moveOut();
+                  } else {
+                    MiniIngredientsListState.current!.moveBack();
+                  }
+                },
                 onMute: () => _listener.shutdown(),
                 onListen: () => _listener.start(),
                 onSay: _onSay,

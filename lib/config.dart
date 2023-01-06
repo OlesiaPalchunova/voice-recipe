@@ -256,6 +256,13 @@ class Config {
     return backColors[id % backColors.length];
   }
 
+  static Color getBackEdgeColor(int id) {
+    if (darkModeOn) {
+      return darkBlue;
+    }
+    return backColors[id % backColors.length];
+  }
+
   static double pageHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
