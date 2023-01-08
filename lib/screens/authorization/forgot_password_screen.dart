@@ -12,6 +12,8 @@ import '../../config.dart';
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
+  static const route = '/reset-password';
+
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
@@ -38,7 +40,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: GestureDetector(
         onTap: () => _emailFocusNode.unfocus(),
         child: Container(
-          color: Config.backgroundColor,
+          color: Config.backgroundEdgeColor,
           alignment: Alignment.center,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

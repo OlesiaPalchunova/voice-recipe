@@ -51,10 +51,6 @@ class Config {
       fit: BoxFit.cover);
 
   static init() async {
-    var mainPage = await RecipesGetter().getCollection('mainpage');
-    if (mainPage != null) {
-      recipes.addAll(mainPage);
-    }
     darkModeOn = await DarkThemePreference().getTheme();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         systemNavigationBarColor: _darkThemeBackColor,
@@ -159,6 +155,13 @@ class Config {
     return Colors.white;
   }
 
+  static Color get backgroundEdgeColor {
+    if (darkModeOn) {
+      return _darkThemeBackColor;
+    }
+    return Colors.grey.shade100;
+  }
+
   static Color get iconBackColor {
     if (darkModeOn) {
       return _darkIconBackColor;
@@ -225,9 +228,10 @@ class Config {
             ));
   }
 
-  static void showAlertDialog(String text, BuildContext context) async {
+  static void showAlertDialog(String text, BuildContext context, [bool noShadow = false]) async {
     final russianText = await Translator().translateToRu(text);
     showDialog(
+        barrierColor: noShadow ? Colors.transparent : Colors.black54,
         context: context,
         builder: (context) => AlertDialog(
               backgroundColor: Config.backgroundColor,

@@ -18,7 +18,7 @@ class RateLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Config.darkModeOn ? Config.darkBlue : Colors.white,
+          color: Config.edgeColor,
           borderRadius: Config.borderRadiusLarge,
         boxShadow: shadows
       ),

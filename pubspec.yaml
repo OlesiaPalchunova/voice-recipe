@@ -52,6 +52,9 @@ dependencies:
   google_sign_in:
   flutter_dropzone: 3.0.0
   dotted_border:
+  animated_background:
+  rive:
+  blur:
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +91,7 @@ flutter:
     - assets/images/icons/
     - assets/videos/
     - assets/sounds/
+    - assets/RiveAssets/
     - assets/images/decorations/
   #   - images/a_dot_ham.jpeg
 

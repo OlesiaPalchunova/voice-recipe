@@ -11,6 +11,7 @@ import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
 class RecipesGetter {
   final Map<String, int> recipeIds = {};
   static RecipesGetter singleton = RecipesGetter._internal();
+  static const List<String> blackList = ['Рим'];
   RecipesGetter._internal();
 
   factory RecipesGetter() {
@@ -53,7 +54,9 @@ class RecipesGetter {
     List<dynamic> recipesJson = collectionJson["recipes"];
     List<Recipe> recipes = [];
     for (dynamic recipeJson in recipesJson) {
-      recipes.add(recipeFromJson(recipeJson));
+      Recipe recipe = recipeFromJson(recipeJson);
+      if (blackList.contains(recipe.name)) continue;
+      recipes.add(recipe);
     }
     return recipes;
   }

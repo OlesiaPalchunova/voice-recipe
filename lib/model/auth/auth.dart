@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,8 +19,7 @@ class AuthenticationManager {
     Vk().signIn();
   }
 
-  Future signInWithGoogle(BuildContext context) async {
-    Config.showProgressCircle(context);
+  Future<bool> signInWithGoogle(BuildContext context) async {
     try {
       if (Config.isWeb) {
         await _signInWithGoogleWeb();
@@ -36,11 +34,11 @@ class AuthenticationManager {
             user.photoURL?? defaultProfileUrl
         );
       }
-      await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch(e) {
       Config.showAlertDialog(e.message!, context);
+      return false;
     }
-    await Future.microtask(() => Navigator.of(context).pop());
+    return true;
   }
 
   Future<UserCredential> _signInWithGoogleWeb() async {
@@ -60,25 +58,23 @@ class AuthenticationManager {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future signIn(BuildContext context, String email, String password) async {
-    Config.showProgressCircle(context);
+  Future<bool> signIn(BuildContext context, String email, String password) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password);
-      await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
-      Config.showAlertDialog(e.message!, context);
+      Config.showAlertDialog(e.message!, context, true);
+      return false;
     }
-    await Future.microtask(() => Navigator.of(context).pop());
+    return true;
   }
 
-  Future signUp(BuildContext context, String email, String password,
+  Future<bool> signUp(BuildContext context, String email, String password,
       String passwordAgain, String firstName, String secondName) async {
-    Config.showProgressCircle(context);
     if (password != passwordAgain) {
-      Config.showAlertDialog("Пароли не совпадают", context);
-      return;
+      Config.showAlertDialog("Пароли не совпадают", context, true);
+      return false;
     }
     try {
       String emailCurrent = email;
@@ -92,12 +88,12 @@ class AuthenticationManager {
       await FirebaseAuth.instance.signOut();
       await UserDbManager().addNewUserData(user.uid, "$firstName $secondName",
           user.photoURL ?? defaultProfileUrl);
-      await Future.microtask(() => Navigator.of(context).pop());
     } on FirebaseException catch (e) {
       debugPrint(e.message);
-      Config.showAlertDialog(e.message!, context);
+      Config.showAlertDialog(e.message!, context, true);
+      return false;
     }
-    await Future.microtask(() => Navigator.of(context).pop());
+    return true;
   }
 
   Future passwordReset(BuildContext context, String email) async {

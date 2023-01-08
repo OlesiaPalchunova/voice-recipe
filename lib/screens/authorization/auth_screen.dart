@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
-
-import '../home_screen.dart';
+import 'package:voice_recipe/screens/profile_screen.dart';
 
 class AuthScreen extends StatelessWidget{
   const AuthScreen({super.key});
+
+  static const route = '/profile';
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class AuthScreen extends StatelessWidget{
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const Home();
+            return const AccountScreen();
           }
           return const LoginScreen();
         },

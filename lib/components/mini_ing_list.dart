@@ -16,7 +16,7 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
   late final AnimationController _controller;
   late Animation<double> _growAnimation;
   late final double _height = widget.recipe.ingredients.length * 35.0;
-  static const int _animationTimeMillis = 300;
+  static const int _animationTimeMillis = 400;
   static MiniIngredientsListState? current;
 
   @override
@@ -63,11 +63,11 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
         );
       },
       child: Container(
-          width: 200,
+          width: 240,
           padding: Config.paddingAll,
           decoration: BoxDecoration(
-              color: Config.edgeColor.withOpacity(.9),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Config.largeRadius))),
+              color: Config.getBackEdgeColor(widget.recipe.id).withOpacity(.95),
+              borderRadius: Config.borderRadiusLarge),
           child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -88,14 +88,14 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
               style: TextStyle(
                   color: Config.iconColor,
                   fontFamily: Config.fontFamily,
-                  fontSize: 12),
+                  fontSize: 14),
             ),
             Text(
               "${ingredient.count} ${ingredient.measureUnit}",
               style: TextStyle(
                   color: Config.iconColor,
                   fontFamily: Config.fontFamily,
-                  fontSize: 12),
+                  fontSize: 14),
             )
           ],
         ),

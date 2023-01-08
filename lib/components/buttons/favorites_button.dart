@@ -74,7 +74,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
         Container(
           decoration: BoxDecoration(
               boxShadow: shadows,
-              color: Config.darkModeOn ? Config.darkBlue : Colors.white,
+              color: Config.edgeColor,
               borderRadius: Config.borderRadiusLarge),
           width: width,
           height: width / 2,

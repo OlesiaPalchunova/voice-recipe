@@ -16,6 +16,8 @@ import '../model/recipes_info.dart';
 class CreateRecipeScreen extends StatefulWidget {
   const CreateRecipeScreen({super.key});
 
+  static const route = '/constructor';
+
   @override
   State<CreateRecipeScreen> createState() => _CreateRecipeScreenState();
 
@@ -118,6 +120,19 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         kilocalories: 0,
         ingredients: ingredients,
         steps: steps,);
+    Config.showProgressCircle(context);
+    int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
+    await Future.microtask(() {
+      Navigator.of(context).pop();
+      if (recipeId == RecipesSender.fail) {
+        Config.showAlertDialog("Приносим свои извинения, сервер не отвечает", context);
+      } else {
+        UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+        Config.showAlertDialog("Ваш рецепт был успешно сохранен!\n"
+            "Вы всегда можете его просмотреть в разделе\n"
+            "Профиль > Мои рецепты", context);
+      }
+    });
     if (HeaderLabelState.current == null) {
       Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
       return;
@@ -132,23 +147,9 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
       return;
     }
-    StepsLabelState.current!.clear(); 
-    Config.showAlertDialog("*рецепт создали*", context);
-    // Config.showProgressCircle(context);
-    // int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
-    // await Future.microtask(() {
-    //   Navigator.of(context).pop();
-    //   if (recipeId == RecipesSender.fail) {
-    //     Config.showAlertDialog("Приносим свои извинения, сервер не отвечает", context);
-    //   } else {
-    //     UserDbManager().addNewCreated(Config.user!.uid, recipeId);
-    //     Config.showAlertDialog("Ваш рецепт был успешно сохранен!\n"
-    //         "Вы всегда можете его просмотреть в разделе\n"
-    //         "Профиль > Мои рецепты", context);
-    //   }
-    // });
-    // setState(() {
-    // });
+    StepsLabelState.current!.clear();
+    setState(() {
+    });
   }
 
   List<Widget> allLabels(BuildContext context) {

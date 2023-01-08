@@ -34,15 +34,19 @@ class InputLabel extends StatelessWidget {
           ),
           floatingLabelAlignment: FloatingLabelAlignment.start,
           enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 0.5, color: Colors.black87),
-              borderRadius: Config.borderRadiusLarge),
+              borderSide: BorderSide(width: 0.2, color: Colors.black87),
+              borderRadius: Config.borderRadiusLarge
+          ),
           focusedBorder: OutlineInputBorder(
               borderRadius: Config.borderRadiusLarge,
               borderSide: BorderSide(
-                  color: Config.darkModeOn ? Colors.orangeAccent : Colors.black)),
+                  color: Config.darkModeOn ? Colors.orangeAccent : Colors.black54)
+          ),
+          hoverColor: !Config.darkModeOn ? Colors.orangeAccent.withOpacity(.1) : Colors.grey.shade800,
           fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
           filled: true,
-          suffixIcon: suffixIcon);
+          suffixIcon: suffixIcon
+      );
 
   @override
   Widget build(BuildContext context) {

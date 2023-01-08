@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/advertisement.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
@@ -6,8 +7,12 @@ import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 import 'package:voice_recipe/config.dart';
 
+import '../api/recipes_getter.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
+
+  static const route = '/';
 
   @override
   State<Home> createState() => HomeState();
@@ -15,10 +20,12 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   var _recipes = recipes;
-  late List<RecipeHeaderCard> recipeViews;
+  final List<RecipeHeaderCard> recipeViews = [];
   static const title = TitleLogoPanel(title: Config.appName);
   static HomeState? current;
   static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
+  final List<Advertisement> ads = [];
+  bool _disposed = false;
 
   @override
   void initState() {
@@ -27,8 +34,28 @@ class HomeState extends State<Home> {
     super.initState();
   }
 
-  void initRecipeViews() {
-    recipeViews = _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void initRecipeViews() async {
+    if (_recipes.isEmpty) {
+      var mainPage = await RecipesGetter().getCollection('mainpage');
+      if (mainPage != null) {
+        recipes.addAll(mainPage);
+      }
+      _recipes = recipes;
+    }
+    ads.clear();
+    ads.add(Advertisement());
+    recipeViews.clear();
+    recipeViews.addAll(_recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+    if (!_disposed) {
+      setState(() {
+      });
+    }
   }
 
   @override
@@ -67,6 +94,12 @@ class HomeState extends State<Home> {
                               horizontal: Config.margin * 2)),
                       child: SizedBox(width: 500, child: buildSearchField()),
                     ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: ads,
+                      ),
+                    ),
                     Wrap(children: recipeViews)
                   ]),
                 ),
@@ -87,8 +120,8 @@ class HomeState extends State<Home> {
               .where((element) =>
                   element.name.toLowerCase().startsWith(string.toLowerCase()))
               .toList();
-          recipeViews =
-              _recipes.map((e) => RecipeHeaderCard(recipe: e)).toList();
+          recipeViews.clear();
+          recipeViews.addAll(_recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
         });
       },
       decoration: InputDecoration(

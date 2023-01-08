@@ -8,21 +8,22 @@ class ClassicButton extends StatefulWidget {
       required this.onTap,
       required this.text,
       this.fontSize = 20,
-        this.customColor});
+        this.customColor, this.customBorderColor});
 
   final VoidCallback onTap;
   final String text;
   final double fontSize;
   final Color? customColor;
+  final Color? customBorderColor;
 
   @override
   State<ClassicButton> createState() => _ClassicButtonState();
 
   static Color get color => Config.darkModeOn ? Colors.grey.shade900
-      : Colors.grey.shade200;
+      : Colors.white;
 
   static Color get hoverColor => Config.darkModeOn ? const Color(0xffc77202)
-      : Colors.white;    
+      : Colors.orangeAccent.shade200;
 }
 
 class _ClassicButtonState extends State<ClassicButton> {
@@ -64,10 +65,10 @@ class _ClassicButtonState extends State<ClassicButton> {
         decoration: BoxDecoration(
           color: color,
               borderRadius: Config.borderRadiusLarge,
-          boxShadow: Config.darkModeOn ? [] : _hovered ?
+          boxShadow: Config.darkModeOn ? [] : !_hovered ?
             [
-            const BoxShadow(
-              color: Colors.orangeAccent,
+            BoxShadow(
+              color: widget.customBorderColor?? Colors.orangeAccent,
               spreadRadius: 1
             )
             ] : [

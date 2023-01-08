@@ -7,6 +7,8 @@ import 'package:voice_recipe/config.dart';
 class SetsListScreen extends StatefulWidget {
   const SetsListScreen({super.key});
 
+  static const route = "/collections";
+
   @override
   State<SetsListScreen> createState() => _SetsListScreen();
 }

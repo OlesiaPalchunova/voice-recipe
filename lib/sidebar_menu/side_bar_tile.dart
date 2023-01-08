@@ -37,7 +37,7 @@ class _SideBarTileState extends State<SideBarTile> {
   Color get pressedColor => Config.darkModeOn ? ClassicButton.hoverColor :
       Colors.grey.shade200;
 
-  Color get color => _pressed ? ClassicButton.hoverColor : Colors.transparent;
+  Color get color => _pressed ? pressedColor : Colors.transparent;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +50,8 @@ class _SideBarTileState extends State<SideBarTile> {
         });
         Future.delayed(Config.shortAnimationTime, () {
           widget.onClicked();
+        });
+        Future.delayed(const Duration(milliseconds: 500), () {
           _pressed = false;
           if (_disposed) return;
           setState(() {

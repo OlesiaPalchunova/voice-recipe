@@ -14,6 +14,7 @@ import 'package:voice_recipe/screens/sets_list_screen.dart';
 
 import '../../model/users_info.dart';
 import '../../screens/set_screen.dart';
+import '../screens/authorization/auth_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key, required this.onUpdate});
@@ -55,17 +56,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Подборки",
                         onClicked: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const SetsListScreen(),
-                            )),
+                            Navigator.of(context).pushNamed(SetsListScreen.route),
                         iconData: Config.darkModeOn
                             ? Icons.library_books_outlined
                             : Icons.library_books_outlined),
                     Config.isWeb ? SideBarTile(
                         name: "Создать рецепт",
                         onClicked: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const CreateRecipeScreen()));
+                          Navigator.of(context).pushNamed(CreateRecipeScreen.route);
                         },
                         iconData: Config.darkModeOn
                             ? Icons.create_outlined
@@ -140,8 +138,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AccountScreen()));
+            Navigator.of(context).pushNamed(AuthScreen.route);
           },
           child: Row(
             children: [
@@ -192,8 +189,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
             return SideBarTile(
                 name: "Войти",
                 onClicked: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginScreen()));
+                  Navigator.of(context).pushNamed(LoginScreen.route);
                 },
                 iconData: Icons.login);
           }
