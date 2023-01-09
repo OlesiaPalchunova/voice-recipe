@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:blur/blur.dart';
-import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/screens/create_recipe_screen.dart';
 
 import '../config.dart';
+import 'buttons/animated_button.dart';
 
 class Advertisement extends StatefulWidget {
   const Advertisement({super.key});
@@ -16,11 +14,12 @@ class Advertisement extends StatefulWidget {
 }
 
 double width(BuildContext context) {
-  double k = Config.isDesktop(context) ? .45 : .9;
+  double k = Config.isWide(context) ? .45 : .9;
   return k * Config.pageWidth(context);
 }
 
 class _AdvertisementState extends State<Advertisement> {
+  late RiveAnimationController _btnAnimationController;
   static double generalFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;
 
@@ -28,9 +27,18 @@ class _AdvertisementState extends State<Advertisement> {
       Config.isDesktop(context) ? 24 : 22;
 
   @override
+  void initState() {
+    _btnAnimationController = OneShotAnimation(
+      "active",
+      autoplay: false,
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 220,
       alignment: Alignment.center,
       width: Config.pageWidth(context) * .9,
       decoration: BoxDecoration(
@@ -58,8 +66,8 @@ class _AdvertisementState extends State<Advertisement> {
                   'Творите. Создавайте. Вдохновляйте',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Config.iconColor,
-                      fontFamily: "Poppins",
+                      color: Config.darkModeOn ? Colors.white : Colors.black,
+                      fontFamily: Config.fontFamily,
                       fontSize: titleFontSize(context)),
                 ),
                 const SizedBox(height: Config.margin,),
@@ -74,9 +82,13 @@ class _AdvertisementState extends State<Advertisement> {
                 const SizedBox(height: Config.margin,),
                 SizedBox(
                   width: width(context) / 2,
-                  child: ClassicButton(
+                  child: AnimatedButton(
+                      btnAnimationController: _btnAnimationController,
                       onTap: () {
-                        Navigator.of(context).pushNamed(CreateRecipeScreen.route);
+                        _btnAnimationController.isActive = true;
+                        Future.delayed(const Duration(milliseconds: 800), () {
+                          Navigator.of(context).pushNamed(CreateRecipeScreen.route);
+                        });
                       },
                       text: "Перейти"
                   ),

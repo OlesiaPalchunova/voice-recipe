@@ -297,9 +297,14 @@ class Config {
     return ph;
   }
 
+  static bool isWide(BuildContext context) {
+    return pageWidth(context) >= pageHeight(context) * 1.5;
+  }
+
   static bool isDesktop(BuildContext context) {
     return pageWidth(context) >= pageHeight(context);
   }
+
 
   static var notificationsOn = true;
 }

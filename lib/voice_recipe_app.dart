@@ -7,6 +7,7 @@ import 'package:voice_recipe/screens/create_recipe_screen.dart';
 import 'package:voice_recipe/screens/home_screen.dart';
 import 'package:voice_recipe/screens/profile_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
+import 'package:voice_recipe/screens/tree.dart';
 
 import 'config.dart';
 
@@ -31,7 +32,7 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
         SetsListScreen.route: (context) => const SetsListScreen(),
         LoginScreen.route: (context) => const LoginScreen(),
         RegisterScreen.route: (context) => const RegisterScreen(),
-        ForgotPasswordScreen.route: (context) => const ForgotPasswordScreen()
+        ForgotPasswordScreen.route: (context) => const ForgotPasswordScreen(),
       },
     );
   }

@@ -68,8 +68,8 @@ class _ClassicButtonState extends State<ClassicButton> {
           boxShadow: Config.darkModeOn ? [] : !_hovered ?
             [
             BoxShadow(
-              color: widget.customBorderColor?? Colors.orangeAccent,
-              spreadRadius: 1
+              color: Config.darkModeOn ? Colors.orangeAccent : Colors.black54,
+              spreadRadius: 0.5
             )
             ] : [
             BoxShadow(
