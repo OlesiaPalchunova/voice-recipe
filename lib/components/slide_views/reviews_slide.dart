@@ -122,9 +122,6 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                         child: StarPanel(
                           id: widget.recipe.id,
                           onTap: (star) {
-                            setState(() {
-                              _isEvaluated = true;
-                            });
                             ratesMap[widget.recipe.id] = star;
                           },
                         ),

@@ -30,6 +30,7 @@ class _ClassicButtonState extends State<ClassicButton> {
   bool _hovered = false;
   bool _pressed = false;
   bool _disposed = false;
+  bool _locked = false;
 
   @override
   void dispose() {
@@ -49,7 +50,9 @@ class _ClassicButtonState extends State<ClassicButton> {
       hoverColor: ClassicButton.hoverColor,
       focusColor: ClassicButton.hoverColor.withOpacity(.5),
       onTap: () {
+        if (_locked) return;
         setState(() {
+          _locked = true;
           _pressed = true;
         });
         Future.delayed(Config.animationTime, () {
@@ -57,6 +60,7 @@ class _ClassicButtonState extends State<ClassicButton> {
           setState(() {
             _pressed = false;
             widget.onTap();
+            _locked = false;
           });
         });
       },

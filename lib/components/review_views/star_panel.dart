@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 
 import '../../config.dart';
 
+import 'package:rive/rive.dart';
+import 'package:voice_recipe/services/rive_utils.dart';
+
 class StarPanel extends StatefulWidget {
   const StarPanel({super.key, required this.id, required this.onTap});
 
@@ -16,84 +19,77 @@ class StarPanel extends StatefulWidget {
 }
 
 class StarPanelState extends State<StarPanel> {
-  static const _initialMinIdx = - 1;
-  late int _minIdx;
-  late var _currentStarIdx = _minIdx;
+  late int currentRate;
   static const starsCount = 5;
   static StarPanelState? current;
   static final starsTable = HashMap<int, int>();
 
+  StateMachineController? controller;
+  SMIInput<double>? inputValue;
+
   @override
   void initState() {
     current = this;
-    _minIdx = starsTable[widget.id] ?? -1;
+    currentRate = starsTable[widget.id] ?? -1;
     super.initState();
   }
 
   @override
   void dispose() {
-    starsTable[widget.id] = _minIdx;
+    starsTable[widget.id] = currentRate;
     super.dispose();
   }
 
   void clear() {
-    setState(() {
-      _minIdx = - 1;
-      _currentStarIdx = _minIdx;
-    });
   }
 
-  Color starColor(int index) {
-    if (_minIdx == _initialMinIdx) {
-      return index <= _currentStarIdx
-          ? Config.darkModeOn ? Colors.white : Colors.yellow.shade600
-          : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
-    }
-    return index <= _currentStarIdx
-        ? Colors.yellow.shade600
-        : Config.darkModeOn ? Colors.grey : Colors.grey.shade200;
+  int getRate(String stateName) {
+    if (stateName == "1_star") return 1;
+    if (stateName == "2_stars") return 2;
+    if (stateName == "3_stars") return 3;
+    if (stateName == "4_stars") return 4;
+    if (stateName == "5_stars") return 5;
+    return 0;
   }
+
+  String get postfix => Config.darkModeOn ? "" : "_light";
 
   @override
   Widget build(BuildContext context) {
     final width = Config.loginPageWidth(context);
     final double starSize = width / 2 / starsCount;
-    return Container(
-      alignment: Alignment.center,
-      child: Row(
-        children: List.generate(starsCount,
-            (index) => InkWell(
-              onHover: (hovered) {
-                if (_minIdx != _initialMinIdx) return;
-                setState(() {
-                  if (hovered) {
-                    _currentStarIdx = index;
-                  } else {
-                    _currentStarIdx = _minIdx;
+    return InkWell(
+      onTap: () {},
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: width / 2,
+          height: 80,
+          child: RiveAnimation.asset('assets/RiveAssets/rating_animation$postfix.riv',
+            fit: BoxFit.fitWidth,
+            onInit: (artboard) {
+              controller = StateMachineController.fromArtboard(
+                  artboard, 'State Machine 1',
+                  onStateChange: (stateMachineName, stateName) {
+                    int newRate = getRate(stateName);
+                    if (currentRate != newRate) {
+                      currentRate = newRate;
+                      widget.onTap(currentRate);
+                      starsTable[widget.id] = currentRate;
+                    }
+                    currentRate = newRate;
                   }
-                });
-              },
-              onTap: () {
-                setState(() {
-                  widget.onTap(index as int);
-                  _minIdx = index;
-                  _currentStarIdx = index;
-                });
-              },
-              child: AnimatedContainer(
-                  duration: Config.animationTime,
-                  height: starSize,
-                  width: starSize,
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.star,
-                    color: starColor(index),
-                    size: starSize,
-                  ),
-              ),
-            )
-        ),
-      ),
+              );
+              if (controller == null) return;
+              artboard.addController(controller!);
+              inputValue = controller!.findInput<double>('rating') as SMINumber;
+              if (currentRate > 0) {
+                inputValue?.change(currentRate as double);
+              }
+            }
+          )
+        )
+      )
     );
   }
 }

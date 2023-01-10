@@ -3,26 +3,38 @@ import 'package:rive/rive.dart';
 import 'package:voice_recipe/config.dart';
 
 class AnimatedButton extends StatelessWidget {
-  const AnimatedButton({
+  AnimatedButton({
     Key? key,
-    required RiveAnimationController btnAnimationController,
     required this.onTap,
     required this.text,
     this.fontSize = 20
-  })  : _btnAnimationController = btnAnimationController,
-        super(key: key);
+  }) : super(key: key) {
+    _btnAnimationController = OneShotAnimation(
+      "active",
+      autoplay: false,
+    );
+  }
 
   final String text;
-  final RiveAnimationController _btnAnimationController;
+  late final RiveAnimationController _btnAnimationController;
   final VoidCallback onTap;
   final double fontSize;
+  bool locked = false;
 
   String get postfix => Config.darkModeOn ? "_dark" : "_light";
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        if (locked) return;
+        locked = true;
+        _btnAnimationController.isActive = true;
+        Future.delayed(const Duration(milliseconds: 800), () {
+          onTap();
+          locked = false;
+        });
+      },
       onHover: (h) {},
       child: SizedBox(
         height: 64,

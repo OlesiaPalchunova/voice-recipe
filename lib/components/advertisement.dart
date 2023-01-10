@@ -19,21 +19,11 @@ double width(BuildContext context) {
 }
 
 class _AdvertisementState extends State<Advertisement> {
-  late RiveAnimationController _btnAnimationController;
   static double generalFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;
 
   static double titleFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 24 : 22;
-
-  @override
-  void initState() {
-    _btnAnimationController = OneShotAnimation(
-      "active",
-      autoplay: false,
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +73,8 @@ class _AdvertisementState extends State<Advertisement> {
                 SizedBox(
                   width: width(context) / 2,
                   child: AnimatedButton(
-                      btnAnimationController: _btnAnimationController,
                       onTap: () {
-                        _btnAnimationController.isActive = true;
-                        Future.delayed(const Duration(milliseconds: 800), () {
-                          Navigator.of(context).pushNamed(CreateRecipeScreen.route);
-                        });
+                        Navigator.of(context).pushNamed(CreateRecipeScreen.route);
                       },
                       text: "Перейти"
                   ),

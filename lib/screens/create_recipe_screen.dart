@@ -74,7 +74,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     return Scaffold(
       appBar: const TitleLogoPanel(
         title: "Создать новый рецепт",
-      ).appBar(),/**/
+      ).appBar(),
       backgroundColor: backgroundColor,
       body: Stack(
         children: [

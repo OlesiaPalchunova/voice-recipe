@@ -1,11 +1,13 @@
 import 'package:rive/rive.dart';
 
 class RiveUtils {
-  static StateMachineController getRiveInput(Artboard artboard,
+  static StateMachineController? getStateMachineController(Artboard artboard,
       {required String stateMachineName}) {
     StateMachineController? controller = StateMachineController.fromArtboard(
         artboard, stateMachineName);
-    artboard.addController(controller!);
+    if (controller != null) {
+      artboard.addController(controller!);
+    }
     return controller;
   }
 
