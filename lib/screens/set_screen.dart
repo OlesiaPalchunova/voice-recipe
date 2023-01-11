@@ -40,18 +40,32 @@ class _SetScreenState extends State<SetScreen> {
                   width: Config.maxPageWidth,
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: Config.margin / 2),
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    child: Wrap(
-                      children: recipes.map((e) => RecipeHeaderCard(
-                          recipe: e,
-                          sizeDivider: 2,
-                          showLike: widget.showLikes,
-                      )
-                      ).toList()
-                    ),
-                  ),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        child: Wrap(
+                          children: recipes.map((e) => RecipeHeaderCard(
+                              recipe: e,
+                              sizeDivider: 2,
+                              showLike: widget.showLikes,
+                          )
+                          ).toList()
+                        ),
+                      ),
+                      recipes.isEmpty
+                      ? Center(
+                          child: Text("Данная коллекция пока что пуста :/",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Config.iconColor,
+                              fontFamily: Config.fontFamily,
+                            ))
+                        )
+                      : const SizedBox()  
+                    ]
+                  )
                 )
               ),
             )

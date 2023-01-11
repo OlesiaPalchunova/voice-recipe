@@ -8,6 +8,7 @@ import '../db/user_db_manager.dart';
 import '../users_info.dart';
 
 class AuthenticationManager {
+  static const delayMillis = 2000;
 
   factory AuthenticationManager() {
     return AuthenticationManager._internal();
@@ -35,7 +36,9 @@ class AuthenticationManager {
         );
       }
     } on FirebaseException catch(e) {
-      Config.showAlertDialog(e.message!, context);
+      Future.delayed(const Duration(milliseconds: delayMillis), () {
+        Config.showAlertDialog(e.message!, context);
+      });
       return false;
     }
     return true;
@@ -64,7 +67,9 @@ class AuthenticationManager {
           email: email,
           password: password);
     } on FirebaseException catch (e) {
-      Config.showAlertDialog(e.message!, context, true);
+      Future.delayed(const Duration(milliseconds: delayMillis), () {
+        Config.showAlertDialog(e.message!, context);
+      });
       return false;
     }
     return true;
@@ -73,7 +78,9 @@ class AuthenticationManager {
   Future<bool> signUp(BuildContext context, String email, String password,
       String passwordAgain, String firstName, String secondName) async {
     if (password != passwordAgain) {
-      Config.showAlertDialog("Пароли не совпадают", context, true);
+      Future.delayed(const Duration(milliseconds: delayMillis), () {
+        Config.showAlertDialog("Пароли не совпадают", context);
+      });
       return false;
     }
     try {
@@ -89,8 +96,9 @@ class AuthenticationManager {
       await UserDbManager().addNewUserData(user.uid, "$firstName $secondName",
           user.photoURL ?? defaultProfileUrl);
     } on FirebaseException catch (e) {
-      debugPrint(e.message);
-      Config.showAlertDialog(e.message!, context, true);
+      Future.delayed(const Duration(milliseconds: delayMillis), () {
+        Config.showAlertDialog(e.message!, context);
+      });
       return false;
     }
     return true;

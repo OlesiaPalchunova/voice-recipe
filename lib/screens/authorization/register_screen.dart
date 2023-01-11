@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
+import 'package:voice_recipe/components/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
 import '../../components/buttons/login/sign_in_button.dart';
-import '../../components/custom_positioned.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
 import '../../config.dart';
@@ -31,29 +30,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _firstNameFocusNode = FocusNode();
   final _secondNameFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
-
-  bool isShowLoading = false;
-  bool isShowConfetti = false;
-  SMITrigger? error;
-  SMITrigger? success;
-  SMITrigger? reset;
-  SMITrigger? confetti;
-
-  void _onCheckRiveInit(Artboard artboard) {
-    StateMachineController? controller =
-        StateMachineController.fromArtboard(artboard, 'State Machine 1');
-    artboard.addController(controller!);
-    error = controller.findInput<bool>('Error') as SMITrigger;
-    success = controller.findInput<bool>('Check') as SMITrigger;
-    reset = controller.findInput<bool>('Reset') as SMITrigger;
-  }
-
-  void _onConfettiRiveInit(Artboard artboard) {
-    StateMachineController? controller =
-        StateMachineController.fromArtboard(artboard, "State Machine 1");
-    artboard.addController(controller!);
-    confetti = controller.findInput<bool>("Trigger explosion") as SMITrigger;
-  }
 
   String get email => _emailController.text.trim();
 
@@ -99,9 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _passwordFocusNode.unfocus();
           _confirmPasswordFocusNode.unfocus();
         },
-        child: Stack(
-          children: [
-            SingleChildScrollView(
+        child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Center(
                 child: SizedBox(
@@ -187,78 +161,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-            ),
-            isShowLoading
-                ? CustomPositioned(
-                    topOffset: 200,
-                    child: RiveAnimation.asset(
-                      'assets/RiveAssets/check.riv',
-                      fit: BoxFit.cover,
-                      onInit: _onCheckRiveInit,
-                    ),
-                  )
-                : const SizedBox(),
-            isShowConfetti
-                ? CustomPositioned(
-                    topOffset: 200,
-                    scale: 6,
-                    child: RiveAnimation.asset(
-                      "assets/RiveAssets/confetti.riv",
-                      onInit: _onConfettiRiveInit,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : const SizedBox()
-          ],
-        ),
+            )
       ),
     );
   }
 
   void register(Method method) async {
-    setState(() {
-      isShowConfetti = true;
-      isShowLoading = true;
-    });
-    bool logged = false;
-    if (method == Method.email) {
-      logged = await AuthenticationManager().signUp(
-          context,
-          email,
-          password,
-          confirmPassword,
-          firstName,
-          secondName);
-    } else {
-      logged = await AuthenticationManager().signInWithGoogle(context);
-    }
-    if (logged) {
-      success?.fire();
-      Future.delayed(
-        const Duration(seconds: 2),
-            () {
-          setState(() {
-            isShowLoading = false;
-          });
-          confetti?.fire();
-          // Navigate & hide confetti
-          Future.delayed(const Duration(seconds: 1), () {
-            // Navigator.pop(context);
-            Navigator.of(context).pop();
-          });
-        },
-      );
-    } else {
-      error?.fire();
-      Future.delayed(
-        const Duration(seconds: 2),
-            () {
-          setState(() {
-            isShowLoading = false;
-          });
-          reset?.fire();
-        },
-      );
-    }
+    AnimatedLoading().execute(
+      context,
+      task: () async {
+        bool logged = false;
+        if (method == Method.email) {
+          logged = await AuthenticationManager().signUp(
+              context,
+              email,
+              password,
+              confirmPassword,
+              firstName,
+              secondName);
+        } else {
+          logged = await AuthenticationManager().signInWithGoogle(context);
+        }
+        return logged;
+      },
+      onSuccess: () => Navigator.of(context).pop()
+    );
   }
 }

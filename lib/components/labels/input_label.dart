@@ -32,11 +32,15 @@ class InputLabel extends StatelessWidget {
           Widget? suffixIcon,
           Widget? prefixIcon,
           String? hintText,
-          bool? withContentPadding}) =>
-      InputDecoration(
+          bool? withContentPadding}) {
+    bool withPadding = false;
+    if (withContentPadding != null) {
+      withPadding = withContentPadding!;
+    }
+    return InputDecoration(
           hintText: hintText,
           labelText: labelText,
-          contentPadding: withContentPadding ?? withContentPadding!
+          contentPadding: withPadding
               ? null
               : const EdgeInsets.symmetric(horizontal: Config.margin),
           labelStyle: TextStyle(
@@ -63,6 +67,7 @@ class InputLabel extends StatelessWidget {
           filled: true,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon);
+  }
 
   @override
   Widget build(BuildContext context) {

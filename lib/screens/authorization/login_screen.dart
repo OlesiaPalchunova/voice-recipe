@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
+import 'package:voice_recipe/components/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
@@ -60,29 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
 
-  bool isShowLoading = false;
-  bool isShowConfetti = false;
-  late SMITrigger error;
-  late SMITrigger success;
-  late SMITrigger reset;
-  late SMITrigger confetti;
-
-  void _onCheckRiveInit(Artboard artboard) {
-    StateMachineController? controller =
-        StateMachineController.fromArtboard(artboard, 'State Machine 1');
-    artboard.addController(controller!);
-    error = controller.findInput<bool>('Error') as SMITrigger;
-    success = controller.findInput<bool>('Check') as SMITrigger;
-    reset = controller.findInput<bool>('Reset') as SMITrigger;
-  }
-
-  void _onConfettiRiveInit(Artboard artboard) {
-    StateMachineController? controller =
-        StateMachineController.fromArtboard(artboard, "State Machine 1");
-    artboard.addController(controller!);
-    confetti = controller.findInput<bool>("Trigger explosion") as SMITrigger;
-  }
-
   String get email => _emailController.text.trim();
 
   String get password => _passwordController.text.trim();
@@ -112,9 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _emailFocusNode.unfocus();
           _passwordFocusNode.unfocus();
         },
-        child: Stack(
-          children: [
-            SingleChildScrollView(
+        child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Container(
                 alignment: Alignment.center,
@@ -210,78 +185,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-            ),
-            isShowLoading
-                ? CustomPositioned(
-              child: RiveAnimation.asset(
-                'assets/RiveAssets/check.riv',
-                fit: BoxFit.cover,
-                onInit: _onCheckRiveInit,
-              ),
             )
-                : const SizedBox(),
-            isShowConfetti
-                ? CustomPositioned(
-              scale: 6,
-              child: RiveAnimation.asset(
-                "assets/RiveAssets/confetti.riv",
-                onInit: _onConfettiRiveInit,
-                fit: BoxFit.cover,
-              ),
-            )
-                : const SizedBox()
-          ],
-        ),
       ),
     );
   }
 
   void login(Method method) async {
-    setState(() {
-      isShowConfetti = true;
-      isShowLoading = true;
-    });
-    bool logged = false;
-    if (method == Method.email) {
-      logged = await AuthenticationManager()
-          .signIn(context, email, password);
-    } else {
-      logged = await AuthenticationManager()
-          .signInWithGoogle(context);
-    }
-    if (logged) {
-      success.fire();
-      Future.delayed(
-        const Duration(seconds: 2),
-            () {
-          setState(() {
-            isShowLoading = false;
-          });
-          confetti.fire();
-          // Navigate & hide confetti
-          Future.delayed(const Duration(seconds: 1), () {
-            // Navigator.pop(context);
-            Navigator.of(context).pop();
-          });
-        },
-      );
-    } else {
-      error.fire();
-      Future.delayed(
-        const Duration(seconds: 2),
-            () {
-          setState(() {
-            isShowLoading = false;
-          });
-          reset.fire();
-        },
-      );
-    }
+    AnimatedLoading().execute(
+      context,
+      task: () async {
+        bool logged = false;
+        if (method == Method.email) {
+          logged = await AuthenticationManager()
+              .signIn(context, email, password);
+        } else {
+          logged = await AuthenticationManager()
+              .signInWithGoogle(context);
+        }
+        return logged;
+      },
+      onSuccess: () => Navigator.of(context).pop()
+    );
   }
 
   void _onForgotPassword(BuildContext context) {
     Navigator.of(context).pushNamed(ForgotPasswordScreen.route);
   }
 }
-
-

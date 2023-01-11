@@ -32,7 +32,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var width = min(Config.recipeSlideWidth(context), Config.maxLoginPageWidth);
+    var width = Config.loginPageWidth(context);
     return Scaffold(
       appBar: const TitleLogoPanel(
         title: Config.appName,
@@ -41,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         onTap: () => _emailFocusNode.unfocus(),
         child: Container(
           color: Config.backgroundEdgeColor,
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Container(
@@ -63,6 +63,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Container(
                     padding: const EdgeInsets.all(Config.padding).add(
                         const EdgeInsets.symmetric(horizontal: Config.padding)),
+                    width: width * .85,
                     alignment: Alignment.center,
                     child: Text(
                         "Введите свой email, чтобы мы прислали вам"

@@ -10,23 +10,13 @@ class CustomPositioned extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
+    return SizedBox(
             height: 100,
             width: 100,
             child: Transform.scale(
               scale: scale,
               child: child,
             ),
-          ),
-          SizedBox(
-            height: topOffset,
-          )
-        ],
-      ),
     );
   }
 }

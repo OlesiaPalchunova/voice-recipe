@@ -11,6 +11,7 @@ import 'package:voice_recipe/components/constructor_views/ingredients_label.dart
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 import 'package:voice_recipe/screens/recipe_screen.dart';
+import 'package:voice_recipe/components/animated_loading.dart';
 
 import '../config.dart';
 import '../model/recipes_info.dart';
@@ -135,38 +136,42 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       ingredients: ingredients,
       steps: steps,
     );
-    Config.showProgressCircle(context);
-    int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
-    await Future.microtask(() {
-      Navigator.of(context).pop();
-      if (recipeId == RecipesSender.fail) {
+    AnimatedLoading().execute(context,
+      task: () async {
+        int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
+        Future.delayed(const Duration(milliseconds: 2000), () {
+          if (recipeId == RecipesSender.fail) {
+            Config.showAlertDialog(
+                "Приносим свои извинения, сервер не отвечает", context);
+          } else {
+            UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+          }
+        });
+        return recipeId != RecipesSender.fail;
+      },
+      onSuccess: () {
         Config.showAlertDialog(
-            "Приносим свои извинения, сервер не отвечает", context);
-      } else {
-        UserDbManager().addNewCreated(Config.user!.uid, recipeId);
-        Config.showAlertDialog(
-            "Ваш рецепт был успешно сохранен!\n"
-            "Вы всегда можете его просмотреть в разделе\n"
-            "Профиль > Мои рецепты",
-            context);
+          "Ваш рецепт был успешно сохранен!\n"
+          "Вы всегда можете его просмотреть в разделе\n"
+          "Профиль > Мои рецепты", context);
+        if (HeaderLabelState.current == null) {
+          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+          return;
+        }
+        HeaderLabelState.current!.clear();
+        if (IngredientsLabelState.current == null) {
+          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+          return;
+        }
+        IngredientsLabelState.current!.clear();
+        if (StepsLabelState.current == null) {
+          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+          return;
+        }
+        StepsLabelState.current!.clear();
+        setState(() {});
       }
-    });
-    if (HeaderLabelState.current == null) {
-      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-      return;
-    }
-    HeaderLabelState.current!.clear();
-    if (IngredientsLabelState.current == null) {
-      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-      return;
-    }
-    IngredientsLabelState.current!.clear();
-    if (StepsLabelState.current == null) {
-      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-      return;
-    }
-    StepsLabelState.current!.clear();
-    setState(() {});
+    );
   }
 
   List<Widget> allLabels(BuildContext context) {
@@ -191,32 +196,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
             ))),
       ),
     ];
-    if (createdRecipe != null) {
-      labels.add(
-        Container(
-          margin: Config.paddingAll,
-          child: SizedBox(
-              width: CreateRecipeScreen.pageWidth(context) / 2,
-              child: SizedBox(
-                  child: ClassicButton(
-                customColor: CreateRecipeScreen.buttonColor,
-                onTap: showCreatedRecipe,
-                text: "Превью",
-                fontSize: CreateRecipeScreen.generalFontSize(context),
-              ))),
-        ),
-      );
-    }
     return labels.map((e) => roundWrapper(e)).toList();
-  }
-
-  void showCreatedRecipe() {
-    if (createdRecipe == null) {
-      Config.showAlertDialog("Рецепт не создан", context);
-      return;
-    }
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => RecipeScreen(recipe: createdRecipe!)));
   }
 
   TextStyle get ingStyle => TextStyle(
