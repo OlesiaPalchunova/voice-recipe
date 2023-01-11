@@ -16,7 +16,7 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TitleLogoPanel(title: "Профиль").appBar(),
-      backgroundColor: Config.backgroundColor,
+      backgroundColor: Config.backgroundEdgeColor,
       body: Center(
         child: Container(
           alignment: Alignment.center,

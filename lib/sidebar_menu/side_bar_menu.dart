@@ -41,7 +41,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
     return Drawer(
       width: min(Config.pageWidth(context) * 0.7, 400),
       child: Material(
-          color: Config.backgroundColor,
+          color: Config.darkModeOn ? Config.backgroundColor : Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -140,6 +140,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
           onTap: () {
             Navigator.of(context).pushNamed(AuthScreen.route);
           },
+          borderRadius: Config.borderRadiusLarge,
           child: Row(
             children: [
               Container(

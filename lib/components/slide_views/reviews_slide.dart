@@ -82,6 +82,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
         padding: const EdgeInsets.all(Config.padding),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
+          physics: const BouncingScrollPhysics(),
           child: Container(
             alignment: Alignment.topCenter,
             child: Column(
@@ -117,14 +118,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                           ),
                         ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: Config.padding),
-                        child: StarPanel(
-                          id: widget.recipe.id,
-                          onTap: (star) {
-                            ratesMap[widget.recipe.id] = star;
-                          },
-                        ),
+                      StarPanel(
+                        id: widget.recipe.id,
+                        onTap: (star) {
+                          ratesMap[widget.recipe.id] = star;
+                        },
                       )
                     ],
                   ),
@@ -150,36 +148,32 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                               fontSize: fontSize(context)),
                         ),
                       ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: [
-                            NewCommentCard(
-                                focusNode: _newCommentNode,
-                                textController: _commentController,
-                                onSubmit: _submitComment,
-                                onCancel: () {},
-                                profileImageUrl: Config.loggedIn
-                                    ? FirebaseAuth
-                                            .instance.currentUser!.photoURL ??
-                                        defaultProfileUrl
-                                    : defaultProfileUrl
-                            ),
-                            Column(
-                              children: comments.keys
-                                  .map((id) => CommentCard(
-                                        onUpdate: _updateComment,
-                                        commentId: id,
-                                        comment: comments[id]!,
-                                        recipeId: widget.recipe.id,
-                                        onDelete: () => setState(() {
-                                          comments.remove(id);
-                                        }),
-                                      ))
-                                  .toList(),
-                            ),
-                          ],
-                        ),
+                      Column(
+                        children: [
+                          NewCommentCard(
+                              focusNode: _newCommentNode,
+                              textController: _commentController,
+                              onSubmit: _submitComment,
+                              onCancel: () {},
+                              profileImageUrl: Config.loggedIn
+                                  ? FirebaseAuth
+                                          .instance.currentUser!.photoURL ??
+                                      defaultProfileUrl
+                                  : defaultProfileUrl),
+                          Column(
+                            children: comments.keys
+                                .map((id) => CommentCard(
+                                      onUpdate: _updateComment,
+                                      commentId: id,
+                                      comment: comments[id]!,
+                                      recipeId: widget.recipe.id,
+                                      onDelete: () => setState(() {
+                                        comments.remove(id);
+                                      }),
+                                    ))
+                                .toList(),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -197,10 +191,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       return;
     }
     await CommentDbManager().updateComment(
-        newText: newText,
-        recipeId: widget.recipe.id,
-        commentId: commentId
-    );
+        newText: newText, recipeId: widget.recipe.id, commentId: commentId);
     await widget.updateComments();
     if (_disposed) return;
     setState(() {});

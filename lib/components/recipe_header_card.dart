@@ -18,6 +18,25 @@ class RecipeHeaderCard extends StatefulWidget {
   final Recipe recipe;
   final double sizeDivider;
   final bool showLike;
+  static const maxDesktopHeight = 270.0;
+
+  static double cardWidth(BuildContext context) {
+    bool isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
+    double height = isDesktop ? maxDesktopHeight : Config.pageHeight(context) * .3;
+    var largeWidth = Config.pageWidth(context) * .9;
+    var smallWidth = height * 1.2;
+    double width = 0.0;
+    if (isDesktop) {
+      if (largeWidth < 2 * smallWidth) {
+        width = largeWidth;
+      } else {
+        width = smallWidth;
+      }
+    } else {
+      width = largeWidth;
+    }
+    return width;
+  }
 
   @override
   State<RecipeHeaderCard> createState() => _RecipeHeaderCardState();
@@ -29,7 +48,6 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   static const gradColor = Colors.black87;
   static const endGradColor = Color.fromRGBO(50, 50, 50, .0);
   static final startGradColor = gradColor.withOpacity(0.8);
-  static const maxDesktopHeight = 270.0;
   static bool isDesktop = false;
   late double height;
   late double width;
@@ -43,16 +61,17 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     isDesktop = Config.pageWidth(context) >= Config.pageHeight(context);
-    height = isDesktop ? maxDesktopHeight : Config.pageHeight(context) * 0.3;
-    var supposedWidth = Config.pageWidth(context) * 0.9;
+    height = isDesktop ? RecipeHeaderCard.maxDesktopHeight : Config.pageHeight(context) * .3;
+    var largeWidth = Config.pageWidth(context) * .9;
+    var smallWidth = height * 1.2;
     if (isDesktop) {
-      if (supposedWidth < 2 * height * 1.2) {
-        width = supposedWidth;
+      if (largeWidth < 2 * smallWidth) {
+        width = largeWidth;
       } else {
-        width = height * 1.2;
+        width = smallWidth;
       }
     } else {
-      width = supposedWidth;
+      width = largeWidth;
     }
   }
 
@@ -138,14 +157,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                                 blurRadius: blurRadius,
                                 offset: const Offset(-2, -2))
                           ]
-                        : Config.darkModeOn
-                            ? []
-                            : [
-                                BoxShadow(
-                                    color: Config.iconColor,
-                                    spreadRadius: 0.5,
-                                    blurRadius: 0.5)
-                              ]),
+                        : []
+                        ),
                 child: Column(children: [
                   Container(
                     // height: cardHeight * 0.2,

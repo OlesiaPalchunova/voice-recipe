@@ -164,6 +164,7 @@ class StepsLabelState extends State<StepsLabel> {
                 height: Config.padding,
               ),
               InputLabel(
+                  withContentPadding: true,
                   labelText: "Описание шага",
                   controller: stepController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),

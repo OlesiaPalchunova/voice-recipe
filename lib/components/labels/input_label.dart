@@ -9,61 +9,109 @@ class InputLabel extends StatelessWidget {
       required this.controller,
       this.focusNode,
       this.onSubmit,
-        this.hintText,
-      this.fontSize = 18});
+      this.onTap,
+      this.onChanged,
+      this.hintText,
+      this.prefixIcon,
+      this.fontSize = 18,
+      this.withContentPadding = false});
 
+  final bool withContentPadding;
   final String? hintText;
   final String labelText;
   final TextEditingController controller;
   final FocusNode? focusNode;
   final VoidCallback? onSubmit;
+  final VoidCallback? onTap;
+  final Widget? prefixIcon;
+  final Function(String)? onChanged;
   final double fontSize;
 
   static InputDecoration buildInputDecoration(
-          {required String labelText, Widget? suffixIcon, String? hintText}) =>
+          {required String labelText,
+          Widget? suffixIcon,
+          Widget? prefixIcon,
+          String? hintText,
+          bool? withContentPadding}) =>
       InputDecoration(
           hintText: hintText,
           labelText: labelText,
+          contentPadding: withContentPadding ?? withContentPadding!
+              ? null
+              : const EdgeInsets.symmetric(horizontal: Config.margin),
           labelStyle: TextStyle(
               color: Config.iconColor.withOpacity(0.7),
-              fontFamily: Config.fontFamily
-          ),
+              fontFamily: Config.fontFamily),
           hintStyle: TextStyle(
-              color: Config.iconColor.withOpacity(0.7),
-              fontFamily: Config.fontFamily,
+            color: Config.iconColor.withOpacity(0.7),
+            fontFamily: Config.fontFamily,
           ),
           floatingLabelAlignment: FloatingLabelAlignment.start,
           enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: 0.2, color: Colors.black87),
-              borderRadius: Config.borderRadiusLarge
-          ),
+              borderSide: BorderSide(width: .2, color: Colors.transparent),
+              borderRadius: Config.borderRadiusLarge),
           focusedBorder: OutlineInputBorder(
               borderRadius: Config.borderRadiusLarge,
               borderSide: BorderSide(
-                  color: Config.darkModeOn ? Colors.orangeAccent : Colors.black54)
-          ),
-          hoverColor: !Config.darkModeOn ? Colors.orangeAccent.withOpacity(.1) : Colors.grey.shade800,
+                  color: Config.darkModeOn
+                      ? Colors.orangeAccent
+                      : Colors.black54)),
+          hoverColor: !Config.darkModeOn
+              ? Colors.orangeAccent.withOpacity(.2)
+              : Colors.grey.shade800,
           fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
           filled: true,
-          suffixIcon: suffixIcon
-      );
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-            onFieldSubmitted: (s) {
-              if (onSubmit == null) return;
-              onSubmit!();
-            },
-            focusNode: focusNode,
-            controller: controller,
-            decoration: buildInputDecoration(
-            labelText: labelText, hintText: hintText),
-            style: TextStyle(
-                color: Config.iconColor.withOpacity(0.8),
-                fontSize: fontSize,
-                fontFamily: Config.fontFamily
+    return withContentPadding
+        ? SizedBox(
+            // height: Config.isDesktop(context) ? 60 : 40,
+            child: TextField(
+              onSubmitted: (s) {
+                if (onSubmit == null) return;
+                onSubmit!();
+              },
+              maxLines: null,
+              onTap: onTap,
+              onChanged: onChanged,
+              focusNode: focusNode,
+              controller: controller,
+              decoration: buildInputDecoration(
+                  labelText: labelText,
+                  hintText: hintText,
+                  prefixIcon: prefixIcon,
+                  withContentPadding: withContentPadding),
+              style: TextStyle(
+                  color: Config.iconColor.withOpacity(0.8),
+                  fontSize: fontSize,
+                  fontFamily: Config.fontFamily
+              ),
             ),
-    );
+          )
+        : SizedBox(
+            // height: Config.isDesktop(context) ? 60 : 40,
+            child: TextFormField(
+              onFieldSubmitted: (s) {
+                if (onSubmit == null) return;
+                onSubmit!();
+              },
+              onTap: onTap,
+              onChanged: onChanged,
+              focusNode: focusNode,
+              controller: controller,
+              decoration: buildInputDecoration(
+                  labelText: labelText,
+                  hintText: hintText,
+                  prefixIcon: prefixIcon,
+                  withContentPadding: withContentPadding),
+              style: TextStyle(
+                  color: Config.iconColor.withOpacity(0.8),
+                  fontSize: fontSize,
+                  fontFamily: Config.fontFamily),
+            ),
+          );
   }
 }

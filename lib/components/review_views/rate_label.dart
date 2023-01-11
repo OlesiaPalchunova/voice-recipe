@@ -10,9 +10,7 @@ class RateLabel extends StatelessWidget {
   final double width;
   final bool shadowOn;
 
-  List<BoxShadow> get shadows => shadowOn
-      ? [BoxShadow(color: Config.iconColor.withOpacity(0.5), blurRadius: 0, spreadRadius: 0.5)]
-      : [];
+  List<BoxShadow> get shadows => [];
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +20,9 @@ class RateLabel extends StatelessWidget {
           borderRadius: Config.borderRadiusLarge,
         boxShadow: shadows
       ),
+      margin: EdgeInsets.only(bottom: width / 10),
       width: width,
-      height: width / 2,
+      height: width * .8,
       padding: EdgeInsets.all(width / 20).add(EdgeInsets.symmetric(horizontal:
       width / 15)),
       alignment: Alignment.center,

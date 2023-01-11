@@ -68,19 +68,7 @@ class _ClassicButtonState extends State<ClassicButton> {
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
           color: color,
-              borderRadius: Config.borderRadiusLarge,
-          boxShadow: Config.darkModeOn ? [] : !_hovered ?
-            [
-            BoxShadow(
-              color: Config.darkModeOn ? Colors.orangeAccent : Colors.black54,
-              spreadRadius: 0.5
-            )
-            ] : [
-            BoxShadow(
-              color: Config.iconColor.withOpacity(0.5),
-              spreadRadius: 0.5
-            )
-          ]
+              borderRadius: Config.borderRadiusLarge
         ),
         padding: const EdgeInsets.all(Config.padding)
             .add(const EdgeInsets.symmetric(horizontal: Config.padding)),

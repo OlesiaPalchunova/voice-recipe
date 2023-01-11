@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:blur/blur.dart';
 import 'package:voice_recipe/screens/create_recipe_screen.dart';
+import 'package:voice_recipe/components/recipe_header_card.dart';
 
 import '../config.dart';
 import 'buttons/animated_button.dart';
@@ -13,9 +14,24 @@ class Advertisement extends StatefulWidget {
   State<Advertisement> createState() => _AdvertisementState();
 }
 
-double width(BuildContext context) {
+double labelWidth(BuildContext context) {
   double k = Config.isWide(context) ? .45 : .9;
-  return k * Config.pageWidth(context);
+  return k * width(context);
+}
+
+double width(BuildContext context) {
+  double cardWidth = RecipeHeaderCard.cardWidth(context);
+  int n = 1;
+  while (true) {
+    double margin = 2 * 10.0 * (n - 1);
+    if (Config.widePageWidth(context) < n * cardWidth + margin) {
+      n--;
+      break;
+    }
+    n++;
+  }
+  double margin = 2 * 10.0 * (n - 1);
+  return n * cardWidth + margin;
 }
 
 class _AdvertisementState extends State<Advertisement> {
@@ -30,23 +46,22 @@ class _AdvertisementState extends State<Advertisement> {
     return Container(
       height: 220,
       alignment: Alignment.center,
-      width: Config.pageWidth(context) * .9,
+      width: width(context),
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: Config.backgroundColor,
-          boxShadow: [
-            BoxShadow(
-                color: Config.iconColor, spreadRadius: 0.2, blurRadius: 0.2)
-          ]
+          // color: Config.backgroundColor,
+          // boxShadow: [
+          //   BoxShadow(
+          //       color: Config.iconColor, spreadRadius: 0.2, blurRadius: 0.2)
+          // ]
       ),
       child: Blur(
         blur: 5,
-        blurColor: Config.backgroundColor,
+        blurColor: Config.edgeColor,
         borderRadius: Config.borderRadiusLarge,
         overlay: Container(
-          alignment: Alignment.centerLeft,
+          alignment: Alignment.center,
           child: Container(
-            width: width(context),
             alignment: Alignment.center,
             padding: Config.paddingAll,
             child: Column(
@@ -71,7 +86,7 @@ class _AdvertisementState extends State<Advertisement> {
                 ),
                 const SizedBox(height: Config.margin,),
                 SizedBox(
-                  width: width(context) / 2,
+                  width: labelWidth(context) / 2,
                   child: AnimatedButton(
                       onTap: () {
                         Navigator.of(context).pushNamed(CreateRecipeScreen.route);
@@ -84,10 +99,10 @@ class _AdvertisementState extends State<Advertisement> {
           ),
         ),
         child: Container(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             child: SizedBox(
-                width: width(context),
-                child: const RiveAnimation.asset('assets/RiveAssets/shapes.riv')
+                child: const RiveAnimation.asset('assets/RiveAssets/shapes.riv',
+              )
             )
         ),
       ),

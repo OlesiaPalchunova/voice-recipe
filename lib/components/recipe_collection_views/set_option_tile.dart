@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config.dart';
 import '../../model/sets_info.dart';
 import '../../screens/set_screen.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 
 class SetOptionTile extends StatefulWidget {
   const SetOptionTile({Key? key, required this.setOption}) : super(key: key);
@@ -16,14 +17,19 @@ class SetOptionTile extends StatefulWidget {
 class _SetOptionTileState extends State<SetOptionTile> {
   bool _isPressed = false;
 
+  Color get hoverColor => Config.darkModeOn ? ClassicButton.hoverColor :
+      Colors.white;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         setState(() {
           _isPressed = true;
         });
       },
+      borderRadius: Config.borderRadiusLarge,
+      hoverColor: Config.pressed,
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         onEnd: () async {
@@ -39,7 +45,7 @@ class _SetOptionTileState extends State<SetOptionTile> {
         },
         decoration: BoxDecoration(
           borderRadius: Config.borderRadius,
-          color: _isPressed ? Config.pressed : Config.notPressed,
+          color: _isPressed ? Config.pressed : null,
         ),
         width: Config.pageWidth(context),
         margin: const EdgeInsets.symmetric(horizontal: Config.margin * 2),

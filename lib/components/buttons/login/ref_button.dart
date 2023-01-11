@@ -34,6 +34,7 @@ class _RefButtonState extends State<RefButton> {
         }));
         widget.onTap();
       },
+      borderRadius: Config.borderRadiusLarge,
       child: Container(
         padding: const EdgeInsets.all(Config.padding),
         child: Text(

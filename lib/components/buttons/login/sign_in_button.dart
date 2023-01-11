@@ -39,6 +39,8 @@ class _SignInButtonState extends State<SignInButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      hoverColor: ClassicButton.hoverColor,
+      borderRadius: Config.borderRadiusLarge,
       onHover: (h) => setState(() {
         hovered = h;
       }),
@@ -57,16 +59,11 @@ class _SignInButtonState extends State<SignInButton> {
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: backgroundColor,
-          border: Border.all(
-            color: Colors.black87,
-            width: 0.1
-          ),
+          color: backgroundColor
         ),
         alignment: Alignment.center,
         height: widget.height,
         width: widget.width,
-        margin: const EdgeInsets.symmetric(vertical: Config.margin / 2),
         padding: const EdgeInsets.symmetric(horizontal: Config.padding * 2),
         child: Row(
           children: [

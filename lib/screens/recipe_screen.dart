@@ -79,7 +79,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   List<Widget> getBodyWidgets() {
     List<Widget> list = [];
     bool showButtons = Config.isWeb && Config.pageWidth(context) > 800;
-    double arrowSize = Config.pageWidth(context) / 8;
+    double arrowSize = Config.pageWidth(context) / 16;
     if (showButtons) {
       list.add(
         SizedBox(

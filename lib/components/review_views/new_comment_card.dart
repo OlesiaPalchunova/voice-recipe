@@ -50,46 +50,53 @@ class NewCommentCardState extends State<NewCommentCard> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     List<Widget> columnChildren = [
-      TextField(
-          focusNode: widget.focusNode,
-          autofocus: false,
-          controller: widget.textController,
-          style: TextStyle(
-              color: Config.iconColor,
-              fontFamily: Config.fontFamily
-          ),
-          onTap: () {
-            if (Config.loggedIn) {
-              setState(() {
-                _focused = true;
-              });
-              return;
-            }
-            widget.focusNode.unfocus();
-            Config.showLoginInviteDialog(context);
-          },
-          onSubmitted: (s) => onSubmit(),
-          decoration: InputDecoration(
-              hintText: 'Оставьте свой комментарий',
-              hintStyle: TextStyle(
-                  color: Config.iconColor.withOpacity(0.5),
-                  fontFamily: Config.fontFamily,
-                  fontSize: CommentCard.descFontSize(context)
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Config.iconColor.withOpacity(0.5)
-                  )
-              ),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Config.iconColor
-                  )
-              ),
-          )
+      SizedBox(
+        // height: 40,
+        child: TextField(
+            focusNode: widget.focusNode,
+            autofocus: false,
+            controller: widget.textController,
+            style: TextStyle(
+                color: Config.iconColor,
+                fontFamily: Config.fontFamily,
+                fontSize: CommentCard.descFontSize(context)
+            ),
+            maxLines: null,
+            onTap: () {
+              if (Config.loggedIn) {
+                setState(() {
+                  _focused = true;
+                });
+                return;
+              }
+              widget.focusNode.unfocus();
+              Config.showLoginInviteDialog(context);
+            },
+            onSubmitted: (s) => onSubmit(),
+            decoration: InputDecoration(
+                hintText: 'Оставьте свой комментарий',
+                hintStyle: TextStyle(
+                    color: Config.iconColor.withOpacity(0.5),
+                    fontFamily: Config.fontFamily,
+                    fontSize: CommentCard.descFontSize(context)
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Config.iconColor.withOpacity(0.5)
+                    )
+                ),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Config.iconColor
+                    )
+                ),
+            )
+        ),
       ),
     ];
     if (_focused) {

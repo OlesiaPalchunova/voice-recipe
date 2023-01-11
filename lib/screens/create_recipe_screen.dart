@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
 import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
@@ -15,7 +14,6 @@ import 'package:voice_recipe/screens/recipe_screen.dart';
 
 import '../config.dart';
 import '../model/recipes_info.dart';
-import '../services/rive_utils.dart';
 
 class CreateRecipeScreen extends StatefulWidget {
   const CreateRecipeScreen({super.key});
@@ -62,10 +60,10 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     super.dispose();
   }
 
-  Color get backgroundColor => Config.backgroundColor;
+  Color get backgroundColor => Config.backgroundEdgeColor;
 
   Color get labelColor =>
-      !Config.darkModeOn ? Config.backgroundColor : ClassicButton.color;
+      !Config.darkModeOn ? Colors.grey.shade300 : ClassicButton.color;
 
   String get asset => Config.darkModeOn ? "green_balls" : "pink_balls";
 
@@ -76,30 +74,18 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         title: "Создать новый рецепт",
       ).appBar(),
       backgroundColor: backgroundColor,
-      body: Stack(
-        children: [
-          Blur(
-            blurColor: backgroundColor,
-            blur: 3,
-            child: RiveAnimation.asset("assets/RiveAssets/$asset.riv",
-              artboard: "Motion",
-              fit: Config.isDesktop(context) ?  BoxFit.fitWidth : BoxFit.fitHeight,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
+            alignment: Alignment.topCenter,
+            width: CreateRecipeScreen.pageWidth(context),
+            child: Column(
+              children: allLabels(context),
             ),
           ),
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
-                alignment: Alignment.topCenter,
-                width: CreateRecipeScreen.pageWidth(context),
-                child: Column(
-                  children: allLabels(context),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -108,10 +94,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: labelColor.withOpacity(.9),
-          border: Config.darkModeOn
-              ? null
-              : Border.all(color: Colors.black87, width: 0.3)),
+          color: labelColor.withOpacity(.9)),
       padding: Config.paddingAll,
       margin: const EdgeInsets.only(bottom: Config.margin),
       child: child,

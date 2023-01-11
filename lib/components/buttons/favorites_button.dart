@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../config.dart';
 import '../../model/db/favorite_recipes_db_manager.dart';
+import 'package:rive/rive.dart';
 
 class FavoritesButton extends StatefulWidget {
   const FavoritesButton(
@@ -21,10 +22,26 @@ class FavoritesButton extends StatefulWidget {
 
 class _FavoritesButtonState extends State<FavoritesButton>
     with TickerProviderStateMixin {
-  late final AnimationController animationController;
   bool _pressed = false;
   bool _listen = false;
   bool _disposed = false;
+  SMIBool? hovered;
+  SMIBool? pressed;
+
+  void _onLikeInit(Artboard artboard) {
+    StateMachineController? controller =
+        StateMachineController.fromArtboard(artboard, 'State Machine 1');
+    if (controller == null) return;
+    artboard.addController(controller!);
+    hovered = controller.findInput<bool>('Hover') as SMIBool;
+    pressed = controller.findInput<bool>('Pressed') as SMIBool;
+    if (_pressed) {
+      hovered?.change(true);
+      pressed?.change(true);
+    } else {
+      pressed?.change(false);
+    }
+  }
 
   @override
   void initState(){
@@ -33,19 +50,12 @@ class _FavoritesButtonState extends State<FavoritesButton>
     }
     _disposed = false;
     setAuthListener();
-    animationController = AnimationController(vsync: this, duration: const Duration(seconds: 1))
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              animationController.reset();
-            }
-          });
     super.initState();
   }
 
   @override
   void dispose() {
     _disposed = true;
-    animationController.dispose();
     super.dispose();
   }
 
@@ -63,69 +73,64 @@ class _FavoritesButtonState extends State<FavoritesButton>
 
   double get width => widget.width;
 
-  List<BoxShadow> get shadows => widget.shadowOn
-  ? [BoxShadow(color: Config.iconColor.withOpacity(0.5), blurRadius: 0, spreadRadius: 0.5)]
-  : [];
+  List<BoxShadow> get shadows => [];
+
+  String get postfix => Config.darkModeOn ? "_dark" : "_light";
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.center,
       children: [
         Container(
           decoration: BoxDecoration(
               boxShadow: shadows,
               color: Config.edgeColor,
               borderRadius: Config.borderRadiusLarge),
-          width: width,
-          height: width / 2,
-          margin: EdgeInsets.only(top: width / 15),
+          width: width * .8,
+          height: width * .8,
+          // margin: EdgeInsets.only(top: width / 15),
         ),
-        FadeTransition(
-          opacity: Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-              parent: animationController,
-              curve: Curves.fastLinearToSlowEaseIn)),
-          child: SlideTransition(
-            position: Tween<Offset>(
-                    begin: const Offset(0, 0), end: const Offset(0, -1))
-                .animate(CurvedAnimation(
-                    parent: animationController,
-                    curve: Curves.fastLinearToSlowEaseIn)),
-            child: Container(
-              alignment: Alignment.topCenter,
-              width: width,
-              height: width / 2,
-              child: IconButton(
-                icon: icon,
-                onPressed: () {},
-              ),
+        InkWell(
+          onTap: () {
+            if (!Config.loggedIn) {
+              Config.showLoginInviteDialog(context);
+              return;
+            }
+            _pressed = !_pressed;
+            pressed?.change(_pressed);
+            if (_pressed) {
+              FavoriteRecipesDbManager().add(widget.recipeId);
+            } else {
+              FavoriteRecipesDbManager().remove(widget.recipeId);
+            }
+          },
+          onHover: (h) {
+            hovered?.change(h);
+          },
+          child: Container(
+            width: width,
+            height: width,
+            child: SizedBox(
+              child: RiveAnimation.asset("assets/RiveAssets/like$postfix.riv",
+                onInit: _onLikeInit
+              )
             ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topCenter,
-          width: width,
-          height: width / 2,
-          child: IconButton(
-            icon: icon,
-            onPressed: () {
-              if (!Config.loggedIn) {
-                Config.showLoginInviteDialog(context);
-                return;
-              }
-              setState(() {
-                _pressed = !_pressed;
-                animationController.forward();
-                if (_pressed) {
-                  FavoriteRecipesDbManager().add(widget.recipeId);
-                } else {
-                  FavoriteRecipesDbManager().remove(widget.recipeId);
-                }
-              });
-            },
-          ),
-        ),
+          )
+        )
       ],
     );
+  }
+
+  void onPressed() {
+    setState(() {
+      _pressed = !_pressed;
+      if (_pressed) {
+        FavoriteRecipesDbManager().add(widget.recipeId);
+      } else {
+        FavoriteRecipesDbManager().remove(widget.recipeId);
+      }
+    });
   }
 
   void setAuthListener() {
@@ -143,7 +148,11 @@ class _FavoritesButtonState extends State<FavoritesButton>
     if (_disposed) {
       return;
     }
-    setState(() {
-    });
+    if (_pressed) {
+      hovered?.change(true);
+      pressed?.change(true);
+    } else {
+      pressed?.change(false);
+    }
   }
 }

@@ -35,7 +35,7 @@ class _SetScreenState extends State<SetScreen> {
         body: Builder(
             builder: (context) => Container(
               alignment: Alignment.topCenter,
-                color: Config.backgroundColor,
+                color: Config.backgroundEdgeColor,
                 child: Container(
                   width: Config.maxPageWidth,
                   alignment: Alignment.center,

@@ -39,7 +39,8 @@ class Config {
   static const Duration animationTime = Duration(milliseconds: 200);
   static const maxRecipeSlideWidth = 600.0;
   static const maxConstructorWidth = 1000.0;
-  static const maxPageWidth = 1200.0;
+  static const maxAdWidth = 270.0 * 3 + 10.0 * 6;
+  static const maxPageWidth = 1500.0;
   static const maxLoginPageWidth = 500.0;
   static const maxLoginPageHeight = 800.0;
   static const minLoginPageWidth = 300.0;
@@ -104,26 +105,32 @@ class Config {
   };
 
   static final lightTheme = ThemeData(
-      primarySwatch: const MaterialColor(
-          0xFFf07800,
-          Config.colorScheme
-      ),
       bottomAppBarTheme: const BottomAppBarTheme(
           color: MaterialColor(
               0xFFf07800,
               Config.colorScheme
           )
+      ),
+      primarySwatch: const MaterialColor(
+          0xFFf07800,
+          Config.colorScheme
       )
   );
 
   static final darkTheme = ThemeData(
       bottomAppBarTheme: const BottomAppBarTheme(
-          color: MaterialColor(0xFFf07800, Config.colorScheme)),
+          color: MaterialColor(
+            0xFFf07800,
+            Config.colorScheme
+          )
+      ),
       colorScheme: ColorScheme.fromSwatch(
           primarySwatch:
           const MaterialColor(0xFFf07800, Config.colorScheme))
           .copyWith(
-          background: const MaterialColor(0xff000000, Config.colorScheme)));
+          background: const MaterialColor(0xff000000, Config.colorScheme)
+      )
+  );
 
   static String get profileImageUrl => loggedIn ?
       user!.photoURL?? defaultProfileUrl : defaultProfileUrl;
@@ -159,7 +166,14 @@ class Config {
     if (darkModeOn) {
       return _darkThemeBackColor;
     }
-    return Colors.grey.shade100;
+    return Colors.grey.shade200;
+  }
+
+  static Color get backgroundLightedColor {
+    if (darkModeOn) {
+      return Colors.grey.shade900;
+    }
+    return Colors.white;
   }
 
   static Color get iconBackColor {
@@ -191,10 +205,9 @@ class Config {
 
   static Color getColor(int id) {
     if (darkModeOn) {
-      // return Colors.orange;
       return GradientColors.sets[id % GradientColors.sets.length].last;
     }
-    return colors[id % colors.length];
+    return GradientColors.sets[id % GradientColors.sets.length].first;
   }
 
   static User? get user => FirebaseAuth.instance.currentUser;
@@ -205,7 +218,7 @@ class Config {
         builder: (context) => AlertDialog(
             contentPadding: const EdgeInsets.all(Config.padding * 2),
             actionsPadding: const EdgeInsets.all(Config.padding * 2),
-            backgroundColor: Config.backgroundColor,
+            backgroundColor: Config.backgroundEdgeColor,
               content: Text(
                 "Войдите, чтобы сохранять понравившиеся\nрецепты и оставлять комментарии",
                 style: TextStyle(
@@ -234,7 +247,7 @@ class Config {
         barrierColor: noShadow ? Colors.transparent : Colors.black54,
         context: context,
         builder: (context) => AlertDialog(
-              backgroundColor: Config.backgroundColor,
+              backgroundColor: Config.backgroundEdgeColor,
               content: Text(
                 russianText,
                 style: TextStyle(
@@ -275,12 +288,20 @@ class Config {
     return MediaQuery.of(context).size.width;
   }
 
+  static double widePageWidth(BuildContext context) {
+    return min(maxPageWidth, MediaQuery.of(context).size.width);
+  }
+
   static double recipeSlideWidth(BuildContext context) {
     return min(maxRecipeSlideWidth, pageWidth(context));
   }
 
   static double constructorWidth(BuildContext context) {
     return min(maxConstructorWidth, pageWidth(context));
+  }
+
+  static double adWidth(BuildContext context) {
+    return min(maxAdWidth, pageWidth(context));
   }
 
   static double loginPageWidth(BuildContext context) {

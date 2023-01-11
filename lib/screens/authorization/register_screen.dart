@@ -34,10 +34,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isShowLoading = false;
   bool isShowConfetti = false;
-  late SMITrigger error;
-  late SMITrigger success;
-  late SMITrigger reset;
-  late SMITrigger confetti;
+  SMITrigger? error;
+  SMITrigger? success;
+  SMITrigger? reset;
+  SMITrigger? confetti;
 
   void _onCheckRiveInit(Artboard artboard) {
     StateMachineController? controller =
@@ -110,10 +110,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       LoginScreen.voiceRecipeIcon(
                           context,
-                          Config.loginPageHeight(context) / 5,
-                          Config.loginPageHeight(context) / 6),
+                          Config.loginPageHeight(context) / 4,
+                          Config.loginPageHeight(context) / 6
+                      ),
                       SizedBox(
-                        height: Config.loginPageHeight(context) * 0.8,
+                        // height: Config.loginPageHeight(context) * 0.8,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -232,14 +233,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       logged = await AuthenticationManager().signInWithGoogle(context);
     }
     if (logged) {
-      success.fire();
+      success?.fire();
       Future.delayed(
         const Duration(seconds: 2),
             () {
           setState(() {
             isShowLoading = false;
           });
-          confetti.fire();
+          confetti?.fire();
           // Navigate & hide confetti
           Future.delayed(const Duration(seconds: 1), () {
             // Navigator.pop(context);
@@ -248,14 +249,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
       );
     } else {
-      error.fire();
+      error?.fire();
       Future.delayed(
         const Duration(seconds: 2),
             () {
           setState(() {
             isShowLoading = false;
           });
-          reset.fire();
+          reset?.fire();
         },
       );
     }

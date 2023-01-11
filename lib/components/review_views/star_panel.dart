@@ -1,12 +1,10 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
 
 import 'package:rive/rive.dart';
-import 'package:voice_recipe/services/rive_utils.dart';
 
 class StarPanel extends StatefulWidget {
   const StarPanel({super.key, required this.id, required this.onTap});
@@ -56,14 +54,14 @@ class StarPanelState extends State<StarPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final width = Config.loginPageWidth(context);
-    final double starSize = width / 2 / starsCount;
+    double k = Config.isDesktop(context) ? .5 : .7;
+    final width = Config.loginPageWidth(context) * k;
     return InkWell(
       onTap: () {},
       child: Align(
         alignment: Alignment.centerLeft,
         child: SizedBox(
-          width: width / 2,
+          width: width,
           height: 80,
           child: RiveAnimation.asset('assets/RiveAssets/rating_animation$postfix.riv',
             fit: BoxFit.fitWidth,
@@ -84,7 +82,7 @@ class StarPanelState extends State<StarPanel> {
               artboard.addController(controller!);
               inputValue = controller!.findInput<double>('rating') as SMINumber;
               if (currentRate > 0) {
-                inputValue?.change(currentRate as double);
+                inputValue?.change(currentRate.toDouble());
               }
             }
           )

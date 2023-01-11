@@ -10,7 +10,6 @@ class RecipeFaceSlideView extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  static const _centerOpacity = 0.8;
   static const _gradSize = 0.1;
   static const _betweenTextSize = 0.1;
   static const _betweenIconAndTextSize = 0.01;
@@ -50,14 +49,7 @@ class RecipeFaceSlideView extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
-                      color: Config.getBackColor(recipe.id).withOpacity(_centerOpacity),
-                      boxShadow: Config.darkModeOn ? [] : [
-                        BoxShadow(
-                            color: Config.iconColor,
-                            spreadRadius: 0.4
-                          )
-                      ]
-                      // borderRadius: Config.borderRadiusLarge,
+                      color: Config.getBackColor(recipe.id).withOpacity(.8),
                     ),
                     padding: const EdgeInsets.all(Config.padding),
                     width: double.infinity,

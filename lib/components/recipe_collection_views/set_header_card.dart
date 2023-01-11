@@ -62,7 +62,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                   height: cardHeight,
                   decoration: BoxDecoration(
                       borderRadius: Config.borderRadius,
-                      color: Config.backgroundColor,
+                      color: Config.backgroundLightedColor,
                       boxShadow: active
                           ? [
                               BoxShadow(
@@ -71,12 +71,8 @@ class _SetHeaderCardState extends State<SetHeaderCard>
                                 spreadRadius: 2
                               )
                             ]
-                          : [
-                            BoxShadow(
-                                color: Config.iconColor.withOpacity(0.5),
-                                spreadRadius: 0.5
-                              )
-                          ]),
+                          : []
+                          ),
                   child: Row(
                     children: [
                       SizedBox(

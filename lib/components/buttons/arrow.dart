@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
+import 'package:rive/rive.dart';
 
 enum Direction { left, right }
 
@@ -19,32 +20,40 @@ class ArrowButton extends StatefulWidget {
 }
 
 class _ArrowButtonState extends State<ArrowButton> {
-  bool hovered = false;
+  SMIBool? hovered;
+
+  void _onArrowInit(Artboard artboard) {
+    StateMachineController? controller =
+        StateMachineController.fromArtboard(artboard, 'State Machine 1');
+    if (controller == null) return;
+    artboard.addController(controller!);
+    hovered = controller.findInput<bool>('Hover') as SMIBool;
+  }
 
   String get imageName =>
       widget.direction == Direction.right ? "right" : "left";
 
-  String get postfix => "";
+  String get postfix => Config.darkModeOn ? "" : "_light";
+
+  int get turn => widget.direction == Direction.right ? 3 : 1;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        setState(() {
-          widget.onTap();
-        });
+        widget.onTap();
       },
       onHover: (h) {
-        setState(() => hovered = h);
+        hovered?.change(h);
       },
-      hoverColor: Colors.grey,
       child: Container(
-        margin: !hovered ? const EdgeInsets.all(Config.padding) : null,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage("assets/images/decorations/$imageName$postfix.png"),
-        )),
-      ),
+        child: RotatedBox(
+          quarterTurns: turn,
+          child: RiveAnimation.asset("assets/RiveAssets/arrow_down$postfix.riv",
+            onInit: _onArrowInit
+          )
+        )
+      )
     );
   }
 }

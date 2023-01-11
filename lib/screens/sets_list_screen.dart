@@ -23,7 +23,7 @@ class _SetsListScreen extends State<SetsListScreen> {
             title: const TitleLogoPanel(title: "Подборки")),
         body: Builder(
           builder: (context) => Container(
-            color: Config.backgroundColor,
+            color: Config.backgroundEdgeColor,
             alignment: Alignment.center,
             child: SizedBox(
               width: Config.maxRecipeSlideWidth,

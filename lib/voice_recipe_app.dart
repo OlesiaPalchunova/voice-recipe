@@ -24,7 +24,7 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
     return MaterialApp(
       title: Config.appName,
       initialRoute: Home.route,
-      theme: Config.darkModeOn ? Config.darkTheme : Config.lightTheme,
+      theme: Config.lightTheme,
       routes: {
         Home.route: (context) => const Home(),
         CreateRecipeScreen.route: (context) => const CreateRecipeScreen(),

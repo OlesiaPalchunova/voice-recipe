@@ -35,6 +35,8 @@ class TitleLogoPanelState extends State<TitleLogoPanel> {
     });
   }
 
+  double fontSize(BuildContext context) => Config.isDesktop(context) ? 22 : 20;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -45,7 +47,7 @@ class TitleLogoPanelState extends State<TitleLogoPanel> {
             widget.title,
             style: TextStyle(
                 fontFamily: Config.fontFamily,
-                fontSize: 22,
+                fontSize: fontSize(context),
                 fontWeight: FontWeight.normal,
                 color: Config.iconColor
             ),
