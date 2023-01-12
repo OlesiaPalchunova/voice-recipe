@@ -10,9 +10,12 @@ import '../buttons/classic_button.dart';
 import '../labels/input_label.dart';
 
 class IngredientsLabel extends StatefulWidget {
-  const IngredientsLabel({super.key, required this.insertList});
+  const IngredientsLabel({super.key, required this.insertList,
+  required this.ingNameFocusNode, required this.ingCountFocusNode});
 
   final List<Ingredient> insertList;
+  final FocusNode ingNameFocusNode;
+  final FocusNode ingCountFocusNode;
 
   @override
   State<IngredientsLabel> createState() => IngredientsLabelState();
@@ -21,7 +24,6 @@ class IngredientsLabel extends StatefulWidget {
 class IngredientsLabelState extends State<IngredientsLabel> {
   final ingNameController = TextEditingController();
   final ingCountController = TextEditingController();
-  final nameFocusNode = FocusNode();
   static const examples = [
     "400 гр.", "1 щепотка", "2 ст. л.", "3 шт."
   ];
@@ -117,12 +119,13 @@ class IngredientsLabelState extends State<IngredientsLabel> {
             child:
                 InputLabel(labelText: "Название", controller: ingNameController,
                   fontSize: CreateRecipeScreen.generalFontSize(context),
-                focusNode: nameFocusNode,),
+                focusNode: widget.ingNameFocusNode,),
           ),
           SizedBox(
             width: CreateRecipeScreen.pageWidth(context) * .3,
             child: InputLabel(
               labelText: "Количество",
+              focusNode: widget.ingCountFocusNode,
               controller: ingCountController,
               fontSize: CreateRecipeScreen.generalFontSize(context),
               onSubmit: addNewIngredient,
@@ -175,7 +178,7 @@ class IngredientsLabelState extends State<IngredientsLabel> {
     ingNameController.clear();
     ingCountController.clear();
     setState(() {
-      nameFocusNode.requestFocus();
+      widget.ingNameFocusNode.requestFocus();
       widget.insertList.add(Ingredient(
           id: widget.insertList.length, name: ingName, measureUnit: unitStr,
       count: count));

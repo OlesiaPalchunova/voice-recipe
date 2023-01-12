@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:blur/blur.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
@@ -10,7 +10,6 @@ import 'package:voice_recipe/components/constructor_views/header_label.dart';
 import 'package:voice_recipe/components/constructor_views/ingredients_label.dart';
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
-import 'package:voice_recipe/screens/recipe_screen.dart';
 import 'package:voice_recipe/components/animated_loading.dart';
 
 import '../config.dart';
@@ -55,16 +54,25 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   static final List<Ingredient> ingredients = [];
   static final List<RecipeStep> steps = [];
   static final Map<HeaderField, dynamic> headers = {};
+  final nameFocusNode = FocusNode();
+  final cookTimeFocusNode = FocusNode();
+  final prepTimeFocusNode = FocusNode();
+  final ingNameFocusNode = FocusNode();
+  final ingCountFocusNode = FocusNode();
+  final descFocusNode = FocusNode();
+  final stepTimeFocusNode = FocusNode();
+
+  final int recipeId = 0;
 
   @override
   void dispose() {
     super.dispose();
   }
 
-  Color get backgroundColor => Config.backgroundEdgeColor;
+  Color get backgroundColor => Config.backgroundColor;
 
   Color get labelColor =>
-      !Config.darkModeOn ? Colors.grey.shade300 : ClassicButton.color;
+      !Config.darkModeOn ? Colors.grey.shade200 : ClassicButton.color;
 
   String get asset => Config.darkModeOn ? "green_balls" : "pink_balls";
 
@@ -75,15 +83,26 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         title: "Создать новый рецепт",
       ).appBar(),
       backgroundColor: backgroundColor,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
-            alignment: Alignment.topCenter,
-            width: CreateRecipeScreen.pageWidth(context),
-            child: Column(
-              children: allLabels(context),
+      body: GestureDetector(
+        onTap: () {
+          nameFocusNode.unfocus();
+          cookTimeFocusNode.unfocus();
+          prepTimeFocusNode.unfocus();
+          ingNameFocusNode.unfocus();
+          ingCountFocusNode.unfocus();
+          descFocusNode.unfocus();
+          stepTimeFocusNode.unfocus();
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
+              alignment: Alignment.topCenter,
+              width: CreateRecipeScreen.pageWidth(context),
+              child: Column(
+                children: allLabels(context),
+              ),
             ),
           ),
         ),
@@ -95,7 +114,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: Config.borderRadiusLarge,
-          color: labelColor.withOpacity(.9)),
+          color: labelColor),
       padding: Config.paddingAll,
       margin: const EdgeInsets.only(bottom: Config.margin),
       child: child,
@@ -178,10 +197,16 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     var labels = <Widget>[
       HeaderLabel(
         headers: headers,
+        nameFocusNode: nameFocusNode,
+        cookTimeFocusNode: cookTimeFocusNode,
+        prepTimeFocusNode: prepTimeFocusNode,
       ),
-      IngredientsLabel(insertList: ingredients),
+      IngredientsLabel(insertList: ingredients, ingNameFocusNode: ingNameFocusNode,
+      ingCountFocusNode: ingCountFocusNode,),
       StepsLabel(
         insertList: steps,
+        descFocusNode: descFocusNode,
+        stepTimeFocusNode: stepTimeFocusNode,
       ),
       Container(
         margin: Config.paddingAll,

@@ -95,7 +95,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   Widget buildSlider(BuildContext context) {
-    debugPrint('build slider');
     listContentConfig.clear();
     for (Widget slide in widget.slides) {
       listContentConfig.add(ContentConfig(

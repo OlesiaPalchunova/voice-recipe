@@ -27,6 +27,8 @@ class HomeState extends State<Home> {
   static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
   final List<Advertisement> ads = [];
   bool _disposed = false;
+  final searchFocusNode = FocusNode();
+
 
   @override
   void initState() {
@@ -76,8 +78,8 @@ class HomeState extends State<Home> {
         }),
         body: Builder(
           builder: (context) => SliderGestureHandler(
-            handleTaps: false,
             ignoreVerticalSwipes: false,
+            customOnTap: () => searchFocusNode.unfocus(),
             onRight: () {},
             onLeft: () => Scaffold.of(context).openDrawer(),
             child: Container(
@@ -96,7 +98,7 @@ class HomeState extends State<Home> {
                       child: SizedBox(
                         // height: Config.isDesktop(context) ? 60 : 40,
                         width: 500,
-                        child: SearchField(onChanged: handleSearch)
+                        child: SearchField(onChanged: handleSearch, focusNode: searchFocusNode,)
                       ),
                     ),
                     Container(

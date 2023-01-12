@@ -4,9 +4,10 @@ import 'package:voice_recipe/components/labels/input_label.dart';
 import 'package:rive/rive.dart';
 
 class SearchField extends StatefulWidget {
-  const SearchField({super.key, required this.onChanged});
+  const SearchField({super.key, required this.onChanged, required this.focusNode});
 
   final Function(String) onChanged;
+  final FocusNode focusNode;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -39,6 +40,7 @@ class _SearchFieldState extends State<SearchField> {
     return SizedBox(
       height: Config.isDesktop(context) ? 60 : 40,
       child: InputLabel(
+          focusNode: widget.focusNode,
           labelText: "Поиск",
           controller: controller,
           prefixIcon: Container(

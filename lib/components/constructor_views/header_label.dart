@@ -10,9 +10,13 @@ import '../buttons/delete_button.dart';
 import '../labels/input_label.dart';
 
 class HeaderLabel extends StatefulWidget {
-  const HeaderLabel({super.key, required this.headers});
+  const HeaderLabel({super.key, required this.headers,
+  required this.nameFocusNode, required this.cookTimeFocusNode, required this.prepTimeFocusNode});
 
   final Map<HeaderField, dynamic> headers;
+  final FocusNode nameFocusNode;
+  final FocusNode cookTimeFocusNode;
+  final FocusNode prepTimeFocusNode;
 
   @override
   State<HeaderLabel> createState() => HeaderLabelState();
@@ -71,6 +75,7 @@ class HeaderLabelState extends State<HeaderLabel> {
         Container(
           padding: Config.paddingAll,
           child: InputLabel(
+            focusNode: widget.nameFocusNode,
             labelText: "Название рецепта",
             controller: nameController,
             fontSize: CreateRecipeScreen.generalFontSize(context),
@@ -138,6 +143,7 @@ class HeaderLabelState extends State<HeaderLabel> {
               SizedBox(
                 // width: CreateRecipeScreen.pageWidth(context) * .7,
                 child: InputLabel(
+                  focusNode: widget.cookTimeFocusNode,
                   labelText: "Время приготовления, в минутах",
                   controller: cookTimeController,
                   fontSize: CreateRecipeScreen.generalFontSize(context),
@@ -150,6 +156,7 @@ class HeaderLabelState extends State<HeaderLabel> {
               SizedBox(
                 // width: CreateRecipeScreen.pageWidth(context) * .7,
                 child: InputLabel(
+                    focusNode: widget.prepTimeFocusNode,
                     labelText: "Время подготовки, в минутах (необязательно)",
                     controller: prepTimeController,
                     fontSize: CreateRecipeScreen.generalFontSize(context),

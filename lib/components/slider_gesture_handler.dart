@@ -2,13 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class SliderGestureHandler extends StatefulWidget {
-
-  const SliderGestureHandler({super.key, required this.onLeft,
-  required this.onRight, required this.child, this.handleTaps = true,
-  this.ignoreVerticalSwipes = true});
+  const SliderGestureHandler(
+      {super.key,
+      required this.onLeft,
+      required this.onRight,
+      required this.child,
+      this.handleTaps = true,
+      this.ignoreVerticalSwipes = true,
+      this.customOnTap});
 
   final void Function() onRight;
   final void Function() onLeft;
+  final VoidCallback? customOnTap;
   final Widget child;
   final bool handleTaps;
   final bool ignoreVerticalSwipes;
@@ -26,20 +31,25 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
 
   var lastTapDownTime = DateTime.now().subtract(const Duration(seconds: 1));
 
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.unfocus();
+    super.dispose();
+  }
+
   void _handleKeyEvent(RawKeyEvent event) {
-    var cur = DateTime.now();
-    if (cur.difference(lastSwipeTime).inMilliseconds <=
-        SliderGestureHandler.minKeyboardSwipeTimeMillis) {
-      return;
-    }
-    if (event.physicalKey == PhysicalKeyboardKey.arrowRight) {
-        //|| event.physicalKey == PhysicalKeyboardKey.keyD) {
+    if (event.physicalKey == PhysicalKeyboardKey.arrowRight ||
+        event.physicalKey == PhysicalKeyboardKey.pageUp) {
       widget.onRight();
-      lastSwipeTime = cur;
-    } else if (event.physicalKey == PhysicalKeyboardKey.arrowLeft) {
-        // || event.physicalKey == PhysicalKeyboardKey.keyA) {
+    } else if (event.physicalKey == PhysicalKeyboardKey.arrowLeft ||
+        event.physicalKey == PhysicalKeyboardKey.pageDown) {
       widget.onLeft();
-      lastSwipeTime = cur;
     }
   }
 
@@ -52,7 +62,8 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
       child: GestureDetector(
         onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
         onPanUpdate: _swipeHandler,
-        onTapUp: widget.handleTaps ? (TapUpDetails details) => _tapHandler(details, context)
+        onTapUp: widget.handleTaps
+            ? (TapUpDetails details) => _tapHandler(details, context)
             : (TapUpDetails details) {},
         child: widget.child,
       ),
@@ -67,7 +78,8 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
         SliderGestureHandler.minSwipeTimeMillis) {
       return;
     }
-    if (widget.ignoreVerticalSwipes && details.delta.dy.abs() > details.delta.dx.abs()) {
+    if (widget.ignoreVerticalSwipes &&
+        details.delta.dy.abs() > details.delta.dx.abs()) {
       return;
     }
     if (details.delta.dx > sensitivity) {
@@ -81,7 +93,10 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
   }
 
   void _tapHandler(TapUpDetails details, BuildContext context) {
-    debugPrint('TAP');
+    if (widget.customOnTap != null) {
+      widget.customOnTap!();
+      return;
+    }
     if (DateTime.now().difference(lastTapDownTime).inMilliseconds > 1000) {
       return;
     }

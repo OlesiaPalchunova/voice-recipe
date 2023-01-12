@@ -11,9 +11,12 @@ import '../drop_zone.dart';
 import '../labels/input_label.dart';
 
 class StepsLabel extends StatefulWidget {
-  const StepsLabel({super.key, required this.insertList});
+  const StepsLabel({super.key, required this.insertList,
+  required this.descFocusNode, required this.stepTimeFocusNode});
 
   final List<RecipeStep> insertList;
+  final FocusNode descFocusNode;
+  final FocusNode stepTimeFocusNode;
 
   @override
   State<StepsLabel> createState() => StepsLabelState();
@@ -165,6 +168,7 @@ class StepsLabelState extends State<StepsLabel> {
               ),
               InputLabel(
                   withContentPadding: true,
+                  focusNode: widget.descFocusNode,
                   labelText: "Описание шага",
                   controller: stepController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
@@ -174,6 +178,7 @@ class StepsLabelState extends State<StepsLabel> {
               ),
               InputLabel(
                   labelText: "Время ожидания, в минутах (опционально)",
+                  focusNode: widget.stepTimeFocusNode,
                   controller: waitTimeController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
                 onSubmit: addNewStep,),
