@@ -1,9 +1,9 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:intro_slider/intro_slider.dart';
-
+import 'package:http/http.dart';
 import 'package:voice_recipe/components/buttons/arrow.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
@@ -39,12 +39,6 @@ class RecipeScreen extends StatefulWidget {
   }) : super(key: key) {
     tts.setLanguage("ru");
     reviewPage.updateComments();
-    slides.add(facePage);
-    slides.add(ingPage);
-    for (int i = 2; i <= recipe.steps.length + 1; i++) {
-      slides.add(RecipeStepView(recipe: recipe, slideId: i));
-    }
-    slides.add(reviewPage);
   }
 
   final Recipe recipe;
@@ -53,7 +47,6 @@ class RecipeScreen extends StatefulWidget {
       IngredientsSlideView(recipe: recipe);
   late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
   late final ReviewsSlide reviewPage = ReviewsSlide(recipe: recipe);
-  final List<Widget> slides = [];
 
   @override
   State<RecipeScreen> createState() => _RecipeScreenState();
@@ -66,18 +59,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static int _slideId = 0;
   late CommandsListener _listener;
   static final stepsMap = HashMap<int, int>();
-  static const Duration slidingTime = Duration(milliseconds: 350);
   bool showMiniIngList = false;
-
-  late Function goToTab;
-  List<ContentConfig> listContentConfig = [];
-  late Color activeColor = Config.getColor(widget.recipe.id);
-  DateTime tapTime = DateTime.now();
-
-  double sizeIndicator(BuildContext context) =>
-      .3 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
-
-  Color get inactiveColor => activeColor;
 
   @override
   void initState() {
@@ -94,126 +76,57 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _listener.shutdown();
   }
 
-  Widget buildSlider(BuildContext context) {
-    debugPrint('build slider');
-    listContentConfig.clear();
-    for (Widget slide in widget.slides) {
-      listContentConfig.add(ContentConfig(
-          marginTitle: const EdgeInsets.all(0.0),
-          verticalScrollbarBehavior: ScrollbarBehavior.hide,
-          marginDescription: const EdgeInsets.all(0.0),
-          widgetTitle: SliderGestureHandler(
-            onRight: _onNext,
-            onLeft: _onPrev,
-            child: Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                    height: Config.pageHeight(context) * .85,
-                    width: Config.maxRecipeSlideWidth,
-                    alignment: Alignment.topCenter,
-                    child: slide)),
-          )));
-    }
-    final slider = IntroSlider(
-      key: UniqueKey(),
-      listContentConfig: listContentConfig,
-      backgroundColorAllTabs: Config.getBackColor(widget.recipe.id),
-      isShowSkipBtn: false,
-      isShowPrevBtn: false,
-      isShowNextBtn: false,
-      isShowDoneBtn: false,
-      refFuncGoToTab: (refFunc) {
-        goToTab = refFunc;
-        if (_slideId > 0) {
-          goToTab(_slideId);
-        }
-      },
-      onTabChangeCompleted: (id) {
-        _slideId = id;
-      },
-      indicatorConfig: IndicatorConfig(
-        sizeIndicator: sizeIndicator(context),
-        indicatorWidget: Container(
-          width: sizeIndicator(context),
-          height: 10,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4), color: inactiveColor),
-        ),
-        activeIndicatorWidget: Container(
-          width: sizeIndicator(context),
-          height: 10,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4), color: activeColor),
-        ),
-        spaceBetweenIndicator: sizeIndicator(context) * .5,
-        typeIndicatorAnimation: TypeIndicatorAnimation.sizeTransition,
-      ),
-      navigationBarConfig: NavigationBarConfig(
-        navPosition: NavPosition.bottom,
-        padding: const EdgeInsets.all(0.0),
-      ),
-      isAutoScroll: false,
-      isLoopAutoScroll: false,
-      curveScroll: Curves.bounceIn,
-    );
-    return slider;
-  }
-
-  Color get backgroundColor => Config.getBackColor(widget.recipe.id);
-
-  List<Widget> getBodyWidgets(BuildContext context) {
+  List<Widget> getBodyWidgets() {
     List<Widget> list = [];
-    list.addAll(
-      [
-        buildSlider(context),
-        Center(
-          child: Container(
-              width: Config.recipeSlideWidth(context),
-              alignment: Alignment.topRight,
-              padding: Config.paddingAll,
-              child: MiniIngredientsList(recipe: widget.recipe)),
-        )
-      ],
-    );
     bool showButtons = Config.isWeb && Config.pageWidth(context) > 800;
-    if (!showButtons) return list;
     double arrowSize = Config.pageWidth(context) / 16;
-    double contSize =
-        (Config.pageWidth(context) - Config.maxRecipeSlideWidth) / 2;
-    list.add(Center(
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: contSize,
-              height: double.infinity,
-              color: backgroundColor,
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                  height: arrowSize,
-                  width: arrowSize,
-                  child: ArrowButton(
-                    direction: Direction.left,
-                    onTap: _onPrev,
-                  )),
-            ),
-            const SizedBox(width: Config.maxRecipeSlideWidth),
-            Container(
-              width: contSize,
-              height: double.infinity,
-              color: backgroundColor,
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                  height: arrowSize,
-                  width: arrowSize,
-                  child: ArrowButton(
-                    direction: Direction.right,
-                    onTap: _onNext,
-                  )),
-            ),
-          ]),
-    ));
+    if (showButtons) {
+      list.add(
+        SizedBox(
+          height: arrowSize,
+          width: arrowSize,
+          child: _slideId != 0
+              ? ArrowButton(
+                  direction: Direction.left,
+                  onTap: _onPrev,
+                )
+              : null,
+        ),
+      );
+    }
+    list.add(Stack(children: [
+      Center(
+        child: Container(
+          color: Config.getBackColor(widget.recipe.id),
+          alignment: Alignment.center,
+          width: Config.recipeSlideWidth(context),
+          child: _buildCurrentSlide(context, _slideId),
+        ),
+      ),
+      Center(
+        child: Container(
+            alignment: Alignment.bottomCenter,
+            width: Config.recipeSlideWidth(context),
+            child: _buildSliderBottom()),
+      ),
+      Container(
+          width: Config.recipeSlideWidth(context),
+          alignment: Alignment.topRight,
+          padding: Config.paddingAll,
+          child: MiniIngredientsList(recipe: widget.recipe)
+      ),
+    ]));
+    if (showButtons) {
+      list.add(SizedBox(
+          height: arrowSize,
+          width: arrowSize,
+          child: _slideId != widget.recipe.steps.length + 1 + 1
+              ? ArrowButton(
+                  direction: Direction.right,
+                  onTap: _onNext,
+                )
+              : null));
+    }
     return list;
   }
 
@@ -221,43 +134,50 @@ class _RecipeScreenState extends State<RecipeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          shadowColor:
-              Config.darkModeOn ? Colors.black87 : Colors.transparent,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 60,
-          foregroundColor: Config.iconColor,
-          backgroundColor: backgroundColor,
-          centerTitle: true,
-          title: Container(
-            alignment: Alignment.center,
-            width: Config.maxRecipeSlideWidth,
-            child: HeaderButtonsPanel(
-              id: widget.recipe.id,
-              onClose: _onClose,
-              onList: () {
-                if (MiniIngredientsListState.current == null) return;
-                showMiniIngList = !showMiniIngList;
-                if (showMiniIngList) {
-                  MiniIngredientsListState.current!.moveOut();
-                } else {
-                  MiniIngredientsListState.current!.moveBack();
-                }
-              },
-              onMute: () => _listener.shutdown(),
-              onListen: () => _listener.start(),
-              onSay: _onSay,
-              onStopSaying: _onStopSaying,
+      child: SliderGestureHandler(
+        onLeft: _onPrev,
+        onRight: _onNext,
+        child: Scaffold(
+          appBar: AppBar(
+            shadowColor: Config.darkModeOn
+                ? Colors.black87
+                : Colors.white.withOpacity(0),
+            automaticallyImplyLeading: false,
+            toolbarHeight: 60,
+            foregroundColor: Config.iconColor,
+            backgroundColor: Config.getBackColor(widget.recipe.id),
+            centerTitle: true,
+            title: Container(
+              alignment: Alignment.center,
+              width: Config.maxRecipeSlideWidth,
+              child: HeaderButtonsPanel(
+                id: widget.recipe.id,
+                onClose: _onClose,
+                onList: () {
+                  if (MiniIngredientsListState.current == null) return;
+                  showMiniIngList = !showMiniIngList;
+                  if (showMiniIngList) {
+                    MiniIngredientsListState.current!.moveOut();
+                  } else {
+                    MiniIngredientsListState.current!.moveBack();
+                  }
+                },
+                onMute: () => _listener.shutdown(),
+                onListen: () => _listener.start(),
+                onSay: _onSay,
+                onStopSaying: _onStopSaying,
+              ),
             ),
           ),
-        ),
-        body: Container(
-          alignment: Alignment.topCenter,
-          color: Config.darkModeOn
-              ? Config.backgroundColor
-              : Config.getBackColor(widget.recipe.id),
-          child: Stack(children: getBodyWidgets(context)),
+          body: Container(
+              alignment: Alignment.center,
+              color: Config.darkModeOn
+                  ? Config.backgroundColor
+                  : Config.getBackColor(widget.recipe.id),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: getBodyWidgets(),
+              )),
         ),
       ),
     );
@@ -325,24 +245,58 @@ class _RecipeScreenState extends State<RecipeScreen> {
     RecipeScreen.tts.stop();
   }
 
+  Widget _buildCurrentSlide(BuildContext context, int slideId) {
+    if (slideId == faceSlideId) {
+      return widget.facePage;
+    } else if (slideId == ingredientsSlideId) {
+      return widget.ingPage;
+    } else if (slideId == widget.recipe.steps.length + 1 + 1) {
+      return widget.reviewPage;
+    }
+    return RecipeStepView(
+      recipe: widget.recipe,
+      slideId: slideId,
+    );
+  }
+
+  Widget _buildSliderBottom() {
+    var width = min(Config.pageWidth(context), Config.maxRecipeSlideWidth);
+    var slidesCount = 1 + 1 + 1 + widget.recipe.steps.length;
+    var sectionWidth = width / slidesCount;
+    return Container(
+      alignment: Alignment.center,
+      height: 10,
+      decoration: BoxDecoration(
+          borderRadius: Config.borderRadius),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        // padding: const EdgeInsets.symmetric(horizontal: 10),
+        itemCount: slidesCount,
+        itemBuilder: (_, index) => Container(
+          decoration: BoxDecoration(
+              color:
+                  index == _slideId ? Config.getColor(widget.recipe.id) : null,
+              borderRadius: Config.borderRadius),
+          width: sectionWidth,
+        ),
+      ),
+    );
+  }
+
   void _onNext() {
     _changeSlide(_incrementSlideId);
   }
 
   void _changeSlide(void Function() changer) {
-    DateTime current = DateTime.now();
-    if (current.difference(tapTime) < slidingTime) {
-      return;
-    }
-    tapTime = current;
     int prev = _slideId;
     changer();
     if (prev == _slideId) return;
     _onStopSaying();
-    goToTab(_slideId);
-    if (SayButtonState.current()!.isSaying()) {
-      _onSay();
-    }
+    setState(() {
+      if (SayButtonState.current()!.isSaying()) {
+        _onSay();
+      }
+    });
   }
 
   void _onPrev() {
@@ -354,7 +308,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
       NextCommand(onTriggerFunction: _onNext),
       BackCommand(onTriggerFunction: _onPrev),
       SayCommand(onTriggerFunction: () => SayButtonState.current()!.say()),
-      StartCommand(onTriggerFunction: () => goToTab(firstStepSlideId)),
+      StartCommand(
+          onTriggerFunction: () => setState(() {
+                _slideId = firstStepSlideId;
+              })),
       CloseCommand(onTriggerFunction: () => _onClose(context)),
       StopSayCommand(onTriggerFunction: _onStopSaying),
       StartTimerCommand(onTriggerFunction: () {

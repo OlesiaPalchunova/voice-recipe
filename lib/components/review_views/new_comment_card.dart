@@ -29,6 +29,7 @@ class NewCommentCardState extends State<NewCommentCard> {
   late bool _focused = widget.initialFocused;
   bool _disposed = false;
   static NewCommentCardState? current;
+  static final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -50,14 +51,11 @@ class NewCommentCardState extends State<NewCommentCard> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     List<Widget> columnChildren = [
-      SizedBox(
-        // height: 40,
-        child: TextField(
+        TextField(
+            key: _formKey,
             focusNode: widget.focusNode,
             autofocus: false,
             controller: widget.textController,
@@ -96,10 +94,9 @@ class NewCommentCardState extends State<NewCommentCard> {
                     )
                 ),
             )
-        ),
       ),
     ];
-    if (_focused) {
+    if (_focused || widget.focusNode.hasFocus) {
       columnChildren.addAll([
         const SizedBox(height: Config.padding,),
         Row(

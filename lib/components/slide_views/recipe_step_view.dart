@@ -16,7 +16,6 @@ class RecipeStepView extends StatelessWidget {
   static const _imageSize = 0.65;
   static const _borderRadius = 16.0;
   static const _textBackgroundOpacity = 0.75;
-  static const _textSize = 0.022;
 
   final Recipe recipe;
   final int slideId;
@@ -47,6 +46,7 @@ class RecipeStepView extends StatelessWidget {
       key: Key("$timerId"),
       waitTimeMins: step.waitTime,
       id: timerId,
+      colorId: recipe.id,
       alarmText: "${recipe.name}: шаг ${slideId - 1}",
     );
   }
@@ -98,7 +98,7 @@ class RecipeStepView extends StatelessWidget {
                     )
                 ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin),
+                  margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin * 3),
                   child: _buildTimer(),
                 )
               ],

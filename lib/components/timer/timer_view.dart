@@ -10,10 +10,12 @@ class TimerView extends StatefulWidget {
       {super.key,
       required this.waitTimeMins,
       required this.id,
+      this.colorId = 0,
       required this.alarmText});
 
   final int waitTimeMins;
   final int id;
+  final int colorId;
   final String alarmText;
 
   @override
@@ -46,9 +48,8 @@ class TimerViewState extends State<TimerView> {
   }
 
   BoxDecoration _getTimerBoxDecoration() {
-    var gradientColor = Config.getGradientColor(widget.id);
-    if (Config.darkModeOn) {
-      return BoxDecoration(
+    var gradientColor = Config.getGradientColor(widget.colorId);
+    return BoxDecoration(
         gradient: LinearGradient(
           colors: gradientColor,
           begin: Alignment.topCenter,
@@ -56,20 +57,18 @@ class TimerViewState extends State<TimerView> {
         ),
         boxShadow: [
           BoxShadow(
-            color: gradientColor.last.withOpacity(0.4),
+            color: !Config.darkModeOn
+                ? gradientColor.first.withOpacity(.4)
+                : gradientColor.last.withOpacity(.4),
             blurRadius: 8,
             spreadRadius: 2,
             offset: const Offset(4, 4),
           ),
         ],
-        borderRadius: Config.borderRadiusLarge,
-      );
-    }
-    return BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
-        borderRadius: Config.borderRadiusLarge
-    );
+        borderRadius: Config.borderRadiusLarge);
   }
+
+  Color get contentColor => Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -92,10 +91,9 @@ class TimerViewState extends State<TimerView> {
               },
               icon: Icon(
                 _isRunning ? Icons.pause : Icons.play_arrow,
-                color: Config.iconColor,
+                color: contentColor,
                 size: _iconHeight * Config.pageHeight(context) * 0.9,
-              )
-          ),
+              )),
           _buildTimerLabel(),
           _buildTimerButton(
               onPressed: () {
@@ -105,10 +103,9 @@ class TimerViewState extends State<TimerView> {
               },
               icon: Icon(
                 Icons.replay,
-                color: Config.iconColor,
+                color: contentColor,
                 size: _iconHeight * Config.pageHeight(context) * 0.9,
-              )
-          )
+              ))
         ],
       ),
     );
@@ -167,7 +164,8 @@ class TimerViewState extends State<TimerView> {
           alarmTime: DateTime.now().add(_leftDuration));
       _noticed = true;
     }
-    _timer = Timer.periodic(const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
+    _timer = Timer.periodic(
+        const Duration(seconds: _reduceSecondsBy), (_) => setCountDown());
     _isRunning = true;
   }
 
@@ -211,13 +209,6 @@ class TimerViewState extends State<TimerView> {
     );
   }
 
-  Color _getDigitsColor() {
-    if (Config.darkModeOn) {
-      return Colors.white;
-    }
-    return Colors.black87;
-  }
-
   Widget _buildTimerLabel() {
     const fontSize = 0.05;
     String strDigits(int n) => n.toString().padLeft(2, '0');
@@ -229,10 +220,10 @@ class TimerViewState extends State<TimerView> {
           ? "$minutes:$seconds"
           : "$hours:$minutes:$seconds",
       style: TextStyle(
-          fontFamily: Config.fontFamily,
-          fontSize: fontSize * Config.pageHeight(context),
-          color: _getDigitsColor(),
-          ),
+        fontFamily: Config.fontFamily,
+        fontSize: fontSize * Config.pageHeight(context),
+        color: contentColor,
+      ),
     );
   }
 }

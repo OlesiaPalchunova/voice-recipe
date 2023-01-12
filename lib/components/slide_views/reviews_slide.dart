@@ -39,7 +39,7 @@ class ReviewsSlide extends StatefulWidget {
 class _ReviewsSlideState extends State<ReviewsSlide> {
   var _isEvaluated = false;
   final _commentController = TextEditingController();
-  final FocusNode _newCommentNode = FocusNode();
+  static final FocusNode _newCommentNode = FocusNode();
   bool _disposed = false;
   StreamSubscription<MapEntry<String, Comment>>? subscription;
 
@@ -75,7 +75,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white;
+    final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
     return GestureDetector(
       onTap: () => _newCommentNode.unfocus(),
       child: Container(
@@ -215,9 +215,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
           uid: user.uid),
       recipeId: widget.recipe.id,
     );
-    setState(() {
+    if (!_disposed) {
+      setState(() {
       _commentController.clear();
     });
+    }
     await widget.updateComments();
     if (_disposed) return;
     setState(() {});

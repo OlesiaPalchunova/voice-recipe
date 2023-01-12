@@ -32,27 +32,30 @@ class _SearchFieldState extends State<SearchField> {
 
   String get postfix => Config.darkModeOn ? "_dark" : "_light";
 
-  double iconSize(BuildContext context) => Config.isDesktop(context) ? 40 : 20;
+  double iconSize(BuildContext context) => Config.isDesktop(context) ? 30 : 15;
 
   @override
   Widget build(BuildContext context) {
-    return InputLabel(
-        labelText: "Поиск",
-        controller: controller,
-        prefixIcon: Container(
-            width: iconSize(context),
-            height: iconSize(context),
-            padding: const EdgeInsets.all(5.0),
-            child: RiveAnimation.asset("assets/RiveAssets/search$postfix.riv",
-                onInit: _onInit)),
-        onChanged: (s) {
-          if (s.isEmpty) {
-            hovered?.change(false);
-          } else {
-            hovered?.change(true);
-          }
-          widget.onChanged(s);
-        },
-        onSubmit: () => hovered?.change(false));
+    return SizedBox(
+      height: Config.isDesktop(context) ? 60 : 40,
+      child: InputLabel(
+          labelText: "Поиск",
+          controller: controller,
+          prefixIcon: Container(
+              width: iconSize(context),
+              height: iconSize(context),
+              padding: const EdgeInsets.all(5.0),
+              child: RiveAnimation.asset("assets/RiveAssets/search$postfix.riv",
+                  onInit: _onInit)),
+          onChanged: (s) {
+            if (s.isEmpty) {
+              hovered?.change(false);
+            } else {
+              hovered?.change(true);
+            }
+            widget.onChanged(s);
+          },
+          onSubmit: () => hovered?.change(false)),
+    );
   }
 }

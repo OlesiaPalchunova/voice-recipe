@@ -37,23 +37,34 @@ class _ArrowButtonState extends State<ArrowButton> {
 
   int get turn => widget.direction == Direction.right ? 3 : 1;
 
+  bool pressed = false;
+
+  DateTime lastCallTime = DateTime.now();
+
+  void onTap() async {
+    while (pressed) {
+      widget.onTap();
+      await Future.delayed(const Duration(milliseconds: 350));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        widget.onTap();
-      },
-      onHover: (h) {
-        hovered?.change(h);
-      },
-      child: Container(
+        onTapDown: (d) {
+          pressed = true;
+          onTap();
+        },
+        onTapUp: (d) {
+          pressed = false;
+        },
+        onHover: (h) {
+          hovered?.change(h);
+        },
         child: RotatedBox(
-          quarterTurns: turn,
-          child: RiveAnimation.asset("assets/RiveAssets/arrow_down$postfix.riv",
-            onInit: _onArrowInit
-          )
-        )
-      )
-    );
+            quarterTurns: turn,
+            child: RiveAnimation.asset(
+                "assets/RiveAssets/arrow_down$postfix.riv",
+                onInit: _onArrowInit)));
   }
 }

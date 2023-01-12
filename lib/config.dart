@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
 import 'package:voice_recipe/services/translator.dart';
-import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GradientColors {
@@ -75,13 +73,6 @@ class Config {
   static const _iconDisabledBackColor = Colors.white70;
   static const _iconColor = Colors.black87;
 
-  static const backColors = [
-    Color(0xFFE9F7CA),
-    Color(0xffffce8c),
-    Color(0xFFf7d2ca),
-    Color(0xFFf7ecca)
-  ];
-
   static bool get isWeb => kIsWeb;
 
   static const colors = [
@@ -89,6 +80,15 @@ class Config {
     Color(0xffcc9245),
     Colors.redAccent,
     Colors.orangeAccent
+  ];
+
+  static const lightBackColors = [
+    Color(0xFFE9F7CA),
+    Color(0xFFcae1f7),
+    Color(0xffffce8c),
+    Color(0xFFcae1f7),
+    Color(0xFFf7ecca),
+    Color(0xFFf7d2ca),
   ];
 
   static const Map<int, Color> colorScheme = {
@@ -270,14 +270,14 @@ class Config {
     if (darkModeOn) {
       return _darkThemeBackColor;
     }
-    return backColors[id % backColors.length];
+    return lightBackColors[id % lightBackColors.length];
   }
 
   static Color getBackEdgeColor(int id) {
     if (darkModeOn) {
       return darkBlue;
     }
-    return backColors[id % backColors.length];
+    return lightBackColors[id % lightBackColors.length];
   }
 
   static double pageHeight(BuildContext context) {

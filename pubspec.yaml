@@ -52,7 +52,7 @@ dependencies:
   google_sign_in:
   flutter_dropzone: 3.0.0
   dotted_border:
-  animated_background:
+  intro_slider:
   rive:
   blur:
 
