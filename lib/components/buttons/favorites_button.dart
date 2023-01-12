@@ -28,6 +28,8 @@ class _FavoritesButtonState extends State<FavoritesButton>
   SMIBool? hovered;
   SMIBool? pressed;
 
+  static final Map<int, ValueNotifier<bool>> notifyers = {};
+
   void _onLikeInit(Artboard artboard) {
     StateMachineController? controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1');
@@ -45,10 +47,13 @@ class _FavoritesButtonState extends State<FavoritesButton>
 
   @override
   void initState(){
+    _disposed = false;
+    if (!notifyers.containsKey(widget.recipeId)) {
+      notifyers[widget.recipeId] = ValueNotifier(false);
+    }    
     if (Config.loggedIn) {
       checkIfIsFavorite();
     }
-    _disposed = false;
     setAuthListener();
     super.initState();
   }
@@ -91,46 +96,47 @@ class _FavoritesButtonState extends State<FavoritesButton>
           height: width * .8,
           // margin: EdgeInsets.only(top: width / 15),
         ),
-        InkWell(
-          onTap: () {
-            if (!Config.loggedIn) {
-              Config.showLoginInviteDialog(context);
-              return;
-            }
-            _pressed = !_pressed;
-            pressed?.change(_pressed);
-            if (_pressed) {
-              FavoriteRecipesDbManager().add(widget.recipeId);
-            } else {
-              FavoriteRecipesDbManager().remove(widget.recipeId);
-            }
-          },
-          onHover: (h) {
-            hovered?.change(h);
-          },
-          child: Container(
-            width: width,
-            height: width,
-            child: SizedBox(
-              child: RiveAnimation.asset("assets/RiveAssets/like$postfix.riv",
-                onInit: _onLikeInit
+        ValueListenableBuilder(
+          valueListenable: notifyers[widget.recipeId]!,
+          builder: (BuildContext context, bool isFav, Widget? child) {
+            Widget res = InkWell(
+              onTap: () {
+                if (!Config.loggedIn) {
+                  Config.showLoginInviteDialog(context);
+                  return;
+                }
+                _pressed = !_pressed;
+                notifyers[widget.recipeId]!.value = _pressed;
+                if (_pressed) {
+                  FavoriteRecipesDbManager().add(widget.recipeId);
+                } else {
+                  FavoriteRecipesDbManager().remove(widget.recipeId);
+                }
+                pressed?.change(_pressed);
+              },
+              onHover: (h) {
+                hovered?.change(h);
+              },
+              child: Container(
+                width: width,
+                height: width,
+                child: SizedBox(
+                  child: RiveAnimation.asset("assets/RiveAssets/like$postfix.riv",
+                    onInit: _onLikeInit
+                  )
+                ),
               )
-            ),
-          )
+            );
+            if (_pressed != isFav) {
+              hovered?.change(isFav);
+              pressed?.change(isFav);
+              _pressed = isFav;
+            }
+            return res;
+          }
         )
       ],
     );
-  }
-
-  void onPressed() {
-    setState(() {
-      _pressed = !_pressed;
-      if (_pressed) {
-        FavoriteRecipesDbManager().add(widget.recipeId);
-      } else {
-        FavoriteRecipesDbManager().remove(widget.recipeId);
-      }
-    });
   }
 
   void setAuthListener() {
@@ -144,15 +150,16 @@ class _FavoritesButtonState extends State<FavoritesButton>
     if (_disposed) {
       return;
     }
-    _pressed = await FavoriteRecipesDbManager().isFavorite(widget.recipeId);
-    if (_disposed) {
-      return;
-    }
-    if (_pressed) {
-      hovered?.change(true);
-      pressed?.change(true);
-    } else {
-      pressed?.change(false);
-    }
+    bool isFav = await FavoriteRecipesDbManager().isFavorite(widget.recipeId);
+    notifyers[widget.recipeId]!.value = isFav;
+    // if (_disposed) {
+    //   return;
+    // }
+    // if (_pressed) {
+    //   hovered?.change(true);
+    //   pressed?.change(true);
+    // } else {
+    //   pressed?.change(false);
+    // }
   }
 }

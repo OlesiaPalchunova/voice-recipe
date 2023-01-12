@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/review_views/new_comment_card.dart';
+import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
 import 'package:voice_recipe/components/review_views/comment_card.dart';
 import 'package:voice_recipe/components/review_views/star_panel.dart';
@@ -52,7 +53,9 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     _disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
-      _isEvaluated = true;
+      if (rate > 0) {
+        _isEvaluated = true;
+      }
     }
     subscription ??= widget.commentsController.stream.listen((event) {
       comments[event.key] = event.value;
@@ -77,7 +80,6 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       onTap: () => _newCommentNode.unfocus(),
       child: Container(
         margin: const EdgeInsets.all(Config.margin),
-        // color: Config.backgroundColor,
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(Config.padding),
         child: SingleChildScrollView(
@@ -95,10 +97,12 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                       width: labelWidth,
                       shadowOn: false,
                     ),
-                    Container()
+                    FavoritesButton(
+                      recipeId: widget.recipe.id,
+                    )
                   ],
                 ),
-                Container(
+                !_isEvaluated ? Container(
                   margin: const EdgeInsets.only(top: Config.padding),
                   padding: const EdgeInsets.all(Config.padding),
                   decoration: BoxDecoration(
@@ -110,7 +114,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            !_isEvaluated ? "Оставьте отзыв" : "Готово",
+                            "Оставьте отзыв",
                             style: TextStyle(
                                 fontFamily: Config.fontFamily,
                                 fontSize: fontSize(context),
@@ -126,7 +130,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                       )
                     ],
                   ),
-                ),
+                ) : const SizedBox(),
                 Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: Config.padding),
