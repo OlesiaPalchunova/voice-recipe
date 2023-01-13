@@ -68,7 +68,7 @@ class HomeState extends State<Home> {
         appBar: AppBar(
           foregroundColor: Config.iconColor,
           backgroundColor: Config.appBarColor,
-          title: title,
+          title: title
         ),
         drawer: SideBarMenu(onUpdate: () {
           setState(() {
@@ -78,7 +78,9 @@ class HomeState extends State<Home> {
         }),
         body: Builder(
           builder: (context) => SliderGestureHandler(
+            handleKeyboard: false,
             ignoreVerticalSwipes: false,
+            handleSideTaps: false,
             customOnTap: () => searchFocusNode.unfocus(),
             onRight: () {},
             onLeft: () => Scaffold.of(context).openDrawer(),

@@ -7,15 +7,17 @@ class SliderGestureHandler extends StatefulWidget {
       required this.onLeft,
       required this.onRight,
       required this.child,
-      this.handleTaps = true,
+      this.handleSideTaps = true,
       this.ignoreVerticalSwipes = true,
+      this.handleKeyboard = true,
       this.customOnTap});
 
   final void Function() onRight;
   final void Function() onLeft;
   final VoidCallback? customOnTap;
   final Widget child;
-  final bool handleTaps;
+  final bool handleSideTaps;
+  final bool handleKeyboard;
   final bool ignoreVerticalSwipes;
   static const minSwipeTimeMillis = 400;
   static const minKeyboardSwipeTimeMillis = 200;
@@ -25,7 +27,7 @@ class SliderGestureHandler extends StatefulWidget {
 }
 
 class _SliderGestureHandlerState extends State<SliderGestureHandler> {
-  final _focusNode = FocusNode();
+  final focusNode = FocusNode();
 
   var lastSwipeTime = DateTime.now();
 
@@ -34,12 +36,12 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
   @override
   void initState() {
     super.initState();
-    _focusNode.requestFocus();
+    focusNode.requestFocus();
   }
 
   @override
   void dispose() {
-    _focusNode.unfocus();
+    focusNode.unfocus();
     super.dispose();
   }
 
@@ -55,18 +57,23 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.handleKeyboard) {
+      return buildGestureHandler(context);
+    }
     return RawKeyboardListener(
-      focusNode: _focusNode,
+      focusNode: focusNode,
       autofocus: true,
       onKey: _handleKeyEvent,
-      child: GestureDetector(
-        onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
-        onPanUpdate: _swipeHandler,
-        onTapUp: widget.handleTaps
-            ? (TapUpDetails details) => _tapHandler(details, context)
-            : (TapUpDetails details) {},
-        child: widget.child,
-      ),
+      child: buildGestureHandler(context)
+    );
+  }
+
+  Widget buildGestureHandler(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (TapDownDetails d) => lastTapDownTime = DateTime.now(),
+      onPanUpdate: _swipeHandler,
+      onTapUp: (TapUpDetails details) => _tapHandler(details, context),
+      child: widget.child,
     );
   }
 
@@ -95,6 +102,8 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
   void _tapHandler(TapUpDetails details, BuildContext context) {
     if (widget.customOnTap != null) {
       widget.customOnTap!();
+    }
+    if (!widget.handleSideTaps) {
       return;
     }
     if (DateTime.now().difference(lastTapDownTime).inMilliseconds > 1000) {

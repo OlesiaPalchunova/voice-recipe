@@ -7,6 +7,7 @@ import 'package:intro_slider/intro_slider.dart';
 import 'package:voice_recipe/components/buttons/arrow.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
+import 'package:voice_recipe/components/review_views/comment_card.dart';
 import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/components/mini_ing_list.dart';
@@ -94,6 +95,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _listener.shutdown();
   }
 
+  bool get isLastSlide => _slideId == widget.slides.length - 1;
+
   Widget buildSlider(BuildContext context) {
     listContentConfig.clear();
     for (Widget slide in widget.slides) {
@@ -102,6 +105,11 @@ class _RecipeScreenState extends State<RecipeScreen> {
           verticalScrollbarBehavior: ScrollbarBehavior.hide,
           marginDescription: const EdgeInsets.all(0.0),
           widgetTitle: SliderGestureHandler(
+            handleKeyboard: Config.isWeb && !(slide == widget.slides.last),
+            customOnTap: () {
+              ReviewsSlide.newCommentNode.unfocus();
+              CommentCard.editNode.unfocus();
+            },
             onRight: _onNext,
             onLeft: _onPrev,
             child: Align(
@@ -244,8 +252,20 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   MiniIngredientsListState.current!.moveBack();
                 }
               },
-              onMute: () => _listener.shutdown(),
-              onListen: () => _listener.start(),
+              onMute: () {
+                if (Config.isWeb) {
+                  Config.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  return;
+                }
+                _listener.shutdown();
+                },
+              onListen: () {
+                if (Config.isWeb) {
+                  Config.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  return;
+                }
+                _listener.start();
+                },
               onSay: _onSay,
               onStopSaying: _onStopSaying,
             ),
@@ -383,6 +403,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   void _onClose(BuildContext context) {
+    ReviewsSlide.commentController.clear();
     _listener.shutdown();
     Navigator.of(context).pop();
   }

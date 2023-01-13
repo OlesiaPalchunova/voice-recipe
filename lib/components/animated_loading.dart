@@ -35,6 +35,7 @@ class AnimatedLoading {
     Future<bool> execute(BuildContext context, {required Future<bool> Function() task, 
     required VoidCallback onSuccess}) async {
         showDialog(
+            barrierColor: Colors.transparent,
             context: context,
             builder: (content) => Center(
                 child: CustomPositioned(
@@ -48,6 +49,7 @@ class AnimatedLoading {
             ),
         ));
         showDialog(
+            barrierColor: Colors.transparent,
             context: context,
             builder: (content) => Center(
                 child: CustomPositioned(

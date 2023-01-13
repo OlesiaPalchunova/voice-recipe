@@ -19,6 +19,8 @@ class ReviewsSlide extends StatefulWidget {
   ReviewsSlide({super.key, required this.recipe});
 
   final Recipe recipe;
+  static final FocusNode newCommentNode = FocusNode();
+  static final commentController = TextEditingController();
 
   @override
   State<ReviewsSlide> createState() => _ReviewsSlideState();
@@ -38,8 +40,6 @@ class ReviewsSlide extends StatefulWidget {
 
 class _ReviewsSlideState extends State<ReviewsSlide> {
   var _isEvaluated = false;
-  final _commentController = TextEditingController();
-  static final FocusNode _newCommentNode = FocusNode();
   bool _disposed = false;
   StreamSubscription<MapEntry<String, Comment>>? subscription;
 
@@ -67,7 +67,6 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   @override
   dispose() {
     _disposed = true;
-    _commentController.dispose();
     super.dispose();
   }
 
@@ -75,115 +74,114 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final Color backColor = Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
-    return GestureDetector(
-      onTap: () => _newCommentNode.unfocus(),
-      child: Container(
-        margin: const EdgeInsets.all(Config.margin),
-        alignment: Alignment.topCenter,
-        padding: const EdgeInsets.all(Config.padding),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            alignment: Alignment.topCenter,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RateLabel(
-                      rate: rates[widget.recipe.id % rates.length],
-                      width: labelWidth,
-                      shadowOn: false,
-                    ),
-                    FavoritesButton(
-                      recipeId: widget.recipe.id,
+    final Color backColor =
+        Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
+    return Container(
+      margin: const EdgeInsets.all(Config.margin),
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.all(Config.padding),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          alignment: Alignment.topCenter,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RateLabel(
+                    rate: rates[widget.recipe.id % rates.length],
+                    width: labelWidth,
+                    shadowOn: false,
+                  ),
+                  FavoritesButton(
+                    recipeId: widget.recipe.id,
+                  )
+                ],
+              ),
+              !_isEvaluated
+                  ? Container(
+                      margin: const EdgeInsets.only(top: Config.padding),
+                      padding: const EdgeInsets.all(Config.padding),
+                      decoration: BoxDecoration(
+                          color: backColor,
+                          borderRadius: Config.borderRadiusLarge),
+                      child: Column(
+                        children: [
+                          Row(
+                            textBaseline: TextBaseline.alphabetic,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Оставьте отзыв",
+                                style: TextStyle(
+                                    fontFamily: Config.fontFamily,
+                                    fontSize: fontSize(context),
+                                    color: Config.iconColor),
+                              ),
+                            ],
+                          ),
+                          StarPanel(
+                            id: widget.recipe.id,
+                            onTap: (star) {
+                              ratesMap[widget.recipe.id] = star;
+                            },
+                          )
+                        ],
+                      ),
                     )
+                  : const SizedBox(),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: Config.padding),
+                // padding: const EdgeInsets.all(Config.padding),
+                decoration: BoxDecoration(
+                    color: backColor, borderRadius: Config.borderRadiusLarge),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(Config.padding),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Комментарии",
+                        style: TextStyle(
+                            color:
+                                Config.darkModeOn ? Colors.white : Colors.black,
+                            fontFamily: Config.fontFamily,
+                            fontSize: fontSize(context)),
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        NewCommentCard(
+                            focusNode: ReviewsSlide.newCommentNode,
+                            textController: ReviewsSlide.commentController,
+                            onSubmit: _submitComment,
+                            onCancel: () {},
+                            profileImageUrl: Config.loggedIn
+                                ? FirebaseAuth.instance.currentUser!.photoURL ??
+                                    defaultProfileUrl
+                                : defaultProfileUrl),
+                        Column(
+                          children: comments.keys
+                              .map((id) => CommentCard(
+                                    onUpdate: _updateComment,
+                                    commentId: id,
+                                    comment: comments[id]!,
+                                    recipeId: widget.recipe.id,
+                                    onDelete: () => setState(() {
+                                      comments.remove(id);
+                                    }),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                !_isEvaluated ? Container(
-                  margin: const EdgeInsets.only(top: Config.padding),
-                  padding: const EdgeInsets.all(Config.padding),
-                  decoration: BoxDecoration(
-                      color: backColor, borderRadius: Config.borderRadiusLarge),
-                  child: Column(
-                    children: [
-                      Row(
-                        textBaseline: TextBaseline.alphabetic,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Оставьте отзыв",
-                            style: TextStyle(
-                                fontFamily: Config.fontFamily,
-                                fontSize: fontSize(context),
-                                color: Config.iconColor),
-                          ),
-                        ],
-                      ),
-                      StarPanel(
-                        id: widget.recipe.id,
-                        onTap: (star) {
-                          ratesMap[widget.recipe.id] = star;
-                        },
-                      )
-                    ],
-                  ),
-                ) : const SizedBox(),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(top: Config.padding),
-                  // padding: const EdgeInsets.all(Config.padding),
-                  decoration: BoxDecoration(
-                      color: backColor, borderRadius: Config.borderRadiusLarge),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(Config.padding),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Комментарии",
-                          style: TextStyle(
-                              color: Config.darkModeOn
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontFamily: Config.fontFamily,
-                              fontSize: fontSize(context)),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          NewCommentCard(
-                              focusNode: _newCommentNode,
-                              textController: _commentController,
-                              onSubmit: _submitComment,
-                              onCancel: () {},
-                              profileImageUrl: Config.loggedIn
-                                  ? FirebaseAuth
-                                          .instance.currentUser!.photoURL ??
-                                      defaultProfileUrl
-                                  : defaultProfileUrl),
-                          Column(
-                            children: comments.keys
-                                .map((id) => CommentCard(
-                                      onUpdate: _updateComment,
-                                      commentId: id,
-                                      comment: comments[id]!,
-                                      recipeId: widget.recipe.id,
-                                      onDelete: () => setState(() {
-                                        comments.remove(id);
-                                      }),
-                                    ))
-                                .toList(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -217,8 +215,8 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     );
     if (!_disposed) {
       setState(() {
-      _commentController.clear();
-    });
+        ReviewsSlide.commentController.clear();
+      });
     }
     await widget.updateComments();
     if (_disposed) return;

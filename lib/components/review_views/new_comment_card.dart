@@ -30,6 +30,7 @@ class NewCommentCardState extends State<NewCommentCard> {
   bool _disposed = false;
   static NewCommentCardState? current;
   static final _formKey = GlobalKey<FormState>();
+  static final _editingFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class NewCommentCardState extends State<NewCommentCard> {
   Widget build(BuildContext context) {
     List<Widget> columnChildren = [
         TextField(
-            key: _formKey,
+            key: widget.initialFocused ? _editingFormKey : _formKey,
             focusNode: widget.focusNode,
             autofocus: false,
             controller: widget.textController,
@@ -112,7 +113,7 @@ class NewCommentCardState extends State<NewCommentCard> {
                   ),
                   const SizedBox(width: Config.padding,),
                   ClassicButton(
-                    text: "Оставить комментарий",
+                    text: widget.initialFocused ? "Обновить" : "Оставить комментарий",
                     onTap: onSubmit,
                     fontSize: fontSize(context),
                   ),

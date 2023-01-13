@@ -20,6 +20,7 @@ class CommentCard extends StatefulWidget {
   final int recipeId;
   final VoidCallback onDelete;
   final void Function(String, String) onUpdate;
+  static final editNode = FocusNode();
 
   static double nameFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 14 : 12;
@@ -35,9 +36,8 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
-  bool editMode = false;
-  final editNode = FocusNode();
-  final editController = TextEditingController();
+  static bool editMode = false;
+  static final editController = TextEditingController();
 
   Widget buildCommentFrame(
       {required BuildContext context,
@@ -150,7 +150,7 @@ class _CommentCardState extends State<CommentCard> {
     setState(() {
       editMode = true;
       editController.text = widget.comment.text;
-      editNode.requestFocus();
+      CommentCard.editNode.requestFocus();
     });
   }
 
@@ -172,7 +172,7 @@ class _CommentCardState extends State<CommentCard> {
     if (editMode) {
       return NewCommentCard(
         initialFocused: true,
-        focusNode: editNode,
+        focusNode: CommentCard.editNode,
         textController: editController,
         profileImageUrl: Config.profileImageUrl,
         onSubmit: (text) {

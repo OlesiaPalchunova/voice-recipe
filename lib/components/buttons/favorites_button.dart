@@ -34,7 +34,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
     StateMachineController? controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1');
     if (controller == null) return;
-    artboard.addController(controller!);
+    artboard.addController(controller);
     hovered = controller.findInput<bool>('Hover') as SMIBool;
     pressed = controller.findInput<bool>('Pressed') as SMIBool;
     if (_pressed) {
@@ -63,18 +63,6 @@ class _FavoritesButtonState extends State<FavoritesButton>
     _disposed = true;
     super.dispose();
   }
-
-  Icon get icon => _pressed
-      ? Icon(
-          Icons.favorite,
-          color: Colors.red,
-          size: widget.width / 3,
-        )
-      : Icon(
-          Icons.favorite_outline_outlined,
-          color: Config.iconColor.withOpacity(.5),
-          size: widget.width / 3,
-        );
 
   double get width => widget.width;
 
@@ -112,12 +100,13 @@ class _FavoritesButtonState extends State<FavoritesButton>
                 } else {
                   FavoriteRecipesDbManager().remove(widget.recipeId);
                 }
+                hovered?.change(_pressed);
                 pressed?.change(_pressed);
               },
               onHover: (h) {
                 hovered?.change(h);
               },
-              child: Container(
+              child: SizedBox(
                 width: width,
                 height: width,
                 child: SizedBox(
@@ -152,14 +141,5 @@ class _FavoritesButtonState extends State<FavoritesButton>
     }
     bool isFav = await FavoriteRecipesDbManager().isFavorite(widget.recipeId);
     notifyers[widget.recipeId]!.value = isFav;
-    // if (_disposed) {
-    //   return;
-    // }
-    // if (_pressed) {
-    //   hovered?.change(true);
-    //   pressed?.change(true);
-    // } else {
-    //   pressed?.change(false);
-    // }
   }
 }
