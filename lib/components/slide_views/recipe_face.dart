@@ -30,12 +30,8 @@ class RecipeFaceSlideView extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: Config.borderRadiusLarge,
             image: DecorationImage(
-              image: recipe.isNetwork ?
-              NetworkImage(recipe.faceImageUrl)
-                  : AssetImage(recipe.faceImageUrl) as ImageProvider,
-              fit: Config.pageHeight(context) > Config.pageWidth(context)
-                  ? BoxFit.fitHeight
-                  : BoxFit.fitHeight,
+              image: NetworkImage(recipe.faceImageUrl),
+              fit: BoxFit.cover,
             ),
         ),
         child: Column(

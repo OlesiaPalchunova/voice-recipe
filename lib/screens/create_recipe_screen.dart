@@ -145,7 +145,6 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       return;
     }
     createdRecipe = Recipe(
-      isNetwork: true,
       name: headers[HeaderField.name],
       faceImageUrl: headers[HeaderField.faceImageUrl],
       id: Random().nextInt(1000),

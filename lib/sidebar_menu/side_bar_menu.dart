@@ -8,7 +8,6 @@ import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/screens/create_recipe_screen.dart';
-import 'package:voice_recipe/screens/profile_screen.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
 import 'package:voice_recipe/screens/sets_list_screen.dart';
 
@@ -17,9 +16,7 @@ import '../../screens/set_screen.dart';
 import '../screens/authorization/auth_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
-  const SideBarMenu({super.key, required this.onUpdate});
-
-  final VoidCallback onUpdate;
+  const SideBarMenu({super.key});
 
   @override
   State<SideBarMenu> createState() => _SideBarMenuState();
@@ -120,7 +117,6 @@ class _SideBarMenuState extends State<SideBarMenu> {
                       value: Config.darkModeOn,
                       onChanged: (value) {
                         setState(() {
-                          widget.onUpdate();
                           Config.setDarkModeOn(!Config.darkModeOn);
                         });
                       },

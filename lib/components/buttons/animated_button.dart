@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:voice_recipe/config.dart';
 
-class AnimatedButton extends StatelessWidget {
+class AnimatedButton extends StatefulWidget {
   AnimatedButton({
     Key? key,
     required this.onTap,
@@ -19,6 +19,12 @@ class AnimatedButton extends StatelessWidget {
   late final RiveAnimationController _btnAnimationController;
   final VoidCallback onTap;
   final double fontSize;
+
+  @override
+  State<AnimatedButton> createState() => _AnimatedButtonState();
+}
+
+class _AnimatedButtonState extends State<AnimatedButton> {
   bool locked = false;
 
   String get postfix => Config.darkModeOn ? "_dark" : "_light";
@@ -29,9 +35,9 @@ class AnimatedButton extends StatelessWidget {
       onTap: () {
         if (locked) return;
         locked = true;
-        _btnAnimationController.isActive = true;
+        widget._btnAnimationController.isActive = true;
         Future.delayed(const Duration(milliseconds: 800), () {
-          onTap();
+          widget.onTap();
           locked = false;
         });
       },
@@ -43,15 +49,15 @@ class AnimatedButton extends StatelessWidget {
           children: [
             RiveAnimation.asset(
               "assets/RiveAssets/button$postfix.riv",
-              controllers: [_btnAnimationController],
+              controllers: [widget._btnAnimationController],
             ),
             Container(
               alignment: Alignment.center,
               child: Text(
-                text,
+                widget.text,
                 style: TextStyle(
                     color: Config.iconColor,
-                    fontSize: fontSize,
+                    fontSize: widget.fontSize,
                     fontFamily: Config.fontFamily
                 ),
               ),

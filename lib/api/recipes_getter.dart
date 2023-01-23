@@ -6,26 +6,22 @@ import '../config.dart';
 import '../model/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/recipe_fields.dart';
-import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
+//import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
 
 class RecipesGetter {
   final Map<String, int> recipeIds = {};
   static RecipesGetter singleton = RecipesGetter._internal();
-  static const List<String> blackList = ['Рим'];
+  static const List<String> blackList = [];
   RecipesGetter._internal();
 
   factory RecipesGetter() {
     return singleton;
   }
 
-  String getImageUrl(int id) {
-    return "https://$serverUrl/api/v1/media/$id";
-  }
-
   Future<List<Recipe>> get favoriteRecipes async {
     if (!Config.loggedIn) return [];
-    var favIds = await FavoriteRecipesDbManager().getList();
-    return recipes.where((element) => favIds.contains(element.id)).toList();
+    // var favIds = await FavoriteRecipesDbManager().getList();
+    return [];
   }
 
   Future<List<Recipe>> get createdRecipes async {
@@ -42,6 +38,10 @@ class RecipesGetter {
       result.add(recipe);
     }
     return result;
+  }
+
+  String getImageUrl(int id) {
+    return "https://$serverUrl/api/v1/media/$id";
   }
 
   Future<List<Recipe>?> getCollection(String name) async {
@@ -98,6 +98,12 @@ class RecipesGetter {
       recipeId = recipesCounter++;
       recipeIds[recipeName] = recipeId;
     }
+    for (int i = 0; i < recipeName.length; i++) {
+      if (recipeName.substring(i).startsWith("- пошаговый")) {
+        recipeName = recipeName.substring(0, i).trim();
+        break;
+      }
+    }
     var recipe = Recipe(
         name: recipeName,
         faceImageUrl: getImageUrl(recipeJson[faceMedia][id]),
@@ -107,7 +113,6 @@ class RecipesGetter {
         kilocalories: kilocaloriesCount == null ? 0.0 : kilocaloriesCount as double,
         ingredients: ingredients,
         steps: recipeSteps,
-        isNetwork: true
     );
     return recipe;
   }

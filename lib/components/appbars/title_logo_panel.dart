@@ -8,7 +8,7 @@ class TitleLogoPanel extends StatefulWidget {
   final String title;
 
   @override
-  State<TitleLogoPanel> createState() => TitleLogoPanelState();
+  State<TitleLogoPanel> createState() => _TitleLogoPanelState();
 
   AppBar appBar() {
     return AppBar(
@@ -19,17 +19,7 @@ class TitleLogoPanel extends StatefulWidget {
   }
 }
 
-class TitleLogoPanelState extends State<TitleLogoPanel> {
-  static TitleLogoPanelState? _current;
-
-  @override
-  initState() {
-    super.initState();
-    _current ??= this;
-  }
-
-  static TitleLogoPanelState? get current => _current;
-
+class _TitleLogoPanelState extends State<TitleLogoPanel> {
   void update() {
     setState(() {
     });
@@ -39,25 +29,30 @@ class TitleLogoPanelState extends State<TitleLogoPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(),
-          Text(
-            widget.title,
-            style: TextStyle(
-                fontFamily: Config.fontFamily,
-                fontSize: fontSize(context),
-                fontWeight: FontWeight.normal,
-                color: Config.iconColor
+    return ValueListenableBuilder(
+      valueListenable: Config.darkThemeProvider,
+      builder: (BuildContext context, bool darkModeOn, Widget? child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
+            Text(
+              widget.title,
+              style: TextStyle(
+                  fontFamily: Config.fontFamily,
+                  fontSize: fontSize(context),
+                  fontWeight: FontWeight.normal,
+                  color: Config.iconColor
+              ),
             ),
-          ),
-          Container(
-              padding: const EdgeInsets.all(5),
-              width: 50,
-              child: Image.asset("assets/images/voice_recipe.png")
-          ),
-        ],
+            Container(
+                padding: const EdgeInsets.all(5),
+                width: 50,
+                child: Image.asset("assets/images/voice_recipe.png")
+            ),
+          ],
+        );
+      }
     );
   }
 }

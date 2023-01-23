@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -15,6 +14,7 @@ class RecipesSender {
       "https://server.voicerecipe.ru/api/v1/ingredient";
   static const int fail = -1;
   static RecipesSender singleton = RecipesSender._internal();
+  static const int defaultMediaId = 172;
 
   RecipesSender._internal();
 
@@ -27,7 +27,6 @@ class RecipesSender {
     if (recipeJson == null) {
       return fail;
     }
-    debugPrint(recipeJson);
     var response = await http.post(
       Uri.parse(recipePostUrl),
       headers: {
@@ -36,15 +35,12 @@ class RecipesSender {
       body: recipeJson
     );
     if (response.statusCode != 200) {
-      debugPrint(response.body);
+      print(response.body);
       return fail;
     }
     var idJson = jsonDecode(response.body);
     int? id = idJson["id"];
-    if (id == null) {
-      return fail;
-    }
-    return id;
+    return id?? fail;
   }
 
   Future<String?> recipeToJson(Recipe recipe) async {
@@ -105,7 +101,7 @@ class RecipesSender {
     for (Ingredient ing in ings) {
       int returnCode = await sendIngredient(ing);
       if (returnCode == fail) {
-        debugPrint("failed to load ${ing.name}");
+        // debugPrint("failed to load ${ing.name}");
         return null;
       }
       res.add(returnCode);
@@ -128,7 +124,7 @@ class RecipesSender {
           body: jsonEncode(ingDto)
       );
       if (response.statusCode != 200) {
-        debugPrint(response.body);
+        // debugPrint(response.body);
         return fail;
       }
       var idJson = jsonDecode(response.body);
@@ -145,9 +141,13 @@ class RecipesSender {
     }
     var res = <int>[];
     for (RecipeStep step in steps) {
+      if (!step.hasImage) {
+        res.add(defaultMediaId);
+        continue;
+      }
       int returnCode = await sendImage(step.imgUrl);
       if (returnCode == fail) {
-        debugPrint("failed to load ${step.imgUrl}");
+        // debugPrint("failed to load ${step.imgUrl}");
         return null;
       }
       res.add(returnCode);
@@ -155,11 +155,21 @@ class RecipesSender {
     return res;
   }
 
+  Future<int> makeCollection(String collectionName) async {
+    var res = await http.post(Uri.parse("https://server.voicerecipe.ru/api/v1/collection?name=$collectionName"));
+    return res.statusCode;
+  }
+  
+  Future<int> addToCollection(String collectionName, int recipeId) async {
+    var res = await http.post(Uri.parse("https://server.voicerecipe.ru/api/v1/collection/content?collection=$collectionName&recipe=$recipeId"));
+    return res.statusCode;
+  }
+
   Future<int> sendImage(String imageUrl) async {
     http.Response imageResponse = await http.get(Uri.parse(imageUrl));
     if (imageResponse.statusCode != 200) {
-      debugPrint("Could not get image response");
-      debugPrint(imageResponse.body);
+      // debugPrint("Could not get image response");
+      // debugPrint(imageResponse.body);
       return fail;
     }
     var response = await http.post(
@@ -168,7 +178,7 @@ class RecipesSender {
       body: imageResponse.bodyBytes,
     );
     if (response.statusCode != 200) {
-      debugPrint(response.body);
+      // debugPrint(response.body);
       return fail;
     }
     var idJson = jsonDecode(response.body);

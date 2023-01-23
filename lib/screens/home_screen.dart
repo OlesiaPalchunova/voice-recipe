@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
-import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -16,118 +15,130 @@ class Home extends StatefulWidget {
   static const route = '/';
 
   @override
-  State<Home> createState() => HomeState();
+  State<Home> createState() => _HomeState();
 }
 
-class HomeState extends State<Home> {
-  var _recipes = recipes;
+class _HomeState extends State<Home> {
+  List<Recipe> recipes = [];
   final List<RecipeHeaderCard> recipeViews = [];
-  static const title = TitleLogoPanel(title: Config.appName);
-  static HomeState? current;
-  static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
-  final List<Advertisement> ads = [];
-  bool _disposed = false;
+  final List<Advertisement> adViews = [];
+  bool disposed = false;
   final searchFocusNode = FocusNode();
+  final scrollController = ScrollController();
+  bool isLoadingMore = false;
+  static int _currentPage = 17;
+  static int maxPage = 30;
+  static const prefix = 'page';
 
+  static int get currentPage => _currentPage++;
 
   @override
   void initState() {
-    current = this;
     initRecipeViews();
+    scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  Future<void> _scrollListener() async {
+    if (isLoadingMore) return;
+    if (_currentPage >= maxPage) return;
+    if (scrollController.position.pixels !=
+        scrollController.position.maxScrollExtent) {
+      return;
+    }
+    setState(() => isLoadingMore = true);
+    await fetchNewRecipesPortion();
+    setState(() => isLoadingMore = false);
   }
 
   @override
   void dispose() {
-    _disposed = true;
+    disposed = true;
     super.dispose();
   }
 
-  void initRecipeViews() async {
-    if (_recipes.isEmpty) {
-      var mainPage = await RecipesGetter().getCollection('mainpage');
-      if (mainPage != null) {
-        recipes.addAll(mainPage);
-      }
-      _recipes = recipes;
+  Future<void> fetchNewRecipesPortion() async {
+    var newPortion = await RecipesGetter().getCollection('$prefix$currentPage');
+    if (newPortion != null) {
+      recipes.addAll(newPortion);
+      recipes = recipes;
+      recipeViews.addAll(newPortion.map((e) => RecipeHeaderCard(recipe: e)).toList());
     }
-    ads.clear();
-    ads.add(Advertisement());
-    recipeViews.clear();
-    recipeViews.addAll(_recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
-    if (!_disposed) {
-      setState(() {
-      });
+  }
+
+  void initRecipeViews() async {
+    List<Recipe>? mainPage = await RecipesGetter().getCollection('$prefix$currentPage');
+    if (mainPage != null) {
+      recipes.addAll(mainPage);
+    }
+    adViews.add(const Advertisement());
+    recipeViews.addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+    if (!disposed) {
+      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawerScrimColor: drawerScrimColor,
-        appBar: AppBar(
-          foregroundColor: Config.iconColor,
-          backgroundColor: Config.appBarColor,
-          title: title
-        ),
-        drawer: SideBarMenu(onUpdate: () {
-          setState(() {
-            TitleLogoPanelState.current?.update();
-            initRecipeViews();
-          });
-        }),
-        body: Builder(
-          builder: (context) => SliderGestureHandler(
-            handleKeyboard: false,
-            ignoreVerticalSwipes: false,
-            handleSideTaps: false,
-            customOnTap: () => searchFocusNode.unfocus(),
-            onRight: () {},
-            onLeft: () => Scaffold.of(context).openDrawer(),
-            child: Container(
-              alignment: Alignment.topCenter,
-              color: Config.backgroundEdgeColor,
-              child: SizedBox(
-                width: Config.widePageWidth(context),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  child: Column(children: [
-                    Container(
-                      margin: const EdgeInsets.all(Config.margin).add(
-                          const EdgeInsets.symmetric(
-                              horizontal: Config.margin * 2)),
-                      child: SizedBox(
-                        // height: Config.isDesktop(context) ? 60 : 40,
-                        width: 500,
-                        child: SearchField(onChanged: handleSearch, focusNode: searchFocusNode,)
+    return ValueListenableBuilder(
+        valueListenable: Config.darkThemeProvider,
+        builder: (context, darkModeOn, child) {
+          return Scaffold(
+              appBar: Config.defaultAppBar,
+              drawerScrimColor: Config.drawerScrimColor,
+              drawer: const SideBarMenu(),
+              body: Builder(
+                builder: (context) => SliderGestureHandler(
+                  handleKeyboard: false,
+                  ignoreVerticalSwipes: false,
+                  handleSideTaps: false,
+                  customOnTap: () => searchFocusNode.unfocus(),
+                  onRight: () {},
+                  onLeft: () => Scaffold.of(context).openDrawer(),
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    color: Config.backgroundEdgeColor,
+                    child: SizedBox(
+                      width: Config.widePageWidth(context),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        scrollDirection: Axis.vertical,
+                        child: Column(children: [
+                          Container(
+                            margin: const EdgeInsets.all(Config.margin).add(
+                                const EdgeInsets.symmetric(
+                                    horizontal: Config.margin * 2)),
+                            child: SizedBox(
+                                // height: Config.isDesktop(context) ? 60 : 40,
+                                width: 500,
+                                child: SearchField(
+                                  onChanged: handleSearch,
+                                  focusNode: searchFocusNode,
+                                )),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: adViews,
+                            ),
+                          ),
+                          const SizedBox(height: Config.margin),
+                          Wrap(children: recipeViews),
+                          isLoadingMore
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox()
+                        ]),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: ads,
-                      ),
-                    ),
-                    const SizedBox(height: Config.margin),
-                    Wrap(children: recipeViews)
-                  ]),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        )
-    );
+              ));
+        });
   }
 
   void handleSearch(String string) {
-    setState(() {
-      _recipes = recipes
-          .where((element) =>
-              element.name.toLowerCase().startsWith(string.toLowerCase()))
-          .toList();
-      recipeViews.clear();
-      recipeViews.addAll(_recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
-    });
+    Config.showAlertDialog("К сожалению, поиск сейчас не работает.", context);
   }
 }

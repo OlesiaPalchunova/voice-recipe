@@ -29,10 +29,7 @@ class TimesSetOption extends SetOption {
 
   @override
   Future<List<Recipe>> getRecipes() async {
-    return recipes.where((element) {
-      var total = element.prepTimeMins + element.cookTimeMins;
-      return total >= minimum && total <= maximum;
-    }).toList();
+    return [];
   }
 }
 

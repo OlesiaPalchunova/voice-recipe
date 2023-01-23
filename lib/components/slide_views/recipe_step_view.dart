@@ -69,10 +69,8 @@ class RecipeStepView extends StatelessWidget {
                     borderRadius:
                         BorderRadius.circular(RecipeStepView._borderRadius),
                     child: Image(
-                      image: recipe.isNetwork ?
-                      NetworkImage(step.imgUrl)
-                          : AssetImage(step.imgUrl) as ImageProvider,
-                      fit: BoxFit.fitHeight,
+                      image: NetworkImage(step.imgUrl),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
