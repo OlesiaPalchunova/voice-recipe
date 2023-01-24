@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:intro_slider/intro_slider.dart';
+import 'package:routemaster/routemaster.dart';
 
 import 'package:voice_recipe/components/buttons/arrow.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
@@ -105,7 +106,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
           verticalScrollbarBehavior: ScrollbarBehavior.hide,
           marginDescription: const EdgeInsets.all(0.0),
           widgetTitle: SliderGestureHandler(
-            handleKeyboard: Config.isWeb && !(slide == widget.slides.last),
+            handleKeyboard: Config.isWeb,
             customOnTap: () {
               ReviewsSlide.newCommentNode.unfocus();
               CommentCard.editNode.unfocus();

@@ -18,3 +18,8 @@ const stepMedia = "media";
 const stepDescription = "description";
 const stepNum = "step_num";
 const stepWaitTime = "wait_time_mins";
+
+const scheme = "https://";
+const authority = "server.voicerecipe.ru/";
+const api = "api/v1/";
+const apiUrl = "$scheme$authority$api";

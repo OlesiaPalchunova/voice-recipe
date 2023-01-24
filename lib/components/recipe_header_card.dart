@@ -1,10 +1,11 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
+import 'package:voice_recipe/screens/future_recipe_screen.dart';
 
 import '../model/recipes_info.dart';
-import 'package:voice_recipe/screens/recipe_screen.dart';
 import 'package:voice_recipe/config.dart';
 
 class RecipeHeaderCard extends StatefulWidget {
@@ -104,7 +105,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   double get blurRadius => 6;
 
   double fontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 17 : 15;
+      Config.isDesktop(context) ? 20 : 18;
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +211,6 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
   void navigateToRecipe(BuildContext context, Recipe recipe) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => RecipeScreen(recipe: recipe)));
+    Routemaster.of(context).push(FutureRecipeScreen.route + recipe.id.toString());
   }
 }

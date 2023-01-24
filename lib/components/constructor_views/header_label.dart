@@ -67,6 +67,7 @@ class HeaderLabelState extends State<HeaderLabel> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CreateRecipeScreen.title(context, "Основное"),
         const SizedBox(
@@ -74,6 +75,7 @@ class HeaderLabelState extends State<HeaderLabel> {
         ),
         Container(
           padding: Config.paddingAll,
+          width: CreateRecipeScreen.pageWidth(context) * .5,
           child: InputLabel(
             focusNode: widget.nameFocusNode,
             labelText: "Название рецепта",
@@ -141,7 +143,7 @@ class HeaderLabelState extends State<HeaderLabel> {
           child: Column(
             children: [
               SizedBox(
-                // width: CreateRecipeScreen.pageWidth(context) * .7,
+                width: CreateRecipeScreen.pageWidth(context) * .5,
                 child: InputLabel(
                   focusNode: widget.cookTimeFocusNode,
                   labelText: "Время приготовления, в минутах",
@@ -154,7 +156,7 @@ class HeaderLabelState extends State<HeaderLabel> {
                 height: Config.margin,
               ),
               SizedBox(
-                // width: CreateRecipeScreen.pageWidth(context) * .7,
+                width: CreateRecipeScreen.pageWidth(context) * .5,
                 child: InputLabel(
                     focusNode: widget.prepTimeFocusNode,
                     labelText: "Время подготовки, в минутах (необязательно)",

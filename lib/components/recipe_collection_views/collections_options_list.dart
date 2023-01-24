@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/recipe_collection_views/set_option_tile.dart';
+import 'package:voice_recipe/components/recipe_collection_views/collection_option_tile.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
 
-class SetsOptionsList extends StatefulWidget {
-  const SetsOptionsList({super.key, required this.set});
+class CollectionsOptionsList extends StatefulWidget {
+  const CollectionsOptionsList({super.key, required this.set});
 
-  final RecipesSet set;
+  final CollectionsSet set;
 
   @override
-  State<SetsOptionsList> createState() => _SetsOptionsListState();
+  State<CollectionsOptionsList> createState() => _CollectionsOptionsListState();
 }
 
-class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProviderStateMixin {
+class _CollectionsOptionsListState extends State<CollectionsOptionsList> with SingleTickerProviderStateMixin {
   late final _setOptions = widget.set.options;
   static const _initialDelayTime = Duration(milliseconds: 20);
   static const _itemSlideTime = Duration(milliseconds: 250);
@@ -80,7 +80,7 @@ class _SetsOptionsListState extends State<SetsOptionsList> with SingleTickerProv
                   ),
                 );
               },
-              child: SetOptionTile(setOption: _setOptions[i],),
+              child: CollectionOptionTile(setOption: _setOptions[i],),
             ),
           ],
         ),

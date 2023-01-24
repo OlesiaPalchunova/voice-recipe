@@ -4,23 +4,17 @@ import 'config.dart';
 import 'services/local_notice_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:routemaster/routemaster.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalNoticeService().setup();
-  var start = DateTime.now();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
-  var end = DateTime.now();
-  debugPrint(end.difference(start).inMilliseconds.toString());
   if (Config.isWeb) {
-    usePathUrlStrategy();
+    Routemaster.setPathUrlStrategy();
   }
-  start = DateTime.now();
   await Config.init();
-  end = DateTime.now();
-  debugPrint(end.difference(start).inMilliseconds.toString());
   runApp(const VoiceRecipeApp());
 }

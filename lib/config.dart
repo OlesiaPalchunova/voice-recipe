@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
@@ -183,9 +184,8 @@ class Config {
                   text: "Войти",
                   fontSize: 20,
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                    Routemaster.of(context).pop();
+                    Routemaster.of(context).push(LoginScreen.route);
                   },
                 )
               ],

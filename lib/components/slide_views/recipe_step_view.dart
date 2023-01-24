@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/components/timer/timer_view.dart';
+import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 class RecipeStepView extends StatelessWidget {
   RecipeStepView({Key? key, required this.recipe, required this.slideId})
@@ -51,8 +52,26 @@ class RecipeStepView extends StatelessWidget {
     );
   }
 
-  double fontSize(BuildContext ctx) =>
-      Config.isDesktop(ctx) ? 18 : 16;
+  double fontSize(BuildContext ctx) => Config.isDesktop(ctx) ? 18 : 16;
+
+  Widget centerWidget(BuildContext context) {
+    double height = _getImageHeight(context);
+    return step.hasImage
+        ? SizedBox(
+            height: height,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(RecipeStepView._borderRadius),
+              child: Image(
+                image: NetworkImage(step.imgUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        : Container(
+            height: 500,
+            alignment: Alignment.center,
+            child: LoginScreen.voiceRecipeIcon(context, height, 300));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,26 +82,17 @@ class RecipeStepView extends StatelessWidget {
             ListView(
               physics: const BouncingScrollPhysics(),
               children: [
-                SizedBox(
-                  height: _getImageHeight(context),
-                  child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(RecipeStepView._borderRadius),
-                    child: Image(
-                      image: NetworkImage(step.imgUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                centerWidget(context),
                 Container(
                     alignment: Alignment.topCenter,
                     margin: const EdgeInsets.symmetric(
                         vertical: Config.margin, horizontal: 0),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: !Config.darkModeOn ? Colors.black87
-                              .withOpacity(RecipeStepView._textBackgroundOpacity)
-                                  : Config.iconBackColor,
+                          color: !Config.darkModeOn
+                              ? Colors.black87.withOpacity(
+                                  RecipeStepView._textBackgroundOpacity)
+                              : Config.iconBackColor,
                           borderRadius: Config.borderRadiusLarge),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(Config.padding),
@@ -93,8 +103,7 @@ class RecipeStepView extends StatelessWidget {
                             fontSize: fontSize(context),
                             color: Colors.white),
                       ),
-                    )
-                ),
+                    )),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin * 3),
                   child: _buildTimer(),

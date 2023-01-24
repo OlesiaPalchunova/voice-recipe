@@ -62,17 +62,20 @@ class _HomeState extends State<Home> {
     if (newPortion != null) {
       recipes.addAll(newPortion);
       recipes = recipes;
-      recipeViews.addAll(newPortion.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      recipeViews
+          .addAll(newPortion.map((e) => RecipeHeaderCard(recipe: e)).toList());
     }
   }
 
   void initRecipeViews() async {
-    List<Recipe>? mainPage = await RecipesGetter().getCollection('$prefix$currentPage');
+    List<Recipe>? mainPage =
+        await RecipesGetter().getCollection('$prefix$currentPage');
     if (mainPage != null) {
       recipes.addAll(mainPage);
     }
     adViews.add(const Advertisement());
-    recipeViews.addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+    recipeViews
+        .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
     if (!disposed) {
       setState(() {});
     }
@@ -88,53 +91,60 @@ class _HomeState extends State<Home> {
               drawerScrimColor: Config.drawerScrimColor,
               drawer: const SideBarMenu(),
               body: Builder(
-                builder: (context) => SliderGestureHandler(
-                  handleKeyboard: false,
-                  ignoreVerticalSwipes: false,
-                  handleSideTaps: false,
-                  customOnTap: () => searchFocusNode.unfocus(),
-                  onRight: () {},
-                  onLeft: () => Scaffold.of(context).openDrawer(),
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    color: Config.backgroundEdgeColor,
-                    child: SizedBox(
-                      width: Config.widePageWidth(context),
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        keyboardDismissBehavior:
-                            ScrollViewKeyboardDismissBehavior.onDrag,
-                        scrollDirection: Axis.vertical,
-                        child: Column(children: [
-                          Container(
-                            margin: const EdgeInsets.all(Config.margin).add(
-                                const EdgeInsets.symmetric(
-                                    horizontal: Config.margin * 2)),
-                            child: SizedBox(
-                                // height: Config.isDesktop(context) ? 60 : 40,
-                                width: 500,
-                                child: SearchField(
-                                  onChanged: handleSearch,
-                                  focusNode: searchFocusNode,
-                                )),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              children: adViews,
+                  builder: (context) => SliderGestureHandler(
+                        handleKeyboard: false,
+                        ignoreVerticalSwipes: false,
+                        handleSideTaps: false,
+                        customOnTap: () => searchFocusNode.unfocus(),
+                        onRight: () {},
+                        onLeft: () => Scaffold.of(context).openDrawer(),
+                        child: Scrollbar(
+                          thickness: 20,
+                          radius: const Radius.elliptical(6, 12),
+                          controller: scrollController,
+                          interactive: true,
+                          thumbVisibility: true,
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            scrollDirection: Axis.vertical,
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              color: Config.backgroundEdgeColor,
+                              child: SizedBox(
+                                width: Config.widePageWidth(context),
+                                child: Column(children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(Config.margin)
+                                        .add(const EdgeInsets.symmetric(
+                                            horizontal: Config.margin * 2)),
+                                    child: SizedBox(
+                                        // height: Config.isDesktop(context) ? 60 : 40,
+                                        width: 500,
+                                        child: SearchField(
+                                          onChanged: handleSearch,
+                                          focusNode: searchFocusNode,
+                                        )),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: adViews,
+                                    ),
+                                  ),
+                                  const SizedBox(height: Config.margin),
+                                  Wrap(children: recipeViews),
+                                  isLoadingMore
+                                      ? const Center(
+                                          child: CircularProgressIndicator())
+                                      : const SizedBox()
+                                ]),
+                              ),
                             ),
                           ),
-                          const SizedBox(height: Config.margin),
-                          Wrap(children: recipeViews),
-                          isLoadingMore
-                              ? const Center(child: CircularProgressIndicator())
-                              : const SizedBox()
-                        ]),
-                      ),
-                    ),
-                  ),
-                ),
-              ));
+                        ),
+                      )));
         });
   }
 

@@ -3,15 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/api/recipe_fields.dart';
+import 'package:voice_recipe/api/api_fields.dart';
 
 class RecipesSender {
-  static const String mediaPostUrl =
-      "https://server.voicerecipe.ru/api/v1/media";
-  static const String recipePostUrl =
-      "https://server.voicerecipe.ru/api/v1/recipe";
-  static const String ingPostUrl =
-      "https://server.voicerecipe.ru/api/v1/ingredient";
   static const int fail = -1;
   static RecipesSender singleton = RecipesSender._internal();
   static const int defaultMediaId = 172;
@@ -28,7 +22,7 @@ class RecipesSender {
       return fail;
     }
     var response = await http.post(
-      Uri.parse(recipePostUrl),
+      Uri.parse('${apiUrl}recipe'),
       headers: {
         "Content-Type" : "application/json; charset=UTF-8",
         },
@@ -117,7 +111,7 @@ class RecipesSender {
         ingredientId : ing.id + 10
       };
       var response = await http.post(
-          Uri.parse(recipePostUrl),
+          Uri.parse('${apiUrl}recipe'),
           headers: {
             "Content-Type" : "application/json; charset=UTF-8",
           },
@@ -156,12 +150,12 @@ class RecipesSender {
   }
 
   Future<int> makeCollection(String collectionName) async {
-    var res = await http.post(Uri.parse("https://server.voicerecipe.ru/api/v1/collection?name=$collectionName"));
+    var res = await http.post(Uri.parse("${apiUrl}collection?name=$collectionName"));
     return res.statusCode;
   }
   
   Future<int> addToCollection(String collectionName, int recipeId) async {
-    var res = await http.post(Uri.parse("https://server.voicerecipe.ru/api/v1/collection/content?collection=$collectionName&recipe=$recipeId"));
+    var res = await http.post(Uri.parse("${apiUrl}collection/content?collection=$collectionName&recipe=$recipeId"));
     return res.statusCode;
   }
 
@@ -173,7 +167,7 @@ class RecipesSender {
       return fail;
     }
     var response = await http.post(
-      Uri.parse(mediaPostUrl),
+      Uri.parse('${apiUrl}media'),
       headers: imageResponse.headers,
       body: imageResponse.bodyBytes,
     );

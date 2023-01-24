@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:blur/blur.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_sender.dart';
@@ -93,18 +94,33 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
           descFocusNode.unfocus();
           stepTimeFocusNode.unfocus();
         },
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: Config.margin * 2),
-              alignment: Alignment.topCenter,
-              width: CreateRecipeScreen.pageWidth(context),
-              child: Column(
-                children: allLabels(context),
-              ),
+        child: Stack(
+          children: [
+            Blur(
+              blur: 3,
+              blurColor: Config.darkThemeBackColor,
+              child: Container(
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/decorations/create_back.jpg'),
+                          fit: BoxFit.fitWidth))),
             ),
-          ),
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Center(
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: Config.margin * 2),
+                  alignment: Alignment.topCenter,
+                  width: CreateRecipeScreen.pageWidth(context),
+                  child: Column(
+                    children: allLabels(context),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -113,8 +129,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   Container roundWrapper(Widget child) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: Config.borderRadiusLarge,
-          color: labelColor),
+          borderRadius: Config.borderRadiusLarge, color: labelColor),
       padding: Config.paddingAll,
       margin: const EdgeInsets.only(bottom: Config.margin),
       child: child,
@@ -122,6 +137,46 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   }
 
   Recipe? createdRecipe;
+
+  List<Widget> allLabels(BuildContext context) {
+    var labels = <Widget>[
+      HeaderLabel(
+        headers: headers,
+        nameFocusNode: nameFocusNode,
+        cookTimeFocusNode: cookTimeFocusNode,
+        prepTimeFocusNode: prepTimeFocusNode,
+      ),
+      IngredientsLabel(
+        insertList: ingredients,
+        ingNameFocusNode: ingNameFocusNode,
+        ingCountFocusNode: ingCountFocusNode,
+      ),
+      StepsLabel(
+        insertList: steps,
+        descFocusNode: descFocusNode,
+        stepTimeFocusNode: stepTimeFocusNode,
+      ),
+      Container(
+        margin: Config.paddingAll,
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+            width: CreateRecipeScreen.pageWidth(context) / 2,
+            child: SizedBox(
+                child: ClassicButton(
+              customColor: CreateRecipeScreen.buttonColor,
+              onTap: submitRecipe,
+              text: "Сохранить рецепт",
+              fontSize: CreateRecipeScreen.generalFontSize(context),
+            ))),
+      ),
+    ];
+    return labels.map((e) => roundWrapper(e)).toList();
+  }
+
+  TextStyle get ingStyle => TextStyle(
+      color: Config.iconColor,
+      fontFamily: Config.fontFamily,
+      fontSize: CreateRecipeScreen.generalFontSize(context));
 
   void submitRecipe() async {
     if (!Config.loggedIn) {
@@ -154,77 +209,39 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       ingredients: ingredients,
       steps: steps,
     );
-    AnimatedLoading().execute(context,
-      task: () async {
-        int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
-        Future.delayed(const Duration(milliseconds: 2000), () {
-          if (recipeId == RecipesSender.fail) {
-            Config.showAlertDialog(
-                "Приносим свои извинения, сервер не отвечает", context);
-          } else {
-            UserDbManager().addNewCreated(Config.user!.uid, recipeId);
-          }
-        });
-        return recipeId != RecipesSender.fail;
-      },
-      onSuccess: () {
-        Config.showAlertDialog(
+    AnimatedLoading().execute(context, task: () async {
+      int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        if (recipeId == RecipesSender.fail) {
+          Config.showAlertDialog(
+              "Приносим свои извинения, сервер не отвечает", context);
+        } else {
+          UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+        }
+      });
+      return recipeId != RecipesSender.fail;
+    }, onSuccess: () {
+      Config.showAlertDialog(
           "Ваш рецепт был успешно сохранен!\n"
-          "Вы всегда можете его просмотреть в разделе\n"
-          "Профиль > Мои рецепты", context);
-        if (HeaderLabelState.current == null) {
-          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-          return;
-        }
-        HeaderLabelState.current!.clear();
-        if (IngredientsLabelState.current == null) {
-          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-          return;
-        }
-        IngredientsLabelState.current!.clear();
-        if (StepsLabelState.current == null) {
-          Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
-          return;
-        }
-        StepsLabelState.current!.clear();
-        setState(() {});
+              "Вы всегда можете его просмотреть в разделе\n"
+              "Профиль > Мои рецепты",
+          context);
+      if (HeaderLabelState.current == null) {
+        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        return;
       }
-    );
+      HeaderLabelState.current!.clear();
+      if (IngredientsLabelState.current == null) {
+        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        return;
+      }
+      IngredientsLabelState.current!.clear();
+      if (StepsLabelState.current == null) {
+        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        return;
+      }
+      StepsLabelState.current!.clear();
+      setState(() {});
+    });
   }
-
-  List<Widget> allLabels(BuildContext context) {
-    var labels = <Widget>[
-      HeaderLabel(
-        headers: headers,
-        nameFocusNode: nameFocusNode,
-        cookTimeFocusNode: cookTimeFocusNode,
-        prepTimeFocusNode: prepTimeFocusNode,
-      ),
-      IngredientsLabel(insertList: ingredients, ingNameFocusNode: ingNameFocusNode,
-      ingCountFocusNode: ingCountFocusNode,),
-      StepsLabel(
-        insertList: steps,
-        descFocusNode: descFocusNode,
-        stepTimeFocusNode: stepTimeFocusNode,
-      ),
-      Container(
-        margin: Config.paddingAll,
-        child: SizedBox(
-            width: CreateRecipeScreen.pageWidth(context) / 2,
-            child: SizedBox(
-                child: ClassicButton(
-              customColor: CreateRecipeScreen.buttonColor,
-              onTap: submitRecipe,
-              text: "Сохранить рецепт",
-              fontSize: CreateRecipeScreen.generalFontSize(context),
-            ))),
-      ),
-    ];
-    return labels.map((e) => roundWrapper(e)).toList();
-  }
-
-  TextStyle get ingStyle => TextStyle(
-      color: Config.iconColor,
-      fontFamily: Config.fontFamily,
-      fontSize: CreateRecipeScreen.generalFontSize(context));
 }

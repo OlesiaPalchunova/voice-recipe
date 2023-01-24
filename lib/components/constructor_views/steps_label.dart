@@ -63,6 +63,7 @@ class StepsLabelState extends State<StepsLabel> {
             padding: Config.paddingAll,
             margin: const EdgeInsets.only(bottom: Config.margin),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                     borderRadius: Config.borderRadiusLarge,
@@ -157,6 +158,7 @@ class StepsLabelState extends State<StepsLabel> {
         Container(
           padding: Config.paddingAll,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               currentImageFile == null ? ImageDropZone(
                 customButtonColor: CreateRecipeScreen.buttonColor,
@@ -176,12 +178,15 @@ class StepsLabelState extends State<StepsLabel> {
               const SizedBox(
                 height: Config.padding,
               ),
-              InputLabel(
-                  labelText: "Время ожидания, в минутах (опционально)",
-                  focusNode: widget.stepTimeFocusNode,
-                  controller: waitTimeController,
-                fontSize: CreateRecipeScreen.generalFontSize(context),
-                onSubmit: addNewStep,),
+              SizedBox(
+                width: CreateRecipeScreen.pageWidth(context) * .5,
+                child: InputLabel(
+                    labelText: "Время ожидания, в минутах (опционально)",
+                    focusNode: widget.stepTimeFocusNode,
+                    controller: waitTimeController,
+                  fontSize: CreateRecipeScreen.generalFontSize(context),
+                  onSubmit: addNewStep,),
+              ),
               const SizedBox(
                 height: Config.padding,
               ),

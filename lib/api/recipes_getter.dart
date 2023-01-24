@@ -1,30 +1,39 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:voice_recipe/api/recipes_sender.dart';
 
 import '../config.dart';
 import '../model/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/api/recipe_fields.dart';
-//import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
+import 'package:voice_recipe/api/api_fields.dart';
+import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
 
 class RecipesGetter {
-  final Map<String, int> recipeIds = {};
   static RecipesGetter singleton = RecipesGetter._internal();
   static const List<String> blackList = [];
   RecipesGetter._internal();
+  final Map<int, Recipe> recipesCache = {};
+  final Map<String, List<Recipe>> collectionsCache = {};
 
   factory RecipesGetter() {
     return singleton;
   }
 
-  Future<List<Recipe>> get favoriteRecipes async {
+  Future<List<Recipe>> get _favoriteRecipes async {
     if (!Config.loggedIn) return [];
-    // var favIds = await FavoriteRecipesDbManager().getList();
-    return [];
+    List<int> favIds = await FavoriteRecipesDbManager().getList();
+    List<Recipe> res = [];
+    for (int id in favIds) {
+      Recipe? recipe = await getRecipe(recipeId: id);
+      if (recipe != null) {
+        res.add(recipe);
+      }
+    }
+    return res;
   }
 
-  Future<List<Recipe>> get createdRecipes async {
+  Future<List<Recipe>> get _createdRecipes async {
     if (!Config.loggedIn) return [];
     var user = Config.user!;
     var userData = await UserDbManager().getUserData(user.uid);
@@ -41,10 +50,19 @@ class RecipesGetter {
   }
 
   String getImageUrl(int id) {
-    return "https://$serverUrl/api/v1/media/$id";
+    return "${apiUrl}media/$id";
   }
 
   Future<List<Recipe>?> getCollection(String name) async {
+    if (name == 'favorites') {
+      return _favoriteRecipes;
+    }
+    if (name == 'created') {
+      return _createdRecipes;
+    }
+    if (collectionsCache.containsKey(name)) {
+      return collectionsCache[name];
+    }
     var response = await fetchCollection(name);
     if (response.statusCode != 200) {
       return null;
@@ -57,6 +75,10 @@ class RecipesGetter {
       Recipe recipe = recipeFromJson(recipeJson);
       if (blackList.contains(recipe.name)) continue;
       recipes.add(recipe);
+    }
+    collectionsCache[name] = recipes;
+    for (Recipe recipe in recipes) {
+      recipesCache[recipe.id] = recipe;
     }
     return recipes;
   }
@@ -83,6 +105,7 @@ class RecipesGetter {
       recipeSteps.add(RecipeStep(
           id: s[stepNum],
           imgUrl: getImageUrl(s[stepMedia][id]),
+          hasImage: s[stepMedia][id] != RecipesSender.defaultMediaId,
           description: s[stepDescription],
           waitTime: waitTimeMins
       ));
@@ -90,14 +113,7 @@ class RecipesGetter {
     num cookTime = recipeJson[cookTimeMins];
     num? prepTime = recipeJson[prepTimeMins];
     num? kilocaloriesCount = recipeJson[kilocalories];
-    int recipeId = 0;
     String recipeName = recipeJson[name];
-    if (recipeIds.containsKey(recipeName)) {
-      recipeId = recipeIds[recipeName]!;
-    } else {
-      recipeId = recipesCounter++;
-      recipeIds[recipeName] = recipeId;
-    }
     for (int i = 0; i < recipeName.length; i++) {
       if (recipeName.substring(i).startsWith("- пошаговый")) {
         recipeName = recipeName.substring(0, i).trim();
@@ -107,7 +123,7 @@ class RecipesGetter {
     var recipe = Recipe(
         name: recipeName,
         faceImageUrl: getImageUrl(recipeJson[faceMedia][id]),
-        id: recipeId,
+        id: recipeJson[id],
         cookTimeMins: cookTime.floor(),
         prepTimeMins: prepTime == null ? 0 : prepTime.floor(),
         kilocalories: kilocaloriesCount == null ? 0.0 : kilocaloriesCount as double,
@@ -118,24 +134,27 @@ class RecipesGetter {
   }
 
   Future<Recipe?> getRecipe({required int recipeId}) async {
+    if (recipesCache.containsKey(recipeId)) {
+      return recipesCache[recipeId];
+    }
     var response = await fetchRecipe(recipeId);
     if (response.statusCode != 200) {
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
     var recipeJson = jsonDecode(decodedBody);
-    return recipeFromJson(recipeJson);
+    Recipe recipe = recipeFromJson(recipeJson);
+    recipesCache[recipeId] = recipe;
+    return recipe;
   }
 
-  static const serverUrl = "server.voicerecipe.ru";
-
   Future<http.Response> fetchRecipe(int id) async {
-    var recipeUrl = Uri.parse('https://server.voicerecipe.ru/api/v1/recipe/$id');
+    var recipeUrl = Uri.parse('${apiUrl}recipe/$id');
     return http.get(recipeUrl);
   }
 
   Future<http.Response> fetchCollection(String name) async {
-    var collectionUri = Uri.parse('https://server.voicerecipe.ru/api/v1/collection/search?name=$name');
+    var collectionUri = Uri.parse('${apiUrl}collection/search?name=$name');
     return http.get(collectionUri);
   }
 }

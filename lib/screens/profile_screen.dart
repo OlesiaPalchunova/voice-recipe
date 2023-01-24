@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
-import 'package:voice_recipe/components/recipe_collection_views/set_header_card.dart';
-import 'package:voice_recipe/screens/set_screen.dart';
+import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 
-import '../api/recipes_getter.dart';
 import '../config.dart';
 import '../model/sets_info.dart';
 import '../model/users_info.dart';
+import 'future_collection_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -35,23 +35,13 @@ class AccountScreen extends StatelessWidget {
                   Container(
                       padding: const EdgeInsets.all(Config.padding),
                       alignment: Alignment.center,
-                      child: SetHeaderCard(
+                      child: CollectionHeaderCard(
                         onTap: () async {
                           if (!Config.loggedIn) {
                             Config.showLoginInviteDialog(context);
                             return;
                           }
-                          Config.showProgressCircle(context);
-                          var recipes = await RecipesGetter().createdRecipes;
-                          await Future.microtask(() => Navigator.of(context).pop());
-                          await Future.microtask(() => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => SetScreen(
-                                    recipes: recipes,
-                                    setName: "Созданные вами",
-                                    showLikes: false,)
-                              )
-                          ));
+                          Routemaster.of(context).push('${FutureCollectionScreen.route}created');
                         },
                         showTiles: false,
                         set: created,
@@ -91,7 +81,7 @@ class AccountScreen extends StatelessWidget {
             Text(
               "${user.displayName}",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 color: Config.iconColor,
                 fontFamily: Config.fontFamily,
               ),
@@ -101,7 +91,7 @@ class AccountScreen extends StatelessWidget {
         IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
-              Navigator.of(context).pop();
+              Routemaster.of(context).pop();
             },
             tooltip: "Выйти из аккаунта",
             icon: Icon(Icons.logout, color: Config.iconColor))

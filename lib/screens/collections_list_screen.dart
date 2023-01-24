@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/model/sets_info.dart';
-import 'package:voice_recipe/components/recipe_collection_views/set_header_card.dart';
+import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 import 'package:voice_recipe/config.dart';
 
-class SetsListScreen extends StatefulWidget {
-  const SetsListScreen({super.key});
+class CollectionsListScreen extends StatefulWidget {
+  const CollectionsListScreen({super.key});
 
   static const route = "/collections";
 
   @override
-  State<SetsListScreen> createState() => _SetsListScreen();
+  State<CollectionsListScreen> createState() => _CollectionsListScreen();
 }
 
-class _SetsListScreen extends State<SetsListScreen> {
+class _CollectionsListScreen extends State<CollectionsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +31,7 @@ class _SetsListScreen extends State<SetsListScreen> {
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(Config.padding),
                 itemCount: sets.length,
-                itemBuilder: (_, index) => SetHeaderCard(
+                itemBuilder: (_, index) => CollectionHeaderCard(
                     widthConstraint:
                         Config.pageWidth(context) > Config.pageHeight(context)
                             ? Config.maxRecipeSlideWidth

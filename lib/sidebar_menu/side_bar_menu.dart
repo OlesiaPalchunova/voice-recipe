@@ -3,16 +3,19 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:voice_recipe/screens/future_collection_screen.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/screens/create_recipe_screen.dart';
 import 'package:voice_recipe/screens/authorization/login_screen.dart';
-import 'package:voice_recipe/screens/sets_list_screen.dart';
+import 'package:voice_recipe/screens/collections_list_screen.dart';
 
 import '../../model/users_info.dart';
-import '../../screens/set_screen.dart';
+import '../../screens/collection_screen.dart';
 import '../screens/authorization/auth_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
@@ -22,7 +25,7 @@ class SideBarMenu extends StatefulWidget {
   State<SideBarMenu> createState() => _SideBarMenuState();
 
   static double nameFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 18 : 14;
+      Config.isDesktop(context) ? 16 : 14;
 
   static double fontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 14;
@@ -53,14 +56,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Подборки",
                         onClicked: () =>
-                            Navigator.of(context).pushNamed(SetsListScreen.route),
+                            Routemaster.of(context).push(CollectionsListScreen.route),
                         iconData: Config.darkModeOn
                             ? Icons.library_books_outlined
                             : Icons.library_books_outlined),
                     Config.isWeb ? SideBarTile(
                         name: "Создать рецепт",
                         onClicked: () {
-                          Navigator.of(context).pushNamed(CreateRecipeScreen.route);
+                          Routemaster.of(context).push(CreateRecipeScreen.route);
                         },
                         iconData: Config.darkModeOn
                             ? Icons.create_outlined
@@ -81,17 +84,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                             Config.showLoginInviteDialog(context);
                             return;
                           }
-                          Config.showProgressCircle(context);
-                          var recipes = await RecipesGetter().favoriteRecipes;
-                          await Future.microtask(
-                              () => Navigator.of(context).pop());
-                          await Future.microtask(() =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SetScreen(
-                                        recipes: recipes,
-                                        setName: "Понравившиеся",
-                                        showLikes: false,
-                                      ))));
+                          Routemaster.of(context).push('${FutureCollectionScreen.route}favorites');
                         },
                         iconData: Config.darkModeOn
                             ? Icons.thumb_up_alt_outlined
@@ -134,7 +127,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed(AuthScreen.route);
+            Routemaster.of(context).push(AuthScreen.route);
           },
           borderRadius: Config.borderRadiusLarge,
           child: Row(
@@ -186,7 +179,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
             return SideBarTile(
                 name: "Войти",
                 onClicked: () {
-                  Navigator.of(context).pushNamed(LoginScreen.route);
+                  Routemaster.of(context).push(LoginScreen.route);
                 },
                 iconData: Icons.login);
           }

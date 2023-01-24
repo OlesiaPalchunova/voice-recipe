@@ -1,31 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:voice_recipe/screens/future_collection_screen.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
-import '../../screens/set_screen.dart';
+import '../../screens/collection_screen.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 
-class SetOptionTile extends StatefulWidget {
-  const SetOptionTile({Key? key, required this.setOption}) : super(key: key);
+class CollectionOptionTile extends StatefulWidget {
+  const CollectionOptionTile({Key? key, required this.setOption})
+      : super(key: key);
 
-  final SetOption setOption;
+  final Collection setOption;
 
   @override
-  State<SetOptionTile> createState() => _SetOptionTileState();
+  State<CollectionOptionTile> createState() => _CollectionOptionTileState();
 }
 
-class _SetOptionTileState extends State<SetOptionTile> {
-  bool _isPressed = false;
+class _CollectionOptionTileState extends State<CollectionOptionTile> {
+  bool pressed = false;
+  bool disposed = false;
 
-  Color get hoverColor => Config.darkModeOn ? ClassicButton.hoverColor :
-      Colors.white;
+  Color get hoverColor =>
+      Config.darkModeOn ? ClassicButton.hoverColor : Colors.white;
+
+  @override
+  void dispose() {
+    disposed = true;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         setState(() {
-          _isPressed = true;
+          pressed = true;
         });
       },
       borderRadius: Config.borderRadiusLarge,
@@ -33,19 +43,19 @@ class _SetOptionTileState extends State<SetOptionTile> {
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         onEnd: () async {
-          if (_isPressed) {
+          if (pressed) {
             _navigateToSet(context, widget.setOption);
           }
-          a() {
+          await Future.delayed(Config.animationTime).whenComplete(() {
+            if (disposed) return;
             setState(() {
-              _isPressed = false;
+              pressed = false;
             });
-          }
-          await Future.delayed(Config.animationTime).whenComplete(a);
+          });
         },
         decoration: BoxDecoration(
           borderRadius: Config.borderRadius,
-          color: _isPressed ? Config.pressed : null,
+          color: pressed ? Config.pressed : null,
         ),
         width: Config.pageWidth(context),
         margin: const EdgeInsets.symmetric(horizontal: Config.margin * 2),
@@ -78,7 +88,9 @@ class _SetOptionTileState extends State<SetOptionTile> {
                   ),
                 ]),
             Divider(
-              color: _isPressed ? Config.pressed : Config.iconColor.withOpacity(0.5),
+              color: pressed
+                  ? Config.pressed
+                  : Config.iconColor.withOpacity(0.5),
               thickness: 0.2,
               indent: 0.0,
               endIndent: 0.0,
@@ -89,17 +101,10 @@ class _SetOptionTileState extends State<SetOptionTile> {
     );
   }
 
-  double fontSize(BuildContext context) => Config.isDesktop(context)
-      ? 20 : 18;
+  double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
-  void _navigateToSet(BuildContext context, SetOption setOption) async {
-    Config.showProgressCircle(context);
-    var recipes = await setOption.getRecipes();
-    Future.microtask(() => Navigator.of(context).pop());
-    Future.microtask(() => Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SetScreen(
-          recipes: recipes,
-          setName: setOption.name,
-        ))));
+  void _navigateToSet(BuildContext context, Collection setOption) async {
+    Routemaster.of(context)
+        .push('${FutureCollectionScreen.route}${setOption.collectionName}');
   }
 }

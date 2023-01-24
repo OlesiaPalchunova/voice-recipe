@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
 import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
 import 'package:voice_recipe/screens/authorization/register_screen.dart';
@@ -6,7 +7,6 @@ import 'package:voice_recipe/components/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
-import '../../components/custom_positioned.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
 import '../../components/buttons/login/ref_button.dart';
@@ -73,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color backColor = Config.backgroundColor;
     Color textColor = Config.iconColor;
     return Scaffold(
       appBar: AppBar(
@@ -120,8 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: Config.padding,
                                 ),
                                 InkWell(
-                                  onTap: () => Navigator.of(context)
-                                      .pushNamed(RegisterScreen.route),
+                                  onTap: () => Routemaster.of(context)
+                                      .push(RegisterScreen.route),
                                   child: Text(
                                     'Создать',
                                     style: TextStyle(
@@ -204,11 +203,11 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         return logged;
       },
-      onSuccess: () => Navigator.of(context).pop()
+      onSuccess: () => Routemaster.of(context).pop()
     );
   }
 
   void _onForgotPassword(BuildContext context) {
-    Navigator.of(context).pushNamed(ForgotPasswordScreen.route);
+    Routemaster.of(context).push(ForgotPasswordScreen.route);
   }
 }

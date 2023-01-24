@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/recipe_collection_views/sets_options_list.dart';
+import 'package:voice_recipe/components/recipe_collection_views/collections_options_list.dart';
 
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 
-class SetHeaderCard extends StatefulWidget {
-  const SetHeaderCard(
+class CollectionHeaderCard extends StatefulWidget {
+  const CollectionHeaderCard(
       {Key? key, required this.set, required this.onTap, this.widthConstraint = 0,
       this.showTiles = true})
       : super(key: key);
 
   final VoidCallback onTap;
-  final RecipesSet set;
+  final CollectionsSet set;
   final double widthConstraint;
   final bool showTiles;
 
   @override
-  State<SetHeaderCard> createState() => _SetHeaderCardState();
+  State<CollectionHeaderCard> createState() => _CollectionHeaderCardState();
 }
 
-class _SetHeaderCardState extends State<SetHeaderCard>
+class _CollectionHeaderCardState extends State<CollectionHeaderCard>
     with SingleTickerProviderStateMixin {
   var _isPressed = false;
   var _isHovered = false;
@@ -105,7 +105,7 @@ class _SetHeaderCardState extends State<SetHeaderCard>
               ),
             ]
             ),
-            _isPressed & widget.showTiles ? SetsOptionsList(set: widget.set) : Container(),
+            _isPressed & widget.showTiles ? CollectionsOptionsList(set: widget.set) : Container(),
           ],
         ),
       ),
