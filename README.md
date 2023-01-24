@@ -9,3 +9,5 @@ www.voicerecipe.ru
 - firebase auth
 - firestore database
 - rive animations
+
+На данный момент в нашей базе данных свыше 10000 рецептов.
