@@ -14,6 +14,7 @@ class TitleLogoPanel extends StatefulWidget {
     return AppBar(
       foregroundColor: Config.iconColor,
       backgroundColor: Config.backgroundColor,
+      shadowColor: Colors.transparent,
       title: this
     );
   }

@@ -99,7 +99,7 @@ class Config {
   static const lightBackColors = [
     Color(0xFFE9F7CA),
     Color(0xFFcae1f7),
-    Color(0xffffce8c),
+    Color(0xfff7cae4),
     Color(0xFFcae1f7),
     Color(0xFFf7ecca),
     Color(0xFFf7d2ca),
@@ -197,7 +197,7 @@ class Config {
     TimeOfDay? selectedTime = await showTimePicker(
         context: context,
         helpText: helpText,
-        initialEntryMode: TimePickerEntryMode.input,
+        initialEntryMode: TimePickerEntryMode.dial,
         hourLabelText: "Часы",
         minuteLabelText: "Минуты",
         initialTime: initialTime

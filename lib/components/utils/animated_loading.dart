@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/utils/custom_positioned.dart';
 
 class AnimatedLoading {
@@ -86,4 +87,3 @@ class AnimatedLoading {
         return completed;
     }
  }
-

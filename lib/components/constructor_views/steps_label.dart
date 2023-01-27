@@ -12,8 +12,8 @@ import '../utils/drop_zone.dart';
 import '../labels/input_label.dart';
 
 class CreateStepsLabel extends StatefulWidget {
-  const CreateStepsLabel({super.key, required this.insertList,
-  required this.descFocusNode});
+  const CreateStepsLabel(
+      {super.key, required this.insertList, required this.descFocusNode});
 
   final List<RecipeStep> insertList;
   final FocusNode descFocusNode;
@@ -42,7 +42,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
     super.dispose();
   }
 
-    void clear() {
+  void clear() {
     if (current == null) return;
     stepTime = null;
     stepController.clear();
@@ -70,11 +70,13 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              currentImageFile == null ? ImageDropZone(
-                customButtonColor: CreateRecipeScreen.buttonColor,
-                onDrop: handleDropFile,
-                fontSize: CreateRecipeScreen.generalFontSize(context),
-              ) : stepImagePreview(),
+              currentImageFile == null
+                  ? ImageDropZone(
+                      customButtonColor: CreateRecipeScreen.buttonColor,
+                      onDrop: handleDropFile,
+                      fontSize: CreateRecipeScreen.generalFontSize(context),
+                    )
+                  : stepImagePreview(),
               const SizedBox(
                 height: Config.padding,
               ),
@@ -85,7 +87,8 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 labelText: "Описание шага",
                 controller: stepController,
                 fontSize: CreateRecipeScreen.generalFontSize(context),
-                onSubmit: addNewStep,),
+                onSubmit: addNewStep,
+              ),
               const SizedBox(
                 height: Config.padding,
               ),
@@ -103,9 +106,11 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 child: SizedBox(
                     width: CreateRecipeScreen.pageWidth(context) * .5,
                     child: ClassicButton(
-                      customColor: CreateRecipeScreen.buttonColor,onTap: addNewStep, text: "Добавить шаг",
-                      fontSize: CreateRecipeScreen.generalFontSize(context),)
-                ),
+                      customColor: CreateRecipeScreen.buttonColor,
+                      onTap: addNewStep,
+                      text: "Добавить шаг",
+                      fontSize: CreateRecipeScreen.generalFontSize(context),
+                    )),
               )
             ],
           ),
@@ -116,9 +121,9 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
 
   void onStepTimeSet() async {
     TimeOfDay initialTime =
-    stepTime == null ? const TimeOfDay(hour: 0, minute: 0) : stepTime!;
+        stepTime == null ? const TimeOfDay(hour: 0, minute: 0) : stepTime!;
     stepTime = await Config.showTimeInputDialog(
-        context, "Время приготовления", initialTime);
+        context, "Время ожидания", initialTime);
     if (stepTime != null) {
       setState(() {});
     }
@@ -135,10 +140,9 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
       children: [
         Container(
             decoration: BoxDecoration(
-                color: Config.darkModeOn ?
-                Config.backgroundColor : Config.pressed,
-                borderRadius: Config.borderRadiusLarge
-            ),
+                color:
+                    Config.darkModeOn ? Config.backgroundColor : Config.pressed,
+                borderRadius: Config.borderRadiusLarge),
             padding: Config.paddingAll,
             margin: const EdgeInsets.only(bottom: Config.margin),
             child: Column(
@@ -164,19 +168,18 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                         style: TextStyle(
                             color: Config.iconColor,
                             fontFamily: Config.fontFamily,
-                            fontSize: 18
-                        ),
+                            fontSize: 18),
                       ),
                     ),
-                    step.waitTime == 0 ? Container()
+                    step.waitTime == 0
+                        ? Container()
                         : Container(
-                        margin: Config.paddingAll,
-                        alignment: Alignment.center,
-                        width: CreateRecipeScreen.pageWidth(context) * .5,
-                        height: 50,
-                        child: TimerDecoration(waitTime: Duration(minutes: step.waitTime)
-                        )
-                    )
+                            margin: Config.paddingAll,
+                            alignment: Alignment.center,
+                            width: CreateRecipeScreen.pageWidth(context) * .5,
+                            height: 50,
+                            child: TimerDecoration(
+                                waitTime: Duration(minutes: step.waitTime)))
                   ],
                 ),
                 const SizedBox(
@@ -184,7 +187,8 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      color: !Config.darkModeOn ? Colors.black87.withOpacity(.75)
+                      color: !Config.darkModeOn
+                          ? Colors.black87.withOpacity(.75)
                           : Config.iconBackColor,
                       borderRadius: Config.borderRadiusLarge),
                   alignment: Alignment.center,
@@ -197,24 +201,23 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                         color: Colors.white),
                   ),
                 ),
-                const SizedBox(height: Config.margin,),
+                const SizedBox(
+                  height: Config.margin,
+                ),
               ],
-            )
-        ),
+            )),
         Container(
             alignment: Alignment.topRight,
             child: DeleteButton(
                 onPressed: () => setState(() {
-                  for (RecipeStep other in steps) {
-                    if (other.id > step.id) {
-                      other.id--;
-                    }
-                  }
-                  steps.remove(step);
-                }),
-                toolTip: "Удалить шаг"
-            )
-        )
+                      for (RecipeStep other in steps) {
+                        if (other.id > step.id) {
+                          other.id--;
+                        }
+                      }
+                      steps.remove(step);
+                    }),
+                toolTip: "Удалить шаг"))
       ],
     );
   }
@@ -232,21 +235,17 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
               child: Image(
                 image: NetworkImage(currentImageFile!.url),
                 fit: BoxFit.fitWidth,
-              )
-          ),
+              )),
           Container(
-            alignment: Alignment.topRight,
-            margin: Config.paddingAll,
-            child: DeleteButton(
-                onPressed: () => setState(() => currentImageFile = null),
-                toolTip: "Убрать изображение"
-            )
-          )
+              alignment: Alignment.topRight,
+              margin: Config.paddingAll,
+              child: DeleteButton(
+                  onPressed: () => setState(() => currentImageFile = null),
+                  toolTip: "Убрать изображение"))
         ],
       ),
     );
   }
-
 
   DroppedFile? currentImageFile;
 

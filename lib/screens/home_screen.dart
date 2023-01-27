@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
+import 'package:voice_recipe/screens/loading_screen.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';

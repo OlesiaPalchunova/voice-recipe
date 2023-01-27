@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/slide_views/recipe_ingredients.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
 
@@ -85,7 +86,7 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
+              child: SelectableText(
                 ingredient.name,
                 style: TextStyle(
                     color: Config.iconColor,
@@ -94,7 +95,7 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
               ),
             ),
             Text(
-              "${ingredient.count.toString().replaceAll(zeroRegex, '')} ${ingredient.measureUnit}",
+              IngredientsList.ingCountStr(ingredient),
               style: TextStyle(
                   color: Config.iconColor,
                   fontFamily: Config.fontFamily,

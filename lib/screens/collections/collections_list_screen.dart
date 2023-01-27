@@ -17,10 +17,7 @@ class _CollectionsListScreen extends State<CollectionsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            foregroundColor: Config.iconColor,
-            backgroundColor: Config.appBarColor,
-            title: const TitleLogoPanel(title: "Подборки")),
+        appBar: const TitleLogoPanel(title: "Подборки").appBar(),
         body: Builder(
           builder: (context) => Container(
             color: Config.backgroundEdgeColor,

@@ -91,11 +91,13 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
               blur: Config.darkModeOn ? 3 : 1,
               blurColor: Config.darkThemeBackColor,
               child: Container(
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/decorations/create_back.jpg'),
-                          fit: BoxFit.cover))),
+                  decoration: Config.isWeb
+                      ? const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/decorations/create_back.jpg'),
+                              fit: BoxFit.cover))
+                      : null),
             ),
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -131,19 +133,13 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
 
   List<Widget> allLabels(BuildContext context) {
     var labels = <Widget>[
-      CreateHeaderLabel(
-        headers: headers,
-        nameFocusNode: nameFocusNode
-      ),
+      CreateHeaderLabel(headers: headers, nameFocusNode: nameFocusNode),
       CreateIngredientsLabel(
         insertList: ingredients,
         ingNameFocusNode: ingNameFocusNode,
         ingCountFocusNode: ingCountFocusNode,
       ),
-      CreateStepsLabel(
-        insertList: steps,
-        descFocusNode: descFocusNode
-      ),
+      CreateStepsLabel(insertList: steps, descFocusNode: descFocusNode),
       Container(
         margin: Config.paddingAll,
         alignment: Alignment.centerLeft,
@@ -211,8 +207,8 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
     }, onSuccess: () {
       Config.showAlertDialog(
           "Ваш рецепт был успешно сохранен!\n"
-              "Вы всегда можете его просмотреть в разделе\n"
-              "Профиль > Мои рецепты",
+          "Вы всегда можете его просмотреть в разделе\n"
+          "Профиль > Мои рецепты",
           context);
       if (CreateHeaderLabelState.current == null) {
         Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);

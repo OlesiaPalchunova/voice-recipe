@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/review_views/new_comment_card.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
@@ -14,6 +16,7 @@ import 'package:voice_recipe/model/db/comment_db_manager.dart';
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ReviewsSlide extends StatefulWidget {
   ReviewsSlide({super.key, required this.recipe});
@@ -71,6 +74,8 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   double get labelWidth => min(65, Config.recipeSlideWidth(context) / 6);
+
+  String get recipeLink => "https://talkychef.ru/recipe/${widget.recipe.id}";
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +138,76 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                       ),
                     )
                   : const SizedBox(),
+              Container(
+                margin: const EdgeInsets.only(top: Config.padding),
+                decoration: BoxDecoration(
+                    color: backColor, borderRadius: Config.borderRadiusLarge),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: Config.padding).
+                      add(const EdgeInsets.only(top: Config.margin)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Поделиться рецептом",
+                                style: TextStyle(
+                                    color: Config.darkModeOn
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontFamily: Config.fontFamily,
+                                    fontSize: fontSize(context)),
+                              ),
+                              SelectableText(
+                                recipeLink,
+                                style: TextStyle(
+                                    color: Config.getColor(widget.recipe.id),
+                                    fontFamily: Config.fontFamily,
+                                    fontSize: fontSize(context) - 2),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: Config.borderRadius,
+                              color: Config.backgroundLightedColor,
+                            ),
+                            height: 40,
+                            width: 40,
+                            child: IconButton(
+                                onPressed: () async {
+                                  await Clipboard.setData(
+                                      ClipboardData(text: recipeLink));
+                                  Future.microtask(() => Config.showAlertDialog(
+                                      "Ссылка успешно скопирована", context));
+                                },
+                                icon: Icon(
+                                  Icons.link_outlined,
+                                  color: Config.iconColor,
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: Config.paddingAll,
+                      width: Config.recipeSlideWidth(context) * .4,
+                      child: ClassicButton(
+                        onTap: () {
+                          Share.share(recipeLink, subject: widget.recipe.name);
+                        },
+                        text: "Отправить",
+                        fontSize: fontSize(context) - 2,
+                      ),
+                    )
+                  ],
+                ),
+              ),
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: Config.padding),

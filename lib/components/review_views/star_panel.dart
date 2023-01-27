@@ -54,7 +54,7 @@ class StarPanelState extends State<StarPanel> {
 
   @override
   Widget build(BuildContext context) {
-    double k = Config.isDesktop(context) ? .5 : .7;
+    double k = Config.isDesktop(context) ? .5 : .6;
     final width = Config.loginPageWidth(context) * k;
     return InkWell(
       onTap: () {},

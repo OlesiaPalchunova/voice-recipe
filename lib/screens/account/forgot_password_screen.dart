@@ -32,9 +32,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     var width = Config.loginPageWidth(context);
     return Scaffold(
-      appBar: const TitleLogoPanel(
-        title: Config.appName,
-      ).appBar(),
+      appBar: Config.defaultAppBar,
       body: GestureDetector(
         onTap: () => _emailFocusNode.unfocus(),
         child: Container(

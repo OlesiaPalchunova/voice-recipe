@@ -27,11 +27,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          foregroundColor: Config.iconColor,
-          backgroundColor: Config.appBarColor,
-          title: TitleLogoPanel(title: widget.setName),
-        ),
+        appBar: TitleLogoPanel(title: widget.setName).appBar(),
         body: Builder(
             builder: (context) => Container(
               alignment: Alignment.topCenter,

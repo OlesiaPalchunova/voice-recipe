@@ -22,9 +22,13 @@ class TimeLabel extends StatelessWidget {
     return TimeOfDay(hour: hours, minute: mins);
   }
 
-  String get timeToStr {
+  static String timeToStr(TimeOfDay time) {
+    if (time.hour == 0 && time.minute == 0) return "---";
     if (time.hour == 0) {
       return "${time.minute} мин.";
+    }
+    if (time.minute == 0) {
+      return "${time.hour} ч.";
     }
     return "${time.hour} ч. ${time.minute} мин.";
   }
@@ -36,7 +40,7 @@ class TimeLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Icon(
-        Icons.access_time,
+        Icons.timer_outlined,
         color: Config.iconColor,
         size: iconSize,
       ),
@@ -46,7 +50,7 @@ class TimeLabel extends StatelessWidget {
       Container(
         height: iconSize,
         alignment: Alignment.centerLeft,
-        child: Text(timeToStr,
+        child: Text(timeToStr(time),
             style: TextStyle(
                 fontFamily: Config.fontFamily,
                 fontSize: customFontSize?? fontSize(context),
@@ -65,6 +69,7 @@ class TimeLabel extends StatelessWidget {
         ? ClassicButton(
       onTap: onSetTap,
       text: buttonText,
+        customColor: CreateRecipeScreen.buttonColor,
       fontSize: CreateRecipeScreen.generalFontSize(context),
     )
         : Container(
@@ -92,8 +97,7 @@ class TimeLabel extends StatelessWidget {
                     width: Config.margin / 2,
                   ),
                   DeleteButton(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: Config.margin),
+                      margin: const EdgeInsets.all(Config.margin * .2),
                       onPressed: onDeleteTap)
                 ],
               ),

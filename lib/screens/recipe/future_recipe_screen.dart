@@ -22,7 +22,7 @@ class FutureRecipeScreen extends StatelessWidget {
         future: RecipesGetter().getRecipe(recipeId: recipeId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingScreen();
+            return const LoadingScreen(postfix: " рецепт",);
           }
           Recipe? recipe = snapshot.data;
           if (recipe == null) {

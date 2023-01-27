@@ -4,7 +4,6 @@ import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
-import '../../screens/collections/collection_screen.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 
 class CollectionOptionTile extends StatefulWidget {

@@ -75,13 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Color textColor = Config.iconColor;
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Config.iconColor,
-        backgroundColor: Config.backgroundColor,
-        title: const TitleLogoPanel(
-          title: Config.appName,
-        ),
-      ),
+      appBar: Config.defaultAppBar,
       backgroundColor: Config.backgroundEdgeColor,
       body: GestureDetector(
         onTap: () {

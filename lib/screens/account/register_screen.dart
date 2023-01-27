@@ -58,13 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Config.iconColor,
-        backgroundColor: Config.backgroundColor,
-        title: const TitleLogoPanel(
-          title: Config.appName,
-        ),
-      ),
+      appBar: Config.defaultAppBar,
       backgroundColor: Config.backgroundEdgeColor,
       body: GestureDetector(
         onTap: () {

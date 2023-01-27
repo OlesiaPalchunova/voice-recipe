@@ -63,7 +63,7 @@ class _CommentCardState extends State<CommentCard> {
                       children: [
                         Container(
                           alignment: Alignment.topLeft,
-                          child: Text(
+                          child: SelectableText(
                             nickname,
                             style: TextStyle(
                                 color: Config.iconColor,
@@ -76,7 +76,7 @@ class _CommentCardState extends State<CommentCard> {
                         ),
                         Container(
                           alignment: Alignment.topLeft,
-                          child: Text(
+                          child: SelectableText(
                             since,
                             style: TextStyle(
                                 color: Config.iconColor.withOpacity(0.7),
@@ -193,7 +193,7 @@ class _CommentCardState extends State<CommentCard> {
       profileImageUrl: widget.comment.profileUrl,
       body: Container(
         alignment: Alignment.topLeft,
-        child: Text(
+        child: SelectableText(
           widget.comment.text,
           textAlign: TextAlign.left,
           style: TextStyle(

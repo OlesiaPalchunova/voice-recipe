@@ -138,7 +138,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
           )));
     }
     final slider = IntroSlider(
-      key: UniqueKey(),
       listContentConfig: listContentConfig,
       backgroundColorAllTabs: Config.getBackColor(widget.recipe.id),
       isShowSkipBtn: false,
@@ -177,7 +176,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
       ),
       isAutoScroll: false,
       isLoopAutoScroll: false,
-      curveScroll: Curves.bounceIn,
+      curveScroll: Curves.fastOutSlowIn,
     );
     return slider;
   }

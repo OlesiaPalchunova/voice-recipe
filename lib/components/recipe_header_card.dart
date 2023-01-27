@@ -109,6 +109,52 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
+  double get nameShrinker {
+    return .65;
+  }
+
+  Widget recipeHeader(double cardWidth) {
+    if (widget.sizeDivider == 1 && widget.recipe.name.length < 50) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: cardWidth * nameShrinker,
+            child: Text(
+              widget.recipe.name,
+              style: TextStyle(
+                  fontFamily: Config.fontFamily,
+                  fontSize: fontSize(context),
+                  color: Config.iconColor),
+            ),
+          ),
+          TimeLabel(
+            time: TimeLabel.convertToTOD(
+                widget.recipe.cookTimeMins),
+          )
+        ],
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.recipe.name,
+          style: TextStyle(
+              fontFamily: Config.fontFamily,
+              fontSize: fontSize(context),
+              color: Config.iconColor),
+        ),
+        const SizedBox(height: Config.margin / 2),
+        TimeLabel(
+          time: TimeLabel.convertToTOD(
+              widget.recipe.cookTimeMins),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var cardWidth = width;
@@ -176,26 +222,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                           padding: Config.isDesktop(context)
                               ? Config.paddingAll.add(Config.paddingVert)
                               : Config.paddingAll,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: cardWidth * .65,
-                                child: Text(
-                                  widget.recipe.name,
-                                  style: TextStyle(
-                                      fontFamily: Config.fontFamily,
-                                      fontSize: fontSize(context),
-                                      color: Config.iconColor),
-                                ),
-                              ),
-                              TimeLabel(
-                                time: TimeLabel.convertToTOD(
-                                    widget.recipe.cookTimeMins),
-                              )
-                            ],
-                          ),
+                          child: recipeHeader(cardWidth)
                         ),
                         Stack(children: [
                           SizedBox(

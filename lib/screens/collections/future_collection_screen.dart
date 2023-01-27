@@ -23,7 +23,7 @@ class FutureCollectionScreen extends StatelessWidget {
       future: RecipesGetter().getCollection(name),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingScreen();
+            return const LoadingScreen(postfix: " подборку",);
           }
           List<Recipe>? collection = snapshot.data;
           if (collection == null) {

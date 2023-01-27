@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/components/labels/time_label.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
@@ -10,9 +11,8 @@ class IngredientsSlideView extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  static const _topOffset = 0.03;
   static const _listOffset = 0.03;
-  static const _splitterThickness = 0.5;
+  static const _splitterThickness = .3;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,6 @@ class IngredientsSlideView extends StatelessWidget {
           padding: const EdgeInsets.all(Config.padding),
           child: Column(
             children: [
-              SizedBox(
-                height: Config.pageHeight(context) * _topOffset,
-              ),
               GeneralInfo(recipe: recipe),
               Divider(
                 color: Config.darkModeOn ? Colors.white : Colors.black87,
@@ -67,7 +64,13 @@ class IngredientsList extends StatelessWidget {
   double entityFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;
 
-  final zeroRegex = RegExp(r'([.]*0)(?!.*\d)');
+  static final zeroRegex = RegExp(r'([.]*0)(?!.*\d)');
+
+  static String ingCountStr(Ingredient i) {
+    String first = "${i.count.toString().replaceAll(zeroRegex, '')} ${i.measureUnit}";
+    return first.replaceAll(',', '.').replaceAll('1 ед.', '').replaceAll('1 .', '1.')
+    .replaceAll(' ед.', '');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class IngredientsList extends StatelessWidget {
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Expanded(
                       flex: 3,
-                      child: Text(
+                      child: SelectableText(
                         i.name,
                         style: TextStyle(
                             fontFamily: Config.fontFamily,
@@ -108,7 +111,7 @@ class IngredientsList extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          "${i.count.toString().replaceAll(zeroRegex, '')} ${i.measureUnit}",
+                          ingCountStr(i),
                           style: TextStyle(
                               fontFamily: Config.fontFamily,
                               fontSize: entityFontSize(context),
@@ -166,13 +169,13 @@ class GeneralInfo extends StatelessWidget {
             Assignment(
               recipe: recipe,
               name: "Подготовка",
-              value: "${recipe.prepTimeMins} минут",
+              value: TimeLabel.timeToStr(TimeLabel.convertToTOD(recipe.prepTimeMins)),
               iconData: Icons.access_time,
             ),
             Assignment(
               recipe: recipe,
               name: "Приготовление",
-              value: "${recipe.cookTimeMins} минут",
+              value: TimeLabel.timeToStr(TimeLabel.convertToTOD(recipe.cookTimeMins)),
               iconData: Icons.access_time,
             )
           ],

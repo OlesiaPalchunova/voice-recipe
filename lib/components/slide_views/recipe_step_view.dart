@@ -51,7 +51,7 @@ class RecipeStepView extends StatelessWidget {
     );
   }
 
-  double fontSize(BuildContext ctx) => Config.isDesktop(ctx) ? 18 : 16;
+  double fontSize(BuildContext ctx) => Config.isDesktop(ctx) ? 18 : 18;
 
   Widget centerWidget(BuildContext context) {
     double height = _getImageHeight(context);
@@ -102,14 +102,14 @@ class RecipeStepView extends StatelessWidget {
                           borderRadius: Config.borderRadiusLarge),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(Config.padding),
-                      child: RichText(
-                        text: TextSpan(
+                      child: SelectableText.rich(
+                        TextSpan(
                           text: 'Шаг  ${slideId - 1}. ',
                           style: TextStyle(
                             fontFamily: Config.fontFamilyBold,
                             fontSize: fontSize(context),
                             color: Colors.white,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
                           ),
                           children: <TextSpan>[
                             TextSpan(text: step.description, style: TextStyle(

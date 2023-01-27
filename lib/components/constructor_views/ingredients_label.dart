@@ -24,17 +24,28 @@ class CreateIngredientsLabel extends StatefulWidget {
 class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
   final ingNameController = TextEditingController();
   final ingCountController = TextEditingController();
-  static const examples = [
+  static const countExamples = [
     "400 гр.", "1 щепотка", "2 ст. л.", "3 шт."
+  ];
+  static final examples = [
+    Ingredient(id: 0, name: "Клубника", count: 50, measureUnit: "гр."),
+    Ingredient(id: 0, name: "Банан", count: 2, measureUnit: "шт."),
+    Ingredient(id: 0, name: "Молоко", count: 500, measureUnit: "мл."),
+    Ingredient(id: 0, name: "Паприка", count: 1.5, measureUnit: "ст. л."),
   ];
   static final regExp = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
   static final random = Random();
   static CreateIngredientsLabelState? current;
 
-  String get example => examples[random.nextInt(examples.length)];
+  String get countExample => countExamples[random.nextInt(countExamples.length)];
+
+  Ingredient get example => examples[random.nextInt(examples.length)];
+
+  late Ingredient ing;
 
   @override
   void initState() {
+    ing = example;
     current = this;
     super.initState();
   }
@@ -101,6 +112,8 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
 
   @override
   Widget build(BuildContext context) {
+    bool showHint = widget.insertList.isEmpty;
+    String count = '${ing.count.toString().replaceAll(zeroRegex, '')} ${ing.measureUnit}';
     return Column(children: [
       CreateRecipeScreen.title(context, "Ингредиенты"),
       const SizedBox(
@@ -119,14 +132,19 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
           SizedBox(
             width: CreateRecipeScreen.pageWidth(context) * .3,
             child:
-                InputLabel(labelText: "Название", controller: ingNameController,
+                InputLabel(
+                  labelText: "Название",
+                  hintText: showHint ? ing.name : null,
+                  controller: ingNameController,
                   fontSize: CreateRecipeScreen.generalFontSize(context),
-                focusNode: widget.ingNameFocusNode,),
+                focusNode: widget.ingNameFocusNode,
+                ),
           ),
           SizedBox(
             width: CreateRecipeScreen.pageWidth(context) * .3,
             child: InputLabel(
               labelText: "Количество",
+              hintText: showHint ? count : null,
               focusNode: widget.ingCountFocusNode,
               controller: ingCountController,
               fontSize: CreateRecipeScreen.generalFontSize(context),
@@ -150,7 +168,7 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
 
   String get errorMsg => "Введено недопустимое количество\n"
       "Вначале введите число, а затем единицу измерения\n"
-      "Пример: $example";
+      "Пример: $countExample";
 
   void addNewIngredient() {
     String ingName = ingNameController.text.trim();
