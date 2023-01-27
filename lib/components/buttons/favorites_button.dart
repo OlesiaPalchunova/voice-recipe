@@ -88,6 +88,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
           valueListenable: notifyers[widget.recipeId]!,
           builder: (BuildContext context, bool isFav, Widget? child) {
             Widget res = InkWell(
+              borderRadius: Config.borderRadiusLarge,
               onTap: () {
                 if (!Config.loggedIn) {
                   Config.showLoginInviteDialog(context);

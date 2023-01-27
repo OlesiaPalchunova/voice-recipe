@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/authorization/auth_screen.dart';
-import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
-import 'package:voice_recipe/screens/authorization/register_screen.dart';
-import 'package:voice_recipe/screens/create_recipe_screen.dart';
-import 'package:voice_recipe/screens/future_collection_screen.dart';
-import 'package:voice_recipe/screens/future_recipe_screen.dart';
+import 'package:voice_recipe/screens/account/auth_screen.dart';
+import 'package:voice_recipe/screens/account/forgot_password_screen.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/screens/account/register_screen.dart';
+import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
+import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
+import 'package:voice_recipe/screens/recipe/future_recipe_screen.dart';
 import 'package:voice_recipe/screens/home_screen.dart';
-import 'package:voice_recipe/screens/collections_list_screen.dart';
+import 'package:voice_recipe/screens/collections/collections_list_screen.dart';
 import 'package:voice_recipe/screens/not_found_screen.dart';
 
 import 'config.dart';
@@ -26,17 +26,6 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
         return const MaterialPage(child: NotFoundScreen());
       },
       routes: {
-        // Home.route: (_) => const CupertinoTabPage(
-        //       child: Home(),
-        //       paths: [
-        //         CreateRecipeScreen.route,
-        //         AuthScreen.route,
-        //         CollectionsListScreen.route,
-        //         LoginScreen.route,
-        //         RegisterScreen.route,
-        //         ForgotPasswordScreen.route,
-        //       ],
-        //     ),
         Home.route: (_) => const MaterialPage(child: Home()),
         CreateRecipeScreen.route: (_) =>
             const MaterialPage(child: CreateRecipeScreen()),
@@ -55,6 +44,10 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
         '${FutureCollectionScreen.route}:name': (info) {
           String name = info.pathParameters['name']!;
           return MaterialPage(child: FutureCollectionScreen(name: name));
+        },
+        '${FutureCollectionScreen.route}:name/:id': (info) {
+          int id = int.parse(info.pathParameters['id']!);
+          return MaterialPage(child: FutureRecipeScreen(recipeId: id));
         }
       });
 

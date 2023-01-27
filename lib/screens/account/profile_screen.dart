@@ -4,10 +4,10 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 
-import '../config.dart';
-import '../model/sets_info.dart';
-import '../model/users_info.dart';
-import 'future_collection_screen.dart';
+import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/model/sets_info.dart';
+import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});

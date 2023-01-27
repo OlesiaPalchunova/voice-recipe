@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/future_collection_screen.dart';
+import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
-import '../../screens/collection_screen.dart';
+import '../../screens/collections/collection_screen.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 
 class CollectionOptionTile extends StatefulWidget {

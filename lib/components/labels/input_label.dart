@@ -14,8 +14,10 @@ class InputLabel extends StatelessWidget {
       this.hintText,
       this.prefixIcon,
       this.fontSize = 18,
+      this.verticalExpand = false,
       this.withContentPadding = false});
 
+  final bool verticalExpand;
   final bool withContentPadding;
   final String? hintText;
   final String labelText;
@@ -71,7 +73,7 @@ class InputLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return withContentPadding
+    return verticalExpand
         ? SizedBox(
             // height: Config.isDesktop(context) ? 60 : 40,
             child: TextField(

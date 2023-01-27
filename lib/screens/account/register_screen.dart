@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
-import 'package:voice_recipe/components/animated_loading.dart';
+import 'package:voice_recipe/components/utils/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
@@ -13,7 +13,7 @@ import 'login_screen.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
-  static const route = '/register';
+  static const route = '/login/register';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -57,7 +57,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color backColor = Config.backgroundColor;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Config.iconColor,

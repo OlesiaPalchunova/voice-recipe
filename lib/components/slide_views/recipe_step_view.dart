@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/components/timer/timer_view.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
 
 class RecipeStepView extends StatelessWidget {
   RecipeStepView({Key? key, required this.recipe, required this.slideId})
@@ -56,6 +55,7 @@ class RecipeStepView extends StatelessWidget {
 
   Widget centerWidget(BuildContext context) {
     double height = _getImageHeight(context);
+    double iconSize = Config.isDesktop(context) ? 300 : 200;
     return step.hasImage
         ? SizedBox(
             height: height,
@@ -67,10 +67,16 @@ class RecipeStepView extends StatelessWidget {
               ),
             ),
           )
-        : Container(
-            height: 500,
-            alignment: Alignment.center,
-            child: LoginScreen.voiceRecipeIcon(context, height, 300));
+        : Center(
+          child: SizedBox(
+            height: Config.isDesktop(context) ? 500 : 300,
+            child: SizedBox(
+              height: iconSize,
+              width: iconSize,
+              child: Image.asset("assets/images/voice_recipe.png"),
+            ),
+          ),
+        );
   }
 
   @override
@@ -96,13 +102,25 @@ class RecipeStepView extends StatelessWidget {
                           borderRadius: Config.borderRadiusLarge),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(Config.padding),
-                      child: Text(
-                        step.description,
-                        style: TextStyle(
-                            fontFamily: Config.fontFamily,
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Шаг  ${slideId - 1}. ',
+                          style: TextStyle(
+                            fontFamily: Config.fontFamilyBold,
                             fontSize: fontSize(context),
-                            color: Colors.white),
-                      ),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: step.description, style: TextStyle(
+                                fontFamily: Config.fontFamily,
+                                fontSize: fontSize(context),
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal
+                            ))
+                          ],
+                        ),
+                      )
                     )),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 0, Config.margin * 3),

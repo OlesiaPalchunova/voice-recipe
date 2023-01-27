@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
 
-import '../config.dart';
-import 'buttons/classic_button.dart';
+import '../../config.dart';
+import '../buttons/classic_button.dart';
 
 class ImageDropZone extends StatefulWidget {
   const ImageDropZone({super.key, required this.onDrop,

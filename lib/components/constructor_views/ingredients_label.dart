@@ -5,12 +5,12 @@ import 'package:voice_recipe/components/buttons/delete_button.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
-import '../../screens/create_recipe_screen.dart';
+import '../../screens/constructor/create_recipe_screen.dart';
 import '../buttons/classic_button.dart';
 import '../labels/input_label.dart';
 
-class IngredientsLabel extends StatefulWidget {
-  const IngredientsLabel({super.key, required this.insertList,
+class CreateIngredientsLabel extends StatefulWidget {
+  const CreateIngredientsLabel({super.key, required this.insertList,
   required this.ingNameFocusNode, required this.ingCountFocusNode});
 
   final List<Ingredient> insertList;
@@ -18,10 +18,10 @@ class IngredientsLabel extends StatefulWidget {
   final FocusNode ingCountFocusNode;
 
   @override
-  State<IngredientsLabel> createState() => IngredientsLabelState();
+  State<CreateIngredientsLabel> createState() => CreateIngredientsLabelState();
 }
 
-class IngredientsLabelState extends State<IngredientsLabel> {
+class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
   final ingNameController = TextEditingController();
   final ingCountController = TextEditingController();
   static const examples = [
@@ -29,7 +29,7 @@ class IngredientsLabelState extends State<IngredientsLabel> {
   ];
   static final regExp = RegExp(r"-?(?:\d*\.)?\d+(?:[eE][+-]?\d+)?");
   static final random = Random();
-  static IngredientsLabelState? current;
+  static CreateIngredientsLabelState? current;
 
   String get example => examples[random.nextInt(examples.length)];
 
@@ -55,6 +55,8 @@ class IngredientsLabelState extends State<IngredientsLabel> {
     setState(() {});
   }
 
+  final zeroRegex = RegExp(r'([.]*0)(?!.*\d)');
+
   Widget buildIngredient(Ingredient ingredient) {
     return Column(
       children: [
@@ -68,7 +70,7 @@ class IngredientsLabelState extends State<IngredientsLabel> {
             Row(
               children: [
                 Text(
-                  "${ingredient.count} ${ingredient.measureUnit}",
+                  "${ingredient.count.toString().replaceAll(zeroRegex, '')} ${ingredient.measureUnit}",
                   style: ingStyle,
                 ),
                 const SizedBox(width: Config.margin * 2,),

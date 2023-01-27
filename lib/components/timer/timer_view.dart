@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/services/local_notice_service.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:voice_recipe/config.dart';
 
 class TimerView extends StatefulWidget {
@@ -26,7 +26,7 @@ class TimerViewState extends State<TimerView> {
   static const _height = 0.1;
   static const _iconHeight = 0.1 * 0.6;
   static const _reduceSecondsBy = 1;
-  static final AudioPlayer player = AudioPlayer();
+  // static final AudioPlayer player = AudioPlayer();
   static const alarmAudioPath = "sounds/relax-message-tone.mp3";
 
   bool _isRunning = false;
@@ -188,8 +188,8 @@ class TimerViewState extends State<TimerView> {
     if (seconds < 0) {
       _timer!.cancel();
       _isRunning = false;
-      player.stop();
-      player.play(AssetSource(alarmAudioPath));
+      // player.stop();
+      // player.play(AssetSource(alarmAudioPath));
     } else {
       _leftDuration = Duration(seconds: seconds);
     }

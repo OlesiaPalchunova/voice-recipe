@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
-import 'package:voice_recipe/screens/future_recipe_screen.dart';
+import 'package:voice_recipe/screens/recipe/future_recipe_screen.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
+
+import '../screens/home_screen.dart';
+import 'labels/time_label.dart';
 
 class RecipeHeaderCard extends StatefulWidget {
   const RecipeHeaderCard(
@@ -60,7 +63,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
     super.didChangeDependencies();
     height = Config.isDesktop(context)
         ? RecipeHeaderCard.maxDesktopHeight
-        : Config.pageHeight(context) * .3;
+        : Config.pageHeight(context) * .2;
     var largeWidth = Config.pageWidth(context) * .9;
     var smallWidth = height * 1.2;
     if (Config.isDesktop(context)) {
@@ -104,8 +107,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   double get blurRadius => 6;
 
-  double fontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 20 : 18;
+  double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
   @override
   Widget build(BuildContext context) {
@@ -174,12 +176,25 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                           padding: Config.isDesktop(context)
                               ? Config.paddingAll.add(Config.paddingVert)
                               : Config.paddingAll,
-                          child: Text(
-                            widget.recipe.name,
-                            style: TextStyle(
-                                fontFamily: Config.fontFamily,
-                                fontSize: fontSize(context),
-                                color: Config.iconColor),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: cardWidth * .65,
+                                child: Text(
+                                  widget.recipe.name,
+                                  style: TextStyle(
+                                      fontFamily: Config.fontFamily,
+                                      fontSize: fontSize(context),
+                                      color: Config.iconColor),
+                                ),
+                              ),
+                              TimeLabel(
+                                time: TimeLabel.convertToTOD(
+                                    widget.recipe.cookTimeMins),
+                              )
+                            ],
                           ),
                         ),
                         Stack(children: [
@@ -211,6 +226,11 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
   void navigateToRecipe(BuildContext context, Recipe recipe) {
-    Routemaster.of(context).push(FutureRecipeScreen.route + recipe.id.toString());
+    String route = FutureRecipeScreen.route + recipe.id.toString();
+    String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+    if (currentRoute != Home.route) {
+      route = '$currentRoute/${recipe.id}';
+    }
+    Routemaster.of(context).push(route);
   }
 }

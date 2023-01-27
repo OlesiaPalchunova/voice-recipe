@@ -6,6 +6,7 @@ class SliderGestureHandler extends StatefulWidget {
       {super.key,
       required this.onLeft,
       required this.onRight,
+      required this.onEscape,
       required this.child,
       this.handleSideTaps = true,
       this.ignoreVerticalSwipes = true,
@@ -14,6 +15,7 @@ class SliderGestureHandler extends StatefulWidget {
 
   final void Function() onRight;
   final void Function() onLeft;
+  final void Function() onEscape;
   final VoidCallback? customOnTap;
   final Widget child;
   final bool handleSideTaps;
@@ -46,6 +48,10 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
   }
 
   void _handleKeyEvent(RawKeyEvent event) {
+    if (event.physicalKey == PhysicalKeyboardKey.escape) {
+      widget.onEscape();
+      return;
+    }
     if (event.physicalKey == PhysicalKeyboardKey.arrowRight ||
         event.physicalKey == PhysicalKeyboardKey.pageUp) {
       widget.onRight();
@@ -61,11 +67,10 @@ class _SliderGestureHandlerState extends State<SliderGestureHandler> {
       return buildGestureHandler(context);
     }
     return RawKeyboardListener(
-      focusNode: focusNode,
-      autofocus: true,
-      onKey: _handleKeyEvent,
-      child: buildGestureHandler(context)
-    );
+        focusNode: focusNode,
+        autofocus: true,
+        onKey: _handleKeyEvent,
+        child: buildGestureHandler(context));
   }
 
   Widget buildGestureHandler(BuildContext context) {

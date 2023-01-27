@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:blur/blur.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/create_recipe_screen.dart';
+import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 
 import '../config.dart';

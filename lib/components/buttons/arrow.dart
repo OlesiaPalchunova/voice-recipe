@@ -10,10 +10,12 @@ class ArrowButton extends StatefulWidget {
     super.key,
     required this.direction,
     required this.onTap,
+    required this.hideNotify
   });
 
   final Direction direction;
   final VoidCallback onTap;
+  final ValueNotifier<bool> hideNotify;
 
   @override
   State<ArrowButton> createState() => _ArrowButtonState();
@@ -42,29 +44,35 @@ class _ArrowButtonState extends State<ArrowButton> {
   DateTime lastCallTime = DateTime.now();
 
   void onTap() async {
-    while (pressed) {
-      widget.onTap();
-      await Future.delayed(const Duration(milliseconds: 350));
-    }
+    widget.onTap();
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTapDown: (d) {
-          pressed = true;
-          onTap();
-        },
-        onTapUp: (d) {
-          pressed = false;
-        },
-        onHover: (h) {
-          hovered?.change(h);
-        },
-        child: RotatedBox(
-            quarterTurns: turn,
-            child: RiveAnimation.asset(
-                "assets/RiveAssets/arrow_down$postfix.riv",
-                onInit: _onArrowInit)));
+    return ValueListenableBuilder(
+      valueListenable: widget.hideNotify,
+      builder: (context, isHidden, child) {
+        return Visibility(
+            visible: !isHidden,
+            child: child!
+        );
+      },
+      child: InkWell(
+          onTapDown: (d) {
+            pressed = true;
+            onTap();
+          },
+          onTapUp: (d) {
+            pressed = false;
+          },
+          onHover: (h) {
+            hovered?.change(h);
+          },
+          child: RotatedBox(
+              quarterTurns: turn,
+              child: RiveAnimation.asset(
+                  "assets/RiveAssets/arrow_down$postfix.riv",
+                  onInit: _onArrowInit))),
+    );
   }
 }

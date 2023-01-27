@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
-import 'package:voice_recipe/components/slider_gesture_handler.dart';
+import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
-import 'package:voice_recipe/components/search_field.dart';
+import 'package:voice_recipe/components/utils/search_field.dart';
 import 'package:voice_recipe/config.dart';
 
 import '../api/recipes_getter.dart';
@@ -97,13 +97,14 @@ class _HomeState extends State<Home> {
                         handleSideTaps: false,
                         customOnTap: () => searchFocusNode.unfocus(),
                         onRight: () {},
+                        onEscape: () {},
                         onLeft: () => Scaffold.of(context).openDrawer(),
                         child: Scrollbar(
-                          thickness: 20,
+                          thickness: Config.isDesktop(context) ? 20 : 0,
                           radius: const Radius.elliptical(6, 12),
                           controller: scrollController,
                           interactive: true,
-                          thumbVisibility: true,
+                          thumbVisibility: Config.isDesktop(context),
                           child: SingleChildScrollView(
                             controller: scrollController,
                             keyboardDismissBehavior:

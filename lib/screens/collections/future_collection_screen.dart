@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_getter.dart';
-import 'package:voice_recipe/screens/collection_screen.dart';
+import 'package:voice_recipe/screens/collections/collection_screen.dart';
 import 'package:voice_recipe/screens/not_found_screen.dart';
 
-import '../model/recipes_info.dart';
-import 'loading_screen.dart';
+import '../../model/recipes_info.dart';
+import '../loading_screen.dart';
 
 class FutureCollectionScreen extends StatelessWidget {
   const FutureCollectionScreen({super.key, required this.name});
 
-  static const route = "/collection/";
+  static const route = "/collections/";
 
   final String name;
 

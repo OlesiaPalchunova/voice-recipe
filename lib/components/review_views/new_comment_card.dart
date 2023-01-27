@@ -173,6 +173,7 @@ class NewCommentCardState extends State<NewCommentCard> {
       return;
     }
     setState(() {
+      widget.textController.text = "";
       widget.focusNode.unfocus();
       _focused = false;
     });

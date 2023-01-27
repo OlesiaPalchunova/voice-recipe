@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
-import 'package:voice_recipe/screens/profile_screen.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/screens/account/profile_screen.dart';
 
 class AuthScreen extends StatelessWidget{
   const AuthScreen({super.key});

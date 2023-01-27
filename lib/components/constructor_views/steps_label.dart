@@ -4,28 +4,28 @@ import 'package:voice_recipe/components/timer/timer_decoration.dart';
 import '../../config.dart';
 import '../../model/dropped_file.dart';
 import '../../model/recipes_info.dart';
-import '../../screens/create_recipe_screen.dart';
+import '../../screens/constructor/create_recipe_screen.dart';
 import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
-import '../drop_zone.dart';
+import '../labels/time_label.dart';
+import '../utils/drop_zone.dart';
 import '../labels/input_label.dart';
 
-class StepsLabel extends StatefulWidget {
-  const StepsLabel({super.key, required this.insertList,
-  required this.descFocusNode, required this.stepTimeFocusNode});
+class CreateStepsLabel extends StatefulWidget {
+  const CreateStepsLabel({super.key, required this.insertList,
+  required this.descFocusNode});
 
   final List<RecipeStep> insertList;
   final FocusNode descFocusNode;
-  final FocusNode stepTimeFocusNode;
 
   @override
-  State<StepsLabel> createState() => StepsLabelState();
+  State<CreateStepsLabel> createState() => CreateStepsLabelState();
 }
 
-class StepsLabelState extends State<StepsLabel> {
+class CreateStepsLabelState extends State<CreateStepsLabel> {
   final stepController = TextEditingController();
-  final waitTimeController = TextEditingController();
-  static StepsLabelState? current;
+  static CreateStepsLabelState? current;
+  static TimeOfDay? stepTime;
 
   List<RecipeStep> get steps => widget.insertList;
 
@@ -39,16 +39,95 @@ class StepsLabelState extends State<StepsLabel> {
   void dispose() {
     current = null;
     stepController.dispose();
-    waitTimeController.dispose();
     super.dispose();
   }
 
     void clear() {
     if (current == null) return;
+    stepTime = null;
     stepController.clear();
-    waitTimeController.clear();
     widget.insertList.clear();
     setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CreateRecipeScreen.title(context, "Шаги"),
+        const SizedBox(
+          height: Config.padding,
+        ),
+        Container(
+          padding: Config.paddingAll,
+          child: Column(
+            children: steps.map(buildStep).toList(),
+          ),
+        ),
+        CreateRecipeScreen.title(context, "Изображение для шага"),
+        Container(
+          padding: Config.paddingAll,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              currentImageFile == null ? ImageDropZone(
+                customButtonColor: CreateRecipeScreen.buttonColor,
+                onDrop: handleDropFile,
+                fontSize: CreateRecipeScreen.generalFontSize(context),
+              ) : stepImagePreview(),
+              const SizedBox(
+                height: Config.padding,
+              ),
+              InputLabel(
+                verticalExpand: true,
+                withContentPadding: true,
+                focusNode: widget.descFocusNode,
+                labelText: "Описание шага",
+                controller: stepController,
+                fontSize: CreateRecipeScreen.generalFontSize(context),
+                onSubmit: addNewStep,),
+              const SizedBox(
+                height: Config.padding,
+              ),
+              TimeLabel.buildSetter(context,
+                  time: stepTime,
+                  buttonText: "Указать время ожидания (опционально)",
+                  labelText: "Время ожидания: ",
+                  onSetTap: onStepTimeSet,
+                  onDeleteTap: onClearStepTime),
+              const SizedBox(
+                height: Config.padding,
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                    width: CreateRecipeScreen.pageWidth(context) * .5,
+                    child: ClassicButton(
+                      customColor: CreateRecipeScreen.buttonColor,onTap: addNewStep, text: "Добавить шаг",
+                      fontSize: CreateRecipeScreen.generalFontSize(context),)
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void onStepTimeSet() async {
+    TimeOfDay initialTime =
+    stepTime == null ? const TimeOfDay(hour: 0, minute: 0) : stepTime!;
+    stepTime = await Config.showTimeInputDialog(
+        context, "Время приготовления", initialTime);
+    if (stepTime != null) {
+      setState(() {});
+    }
+  }
+
+  void onClearStepTime() {
+    setState(() {
+      stepTime = null;
+    });
   }
 
   Widget buildStep(RecipeStep step) {
@@ -140,72 +219,6 @@ class StepsLabelState extends State<StepsLabel> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CreateRecipeScreen.title(context, "Шаги"),
-        const SizedBox(
-          height: Config.padding,
-        ),
-        Container(
-          padding: Config.paddingAll,
-          child: Column(
-            children: steps.map(buildStep).toList(),
-          ),
-        ),
-        CreateRecipeScreen.title(context, "Изображение для шага"),
-        Container(
-          padding: Config.paddingAll,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              currentImageFile == null ? ImageDropZone(
-                customButtonColor: CreateRecipeScreen.buttonColor,
-                onDrop: handleDropFile,
-                fontSize: CreateRecipeScreen.generalFontSize(context),
-              ) : stepImagePreview(),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              InputLabel(
-                  withContentPadding: true,
-                  focusNode: widget.descFocusNode,
-                  labelText: "Описание шага",
-                  controller: stepController,
-                fontSize: CreateRecipeScreen.generalFontSize(context),
-                onSubmit: addNewStep,),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              SizedBox(
-                width: CreateRecipeScreen.pageWidth(context) * .5,
-                child: InputLabel(
-                    labelText: "Время ожидания, в минутах (опционально)",
-                    focusNode: widget.stepTimeFocusNode,
-                    controller: waitTimeController,
-                  fontSize: CreateRecipeScreen.generalFontSize(context),
-                  onSubmit: addNewStep,),
-              ),
-              const SizedBox(
-                height: Config.padding,
-              ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                    width: CreateRecipeScreen.pageWidth(context) * .5,
-                    child: ClassicButton(
-                      customColor: CreateRecipeScreen.buttonColor,onTap: addNewStep, text: "Добавить шаг",
-                      fontSize: CreateRecipeScreen.generalFontSize(context),)
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget stepImagePreview() {
     if (currentImageFile == null) {
       return Container();
@@ -250,31 +263,19 @@ class StepsLabelState extends State<StepsLabel> {
       return;
     }
     String desc = stepController.text.trim();
-    String waitTimeStr = waitTimeController.text.trim();
     if (desc.isEmpty) {
       Config.showAlertDialog("Описание не может быть пустым", context);
       return;
     }
-    int waitTimeFinal = 0;
-    if (waitTimeStr.isNotEmpty) {
-      int? waitTime = int.tryParse(waitTimeStr);
-      if (waitTime == null) {
-        Config.showAlertDialog(
-            "Время ожидания должно быть числом (минут)", context);
-        return;
-      }
-      if (waitTime > 24 * 60) {
-        Config.showAlertDialog(
-            "Время ожидания не может превышать сутки", context);
-        return;
-      }
-      waitTimeFinal = waitTime;
+    int waitTimeMins = 0;
+    if (stepTime != null) {
+      waitTimeMins = stepTime!.hour * 60 + stepTime!.minute;
     }
     stepController.clear();
-    waitTimeController.clear();
+    stepTime = null;
     setState(() {
       steps.add(RecipeStep(
-          waitTime: waitTimeFinal,
+          waitTime: waitTimeMins,
           id: steps.length + 1,
           imgUrl: currentImageFile!.url,
           description: desc));

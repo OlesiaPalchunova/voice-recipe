@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
-import 'package:voice_recipe/screens/authorization/forgot_password_screen.dart';
-import 'package:voice_recipe/screens/authorization/register_screen.dart';
-import 'package:voice_recipe/components/animated_loading.dart';
+import 'package:voice_recipe/screens/account/forgot_password_screen.dart';
+import 'package:voice_recipe/screens/account/register_screen.dart';
+import 'package:voice_recipe/components/utils/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';

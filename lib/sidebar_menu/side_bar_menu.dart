@@ -4,19 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/future_collection_screen.dart';
+import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config.dart';
-import 'package:voice_recipe/api/recipes_getter.dart';
-import 'package:voice_recipe/screens/create_recipe_screen.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
-import 'package:voice_recipe/screens/collections_list_screen.dart';
+import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/screens/collections/collections_list_screen.dart';
 
-import '../../model/users_info.dart';
-import '../../screens/collection_screen.dart';
-import '../screens/authorization/auth_screen.dart';
+import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/screens/account/auth_screen.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});

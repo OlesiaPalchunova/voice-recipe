@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
 import 'package:voice_recipe/services/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -190,6 +190,19 @@ class Config {
                 )
               ],
             ));
+  }
+
+  static Future<TimeOfDay?> showTimeInputDialog(BuildContext context, String helpText,
+      [TimeOfDay initialTime = const TimeOfDay(hour: 0, minute: 0)]) async {
+    TimeOfDay? selectedTime = await showTimePicker(
+        context: context,
+        helpText: helpText,
+        initialEntryMode: TimePickerEntryMode.input,
+        hourLabelText: "Часы",
+        minuteLabelText: "Минуты",
+        initialTime: initialTime
+    );
+    return selectedTime;
   }
 
   static void showAlertDialog(String text, BuildContext context,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:blur/blur.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
@@ -11,10 +10,10 @@ import 'package:voice_recipe/components/constructor_views/header_label.dart';
 import 'package:voice_recipe/components/constructor_views/ingredients_label.dart';
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
-import 'package:voice_recipe/components/animated_loading.dart';
+import 'package:voice_recipe/components/utils/animated_loading.dart';
 
-import '../config.dart';
-import '../model/recipes_info.dart';
+import '../../config.dart';
+import '../../model/recipes_info.dart';
 
 class CreateRecipeScreen extends StatefulWidget {
   const CreateRecipeScreen({super.key});
@@ -25,10 +24,10 @@ class CreateRecipeScreen extends StatefulWidget {
   State<CreateRecipeScreen> createState() => _CreateRecipeScreenState();
 
   static double generalFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 18 : 16;
+      Config.isDesktop(context) ? 16 : 14;
 
   static double titleFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 19 : 17;
+      Config.isDesktop(context) ? 18 : 16;
 
   static Color get buttonColor =>
       Config.darkModeOn ? const Color(0xff474645) : ClassicButton.color;
@@ -56,12 +55,9 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   static final List<RecipeStep> steps = [];
   static final Map<HeaderField, dynamic> headers = {};
   final nameFocusNode = FocusNode();
-  final cookTimeFocusNode = FocusNode();
-  final prepTimeFocusNode = FocusNode();
   final ingNameFocusNode = FocusNode();
   final ingCountFocusNode = FocusNode();
   final descFocusNode = FocusNode();
-  final stepTimeFocusNode = FocusNode();
 
   final int recipeId = 0;
 
@@ -73,9 +69,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   Color get backgroundColor => Config.backgroundColor;
 
   Color get labelColor =>
-      !Config.darkModeOn ? Colors.grey.shade200 : ClassicButton.color;
-
-  String get asset => Config.darkModeOn ? "green_balls" : "pink_balls";
+      !Config.darkModeOn ? Colors.grey.shade300 : ClassicButton.color;
 
   @override
   Widget build(BuildContext context) {
@@ -87,24 +81,21 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       body: GestureDetector(
         onTap: () {
           nameFocusNode.unfocus();
-          cookTimeFocusNode.unfocus();
-          prepTimeFocusNode.unfocus();
           ingNameFocusNode.unfocus();
           ingCountFocusNode.unfocus();
           descFocusNode.unfocus();
-          stepTimeFocusNode.unfocus();
         },
         child: Stack(
           children: [
             Blur(
-              blur: 3,
+              blur: Config.darkModeOn ? 3 : 1,
               blurColor: Config.darkThemeBackColor,
               child: Container(
                   decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage(
                               'assets/images/decorations/create_back.jpg'),
-                          fit: BoxFit.fitWidth))),
+                          fit: BoxFit.cover))),
             ),
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -140,21 +131,18 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
 
   List<Widget> allLabels(BuildContext context) {
     var labels = <Widget>[
-      HeaderLabel(
+      CreateHeaderLabel(
         headers: headers,
-        nameFocusNode: nameFocusNode,
-        cookTimeFocusNode: cookTimeFocusNode,
-        prepTimeFocusNode: prepTimeFocusNode,
+        nameFocusNode: nameFocusNode
       ),
-      IngredientsLabel(
+      CreateIngredientsLabel(
         insertList: ingredients,
         ingNameFocusNode: ingNameFocusNode,
         ingCountFocusNode: ingCountFocusNode,
       ),
-      StepsLabel(
+      CreateStepsLabel(
         insertList: steps,
-        descFocusNode: descFocusNode,
-        stepTimeFocusNode: stepTimeFocusNode,
+        descFocusNode: descFocusNode
       ),
       Container(
         margin: Config.paddingAll,
@@ -183,11 +171,11 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
       Config.showLoginInviteDialog(context);
       return;
     }
-    if (HeaderLabelState.current == null) {
+    if (CreateHeaderLabelState.current == null) {
       Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
       return;
     }
-    bool gotHeaders = HeaderLabelState.current!.saveHeaders();
+    bool gotHeaders = CreateHeaderLabelState.current!.saveHeaders();
     if (!gotHeaders) {
       return;
     }
@@ -226,21 +214,21 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
               "Вы всегда можете его просмотреть в разделе\n"
               "Профиль > Мои рецепты",
           context);
-      if (HeaderLabelState.current == null) {
+      if (CreateHeaderLabelState.current == null) {
         Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
-      HeaderLabelState.current!.clear();
-      if (IngredientsLabelState.current == null) {
+      CreateHeaderLabelState.current!.clear();
+      if (CreateIngredientsLabelState.current == null) {
         Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
-      IngredientsLabelState.current!.clear();
-      if (StepsLabelState.current == null) {
+      CreateIngredientsLabelState.current!.clear();
+      if (CreateStepsLabelState.current == null) {
         Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
-      StepsLabelState.current!.clear();
+      CreateStepsLabelState.current!.clear();
       setState(() {});
     });
   }

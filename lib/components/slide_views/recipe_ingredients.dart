@@ -67,6 +67,8 @@ class IngredientsList extends StatelessWidget {
   double entityFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;
 
+  final zeroRegex = RegExp(r'([.]*0)(?!.*\d)');
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,21 +92,29 @@ class IngredientsList extends StatelessWidget {
               Column(
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Text(
-                      i.name,
-                      style: TextStyle(
-                          fontFamily: Config.fontFamily,
-                          fontSize: entityFontSize(context),
-                          textBaseline: TextBaseline.alphabetic,
-                          color: _textColor
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        i.name,
+                        style: TextStyle(
+                            fontFamily: Config.fontFamily,
+                            fontSize: entityFontSize(context),
+                            textBaseline: TextBaseline.alphabetic,
+                            color: _textColor
+                        ),
                       ),
                     ),
-                    Text(
-                      "${i.count} ${i.measureUnit}",
-                      style: TextStyle(
-                          fontFamily: Config.fontFamily,
-                          fontSize: entityFontSize(context),
-                          color: _textColor
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "${i.count.toString().replaceAll(zeroRegex, '')} ${i.measureUnit}",
+                          style: TextStyle(
+                              fontFamily: Config.fontFamily,
+                              fontSize: entityFontSize(context),
+                              color: _textColor
+                          ),
+                        ),
                       ),
                     ),
                   ]),
@@ -167,16 +177,17 @@ class GeneralInfo extends StatelessWidget {
             )
           ],
         ),
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.symmetric(vertical: Config.margin),
-          child: Assignment(
-            recipe: recipe,
-            name: "ккал/100г",
-            value: "${recipe.kilocalories}",
-            iconData: Icons.accessibility_new_outlined,
-          ),
-        )
+        const SizedBox(height: Config.margin,)
+        // Container(
+        //   alignment: Alignment.centerLeft,
+        //   margin: const EdgeInsets.symmetric(vertical: Config.margin),
+        //   child: Assignment(
+        //     recipe: recipe,
+        //     name: "ккал/100г",
+        //     value: "${recipe.kilocalories}",
+        //     iconData: Icons.accessibility_new_outlined,
+        //   ),
+        // )
       ],
     );
   }

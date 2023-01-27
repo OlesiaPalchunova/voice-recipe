@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../components/appbars/title_logo_panel.dart';
-import '../config.dart';
-import 'authorization/login_screen.dart';
+import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
+import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
 
 class NotFoundScreen extends StatelessWidget {
   const NotFoundScreen({super.key,

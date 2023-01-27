@@ -6,7 +6,10 @@ import 'package:voice_recipe/model/sets_info.dart';
 
 class CollectionHeaderCard extends StatefulWidget {
   const CollectionHeaderCard(
-      {Key? key, required this.set, required this.onTap, this.widthConstraint = 0,
+      {Key? key,
+      required this.set,
+      required this.onTap,
+      this.widthConstraint = 0,
       this.showTiles = true})
       : super(key: key);
 
@@ -21,31 +24,40 @@ class CollectionHeaderCard extends StatefulWidget {
 
 class _CollectionHeaderCardState extends State<CollectionHeaderCard>
     with SingleTickerProviderStateMixin {
-  var _isPressed = false;
-  var _isHovered = false;
+  bool pressed = false;
+  bool hovered = false;
+  bool disposed = false;
 
-  bool get active => _isPressed || _isHovered;
+  @override
+  void dispose() {
+    disposed = true;
+    super.dispose();
+  }
+
+  bool get active => pressed || hovered;
 
   @override
   Widget build(BuildContext context) {
     double cardHeight = Config.pageHeight(context) / 10;
-    final width =
-        widget.widthConstraint > 0 ? widget.widthConstraint : Config.pageWidth(context);
+    final width = widget.widthConstraint > 0
+        ? widget.widthConstraint
+        : Config.recipeSlideWidth(context);
     return InkWell(
-      onHover: (hovered) => setState(() {
-        _isHovered = hovered;
+      onHover: (h) => setState(() {
+        hovered = h;
       }),
       onTap: () async {
         setState(() {
           widget.onTap();
-          _isPressed = !_isPressed;
+          pressed = !pressed;
         });
-        if (widget.showTiles | !_isPressed) {
+        if (widget.showTiles | !pressed) {
           return;
         }
         await Future.delayed(Config.shortAnimationTime).whenComplete(() {
+          if (disposed) return;
           setState(() {
-            _isPressed = false;
+            pressed = false;
           });
         });
       },
@@ -66,13 +78,11 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
                       boxShadow: active
                           ? [
                               BoxShadow(
-                                color: Config.getColor(widget.set.id),
-                                blurRadius: 6,
-                                spreadRadius: 2
-                              )
+                                  color: Config.getColor(widget.set.id),
+                                  blurRadius: 6,
+                                  spreadRadius: 2)
                             ]
-                          : []
-                          ),
+                          : []),
                   child: Row(
                     children: [
                       SizedBox(
@@ -98,20 +108,19 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
                 child: Text(widget.set.name,
                     style: TextStyle(
                         fontFamily: Config.fontFamily,
-                        fontSize: !active
-                            ? fontSize(context)
-                            : fontSize(context) + 2,
+                        fontSize:
+                            !active ? fontSize(context) : fontSize(context) + 2,
                         color: Config.iconColor)),
               ),
-            ]
-            ),
-            _isPressed & widget.showTiles ? CollectionsOptionsList(set: widget.set) : Container(),
+            ]),
+            pressed & widget.showTiles
+                ? CollectionsOptionsList(set: widget.set)
+                : Container(),
           ],
         ),
       ),
     );
   }
 
-  double fontSize(BuildContext context) => Config.isDesktop(context)
-      ? 22 : 20;
+  double fontSize(BuildContext context) => Config.isDesktop(context) ? 22 : 20;
 }

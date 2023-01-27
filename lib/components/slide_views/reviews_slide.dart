@@ -80,6 +80,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       margin: const EdgeInsets.all(Config.margin),
       alignment: Alignment.topCenter,
       padding: const EdgeInsets.all(Config.padding),
+      color: Colors.transparent,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         physics: const BouncingScrollPhysics(),

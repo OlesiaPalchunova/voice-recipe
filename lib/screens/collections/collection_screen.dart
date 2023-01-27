@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 
-import '../components/recipe_header_card.dart';
-import '../config.dart';
-import '../model/recipes_info.dart';
+import '../../components/recipe_header_card.dart';
+import '../../config.dart';
+import '../../model/recipes_info.dart';
 
 class CollectionScreen extends StatefulWidget {
   const CollectionScreen({super.key,

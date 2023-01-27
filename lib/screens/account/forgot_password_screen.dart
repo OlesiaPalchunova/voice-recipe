@@ -1,18 +1,16 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/labels/input_label.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
-import 'package:voice_recipe/screens/authorization/login_screen.dart';
+import 'package:voice_recipe/screens/account/login_screen.dart';
 
 import '../../config.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
-  static const route = '/reset-password';
+  static const route = '/login/reset-password';
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();

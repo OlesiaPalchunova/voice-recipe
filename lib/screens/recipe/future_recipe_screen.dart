@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/screens/loading_screen.dart';
 import 'package:voice_recipe/screens/not_found_screen.dart';
-import 'package:voice_recipe/screens/recipe_screen.dart';
+import 'package:voice_recipe/screens/recipe/recipe_screen.dart';
 
-import '../config.dart';
-import '../model/recipes_info.dart';
+import '../../model/recipes_info.dart';
 
 class FutureRecipeScreen extends StatelessWidget {
   const FutureRecipeScreen({super.key, required this.recipeId});

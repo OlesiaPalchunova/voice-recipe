@@ -17,7 +17,7 @@ class AuthenticationManager {
   AuthenticationManager._internal();
 
   void signInVK() {
-    Vk().signIn();
+    // Vk().signIn();
   }
 
   Future<bool> signInWithGoogle(BuildContext context) async {

@@ -18,6 +18,7 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
   late final double _height = widget.recipe.ingredients.length * 35.0;
   static const int _animationTimeMillis = 400;
   static MiniIngredientsListState? current;
+  final zeroRegex = RegExp(r'([.]*0)(?!.*\d)');
 
   @override
   void initState() {
@@ -83,15 +84,17 @@ class MiniIngredientsListState extends State<MiniIngredientsList>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              ingredient.name,
-              style: TextStyle(
-                  color: Config.iconColor,
-                  fontFamily: Config.fontFamily,
-                  fontSize: 14),
+            Expanded(
+              child: Text(
+                ingredient.name,
+                style: TextStyle(
+                    color: Config.iconColor,
+                    fontFamily: Config.fontFamily,
+                    fontSize: 14),
+              ),
             ),
             Text(
-              "${ingredient.count} ${ingredient.measureUnit}",
+              "${ingredient.count.toString().replaceAll(zeroRegex, '')} ${ingredient.measureUnit}",
               style: TextStyle(
                   color: Config.iconColor,
                   fontFamily: Config.fontFamily,

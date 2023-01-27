@@ -3,14 +3,13 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:routemaster/routemaster.dart';
 
 import 'package:voice_recipe/components/buttons/arrow.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 import 'package:voice_recipe/components/review_views/comment_card.dart';
 import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
-import 'package:voice_recipe/components/slider_gesture_handler.dart';
+import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/components/mini_ing_list.dart';
 
 import 'package:voice_recipe/model/commands_listener.dart';
@@ -32,7 +31,7 @@ import 'package:voice_recipe/model/voice_commands/prev_command.dart';
 import 'package:voice_recipe/model/voice_commands/start_timer_command.dart';
 import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
 
-import '../model/voice_commands/stop_say.dart';
+import '../../model/voice_commands/stop_say.dart';
 
 class RecipeScreen extends StatefulWidget {
   RecipeScreen({
@@ -70,7 +69,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
   static final stepsMap = HashMap<int, int>();
   static const Duration slidingTime = Duration(milliseconds: 350);
   bool showMiniIngList = false;
-
+  final hideBackButton = ValueNotifier(false);
+  final hideNextButton = ValueNotifier(false);
   late Function goToTab;
   List<ContentConfig> listContentConfig = [];
   late Color activeColor = Config.getColor(widget.recipe.id);
@@ -85,7 +85,21 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void initState() {
     super.initState();
     _slideId = stepsMap[widget.recipe.id] ?? 0;
+    checkToHideButtons();
     _initCommandsListener();
+  }
+
+  void checkToHideButtons() {
+    if (_slideId == 0) {
+      hideBackButton.value = true;
+    } else {
+      if (hideBackButton.value) hideBackButton.value = false;
+    }
+    if (_slideId == lastSlideId) {
+      hideNextButton.value = true;
+    } else {
+      if (hideNextButton.value) hideNextButton.value = false;
+    }
   }
 
   @override
@@ -96,7 +110,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _listener.shutdown();
   }
 
-  bool get isLastSlide => _slideId == widget.slides.length - 1;
+  int get lastSlideId => widget.slides.length - 1;
 
   Widget buildSlider(BuildContext context) {
     listContentConfig.clear();
@@ -111,6 +125,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               ReviewsSlide.newCommentNode.unfocus();
               CommentCard.editNode.unfocus();
             },
+            onEscape: () => _onClose(context),
             onRight: _onNext,
             onLeft: _onPrev,
             child: Align(
@@ -202,6 +217,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   height: arrowSize,
                   width: arrowSize,
                   child: ArrowButton(
+                    hideNotify: hideBackButton,
                     direction: Direction.left,
                     onTap: _onPrev,
                   )),
@@ -216,6 +232,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                   height: arrowSize,
                   width: arrowSize,
                   child: ArrowButton(
+                    hideNotify: hideNextButton,
                     direction: Direction.right,
                     onTap: _onNext,
                   )),
@@ -360,6 +377,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     if (prev == _slideId) return;
     _onStopSaying();
     goToTab(_slideId);
+    checkToHideButtons();
     if (SayButtonState.current()!.isSaying()) {
       _onSay();
     }
@@ -416,7 +434,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
   void _incrementSlideId() {
     _slideId++;
-    int max = widget.recipe.steps.length + 1 + 1;
-    _slideId = _slideId > max ? max : _slideId;
+    _slideId = _slideId > lastSlideId ? lastSlideId : _slideId;
   }
 }
