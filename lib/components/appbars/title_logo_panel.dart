@@ -48,7 +48,7 @@ class _TitleLogoPanelState extends State<TitleLogoPanel> {
             ),
             Container(
                 padding: const EdgeInsets.all(5),
-                width: 50,
+                width: 40,
                 child: Image.asset("assets/images/voice_recipe.png")
             ),
           ],

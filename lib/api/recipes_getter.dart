@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:voice_recipe/api/recipes_sender.dart';
 
-import '../config/config.dart';
 import '../model/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/api_fields.dart';
@@ -116,7 +115,7 @@ class RecipesGetter {
     num? kilocaloriesCount = recipeJson[kilocalories];
     String recipeName = recipeJson[name];
     for (int i = 0; i < recipeName.length; i++) {
-      if (recipeName.substring(i).startsWith("- пошаговый")) {
+      if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
         break;
       }

@@ -28,7 +28,7 @@ class _ArrowButtonState extends State<ArrowButton> {
     StateMachineController? controller =
         StateMachineController.fromArtboard(artboard, 'State Machine 1');
     if (controller == null) return;
-    artboard.addController(controller!);
+    artboard.addController(controller);
     hovered = controller.findInput<bool>('Hover') as SMIBool;
   }
 

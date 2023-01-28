@@ -19,12 +19,12 @@ class SideBarTile extends StatefulWidget {
 }
 
 class _SideBarTileState extends State<SideBarTile> {
-  bool _pressed = false;
-  bool _disposed = false;
+  bool pressed = false;
+  bool disposed = false;
 
   @override
   void dispose() {
-    _disposed = true;
+    disposed = true;
     super.dispose();
   }
 
@@ -37,7 +37,7 @@ class _SideBarTileState extends State<SideBarTile> {
   Color get pressedColor => Config.darkModeOn ? ClassicButton.hoverColor :
       Colors.grey.shade200;
 
-  Color get color => _pressed ? pressedColor : Colors.transparent;
+  Color get color => pressed ? pressedColor : Colors.transparent;
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,14 @@ class _SideBarTileState extends State<SideBarTile> {
       hoverColor: pressedColor,
       onTap: () {
         setState(() {
-          _pressed = true;
+          pressed = true;
         });
         Future.delayed(Config.shortAnimationTime, () {
           widget.onClicked();
         });
         Future.delayed(const Duration(milliseconds: 500), () {
-          _pressed = false;
-          if (_disposed) return;
+          pressed = false;
+          if (disposed) return;
           setState(() {
           });
         });
@@ -86,14 +86,7 @@ class _SideBarTileState extends State<SideBarTile> {
                   )
                 ),
                 const SizedBox(width: Config.margin * 2),
-                Text(
-                  widget.name,
-                  style: TextStyle(
-                    fontSize: fontSize(context),
-                    color: Config.iconColor,
-                    fontFamily: Config.fontFamily,
-                  ),
-                ),
+                Config.defaultText(widget.name, fontSize: fontSize(context)),
               ],
             ),
           ],

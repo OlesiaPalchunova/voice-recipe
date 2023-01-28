@@ -12,7 +12,7 @@ import 'package:voice_recipe/components/slide_views/reviews_slide.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/components/mini_ing_list.dart';
 
-import 'package:voice_recipe/model/commands_listener.dart';
+import 'package:voice_recipe/services/commands_listener.dart';
 import 'package:voice_recipe/components/slide_views/recipe_face.dart';
 import 'package:voice_recipe/components/slide_views/recipe_ingredients.dart';
 import 'package:voice_recipe/components/slide_views/recipe_step_view.dart';
@@ -248,8 +248,7 @@ class _RecipePageState extends State<RecipePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
-          shadowColor:
-              Config.darkModeOn ? Colors.black87 : Colors.transparent,
+          shadowColor: Config.darkModeOn ? Colors.black87 : Colors.transparent,
           automaticallyImplyLeading: false,
           toolbarHeight: 60,
           foregroundColor: Config.iconColor,
@@ -272,18 +271,22 @@ class _RecipePageState extends State<RecipePage> {
               },
               onMute: () {
                 if (Config.isWeb) {
-                  ServiceIO.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  ServiceIO.showAlertDialog(
+                      "К сожалению, голосове управление на данный момент работает только в мобильной версии.",
+                      context);
                   return;
                 }
                 _listener.shutdown();
-                },
+              },
               onListen: () {
                 if (Config.isWeb) {
-                  ServiceIO.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  ServiceIO.showAlertDialog(
+                      "К сожалению, голосове управление на данный момент работает только в мобильной версии.",
+                      context);
                   return;
                 }
                 _listener.start();
-                },
+              },
               onSay: _onSay,
               onStopSaying: _onStopSaying,
             ),
@@ -302,7 +305,7 @@ class _RecipePageState extends State<RecipePage> {
 
   void _completeSaying() {
     _completed = true;
-    ListenButtonState.current()!.unlock();
+    HeaderButtonsPanel.isLockedListening.value = false;
   }
 
   void _setSayingEndHandler(void Function() callback, int slideId) {
@@ -336,26 +339,26 @@ class _RecipePageState extends State<RecipePage> {
     } else {
       text = widget.recipe.steps[_slideId - firstStepSlideId].description;
     }
-    if (!ListenButtonState.current()!.isListening()) {
+    if (!HeaderButtonsPanel.isListening.value) {
       if (_completed) {
         _listenedBeforeStart = false;
         _setSayingEndHandler(() {}, _slideId);
         _completed = false;
-        ListenButtonState.current()!.lock();
+        HeaderButtonsPanel.isLockedListening.value = true;
       }
       RecipePage.tts.speak(text);
       return;
     }
-    ListenButtonState.current()!.stopListening();
+    HeaderButtonsPanel.isListening.value = false;
     _listenedBeforeStart = true;
     _setSayingEndHandler(_restartListening, _slideId);
     _completed = false;
-    ListenButtonState.current()!.lock();
+    HeaderButtonsPanel.isLockedListening.value = true;
     RecipePage.tts.speak(text);
   }
 
   void _restartListening() {
-    ListenButtonState.current()!.listen();
+    HeaderButtonsPanel.isListening.value = true;
   }
 
   _onStopSaying() {
@@ -378,7 +381,7 @@ class _RecipePageState extends State<RecipePage> {
     _onStopSaying();
     goToTab(_slideId);
     checkToHideButtons();
-    if (SayButtonState.current()!.isSaying()) {
+    if (HeaderButtonsPanel.isSaying.value) {
       _onSay();
     }
   }
@@ -391,7 +394,8 @@ class _RecipePageState extends State<RecipePage> {
     _listener = CommandsListener(commandsList: <Command>[
       NextCommand(onTriggerFunction: _onNext),
       BackCommand(onTriggerFunction: _onPrev),
-      SayCommand(onTriggerFunction: () => SayButtonState.current()!.say()),
+      SayCommand(
+          onTriggerFunction: () => HeaderButtonsPanel.isSaying.value = true),
       StartCommand(onTriggerFunction: () => goToTab(firstStepSlideId)),
       CloseCommand(onTriggerFunction: () => _onClose(context)),
       StopSayCommand(onTriggerFunction: _onStopSaying),

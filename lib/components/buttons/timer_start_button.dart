@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
 import 'package:voice_recipe/config/config.dart';
 
 class TimerStartButton extends StatefulWidget {
@@ -9,37 +8,37 @@ class TimerStartButton extends StatefulWidget {
       required this.id,
       required this.onStart,
       required this.onStop,
-      required this.iconSize});
+      required this.iconSize,
+      required this.isRunning});
 
   final int id;
+  final ValueNotifier<bool> isRunning;
   final void Function() onStart;
   final void Function() onStop;
   final double iconSize;
 
   @override
-  State<TimerStartButton> createState() => TimerStartButtonState();
+  State<TimerStartButton> createState() => _TimerStartButtonState();
 }
 
-class TimerStartButtonState extends State<TimerStartButton>
+class _TimerStartButtonState extends State<TimerStartButton>
     with TickerProviderStateMixin {
-  var _isRunning = false;
+  var isRunning = false;
   late AnimationController _controller;
-  static TimerStartButtonState? current;
   late AnimatedIconData _icon;
   late bool _reversed;
-  TimerStartButtonState? _prevState;
-  static final Map<int, TimerStartButtonState?> _statesTable = {};
+  _TimerStartButtonState? _prevState;
+  static final Map<int, _TimerStartButtonState?> _statesTable = {};
 
   @override
   void initState() {
     super.initState();
-    current = this;
     _controller = AnimationController(duration: Config.animationTime, vsync: this);
     if (_statesTable.containsKey(widget.id)) {
       _prevState = _statesTable[widget.id];
     }
     if (_prevState != null) {
-      if (_prevState!._isRunning) {
+      if (_prevState!.isRunning) {
         _icon = AnimatedIcons.pause_play;
         _reversed = true;
         return;
@@ -56,43 +55,42 @@ class TimerStartButtonState extends State<TimerStartButton>
     super.dispose();
   }
 
-  void update(bool running) {
-    if (running == _isRunning) return;
-    setState(() {
-      debugPrint("\n\n\n$running");
-      _isRunning = running;
-      if (_isRunning) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    });
+  void handleTimerStatusUpdate() {
+    if (isRunning) {
+      _reversed ? _controller.reverse() : _controller.forward();
+      widget.onStart();
+    } else {
+      _reversed ? _controller.forward() : _controller.reverse();
+      widget.onStop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Config.padding),
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _isRunning = !_isRunning;
-          });
-          if (_isRunning) {
-            _reversed ? _controller.reverse() : _controller.forward();
-            widget.onStart();
-          } else {
-            _reversed ? _controller.forward() : _controller.reverse();
-            widget.onStop();
+    return ValueListenableBuilder(
+        valueListenable: widget.isRunning,
+        builder: (context, newIsRunning, child) {
+          if (newIsRunning != isRunning) {
+            isRunning = newIsRunning;
+            handleTimerStatusUpdate();
           }
-        },
-        child: AnimatedIcon(
-          icon: _icon,
-          progress: _controller,
-          size: widget.iconSize,
-          color: Config.iconColor,
-        ),
-      ),
-    );
+          return Container(
+            padding: const EdgeInsets.all(Config.padding),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isRunning = !isRunning;
+                  handleTimerStatusUpdate();
+                });
+              },
+              child: AnimatedIcon(
+                icon: _icon,
+                progress: _controller,
+                size: widget.iconSize,
+                color: Config.iconColor,
+              ),
+            ),
+          );
+        });
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config/config.dart';
 
 class FavoriteRecipesDbManager {
   final bool initialized = false;

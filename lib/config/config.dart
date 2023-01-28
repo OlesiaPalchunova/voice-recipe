@@ -73,6 +73,15 @@ class Config {
   static EdgeInsetsGeometry get paddingVert =>
       const EdgeInsets.symmetric(vertical: padding);
 
+  static Text defaultText(String text, {required double fontSize}) {
+    return Text(text,
+        style: TextStyle(
+          fontSize: fontSize,
+          color: Config.iconColor,
+          fontFamily: Config.fontFamily,
+        ));
+  }
+
   static const darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const darkIconBackColor = Color(0xFF202124);
   static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
@@ -167,6 +176,9 @@ class Config {
 
   static Color getBackEdgeColor(int id) =>
       darkModeOn ? darkBlue : lightBackColors[id % lightBackColors.length];
+
+  static double fontSizeMedium(BuildContext context) =>
+      Config.isDesktop(context) ? 18 : 16;
 
   static double pageHeight(BuildContext context) =>
       MediaQuery.of(context).size.height;

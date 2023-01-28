@@ -5,16 +5,16 @@ import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 
 class HeaderButtonsPanel extends StatelessWidget {
-  const HeaderButtonsPanel(
-      {super.key,
-      required this.onClose,
-      required this.onList,
-      required this.onListen,
-      required this.onMute,
-      required this.onSay,
-      required this.onStopSaying,
-      required this.id,
-      });
+  const HeaderButtonsPanel({
+    super.key,
+    required this.onClose,
+    required this.onList,
+    required this.onListen,
+    required this.onMute,
+    required this.onSay,
+    required this.onStopSaying,
+    required this.id,
+  });
 
   static const _iconSize = 25.0;
   final void Function(BuildContext) onClose;
@@ -24,6 +24,9 @@ class HeaderButtonsPanel extends StatelessWidget {
   final void Function() onSay;
   final void Function() onStopSaying;
   final int id;
+  static final isListening = ValueNotifier(false);
+  static final isLockedListening = ValueNotifier(false);
+  static final isSaying = ValueNotifier(false);
 
   static Container buildButton(IconButton iconButton, Color color) {
     return Container(
@@ -50,10 +53,18 @@ class HeaderButtonsPanel extends StatelessWidget {
                   width: 10,
                 ),
                 ListenButton(
-                    onListen: onListen, onMute: onMute, iconSize: _iconSize)
+                    onListen: onListen,
+                    onMute: onMute,
+                    iconSize: _iconSize,
+                    isListening: isListening,
+                    isLocked: isLockedListening)
               ],
             ),
-            SayButton(onSay: onSay, onStopSaying: onStopSaying, iconSize: _iconSize),
+            SayButton(
+                onSay: onSay,
+                onStopSaying: onStopSaying,
+                iconSize: _iconSize,
+                isSaying: isSaying),
             Row(
               children: [
                 _buildListButton(),
@@ -76,7 +87,8 @@ class HeaderButtonsPanel extends StatelessWidget {
         color: Config.iconBackColor,
       ),
       child: const Image(
-          height: _iconSize * 1.65, image: AssetImage("assets/images/voice_recipe.png")),
+          height: _iconSize * 1.65,
+          image: AssetImage("assets/images/voice_recipe.png")),
     );
   }
 
@@ -84,7 +96,7 @@ class HeaderButtonsPanel extends StatelessWidget {
     return HeaderButtonsPanel.buildButton(
         IconButton(
           tooltip: "Список ингредиентов",
-          onPressed: () => onList(),
+          onPressed: onListen,
           icon: Icon(
             Icons.list,
             color: Config.iconColor,

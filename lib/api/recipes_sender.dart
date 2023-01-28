@@ -29,12 +29,11 @@ class RecipesSender {
       body: recipeJson
     );
     if (response.statusCode != 200) {
-      print(response.body);
       return fail;
     }
     var idJson = jsonDecode(response.body);
-    int? id = idJson["id"];
-    return id?? fail;
+    int? recipeId = idJson[id];
+    return recipeId?? fail;
   }
 
   Future<String?> recipeToJson(Recipe recipe) async {
@@ -95,7 +94,6 @@ class RecipesSender {
     for (Ingredient ing in ings) {
       int returnCode = await sendIngredient(ing);
       if (returnCode == fail) {
-        // debugPrint("failed to load ${ing.name}");
         return null;
       }
       res.add(returnCode);
@@ -118,15 +116,14 @@ class RecipesSender {
           body: jsonEncode(ingDto)
       );
       if (response.statusCode != 200) {
-        // debugPrint(response.body);
         return fail;
       }
       var idJson = jsonDecode(response.body);
-      int? id = idJson["id"];
-      if (id == null) {
+      int? ingId = idJson[id];
+      if (ingId == null) {
         return fail;
       }
-      return id;
+      return ingId;
   }
 
   Future<List<int>?> loadAllRecipeMedia(List<RecipeStep> steps) async {
@@ -141,7 +138,6 @@ class RecipesSender {
       }
       int returnCode = await sendImage(step.imgUrl);
       if (returnCode == fail) {
-        // debugPrint("failed to load ${step.imgUrl}");
         return null;
       }
       res.add(returnCode);
@@ -162,8 +158,6 @@ class RecipesSender {
   Future<int> sendImage(String imageUrl) async {
     http.Response imageResponse = await http.get(Uri.parse(imageUrl));
     if (imageResponse.statusCode != 200) {
-      // debugPrint("Could not get image response");
-      // debugPrint(imageResponse.body);
       return fail;
     }
     var response = await http.post(
@@ -176,10 +170,10 @@ class RecipesSender {
       return fail;
     }
     var idJson = jsonDecode(response.body);
-    int? id = idJson["id"];
-    if (id == null) {
+    int? imageId = idJson[id];
+    if (imageId == null) {
       return fail;
     }
-    return id;
+    return imageId;
   }
 }

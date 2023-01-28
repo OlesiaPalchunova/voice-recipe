@@ -4,8 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
-import '../db/user_db_manager.dart';
-import '../users_info.dart';
+import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/model/users_info.dart';
 
 class AuthenticationManager {
   static const delayMillis = 2000;
@@ -15,10 +15,6 @@ class AuthenticationManager {
   }
 
   AuthenticationManager._internal();
-
-  void signInVK() {
-    // Vk().signIn();
-  }
 
   Future<bool> signInWithGoogle(BuildContext context) async {
     try {
@@ -104,15 +100,15 @@ class AuthenticationManager {
     return true;
   }
 
-  Future passwordReset(BuildContext context, String email) async {
-    ServiceIO.showProgressCircle(context);
+  Future<bool> passwordReset(BuildContext context, String email) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       await Future.microtask(() => ServiceIO.showAlertDialog(
           "Подтверждение отправлено вам на почту.", context));
+      return true;
     } on FirebaseException catch (e) {
       ServiceIO.showAlertDialog(e.message ?? "Возникла ошибка", context);
+      return false;
     }
-    await Future.microtask(() => Navigator.of(context).pop());
   }
 }

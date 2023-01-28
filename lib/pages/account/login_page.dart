@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/model/auth/auth.dart';
+import 'package:voice_recipe/services/auth/auth.dart';
 import 'package:voice_recipe/pages/account/forgot_password_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';

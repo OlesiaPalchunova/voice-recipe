@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/labels/input_label.dart';
-import 'package:voice_recipe/model/auth/auth.dart';
+import 'package:voice_recipe/services/auth/auth.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
 import '../../config/config.dart';

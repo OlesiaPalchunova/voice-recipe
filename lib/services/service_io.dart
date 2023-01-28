@@ -16,6 +16,9 @@ class ServiceIO {
 
   static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
 
+  static double fontSize(BuildContext context) => Config.isDesktop(context) ?
+      20 : 18;
+
   static void showLoginInviteDialog(BuildContext context) async {
     showDialog(
         context: context,
@@ -31,7 +34,7 @@ class ServiceIO {
           actions: [
             ClassicButton(
               text: "Войти",
-              fontSize: 20,
+              fontSize: fontSize(context),
               onTap: () {
                 Routemaster.of(context).pop();
                 Routemaster.of(context).push(LoginPage.route);
@@ -57,17 +60,18 @@ class ServiceIO {
   static void showAlertDialog(String text, BuildContext context,
       [bool noShadow = false]) async {
     final russianText = await Translator().translateToRu(text);
+    final fixedText = russianText.replaceAll('Давая', 'Данная');
     showDialog(
         barrierColor: noShadow ? Colors.transparent : Colors.black54,
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: Config.backgroundEdgeColor,
           content: Text(
-            russianText,
+            fixedText,
             style: TextStyle(
                 color: Config.iconColor,
                 fontFamily: Config.fontFamily,
-                fontSize: 20),
+                fontSize: fontSize(context)),
           ),
         ));
   }

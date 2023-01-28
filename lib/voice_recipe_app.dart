@@ -37,19 +37,20 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
             const MaterialPage(child: RegisterPage()),
         ForgotPasswordPage.route: (_) =>
             const MaterialPage(child: ForgotPasswordPage()),
-        '${FutureRecipePage.route}:id': (info) {
-          int id = int.parse(info.pathParameters['id']!);
-          return MaterialPage(child: FutureRecipePage(recipeId: id));
-        },
         '${FutureCollectionPage.route}:name': (info) {
           String name = info.pathParameters['name']!;
           return MaterialPage(child: FutureCollectionPage(name: name));
         },
-        '${FutureCollectionPage.route}:name/:id': (info) {
-          int id = int.parse(info.pathParameters['id']!);
-          return MaterialPage(child: FutureRecipePage(recipeId: id));
-        }
+        '${FutureRecipePage.route}:id': materialRecipeRoute,
+        '${FutureCollectionPage.route}:name/:id': materialRecipeRoute,
+        '/created/:id': materialRecipeRoute,
+        '/favorites/:id': materialRecipeRoute,
       });
+
+  static MaterialPage<dynamic> materialRecipeRoute(RouteData info) {
+    int id = int.parse(info.pathParameters['id']!);
+    return MaterialPage(child: FutureRecipePage(recipeId: id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,9 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
       title: Config.appName,
       routerDelegate: RoutemasterDelegate(routesBuilder: (_) => routes),
       routeInformationParser: const RoutemasterParser(),
+      supportedLocales: const [
+        Locale('ru', 'RU')
+      ],
     );
   }
 }

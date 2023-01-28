@@ -72,7 +72,7 @@ class _SignInButtonState extends State<SignInButton> {
             Text(widget.text, style: TextStyle(
               color: widget.textColor,
               fontFamily: Config.fontFamily,
-              fontSize: 18
+              fontSize: Config.fontSizeMedium(context)
             ),)
           ],
         ),

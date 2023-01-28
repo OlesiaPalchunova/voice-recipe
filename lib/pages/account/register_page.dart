@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/model/auth/auth.dart';
+import 'package:voice_recipe/services/auth/auth.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';

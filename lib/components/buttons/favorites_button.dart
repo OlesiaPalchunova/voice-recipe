@@ -23,11 +23,11 @@ class FavoritesButton extends StatefulWidget {
 
 class _FavoritesButtonState extends State<FavoritesButton>
     with TickerProviderStateMixin {
-  bool _pressed = false;
-  bool _listen = false;
-  bool _disposed = false;
-  SMIBool? hovered;
-  SMIBool? pressed;
+  bool pressed = false;
+  bool listening = false;
+  bool disposed = false;
+  SMIBool? hoveredController;
+  SMIBool? pressedController;
 
   static final Map<int, ValueNotifier<bool>> notifyers = {};
 
@@ -36,19 +36,19 @@ class _FavoritesButtonState extends State<FavoritesButton>
         StateMachineController.fromArtboard(artboard, 'State Machine 1');
     if (controller == null) return;
     artboard.addController(controller);
-    hovered = controller.findInput<bool>('Hover') as SMIBool;
-    pressed = controller.findInput<bool>('Pressed') as SMIBool;
-    if (_pressed) {
-      hovered?.change(true);
-      pressed?.change(true);
+    hoveredController = controller.findInput<bool>('Hover') as SMIBool;
+    pressedController = controller.findInput<bool>('Pressed') as SMIBool;
+    if (pressed) {
+      hoveredController?.change(true);
+      pressedController?.change(true);
     } else {
-      pressed?.change(false);
+      pressedController?.change(false);
     }
   }
 
   @override
   void initState(){
-    _disposed = false;
+    disposed = false;
     if (!notifyers.containsKey(widget.recipeId)) {
       notifyers[widget.recipeId] = ValueNotifier(false);
     }    
@@ -61,7 +61,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
 
   @override
   void dispose() {
-    _disposed = true;
+    disposed = true;
     super.dispose();
   }
 
@@ -90,24 +90,8 @@ class _FavoritesButtonState extends State<FavoritesButton>
           builder: (BuildContext context, bool isFav, Widget? child) {
             Widget res = InkWell(
               borderRadius: Config.borderRadiusLarge,
-              onTap: () {
-                if (!ServiceIO.loggedIn) {
-                  ServiceIO.showLoginInviteDialog(context);
-                  return;
-                }
-                _pressed = !_pressed;
-                notifyers[widget.recipeId]!.value = _pressed;
-                if (_pressed) {
-                  FavoriteRecipesDbManager().add(widget.recipeId);
-                } else {
-                  FavoriteRecipesDbManager().remove(widget.recipeId);
-                }
-                hovered?.change(_pressed);
-                pressed?.change(_pressed);
-              },
-              onHover: (h) {
-                hovered?.change(h);
-              },
+              onTap: onTap,
+              onHover: onHover,
               child: SizedBox(
                 width: width,
                 height: width,
@@ -118,10 +102,10 @@ class _FavoritesButtonState extends State<FavoritesButton>
                 ),
               )
             );
-            if (_pressed != isFav) {
-              hovered?.change(isFav);
-              pressed?.change(isFav);
-              _pressed = isFav;
+            if (pressed != isFav) {
+              hoveredController?.change(isFav);
+              pressedController?.change(isFav);
+              pressed = isFav;
             }
             return res;
           }
@@ -130,15 +114,35 @@ class _FavoritesButtonState extends State<FavoritesButton>
     );
   }
 
+  void onTap() {
+    if (!ServiceIO.loggedIn) {
+      ServiceIO.showLoginInviteDialog(context);
+      return;
+    }
+    pressed = !pressed;
+    notifyers[widget.recipeId]!.value = pressed;
+    if (pressed) {
+      FavoriteRecipesDbManager().add(widget.recipeId);
+    } else {
+      FavoriteRecipesDbManager().remove(widget.recipeId);
+    }
+    hoveredController?.change(pressed);
+    pressedController?.change(pressed);
+  }
+
+  void onHover(bool h) {
+    hoveredController?.change(h);
+  }
+
   void setAuthListener() {
-    if (_listen) return;
-    _listen = true;
+    if (listening) return;
+    listening = true;
     FirebaseAuth.instance.authStateChanges().listen(
             (event) => checkIfIsFavorite());
   }
 
   void checkIfIsFavorite() async {
-    if (_disposed) {
+    if (disposed) {
       return;
     }
     bool isFav = await FavoriteRecipesDbManager().isFavorite(widget.recipeId);

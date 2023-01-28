@@ -4,36 +4,34 @@ import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
 import 'package:voice_recipe/config/config.dart';
 
 class SayButton extends StatefulWidget {
-  const SayButton({super.key,
-    required this.onSay,
-    required this.onStopSaying,
-    required this.iconSize});
+  const SayButton(
+      {super.key,
+      required this.isSaying,
+      required this.onSay,
+      required this.onStopSaying,
+      required this.iconSize});
 
+  final ValueNotifier<bool> isSaying;
   final void Function() onSay;
   final void Function() onStopSaying;
   final double iconSize;
 
   @override
-  State<SayButton> createState() => SayButtonState();
+  State<SayButton> createState() => _SayButtonState();
 }
 
-class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
-  var _isSaying = false;
-  static SayButtonState? _state;
+class _SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   late AnimationController _controller;
 
-  static SayButtonState? current() {
-    return _state;
-  }
+  bool get isSaying => widget.isSaying.value;
+
+  set isSaying(bool newValue) => widget.isSaying.value = newValue;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        duration: Config.animationTime,
-        vsync: this
-    );
-    _state = this;
+    _controller =
+        AnimationController(duration: Config.animationTime, vsync: this);
   }
 
   @override
@@ -44,37 +42,26 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return HeaderButtonsPanel.buildButton(_buildSayIcon(),
-        !_isSaying ? Config.iconBackColor : Config.disabledIconBackColor);
-  }
-
-  void say() {
-    if (_isSaying) return;
-    setState(() {
-      _isSaying = true;
-    });
-    widget.onSay();
-  }
-
-  void stopSaying() {
-    if (!_isSaying) return;
-    setState(() {
-      _isSaying = false;
-    });
-    widget.onStopSaying();
-  }
-
-  bool isSaying() {
-    return _isSaying;
+    return ValueListenableBuilder(
+        valueListenable: widget.isSaying,
+        builder: (context, isSayingVal, child) {
+          if (isSaying) {
+            widget.onSay();
+          } else {
+            widget.onStopSaying();
+          }
+          return HeaderButtonsPanel.buildButton(_buildSayIcon(),
+              !isSaying ? Config.iconBackColor : Config.disabledIconBackColor);
+        });
   }
 
   IconButton _buildSayIcon() {
     return IconButton(
         onPressed: () {
           setState(() {
-            _isSaying = !_isSaying;
+            isSaying = !isSaying;
           });
-          if (_isSaying) {
+          if (isSaying) {
             _controller.forward();
             widget.onSay();
           } else {
@@ -87,7 +74,6 @@ class SayButtonState extends State<SayButton> with TickerProviderStateMixin {
           icon: AnimatedIcons.play_pause,
           progress: _controller,
           color: Config.iconColor,
-        )
-    );
+        ));
   }
 }

@@ -6,12 +6,12 @@ class RiveUtils {
     StateMachineController? controller = StateMachineController.fromArtboard(
         artboard, stateMachineName);
     if (controller != null) {
-      artboard.addController(controller!);
+      artboard.addController(controller);
     }
     return controller;
   }
 
-  static void chnageSMIBoolState(SMIBool input) {
+  static void changeSMIBoolState(SMIBool input) {
     input.change(true);
     Future.delayed(
       const Duration(seconds: 1),

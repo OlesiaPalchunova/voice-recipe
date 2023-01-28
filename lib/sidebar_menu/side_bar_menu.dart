@@ -33,13 +33,12 @@ class SideBarMenu extends StatefulWidget {
 }
 
 class _SideBarMenuState extends State<SideBarMenu> {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: min(Config.pageWidth(context) * 0.7, 400),
+      width: min(Config.pageWidth(context) * .7, 400),
       child: Material(
-          color: Config.darkModeOn ? Config.backgroundColor : Colors.white,
+          color: Config.backgroundColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -50,40 +49,28 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SizedBox(
                       height: Config.pageHeight(context) / 7,
                     ),
-                    buildProfileLabel(),
+                    buildAccountOrLoginLabel(),
                     SideBarTile(
                         name: "Подборки",
-                        onClicked: () =>
-                            Routemaster.of(context).push(CollectionsListPage.route),
+                        onClicked: onCollectionsTap,
                         iconData: Config.darkModeOn
-                            ? Icons.library_books_outlined
-                            : Icons.library_books_outlined),
+                            ? Icons.book_outlined
+                            : Icons.book_outlined),
                     Config.isWeb ? SideBarTile(
                         name: "Создать рецепт",
-                        onClicked: () {
-                          Routemaster.of(context).push(CreateRecipePage.route);
-                        },
+                        onClicked: onConstructorTap,
                         iconData: Config.darkModeOn
                             ? Icons.create_outlined
-                            : Icons.create_outlined) : Container(),
+                            : Icons.create_outlined) : const SizedBox(),
                     SideBarTile(
                         name: "Голосовые команды",
-                        onClicked: () {
-                          ServiceIO.showAlertDialog(
-                              "В стадии разработки", context);
-                        },
+                        onClicked: onVoiceCommandsTap,
                         iconData: Config.darkModeOn
                             ? Icons.record_voice_over_outlined
                             : Icons.record_voice_over_outlined),
                     SideBarTile(
                         name: "Понравившиеся",
-                        onClicked: () async {
-                          if (!ServiceIO.loggedIn) {
-                            ServiceIO.showLoginInviteDialog(context);
-                            return;
-                          }
-                          Routemaster.of(context).push('${FutureCollectionPage.route}favorites');
-                        },
+                        onClicked: onFavoritesTap,
                         iconData: Config.darkModeOn
                             ? Icons.thumb_up_alt_outlined
                             : Icons.thumb_up_alt_outlined),
@@ -120,13 +107,54 @@ class _SideBarMenuState extends State<SideBarMenu> {
     );
   }
 
-  Widget buildProfile(User user) {
+  void onCollectionsTap() {
+    Routemaster.of(context).push(CollectionsListPage.route);
+  }
+
+  void onVoiceCommandsTap() {
+    ServiceIO.showAlertDialog("В стадии разработки", context);
+  }
+
+  void onConstructorTap() {
+    Routemaster.of(context).push(CreateRecipePage.route);
+  }
+
+  void onFavoritesTap() async {
+    if (!ServiceIO.loggedIn) {
+      ServiceIO.showLoginInviteDialog(context);
+      return;
+    }
+    Routemaster.of(context).push('${FutureCollectionPage.route}favorites');
+  }
+
+  void onProfileLabelTap() {
+    Routemaster.of(context).push(AuthPage.route);
+  }
+
+  void onLoginTap() {
+    Routemaster.of(context).push(LoginPage.route);
+  }
+
+  Widget buildAccountOrLoginLabel() {
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return buildAccountTile(snapshot.data!);
+          } else {
+            return SideBarTile(
+                name: "Войти",
+                onClicked: onLoginTap,
+                iconData: Icons.login);
+          }
+        });
+  }
+
+  Widget buildAccountTile(User user) {
     return Column(
       children: [
         InkWell(
-          onTap: () {
-            Routemaster.of(context).push(AuthPage.route);
-          },
+          onTap: onProfileLabelTap,
           borderRadius: Config.borderRadiusLarge,
           child: Row(
             children: [
@@ -167,20 +195,4 @@ class _SideBarMenuState extends State<SideBarMenu> {
     );
   }
 
-  Widget buildProfileLabel() {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildProfile(snapshot.data!);
-          } else {
-            return SideBarTile(
-                name: "Войти",
-                onClicked: () {
-                  Routemaster.of(context).push(LoginPage.route);
-                },
-                iconData: Icons.login);
-          }
-        });
-  }
 }

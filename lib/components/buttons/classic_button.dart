@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/config.dart';
@@ -7,12 +8,12 @@ class ClassicButton extends StatefulWidget {
       {super.key,
       required this.onTap,
       required this.text,
-      this.fontSize = 20,
+      this.fontSize,
         this.customColor, this.customBorderColor});
 
   final VoidCallback onTap;
   final String text;
-  final double fontSize;
+  final double? fontSize;
   final Color? customColor;
   final Color? customBorderColor;
 
@@ -48,6 +49,7 @@ class _ClassicButtonState extends State<ClassicButton> {
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Config.borderRadiusLarge,
       hoverColor: ClassicButton.hoverColor,
+      splashColor: ClassicButton.hoverColor.lighten(5),
       focusColor: ClassicButton.hoverColor.withOpacity(.5),
       onTap: () {
         if (_locked) return;
@@ -76,7 +78,7 @@ class _ClassicButtonState extends State<ClassicButton> {
           child: Text(widget.text,
               style: TextStyle(
                   color: Config.iconColor,
-                  fontSize: widget.fontSize,
+                  fontSize: widget.fontSize?? Config.fontSizeMedium(context),
                   fontFamily: Config.fontFamily
               )
           ),
