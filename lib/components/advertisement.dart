@@ -5,7 +5,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 
-import '../config.dart';
+import '../config/config.dart';
 import 'buttons/animated_button.dart';
 
 class Advertisement extends StatefulWidget {

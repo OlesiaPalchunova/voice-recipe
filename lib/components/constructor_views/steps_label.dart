@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/timer/timer_decoration.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/dropped_file.dart';
 import '../../model/recipes_info.dart';
 import '../../pages/constructor/create_recipe_page.dart';
@@ -122,7 +123,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
   void onStepTimeSet() async {
     TimeOfDay initialTime =
         stepTime == null ? const TimeOfDay(hour: 0, minute: 0) : stepTime!;
-    stepTime = await Config.showTimeInputDialog(
+    stepTime = await ServiceIO.showTimeInputDialog(
         context, "Время ожидания", initialTime);
     if (stepTime != null) {
       setState(() {});
@@ -257,13 +258,13 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
 
   void addNewStep() {
     if (currentImageFile == null) {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           "К шагу должно быть приложено изображение", context);
       return;
     }
     String desc = stepController.text.trim();
     if (desc.isEmpty) {
-      Config.showAlertDialog("Описание не может быть пустым", context);
+      ServiceIO.showAlertDialog("Описание не может быть пустым", context);
       return;
     }
     int waitTimeMins = 0;

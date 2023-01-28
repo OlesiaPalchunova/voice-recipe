@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
-import 'package:voice_recipe/pages/loading_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 import 'package:voice_recipe/components/utils/search_field.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
 import '../api/recipes_getter.dart';
 
@@ -151,6 +151,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void handleSearch(String string) {
-    Config.showAlertDialog("К сожалению, поиск сейчас не работает.", context);
+    ServiceIO.showAlertDialog("К сожалению, поиск сейчас не работает.", context);
   }
 }

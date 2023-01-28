@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 class AnimatedButton extends StatefulWidget {
   AnimatedButton({

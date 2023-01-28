@@ -11,8 +11,9 @@ import 'package:voice_recipe/components/constructor_views/ingredients_label.dart
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/recipes_info.dart';
 
 class CreateRecipePage extends StatefulWidget {
@@ -163,12 +164,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       fontSize: CreateRecipePage.generalFontSize(context));
 
   void submitRecipe() async {
-    if (!Config.loggedIn) {
-      Config.showLoginInviteDialog(context);
+    if (!ServiceIO.loggedIn) {
+      ServiceIO.showLoginInviteDialog(context);
       return;
     }
     if (CreateHeaderLabelState.current == null) {
-      Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+      ServiceIO.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
       return;
     }
     bool gotHeaders = CreateHeaderLabelState.current!.saveHeaders();
@@ -176,11 +177,11 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       return;
     }
     if (ingredients.isEmpty) {
-      Config.showAlertDialog("У рецепта должны быть ингредиенты", context);
+      ServiceIO.showAlertDialog("У рецепта должны быть ингредиенты", context);
       return;
     }
     if (steps.isEmpty) {
-      Config.showAlertDialog("У рецепта должен быть хотя бы один шаг", context);
+      ServiceIO.showAlertDialog("У рецепта должен быть хотя бы один шаг", context);
       return;
     }
     createdRecipe = Recipe(
@@ -197,31 +198,31 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
       Future.delayed(const Duration(milliseconds: 2000), () {
         if (recipeId == RecipesSender.fail) {
-          Config.showAlertDialog(
+          ServiceIO.showAlertDialog(
               "Приносим свои извинения, сервер не отвечает", context);
         } else {
-          UserDbManager().addNewCreated(Config.user!.uid, recipeId);
+          UserDbManager().addNewCreated(ServiceIO.user!.uid, recipeId);
         }
       });
       return recipeId != RecipesSender.fail;
     }, onSuccess: () {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           "Ваш рецепт был успешно сохранен!\n"
           "Вы всегда можете его просмотреть в разделе\n"
           "Профиль > Мои рецепты",
           context);
       if (CreateHeaderLabelState.current == null) {
-        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        ServiceIO.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
       CreateHeaderLabelState.current!.clear();
       if (CreateIngredientsLabelState.current == null) {
-        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        ServiceIO.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
       CreateIngredientsLabelState.current!.clear();
       if (CreateStepsLabelState.current == null) {
-        Config.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
+        ServiceIO.showAlertDialog("Внутренняя ошибка, просим прощения.", context);
         return;
       }
       CreateStepsLabelState.current!.clear();

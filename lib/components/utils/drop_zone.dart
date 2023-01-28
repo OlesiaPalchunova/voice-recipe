@@ -2,8 +2,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../buttons/classic_button.dart';
 
 class ImageDropZone extends StatefulWidget {
@@ -106,7 +107,7 @@ class _ImageDropZoneState extends State<ImageDropZone> {
       highlighted = false;
     });
     if (!allowedMimes.contains(mime)) {
-      Future.microtask(() => Config.showAlertDialog("Допустимые форматы: jpeg, jpg, png", context));
+      Future.microtask(() => ServiceIO.showAlertDialog("Допустимые форматы: jpeg, jpg, png", context));
       return;
     }
     widget.onDrop(DroppedFile(name: name, mime: mime, url: url, size: size));

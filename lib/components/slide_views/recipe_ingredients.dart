@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/labels/time_label.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 class IngredientsSlideView extends StatelessWidget {
   const IngredientsSlideView({

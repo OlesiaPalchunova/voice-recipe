@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:routemaster/routemaster.dart';
 // import 'package:flutter_share_me/flutter_share_me.dart';
 
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 enum ShareOption {
   whatsapp,

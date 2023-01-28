@@ -4,10 +4,11 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -37,8 +38,8 @@ class AccountPage extends StatelessWidget {
                       alignment: Alignment.center,
                       child: CollectionHeaderCard(
                         onTap: () async {
-                          if (!Config.loggedIn) {
-                            Config.showLoginInviteDialog(context);
+                          if (!ServiceIO.loggedIn) {
+                            ServiceIO.showLoginInviteDialog(context);
                             return;
                           }
                           Routemaster.of(context).push('${FutureCollectionPage.route}created');

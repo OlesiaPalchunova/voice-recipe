@@ -12,8 +12,9 @@ import 'package:voice_recipe/components/review_views/comment_card.dart';
 import 'package:voice_recipe/components/review_views/star_panel.dart';
 import 'package:voice_recipe/model/comments_model.dart';
 import 'package:voice_recipe/model/db/comment_db_manager.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
 import 'package:share_plus/share_plus.dart';
@@ -183,7 +184,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                                 onPressed: () async {
                                   await Clipboard.setData(
                                       ClipboardData(text: recipeLink));
-                                  Future.microtask(() => Config.showAlertDialog(
+                                  Future.microtask(() => ServiceIO.showAlertDialog(
                                       "Ссылка успешно скопирована", context));
                                 },
                                 icon: Icon(
@@ -235,7 +236,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                             textController: ReviewsSlide.commentController,
                             onSubmit: _submitComment,
                             onCancel: () {},
-                            profileImageUrl: Config.loggedIn
+                            profileImageUrl: ServiceIO.loggedIn
                                 ? FirebaseAuth.instance.currentUser!.photoURL ??
                                     defaultProfileUrl
                                 : defaultProfileUrl),
@@ -265,7 +266,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   Future _updateComment(String newText, String commentId) async {
-    if (newText.isEmpty || !Config.loggedIn) {
+    if (newText.isEmpty || !ServiceIO.loggedIn) {
       return;
     }
     await CommentDbManager().updateComment(
@@ -276,7 +277,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   Future _submitComment(String result) async {
-    if (result.isEmpty || !Config.loggedIn) {
+    if (result.isEmpty || !ServiceIO.loggedIn) {
       return;
     }
     var user = FirebaseAuth.instance.currentUser!;

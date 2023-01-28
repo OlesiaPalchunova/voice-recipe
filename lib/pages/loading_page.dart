@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../config.dart';
+import '../config/config.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({super.key, this.postfix = ''});

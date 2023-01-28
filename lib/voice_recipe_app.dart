@@ -11,7 +11,7 @@ import 'package:voice_recipe/pages/home_page.dart';
 import 'package:voice_recipe/pages/collections/collections_list_page.dart';
 import 'package:voice_recipe/pages/not_found_page.dart';
 
-import 'config.dart';
+import 'config/config.dart';
 
 class VoiceRecipeApp extends StatefulWidget {
   const VoiceRecipeApp({super.key});

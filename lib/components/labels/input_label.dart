@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class InputLabel extends StatelessWidget {
   const InputLabel(

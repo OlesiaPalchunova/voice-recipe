@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class RateLabel extends StatelessWidget {
   const RateLabel({super.key, required this.rate, this.width = 80,

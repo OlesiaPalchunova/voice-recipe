@@ -7,7 +7,8 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
+import 'package:voice_recipe/services/service_io.dart';
 import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/pages/collections/collections_list_page.dart';
@@ -68,7 +69,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Голосовые команды",
                         onClicked: () {
-                          Config.showAlertDialog(
+                          ServiceIO.showAlertDialog(
                               "В стадии разработки", context);
                         },
                         iconData: Config.darkModeOn
@@ -77,8 +78,8 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Понравившиеся",
                         onClicked: () async {
-                          if (!Config.loggedIn) {
-                            Config.showLoginInviteDialog(context);
+                          if (!ServiceIO.loggedIn) {
+                            ServiceIO.showLoginInviteDialog(context);
                             return;
                           }
                           Routemaster.of(context).push('${FutureCollectionPage.route}favorites');

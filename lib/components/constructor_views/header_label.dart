@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/labels/time_label.dart';
 import 'package:voice_recipe/components/utils/drop_zone.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/dropped_file.dart';
 import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/delete_button.dart';
@@ -154,7 +154,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
   void onCookTimeSet() async {
     TimeOfDay initialTime =
         cookTime == null ? const TimeOfDay(hour: 0, minute: 0) : cookTime!;
-    cookTime = await Config.showTimeInputDialog(
+    cookTime = await ServiceIO.showTimeInputDialog(
         context, "Время приготовления", initialTime);
     if (cookTime != null) {
       setState(() {});
@@ -170,7 +170,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
   void onPrepTimeSet() async {
     TimeOfDay initialTime =
         prepTime == null ? const TimeOfDay(hour: 0, minute: 0) : prepTime!;
-    prepTime = await Config.showTimeInputDialog(
+    prepTime = await ServiceIO.showTimeInputDialog(
         context, "Время подготовки", initialTime);
     if (prepTime != null) {
       setState(() {});
@@ -204,16 +204,16 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
 
   bool saveHeaders() {
     if (currentImageFile == null) {
-      Config.showAlertDialog("Прикрепите изображение обложки", context);
+      ServiceIO.showAlertDialog("Прикрепите изображение обложки", context);
       return false;
     }
     String recipeName = nameController.text.trim();
     if (recipeName.isEmpty) {
-      Config.showAlertDialog("Введите название рецепта", context);
+      ServiceIO.showAlertDialog("Введите название рецепта", context);
       return false;
     }
     if (cookTime == null) {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           "Введите время приготовления (в минутах)", context);
       return false;
     }

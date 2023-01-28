@@ -19,7 +19,7 @@ import 'package:voice_recipe/components/slide_views/recipe_step_view.dart';
 import 'package:voice_recipe/components/timer/timer_view.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 import 'package:voice_recipe/model/voice_commands/close_command.dart';
 import 'package:voice_recipe/model/voice_commands/command.dart';
@@ -30,6 +30,7 @@ import 'package:voice_recipe/model/voice_commands/start_command.dart';
 import 'package:voice_recipe/model/voice_commands/prev_command.dart';
 import 'package:voice_recipe/model/voice_commands/start_timer_command.dart';
 import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
 import '../../model/voice_commands/stop_say.dart';
 
@@ -271,14 +272,14 @@ class _RecipePageState extends State<RecipePage> {
               },
               onMute: () {
                 if (Config.isWeb) {
-                  Config.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  ServiceIO.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
                   return;
                 }
                 _listener.shutdown();
                 },
               onListen: () {
                 if (Config.isWeb) {
-                  Config.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
+                  ServiceIO.showAlertDialog("К сожалению, голосове управление на данный момент работает только в мобильной версии.", context);
                   return;
                 }
                 _listener.start();

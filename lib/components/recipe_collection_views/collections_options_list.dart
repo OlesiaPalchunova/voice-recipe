@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_option_tile.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/sets_info.dart';
 
 class CollectionsOptionsList extends StatefulWidget {

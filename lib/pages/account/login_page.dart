@@ -11,7 +11,7 @@ import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
 import '../../components/buttons/login/ref_button.dart';
 import '../../components/buttons/login/sign_in_button.dart';
-import '../../config.dart';
+import '../../config/config.dart';
 
 enum Method {
   email, google

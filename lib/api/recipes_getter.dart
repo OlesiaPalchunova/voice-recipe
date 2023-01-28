@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:voice_recipe/api/recipes_sender.dart';
 
-import '../config.dart';
+import '../config/config.dart';
 import '../model/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/api_fields.dart';
 import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
 class RecipesGetter {
   static RecipesGetter singleton = RecipesGetter._internal();
@@ -21,7 +22,7 @@ class RecipesGetter {
   }
 
   Future<List<Recipe>> get _favoriteRecipes async {
-    if (!Config.loggedIn) return [];
+    if (!ServiceIO.loggedIn) return [];
     List<int> favIds = await FavoriteRecipesDbManager().getList();
     List<Recipe> res = [];
     for (int id in favIds) {
@@ -34,8 +35,8 @@ class RecipesGetter {
   }
 
   Future<List<Recipe>> get _createdRecipes async {
-    if (!Config.loggedIn) return [];
-    var user = Config.user!;
+    if (!ServiceIO.loggedIn) return [];
+    var user = ServiceIO.user!;
     var userData = await UserDbManager().getUserData(user.uid);
     var favIds = userData[UserDbManager.created];
     List<Recipe> result = [];

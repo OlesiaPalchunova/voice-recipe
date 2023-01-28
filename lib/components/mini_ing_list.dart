@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/slide_views/recipe_ingredients.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 class MiniIngredientsList extends StatefulWidget {
   const MiniIngredientsList({super.key, required this.recipe});

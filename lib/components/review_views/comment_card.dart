@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/comments_model.dart';
 import 'package:voice_recipe/model/db/comment_db_manager.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/users_info.dart';
 import 'new_comment_card.dart';
 
@@ -119,8 +120,8 @@ class _CommentCardState extends State<CommentCard> {
   }
 
   List<PopupMenuEntry<int>> getCommentOptions(BuildContext context) {
-    if (Config.loggedIn) {
-      String uid = Config.user!.uid;
+    if (ServiceIO.loggedIn) {
+      String uid = ServiceIO.user!.uid;
       if (widget.comment.uid == uid) {
         return <PopupMenuEntry<int>>[
           PopupMenuItem(
@@ -141,7 +142,7 @@ class _CommentCardState extends State<CommentCard> {
         value: 1,
         child: getOption("Пожаловаться"),
         onTap: () =>
-            Config.showAlertDialog("Ваша жалоба будет рассмотрена", context),
+            ServiceIO.showAlertDialog("Ваша жалоба будет рассмотрена", context),
       ),
     ];
   }
@@ -174,7 +175,7 @@ class _CommentCardState extends State<CommentCard> {
         initialFocused: true,
         focusNode: CommentCard.editNode,
         textController: editController,
-        profileImageUrl: Config.profileImageUrl,
+        profileImageUrl: ServiceIO.profileImageUrl,
         onSubmit: (text) {
           if (text.trim() != widget.comment.text.trim()) {
             widget.onUpdate(text, widget.commentId);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 
-import '../../config.dart';
+import '../config/config.dart';
 
 class SideBarTile extends StatefulWidget {
   const SideBarTile(

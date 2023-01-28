@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/labels/input_label.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class PasswordLabel extends StatefulWidget {
   const PasswordLabel(

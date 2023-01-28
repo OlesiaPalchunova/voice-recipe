@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/db/favorite_recipes_db_manager.dart';
 import 'package:rive/rive.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
 class FavoritesButton extends StatefulWidget {
   const FavoritesButton(
@@ -51,7 +52,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
     if (!notifyers.containsKey(widget.recipeId)) {
       notifyers[widget.recipeId] = ValueNotifier(false);
     }    
-    if (Config.loggedIn) {
+    if (ServiceIO.loggedIn) {
       checkIfIsFavorite();
     }
     setAuthListener();
@@ -90,8 +91,8 @@ class _FavoritesButtonState extends State<FavoritesButton>
             Widget res = InkWell(
               borderRadius: Config.borderRadiusLarge,
               onTap: () {
-                if (!Config.loggedIn) {
-                  Config.showLoginInviteDialog(context);
+                if (!ServiceIO.loggedIn) {
+                  ServiceIO.showLoginInviteDialog(context);
                   return;
                 }
                 _pressed = !_pressed;

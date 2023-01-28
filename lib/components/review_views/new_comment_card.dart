@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../buttons/classic_button.dart';
 import 'comment_card.dart';
 
@@ -67,14 +68,14 @@ class NewCommentCardState extends State<NewCommentCard> {
             ),
             maxLines: null,
             onTap: () {
-              if (Config.loggedIn) {
+              if (ServiceIO.loggedIn) {
                 setState(() {
                   _focused = true;
                 });
                 return;
               }
               widget.focusNode.unfocus();
-              Config.showLoginInviteDialog(context);
+              ServiceIO.showLoginInviteDialog(context);
             },
             onSubmitted: (s) => onSubmit(),
             decoration: InputDecoration(
@@ -169,7 +170,7 @@ class NewCommentCardState extends State<NewCommentCard> {
   void onSubmit() {
     String text = widget.textController.text;
     if (text.isEmpty) {
-      Config.showAlertDialog("Комментарий не может быть пустым", context);
+      ServiceIO.showAlertDialog("Комментарий не может быть пустым", context);
       return;
     }
     setState(() {

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class FavoriteRecipesDbManager {
   final bool initialized = false;
@@ -14,10 +15,10 @@ class FavoriteRecipesDbManager {
   FavoriteRecipesDbManager._internal();
 
   Future<void> initialize() async {
-    if (initialized || !Config.loggedIn) {
+    if (initialized || !ServiceIO.loggedIn) {
       return;
     }
-    var user = Config.user!;
+    var user = ServiceIO.user!;
     try {
       var userData = await UserDbManager().getUserData(user.uid);
       List<dynamic> favoritesFromBd = userData[UserDbManager.favorites];
@@ -47,7 +48,7 @@ class FavoriteRecipesDbManager {
     if (!initialized) {
       await initialize();
     }
-    var user = Config.user!;
+    var user = ServiceIO.user!;
     bool added = await UserDbManager().addNewFavorite(user.uid, recipeId);
     if (added) {
       favorites.add(recipeId);
@@ -59,7 +60,7 @@ class FavoriteRecipesDbManager {
     if (!initialized) {
       await initialize();
     }
-    var user = Config.user!;
+    var user = ServiceIO.user!;
     bool removed = await UserDbManager().removeFavorite(user.uid, recipeId);
     if (removed) {
       favorites.remove(recipeId);

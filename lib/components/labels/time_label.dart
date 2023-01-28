@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';

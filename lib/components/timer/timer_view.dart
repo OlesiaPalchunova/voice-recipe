@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/services/local_notice_service.dart';
 // import 'package:audioplayers/audioplayers.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 class TimerView extends StatefulWidget {
   const TimerView(

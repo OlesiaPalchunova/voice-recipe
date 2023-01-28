@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class ClassicButton extends StatefulWidget {
   const ClassicButton(

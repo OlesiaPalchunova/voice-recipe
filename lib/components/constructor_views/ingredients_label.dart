@@ -2,8 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/delete_button.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/recipes_info.dart';
 import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/classic_button.dart';
@@ -174,7 +175,7 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
     String ingName = ingNameController.text.trim();
     String ingCount = ingCountController.text.trim();
     if (ingName.isEmpty | ingCount.isEmpty) {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           "Ингредиент или его количество\n"
           "не может быть пустым",
           context);
@@ -184,13 +185,13 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
     double? count = double.tryParse(countStr);
     String unitStr = ingCount.replaceAll(regExp, '').trim();
     if (count == null) {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           errorMsg,
           context);
       return;
     }
     if (unitStr.isEmpty) {
-      Config.showAlertDialog(
+      ServiceIO.showAlertDialog(
           errorMsg,
           context);
       return;

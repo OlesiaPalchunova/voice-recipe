@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 class ListenButton extends StatefulWidget {
   const ListenButton({super.key,

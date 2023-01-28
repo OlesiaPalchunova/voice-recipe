@@ -7,7 +7,7 @@ import '../../components/buttons/classic_button.dart';
 import '../../components/buttons/login/sign_in_button.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
-import '../../config.dart';
+import '../../config/config.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
 class RegisterPage extends StatefulWidget {

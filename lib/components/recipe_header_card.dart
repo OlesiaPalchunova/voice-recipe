@@ -6,7 +6,7 @@ import 'package:voice_recipe/components/review_views/rate_label.dart';
 import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
 
 import '../model/recipes_info.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 
 import '../pages/home_page.dart';
 import 'labels/time_label.dart';

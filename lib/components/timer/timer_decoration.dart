@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class TimerDecoration extends StatelessWidget {
   const TimerDecoration({super.key, required this.waitTime});

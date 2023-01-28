@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../../model/sets_info.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 

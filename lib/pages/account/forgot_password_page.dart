@@ -4,7 +4,7 @@ import 'package:voice_recipe/components/labels/input_label.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

@@ -1,17 +1,11 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/components/buttons/classic_button.dart';
-import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
-import 'package:voice_recipe/services/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'components/appbars/title_logo_panel.dart';
+import '../components/appbars/title_logo_panel.dart';
 
 class GradientColors {
   final List<Color> colors;
@@ -30,6 +24,8 @@ class GradientColors {
 enum AppTheme { dark, light }
 
 class Config {
+  static ValueNotifier<bool> darkThemeProvider = ValueNotifier(false);
+
   static const appName = "Talky Chef";
   static const fontFamily = "Montserrat";
   static const fontFamilyBold = "MontserratBold";
@@ -37,9 +33,8 @@ class Config {
   static const largeRadius = 16.0;
   static const padding = 10.0;
   static const margin = 10.0;
-  static ValueNotifier<bool> darkThemeProvider = ValueNotifier(false);
-  static bool get darkModeOn => darkThemeProvider.value;
 
+  static bool get darkModeOn => darkThemeProvider.value;
   static const Duration shortAnimationTime = Duration(milliseconds: 150);
   static const Duration animationTime = Duration(milliseconds: 200);
   static const maxRecipeSlideWidth = 600.0;
@@ -56,9 +51,10 @@ class Config {
   static const backGroundDecorationImage = DecorationImage(
       image: AssetImage("assets/images/decorations/create_back.jpg"),
       fit: BoxFit.cover);
-  static const title = TitleLogoPanel(title: Config.appName);
   static var notificationsOn = true;
-  static AppBar get defaultAppBar => title.appBar();
+
+  static AppBar get defaultAppBar =>
+      const TitleLogoPanel(title: Config.appName).appBar();
 
   static init() async {
     darkThemeProvider.value = await DarkThemePreference().getTheme();
@@ -132,26 +128,26 @@ class Config {
           .copyWith(
               background: const MaterialColor(0xff000000, Config.colorScheme)));
 
-  static String get profileImageUrl =>
-      loggedIn ? user!.photoURL ?? defaultProfileUrl : defaultProfileUrl;
-
-  static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
-
   static Color get appBarColor => darkModeOn ? Colors.black87 : Colors.white;
 
   static Color get notPressed => darkModeOn ? darkThemeBackColor : Colors.white;
 
   static Color get pressed => darkModeOn ? darkBlue : Colors.grey.shade100;
 
-  static Color get backgroundColor => darkModeOn ? darkThemeBackColor : Colors.white;
+  static Color get backgroundColor =>
+      darkModeOn ? darkThemeBackColor : Colors.white;
 
-  static Color get backgroundEdgeColor => darkModeOn ? darkThemeBackColor :Colors.grey.shade200;
+  static Color get backgroundEdgeColor =>
+      darkModeOn ? darkThemeBackColor : Colors.grey.shade200;
 
-  static Color get backgroundLightedColor => darkModeOn ? Colors.grey.shade900 : Colors.white;
+  static Color get backgroundLightedColor =>
+      darkModeOn ? Colors.grey.shade900 : Colors.white;
 
-  static Color get iconBackColor => darkModeOn ? darkIconBackColor : lightIconBackColor;
+  static Color get iconBackColor =>
+      darkModeOn ? darkIconBackColor : lightIconBackColor;
 
-  static Color get disabledIconBackColor => darkModeOn ? darkBlue : lightIconDisabledBackColor;
+  static Color get disabledIconBackColor =>
+      darkModeOn ? darkBlue : lightIconDisabledBackColor;
 
   static Color get iconColor => darkModeOn ? darkIconColor : lightIconColor;
 
@@ -165,88 +161,30 @@ class Config {
       ? GradientColors.sets[id % GradientColors.sets.length].last
       : GradientColors.sets[id % GradientColors.sets.length].first;
 
-  static User? get user => FirebaseAuth.instance.currentUser;
+  static Color getBackColor(int id) => darkModeOn
+      ? darkThemeBackColor
+      : lightBackColors[id % lightBackColors.length];
 
-  static void showLoginInviteDialog(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              contentPadding: const EdgeInsets.all(Config.padding * 2),
-              actionsPadding: const EdgeInsets.all(Config.padding * 2),
-              backgroundColor: Config.backgroundEdgeColor,
-              content: Text(
-                "Войдите, чтобы сохранять понравившиеся\nрецепты и оставлять комментарии",
-                style: TextStyle(
-                    color: iconColor, fontFamily: fontFamily, fontSize: 18),
-              ),
-              actions: [
-                ClassicButton(
-                  text: "Войти",
-                  fontSize: 20,
-                  onTap: () {
-                    Routemaster.of(context).pop();
-                    Routemaster.of(context).push(LoginPage.route);
-                  },
-                )
-              ],
-            ));
-  }
+  static Color getBackEdgeColor(int id) =>
+      darkModeOn ? darkBlue : lightBackColors[id % lightBackColors.length];
 
-  static Future<TimeOfDay?> showTimeInputDialog(BuildContext context, String helpText,
-      [TimeOfDay initialTime = const TimeOfDay(hour: 0, minute: 0)]) async {
-    TimeOfDay? selectedTime = await showTimePicker(
-        context: context,
-        helpText: helpText,
-        initialEntryMode: TimePickerEntryMode.dial,
-        hourLabelText: "Часы",
-        minuteLabelText: "Минуты",
-        initialTime: initialTime
-    );
-    return selectedTime;
-  }
+  static double pageHeight(BuildContext context) =>
+      MediaQuery.of(context).size.height;
 
-  static void showAlertDialog(String text, BuildContext context,
-      [bool noShadow = false]) async {
-    final russianText = await Translator().translateToRu(text);
-    showDialog(
-        barrierColor: noShadow ? Colors.transparent : Colors.black54,
-        context: context,
-        builder: (context) => AlertDialog(
-              backgroundColor: Config.backgroundEdgeColor,
-              content: Text(
-                russianText,
-                style: TextStyle(
-                    color: Config.iconColor,
-                    fontFamily: Config.fontFamily,
-                    fontSize: 20),
-              ),
-            ));
-  }
+  static double pageWidth(BuildContext context) =>
+      MediaQuery.of(context).size.width;
 
-  static void showProgressCircle(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (content) => const Center(
-              child: CircularProgressIndicator(),
-            ));
-  }
+  static double widePageWidth(BuildContext context) =>
+      min(maxPageWidth, MediaQuery.of(context).size.width);
 
-  static Color getBackColor(int id) => darkModeOn ? darkThemeBackColor
-: lightBackColors[id % lightBackColors.length];
+  static double recipeSlideWidth(BuildContext context) =>
+      min(maxRecipeSlideWidth, pageWidth(context));
 
-  static Color getBackEdgeColor(int id) => darkModeOn ? darkBlue : lightBackColors[id % lightBackColors.length];
+  static double constructorWidth(BuildContext context) =>
+      min(maxConstructorWidth, pageWidth(context));
 
-  static double pageHeight(BuildContext context) => MediaQuery.of(context).size.height;
-
-  static double pageWidth(BuildContext context) => MediaQuery.of(context).size.width;
-
-  static double widePageWidth(BuildContext context) => min(maxPageWidth, MediaQuery.of(context).size.width);
-
-  static double recipeSlideWidth(BuildContext context) => min(maxRecipeSlideWidth, pageWidth(context));
-
-  static double constructorWidth(BuildContext context) => min(maxConstructorWidth, pageWidth(context));
-
-  static double adWidth(BuildContext context) => min(maxAdWidth, pageWidth(context));
+  static double adWidth(BuildContext context) =>
+      min(maxAdWidth, pageWidth(context));
 
   static double loginPageWidth(BuildContext context) {
     var pw = pageWidth(context);
@@ -262,8 +200,9 @@ class Config {
     return ph;
   }
 
-  static bool isWide(BuildContext context) => pageWidth(context) >= pageHeight(context) * 1.5;
+  static bool isWide(BuildContext context) =>
+      pageWidth(context) >= pageHeight(context) * 1.5;
 
-  static bool isDesktop(BuildContext context) => pageWidth(context) >= pageHeight(context);
-
+  static bool isDesktop(BuildContext context) =>
+      pageWidth(context) >= pageHeight(context);
 }

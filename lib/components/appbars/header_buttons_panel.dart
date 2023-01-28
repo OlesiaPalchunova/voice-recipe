@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 
 class HeaderButtonsPanel extends StatelessWidget {

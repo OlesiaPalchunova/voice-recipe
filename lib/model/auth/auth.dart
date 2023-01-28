@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:voice_recipe/model/auth/vk.dart';
+import 'package:voice_recipe/services/service_io.dart';
 
-import '../../config.dart';
+import '../../config/config.dart';
 import '../db/user_db_manager.dart';
 import '../users_info.dart';
 
@@ -37,7 +37,7 @@ class AuthenticationManager {
       }
     } on FirebaseException catch(e) {
       Future.delayed(const Duration(milliseconds: delayMillis), () {
-        Config.showAlertDialog(e.message!, context);
+        ServiceIO.showAlertDialog(e.message!, context);
       });
       return false;
     }
@@ -68,7 +68,7 @@ class AuthenticationManager {
           password: password);
     } on FirebaseException catch (e) {
       Future.delayed(const Duration(milliseconds: delayMillis), () {
-        Config.showAlertDialog(e.message!, context);
+        ServiceIO.showAlertDialog(e.message!, context);
       });
       return false;
     }
@@ -79,7 +79,7 @@ class AuthenticationManager {
       String passwordAgain, String firstName, String secondName) async {
     if (password != passwordAgain) {
       Future.delayed(const Duration(milliseconds: delayMillis), () {
-        Config.showAlertDialog("Пароли не совпадают", context);
+        ServiceIO.showAlertDialog("Пароли не совпадают", context);
       });
       return false;
     }
@@ -97,7 +97,7 @@ class AuthenticationManager {
           user.photoURL ?? defaultProfileUrl);
     } on FirebaseException catch (e) {
       Future.delayed(const Duration(milliseconds: delayMillis), () {
-        Config.showAlertDialog(e.message!, context);
+        ServiceIO.showAlertDialog(e.message!, context);
       });
       return false;
     }
@@ -105,13 +105,13 @@ class AuthenticationManager {
   }
 
   Future passwordReset(BuildContext context, String email) async {
-    Config.showProgressCircle(context);
+    ServiceIO.showProgressCircle(context);
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      await Future.microtask(() => Config.showAlertDialog(
+      await Future.microtask(() => ServiceIO.showAlertDialog(
           "Подтверждение отправлено вам на почту.", context));
     } on FirebaseException catch (e) {
-      Config.showAlertDialog(e.message ?? "Возникла ошибка", context);
+      ServiceIO.showAlertDialog(e.message ?? "Возникла ошибка", context);
     }
     await Future.microtask(() => Navigator.of(context).pop());
   }

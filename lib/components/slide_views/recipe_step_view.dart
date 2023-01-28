@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/timer/timer_view.dart';
 
 class RecipeStepView extends StatelessWidget {
