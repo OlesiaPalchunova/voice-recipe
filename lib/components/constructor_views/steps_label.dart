@@ -4,7 +4,7 @@ import 'package:voice_recipe/components/timer/timer_decoration.dart';
 import '../../config.dart';
 import '../../model/dropped_file.dart';
 import '../../model/recipes_info.dart';
-import '../../screens/constructor/create_recipe_screen.dart';
+import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
 import '../labels/time_label.dart';
@@ -54,7 +54,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CreateRecipeScreen.title(context, "Шаги"),
+        CreateRecipePage.title(context, "Шаги"),
         const SizedBox(
           height: Config.padding,
         ),
@@ -64,7 +64,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
             children: steps.map(buildStep).toList(),
           ),
         ),
-        CreateRecipeScreen.title(context, "Изображение для шага"),
+        CreateRecipePage.title(context, "Изображение для шага"),
         Container(
           padding: Config.paddingAll,
           child: Column(
@@ -72,9 +72,9 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
             children: [
               currentImageFile == null
                   ? ImageDropZone(
-                      customButtonColor: CreateRecipeScreen.buttonColor,
+                      customButtonColor: CreateRecipePage.buttonColor,
                       onDrop: handleDropFile,
-                      fontSize: CreateRecipeScreen.generalFontSize(context),
+                      fontSize: CreateRecipePage.generalFontSize(context),
                     )
                   : stepImagePreview(),
               const SizedBox(
@@ -86,7 +86,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 focusNode: widget.descFocusNode,
                 labelText: "Описание шага",
                 controller: stepController,
-                fontSize: CreateRecipeScreen.generalFontSize(context),
+                fontSize: CreateRecipePage.generalFontSize(context),
                 onSubmit: addNewStep,
               ),
               const SizedBox(
@@ -104,12 +104,12 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
               Container(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
-                    width: CreateRecipeScreen.pageWidth(context) * .5,
+                    width: CreateRecipePage.pageWidth(context) * .5,
                     child: ClassicButton(
-                      customColor: CreateRecipeScreen.buttonColor,
+                      customColor: CreateRecipePage.buttonColor,
                       onTap: addNewStep,
                       text: "Добавить шаг",
-                      fontSize: CreateRecipeScreen.generalFontSize(context),
+                      fontSize: CreateRecipePage.generalFontSize(context),
                     )),
               )
             ],
@@ -176,7 +176,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                         : Container(
                             margin: Config.paddingAll,
                             alignment: Alignment.center,
-                            width: CreateRecipeScreen.pageWidth(context) * .5,
+                            width: CreateRecipePage.pageWidth(context) * .5,
                             height: 50,
                             child: TimerDecoration(
                                 waitTime: Duration(minutes: step.waitTime)))

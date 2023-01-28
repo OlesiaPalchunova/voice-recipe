@@ -15,13 +15,13 @@ import 'package:voice_recipe/components/utils/animated_loading.dart';
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 
-class CreateRecipeScreen extends StatefulWidget {
-  const CreateRecipeScreen({super.key});
+class CreateRecipePage extends StatefulWidget {
+  const CreateRecipePage({super.key});
 
   static const route = '/constructor';
 
   @override
-  State<CreateRecipeScreen> createState() => _CreateRecipeScreenState();
+  State<CreateRecipePage> createState() => _CreateRecipePageState();
 
   static double generalFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 16 : 14;
@@ -50,7 +50,7 @@ class CreateRecipeScreen extends StatefulWidget {
 
 enum HeaderField { name, faceImageUrl, cookTimeMins, prepTimeMins }
 
-class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
+class _CreateRecipePageState extends State<CreateRecipePage> {
   static final List<Ingredient> ingredients = [];
   static final List<RecipeStep> steps = [];
   static final Map<HeaderField, dynamic> headers = {};
@@ -106,7 +106,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
                   margin:
                       const EdgeInsets.symmetric(vertical: Config.margin * 2),
                   alignment: Alignment.topCenter,
-                  width: CreateRecipeScreen.pageWidth(context),
+                  width: CreateRecipePage.pageWidth(context),
                   child: Column(
                     children: allLabels(context),
                   ),
@@ -144,13 +144,13 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
         margin: Config.paddingAll,
         alignment: Alignment.centerLeft,
         child: SizedBox(
-            width: CreateRecipeScreen.pageWidth(context) / 2,
+            width: CreateRecipePage.pageWidth(context) / 2,
             child: SizedBox(
                 child: ClassicButton(
-              customColor: CreateRecipeScreen.buttonColor,
+              customColor: CreateRecipePage.buttonColor,
               onTap: submitRecipe,
               text: "Сохранить рецепт",
-              fontSize: CreateRecipeScreen.generalFontSize(context),
+              fontSize: CreateRecipePage.generalFontSize(context),
             ))),
       ),
     ];
@@ -160,7 +160,7 @@ class _CreateRecipeScreenState extends State<CreateRecipeScreen> {
   TextStyle get ingStyle => TextStyle(
       color: Config.iconColor,
       fontFamily: Config.fontFamily,
-      fontSize: CreateRecipeScreen.generalFontSize(context));
+      fontSize: CreateRecipePage.generalFontSize(context));
 
   void submitRecipe() async {
     if (!Config.loggedIn) {

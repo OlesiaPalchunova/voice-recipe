@@ -7,10 +7,10 @@ import 'package:voice_recipe/components/recipe_collection_views/collection_heade
 import 'package:voice_recipe/config.dart';
 import 'package:voice_recipe/model/sets_info.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
+import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+class AccountPage extends StatelessWidget {
+  const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class AccountScreen extends StatelessWidget {
                             Config.showLoginInviteDialog(context);
                             return;
                           }
-                          Routemaster.of(context).push('${FutureCollectionScreen.route}created');
+                          Routemaster.of(context).push('${FutureCollectionPage.route}created');
                         },
                         showTiles: false,
                         set: created,

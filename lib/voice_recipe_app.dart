@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/account/auth_screen.dart';
-import 'package:voice_recipe/screens/account/forgot_password_screen.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
-import 'package:voice_recipe/screens/account/register_screen.dart';
-import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
-import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
-import 'package:voice_recipe/screens/recipe/future_recipe_screen.dart';
-import 'package:voice_recipe/screens/home_screen.dart';
-import 'package:voice_recipe/screens/collections/collections_list_screen.dart';
-import 'package:voice_recipe/screens/not_found_screen.dart';
+import 'package:voice_recipe/pages/account/auth_page.dart';
+import 'package:voice_recipe/pages/account/forgot_password_page.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
+import 'package:voice_recipe/pages/account/register_page.dart';
+import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
+import 'package:voice_recipe/pages/collections/future_collection_page.dart';
+import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
+import 'package:voice_recipe/pages/home_page.dart';
+import 'package:voice_recipe/pages/collections/collections_list_page.dart';
+import 'package:voice_recipe/pages/not_found_page.dart';
 
 import 'config.dart';
 
@@ -23,31 +23,31 @@ class VoiceRecipeApp extends StatefulWidget {
 class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
   final routes = RouteMap(
       onUnknownRoute: (route) {
-        return const MaterialPage(child: NotFoundScreen());
+        return const MaterialPage(child: NotFoundPage());
       },
       routes: {
-        Home.route: (_) => const MaterialPage(child: Home()),
-        CreateRecipeScreen.route: (_) =>
-            const MaterialPage(child: CreateRecipeScreen()),
-        AuthScreen.route: (_) => const MaterialPage(child: AuthScreen()),
-        CollectionsListScreen.route: (_) =>
-            const MaterialPage(child: CollectionsListScreen()),
-        LoginScreen.route: (_) => const MaterialPage(child: LoginScreen()),
-        RegisterScreen.route: (_) =>
-            const MaterialPage(child: RegisterScreen()),
-        ForgotPasswordScreen.route: (_) =>
-            const MaterialPage(child: ForgotPasswordScreen()),
-        '${FutureRecipeScreen.route}:id': (info) {
+        HomePage.route: (_) => const MaterialPage(child: HomePage()),
+        CreateRecipePage.route: (_) =>
+            const MaterialPage(child: CreateRecipePage()),
+        AuthPage.route: (_) => const MaterialPage(child: AuthPage()),
+        CollectionsListPage.route: (_) =>
+            const MaterialPage(child: CollectionsListPage()),
+        LoginPage.route: (_) => const MaterialPage(child: LoginPage()),
+        RegisterPage.route: (_) =>
+            const MaterialPage(child: RegisterPage()),
+        ForgotPasswordPage.route: (_) =>
+            const MaterialPage(child: ForgotPasswordPage()),
+        '${FutureRecipePage.route}:id': (info) {
           int id = int.parse(info.pathParameters['id']!);
-          return MaterialPage(child: FutureRecipeScreen(recipeId: id));
+          return MaterialPage(child: FutureRecipePage(recipeId: id));
         },
-        '${FutureCollectionScreen.route}:name': (info) {
+        '${FutureCollectionPage.route}:name': (info) {
           String name = info.pathParameters['name']!;
-          return MaterialPage(child: FutureCollectionScreen(name: name));
+          return MaterialPage(child: FutureCollectionPage(name: name));
         },
-        '${FutureCollectionScreen.route}:name/:id': (info) {
+        '${FutureCollectionPage.route}:name/:id': (info) {
           int id = int.parse(info.pathParameters['id']!);
-          return MaterialPage(child: FutureRecipeScreen(recipeId: id));
+          return MaterialPage(child: FutureRecipePage(recipeId: id));
         }
       });
 

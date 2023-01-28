@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:blur/blur.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
+import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
 
 import '../config.dart';
@@ -88,7 +88,7 @@ class _AdvertisementState extends State<Advertisement> {
                       width: labelWidth(context) / 2,
                       child: AnimatedButton(
                           onTap: () {
-                            Routemaster.of(context).push(CreateRecipeScreen.route);
+                            Routemaster.of(context).push(CreateRecipePage.route);
                           },
                           text: "Перейти"
                       )

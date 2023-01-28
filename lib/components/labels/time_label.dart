@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config.dart';
-import '../../screens/constructor/create_recipe_screen.dart';
+import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
 
@@ -69,12 +69,12 @@ class TimeLabel extends StatelessWidget {
         ? ClassicButton(
       onTap: onSetTap,
       text: buttonText,
-        customColor: CreateRecipeScreen.buttonColor,
-      fontSize: CreateRecipeScreen.generalFontSize(context),
+        customColor: CreateRecipePage.buttonColor,
+      fontSize: CreateRecipePage.generalFontSize(context),
     )
         : Container(
       decoration: BoxDecoration(
-          color: CreateRecipeScreen.buttonColor.withOpacity(.9),
+          color: CreateRecipePage.buttonColor.withOpacity(.9),
           borderRadius: Config.borderRadiusLarge),
       padding: const EdgeInsets.symmetric(horizontal: Config.padding),
       child: Row(
@@ -85,10 +85,10 @@ class TimeLabel extends StatelessWidget {
               style: TextStyle(
                   fontFamily: Config.fontFamily,
                   color: Config.iconColor,
-                  fontSize: CreateRecipeScreen.generalFontSize(context)),
+                  fontSize: CreateRecipePage.generalFontSize(context)),
             ),
             SizedBox(
-              width: CreateRecipeScreen.pageWidth(context) * .4,
+              width: CreateRecipePage.pageWidth(context) * .4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

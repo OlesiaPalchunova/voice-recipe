@@ -5,8 +5,8 @@ import '../../components/recipe_header_card.dart';
 import '../../config.dart';
 import '../../model/recipes_info.dart';
 
-class CollectionScreen extends StatefulWidget {
-  const CollectionScreen({super.key,
+class CollectionPage extends StatefulWidget {
+  const CollectionPage({super.key,
     required this.recipes, required this.setName,
     this.showLikes = true
   });
@@ -16,10 +16,10 @@ class CollectionScreen extends StatefulWidget {
   final bool showLikes;
 
   @override
-  State<CollectionScreen> createState() => _CollectionScreenState();
+  State<CollectionPage> createState() => _CollectionPageState();
 }
 
-class _CollectionScreenState extends State<CollectionScreen> {
+class _CollectionPageState extends State<CollectionPage> {
   late final recipes = widget.recipes;
   late final isLaptopView = Config.pageWidth(context)
       > Config.pageHeight(context);

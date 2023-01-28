@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
-import 'package:voice_recipe/screens/account/profile_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
+import 'package:voice_recipe/pages/account/profile_page.dart';
 
-class AuthScreen extends StatelessWidget{
-  const AuthScreen({super.key});
+class AuthPage extends StatelessWidget{
+  const AuthPage({super.key});
 
   static const route = '/profile';
 
@@ -15,9 +15,9 @@ class AuthScreen extends StatelessWidget{
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const AccountScreen();
+            return const AccountPage();
           }
-          return const LoginScreen();
+          return const LoginPage();
         },
       ),
     );

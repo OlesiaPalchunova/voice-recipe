@@ -4,16 +4,16 @@ import 'package:voice_recipe/model/sets_info.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 import 'package:voice_recipe/config.dart';
 
-class CollectionsListScreen extends StatefulWidget {
-  const CollectionsListScreen({super.key});
+class CollectionsListPage extends StatefulWidget {
+  const CollectionsListPage({super.key});
 
   static const route = "/collections";
 
   @override
-  State<CollectionsListScreen> createState() => _CollectionsListScreen();
+  State<CollectionsListPage> createState() => _CollectionsListPage();
 }
 
-class _CollectionsListScreen extends State<CollectionsListScreen> {
+class _CollectionsListPage extends State<CollectionsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

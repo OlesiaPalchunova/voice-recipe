@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
+import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 
 import '../../config.dart';
 import '../../model/sets_info.dart';
@@ -104,6 +104,6 @@ class _CollectionOptionTileState extends State<CollectionOptionTile> {
 
   void _navigateToSet(BuildContext context, Collection setOption) async {
     Routemaster.of(context)
-        .push('${FutureCollectionScreen.route}${setOption.collectionName}');
+        .push('${FutureCollectionPage.route}${setOption.collectionName}');
   }
 }

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/labels/input_label.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
 
 import '../../config.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({super.key});
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   static const route = '/login/reset-password';
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _emailController = TextEditingController();
   final _emailFocusNode = FocusNode();
 
@@ -72,7 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   const SizedBox(
                     height: Config.margin,
                   ),
-                  LoginScreen.inputWrapper(
+                  LoginPage.inputWrapper(
                       InputLabel(
                           onSubmit: () => AuthenticationManager()
                               .passwordReset(context, email),

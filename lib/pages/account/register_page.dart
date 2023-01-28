@@ -8,18 +8,18 @@ import '../../components/buttons/login/sign_in_button.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
 import '../../config.dart';
-import 'login_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   static const route = '/login/register';
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterPageState extends State<RegisterPage> {
   final _firstNameController = TextEditingController();
   final _secondNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: Config.loginPageWidth(context),
                   child: Column(
                     children: [
-                      LoginScreen.voiceRecipeIcon(
+                      LoginPage.voiceRecipeIcon(
                           context,
                           Config.loginPageHeight(context) / 4,
                           Config.loginPageHeight(context) / 6
@@ -85,26 +85,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 InputLabel(
                                     focusNode: _firstNameFocusNode,
                                     labelText: "Имя",
                                     controller: _firstNameController),
                                 context),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 InputLabel(
                                     focusNode: _secondNameFocusNode,
                                     labelText: "Фамилия",
                                     controller: _secondNameController),
                                 context),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 InputLabel(
                                   focusNode: _emailFocusNode,
                                   labelText: 'Email',
                                   controller: _emailController,
                                 ),
                                 context),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 PasswordLabel(
                                   focusNode: _passwordFocusNode,
                                   hintText: "Пароль",
@@ -112,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   onSubmit: () {},
                                 ),
                                 context),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 PasswordLabel(
                                   focusNode: _confirmPasswordFocusNode,
                                   hintText: "Подтвердите пароль",
@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               margin: const EdgeInsets.symmetric(
                                   vertical: Config.margin),
                               height: Config.loginPageHeight(context) / 12,
-                              width: LoginScreen.buttonWidth(context),
+                              width: LoginPage.buttonWidth(context),
                               child: ClassicButton(
                                 onTap: () => register(Method.email),
                                 text: "Создать аккаунт",
@@ -136,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: Column(
                                 children: [
                                   SignInButton(
-                                      width: LoginScreen.buttonWidth(context),
+                                      width: LoginPage.buttonWidth(context),
                                       backgroundColor:
                                       Config.darkModeOn ? const Color(0xff202020) : Colors.white,
                                       textColor: Config.darkModeOn ? Colors.white : Colors.black,

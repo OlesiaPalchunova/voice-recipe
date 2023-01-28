@@ -3,8 +3,8 @@ import 'package:rive/rive.dart';
 
 import '../config.dart';
 
-class LoadingScreen extends StatelessWidget {
-  const LoadingScreen({super.key, this.postfix = ''});
+class LoadingPage extends StatelessWidget {
+  const LoadingPage({super.key, this.postfix = ''});
 
   final String postfix;
 

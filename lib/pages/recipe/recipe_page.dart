@@ -33,8 +33,8 @@ import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
 
 import '../../model/voice_commands/stop_say.dart';
 
-class RecipeScreen extends StatefulWidget {
-  RecipeScreen({
+class RecipePage extends StatefulWidget {
+  RecipePage({
     Key? key,
     required this.recipe,
   }) : super(key: key) {
@@ -57,10 +57,10 @@ class RecipeScreen extends StatefulWidget {
   final List<Widget> slides = [];
 
   @override
-  State<RecipeScreen> createState() => _RecipeScreenState();
+  State<RecipePage> createState() => _RecipePageState();
 }
 
-class _RecipeScreenState extends State<RecipeScreen> {
+class _RecipePageState extends State<RecipePage> {
   static const faceSlideId = 0;
   static const ingredientsSlideId = 1;
   static const firstStepSlideId = 2;
@@ -106,7 +106,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   void dispose() {
     super.dispose();
     stepsMap[widget.recipe.id] = _slideId;
-    RecipeScreen.tts.stop();
+    RecipePage.tts.stop();
     _listener.shutdown();
   }
 
@@ -305,7 +305,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   void _setSayingEndHandler(void Function() callback, int slideId) {
-    RecipeScreen.tts.setCompletionHandler(() {
+    RecipePage.tts.setCompletionHandler(() {
       _completeSaying();
       if (_listenedBeforeStart!) {
         callback();
@@ -319,8 +319,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
       slideId = _slideId;
     }
 
-    RecipeScreen.tts.setCancelHandler(a);
-    RecipeScreen.tts.setPauseHandler(a);
+    RecipePage.tts.setCancelHandler(a);
+    RecipePage.tts.setPauseHandler(a);
   }
 
   static bool? _listenedBeforeStart;
@@ -342,7 +342,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
         _completed = false;
         ListenButtonState.current()!.lock();
       }
-      RecipeScreen.tts.speak(text);
+      RecipePage.tts.speak(text);
       return;
     }
     ListenButtonState.current()!.stopListening();
@@ -350,7 +350,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     _setSayingEndHandler(_restartListening, _slideId);
     _completed = false;
     ListenButtonState.current()!.lock();
-    RecipeScreen.tts.speak(text);
+    RecipePage.tts.speak(text);
   }
 
   void _restartListening() {
@@ -358,7 +358,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   }
 
   _onStopSaying() {
-    RecipeScreen.tts.stop();
+    RecipePage.tts.stop();
   }
 
   void _onNext() {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/labels/time_label.dart';
 import 'package:voice_recipe/components/utils/drop_zone.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
 
 import '../../config.dart';
 import '../../model/dropped_file.dart';
-import '../../screens/constructor/create_recipe_screen.dart';
+import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/delete_button.dart';
 import '../labels/input_label.dart';
 
@@ -56,20 +56,20 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CreateRecipeScreen.title(context, "Основное"),
+        CreateRecipePage.title(context, "Основное"),
         const SizedBox(
           height: Config.padding,
         ),
         Container(
           padding: Config.paddingAll,
-          width: CreateRecipeScreen.pageWidth(context) * .5,
+          width: CreateRecipePage.pageWidth(context) * .5,
           child: InputLabel(
             verticalExpand: true,
             withContentPadding: false,
             focusNode: widget.nameFocusNode,
             labelText: "Название рецепта",
             controller: nameController,
-            fontSize: CreateRecipeScreen.generalFontSize(context),
+            fontSize: CreateRecipePage.generalFontSize(context),
             onSubmit: () {
               String name = nameController.text.trim();
               if (name.isEmpty) return;
@@ -84,40 +84,40 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
           Column(
             children: [
               Container(
-                width: CreateRecipeScreen.pageWidth(context) * .5,
+                width: CreateRecipePage.pageWidth(context) * .5,
                 margin: const EdgeInsets.only(left: Config.margin),
                 alignment: Alignment.centerLeft,
                 child: Text("Изображение для обложки",
                     style: TextStyle(
                         fontFamily: Config.fontFamily,
                         color: Config.iconColor,
-                        fontSize: CreateRecipeScreen.titleFontSize(context))),
+                        fontSize: CreateRecipePage.titleFontSize(context))),
               ),
               const SizedBox(
                 height: Config.padding,
               ),
               SizedBox(
-                  width: CreateRecipeScreen.pageWidth(context) * .5,
+                  width: CreateRecipePage.pageWidth(context) * .5,
                   child: currentImageFile == null
                       ? ImageDropZone(
-                          customButtonColor: CreateRecipeScreen.buttonColor,
+                          customButtonColor: CreateRecipePage.buttonColor,
                           onDrop: onDrop,
-                          fontSize: CreateRecipeScreen.generalFontSize(context))
+                          fontSize: CreateRecipePage.generalFontSize(context))
                       : stepImagePreview()),
             ],
           ),
           Container(
-            width: CreateRecipeScreen.pageWidth(context) * .4,
+            width: CreateRecipePage.pageWidth(context) * .4,
             alignment: Alignment.center,
             child: Column(
               children: [
-                LoginScreen.voiceRecipeIcon(context, 150, 130),
+                LoginPage.voiceRecipeIcon(context, 150, 130),
                 Text(
                   Config.appName,
                   style: TextStyle(
                       color: Config.iconColor,
                       fontFamily: Config.fontFamily,
-                      fontSize: CreateRecipeScreen.titleFontSize(context)),
+                      fontSize: CreateRecipePage.titleFontSize(context)),
                 )
               ],
             ),
@@ -186,7 +186,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
   TextStyle get textStyle => TextStyle(
       fontFamily: Config.fontFamily,
       color: Config.iconColor,
-      fontSize: CreateRecipeScreen.generalFontSize(context));
+      fontSize: CreateRecipePage.generalFontSize(context));
 
   void clear() {
     currentImageFile = null;

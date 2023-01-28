@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
-import 'package:voice_recipe/screens/recipe/future_recipe_screen.dart';
+import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/config.dart';
 
-import '../screens/home_screen.dart';
+import '../pages/home_page.dart';
 import 'labels/time_label.dart';
 
 class RecipeHeaderCard extends StatefulWidget {
@@ -253,9 +253,9 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
   void navigateToRecipe(BuildContext context, Recipe recipe) {
-    String route = FutureRecipeScreen.route + recipe.id.toString();
+    String route = FutureRecipePage.route + recipe.id.toString();
     String currentRoute = Routemaster.of(context).currentRoute.fullPath;
-    if (currentRoute != Home.route) {
+    if (currentRoute != HomePage.route) {
       route = '$currentRoute/${recipe.id}';
     }
     Routemaster.of(context).push(route);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/model/auth/auth.dart';
-import 'package:voice_recipe/screens/account/forgot_password_screen.dart';
-import 'package:voice_recipe/screens/account/register_screen.dart';
+import 'package:voice_recipe/pages/account/forgot_password_page.dart';
+import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
@@ -17,8 +17,8 @@ enum Method {
   email, google
 }
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   static const route = '/login';
 
@@ -31,7 +31,7 @@ class LoginScreen extends StatefulWidget {
       Config.loginPageHeight(context) / 13;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 
   static Widget voiceRecipeIcon(
       BuildContext context, double height, double iconSize) {
@@ -54,7 +54,7 @@ class LoginScreen extends StatefulWidget {
   }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailFocusNode = FocusNode();
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: Config.maxLoginPageWidth,
                   child: Column(
                     children: [
-                      LoginScreen.voiceRecipeIcon(
+                      LoginPage.voiceRecipeIcon(
                           context,
                           Config.loginPageHeight(context) / 3,
                           Config.loginPageHeight(context) / 6),
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   'Еще нет аккаунта?',
                                   style: TextStyle(
                                       color: textColor.withOpacity(0.8),
-                                      fontSize: LoginScreen.fontSize,
+                                      fontSize: LoginPage.fontSize,
                                       fontFamily: Config.fontFamily),
                                 ),
                                 const SizedBox(
@@ -114,19 +114,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 InkWell(
                                   onTap: () => Routemaster.of(context)
-                                      .push(RegisterScreen.route),
+                                      .push(RegisterPage.route),
                                   child: Text(
                                     'Создать',
                                     style: TextStyle(
                                         color: textColor.withOpacity(0.8),
-                                        fontSize: LoginScreen.fontSize,
+                                        fontSize: LoginPage.fontSize,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: Config.fontFamilyBold),
                                   ),
                                 )
                               ],
                             ),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 InputLabel(
                                   focusNode: _emailFocusNode,
                                   labelText: 'Email',
@@ -134,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onSubmit: () => login(Method.email),
                                 ),
                                 context),
-                            LoginScreen.inputWrapper(
+                            LoginPage.inputWrapper(
                                 PasswordLabel(
                                   focusNode: _passwordFocusNode,
                                   hintText: "Пароль",
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(
                                 height: Config.loginPageHeight(context) / 12,
-                                width: LoginScreen.buttonWidth(context),
+                                width: LoginPage.buttonWidth(context),
                                 child: ClassicButton(
                                   onTap: () => login(Method.email),
                                   text: "Войти",
@@ -160,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 children: [
                                   SignInButton(
-                                      width: LoginScreen.buttonWidth(context),
+                                      width: LoginPage.buttonWidth(context),
                                       backgroundColor:
                                       Config.darkModeOn ? const Color(0xff202020) : Colors.white,
                                       textColor: Config.darkModeOn ? Colors.white : Colors.black,
@@ -202,6 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onForgotPassword(BuildContext context) {
-    Routemaster.of(context).push(ForgotPasswordScreen.route);
+    Routemaster.of(context).push(ForgotPasswordPage.route);
   }
 }

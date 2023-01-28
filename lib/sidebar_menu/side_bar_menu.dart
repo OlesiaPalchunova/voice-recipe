@@ -4,16 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/screens/collections/future_collection_screen.dart';
+import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config.dart';
-import 'package:voice_recipe/screens/constructor/create_recipe_screen.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
-import 'package:voice_recipe/screens/collections/collections_list_screen.dart';
+import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
+import 'package:voice_recipe/pages/collections/collections_list_page.dart';
 
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/screens/account/auth_screen.dart';
+import 'package:voice_recipe/pages/account/auth_page.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});
@@ -53,14 +53,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     SideBarTile(
                         name: "Подборки",
                         onClicked: () =>
-                            Routemaster.of(context).push(CollectionsListScreen.route),
+                            Routemaster.of(context).push(CollectionsListPage.route),
                         iconData: Config.darkModeOn
                             ? Icons.library_books_outlined
                             : Icons.library_books_outlined),
                     Config.isWeb ? SideBarTile(
                         name: "Создать рецепт",
                         onClicked: () {
-                          Routemaster.of(context).push(CreateRecipeScreen.route);
+                          Routemaster.of(context).push(CreateRecipePage.route);
                         },
                         iconData: Config.darkModeOn
                             ? Icons.create_outlined
@@ -81,7 +81,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                             Config.showLoginInviteDialog(context);
                             return;
                           }
-                          Routemaster.of(context).push('${FutureCollectionScreen.route}favorites');
+                          Routemaster.of(context).push('${FutureCollectionPage.route}favorites');
                         },
                         iconData: Config.darkModeOn
                             ? Icons.thumb_up_alt_outlined
@@ -124,7 +124,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
       children: [
         InkWell(
           onTap: () {
-            Routemaster.of(context).push(AuthScreen.route);
+            Routemaster.of(context).push(AuthPage.route);
           },
           borderRadius: Config.borderRadiusLarge,
           child: Row(
@@ -176,7 +176,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
             return SideBarTile(
                 name: "Войти",
                 onClicked: () {
-                  Routemaster.of(context).push(LoginScreen.route);
+                  Routemaster.of(context).push(LoginPage.route);
                 },
                 iconData: Icons.login);
           }

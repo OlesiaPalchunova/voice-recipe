@@ -5,7 +5,7 @@ import 'package:voice_recipe/components/buttons/delete_button.dart';
 
 import '../../config.dart';
 import '../../model/recipes_info.dart';
-import '../../screens/constructor/create_recipe_screen.dart';
+import '../../pages/constructor/create_recipe_page.dart';
 import '../buttons/classic_button.dart';
 import '../labels/input_label.dart';
 
@@ -115,7 +115,7 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
     bool showHint = widget.insertList.isEmpty;
     String count = '${ing.count.toString().replaceAll(zeroRegex, '')} ${ing.measureUnit}';
     return Column(children: [
-      CreateRecipeScreen.title(context, "Ингредиенты"),
+      CreateRecipePage.title(context, "Ингредиенты"),
       const SizedBox(
         height: Config.padding,
       ),
@@ -130,32 +130,32 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           SizedBox(
-            width: CreateRecipeScreen.pageWidth(context) * .3,
+            width: CreateRecipePage.pageWidth(context) * .3,
             child:
                 InputLabel(
                   labelText: "Название",
                   hintText: showHint ? ing.name : null,
                   controller: ingNameController,
-                  fontSize: CreateRecipeScreen.generalFontSize(context),
+                  fontSize: CreateRecipePage.generalFontSize(context),
                 focusNode: widget.ingNameFocusNode,
                 ),
           ),
           SizedBox(
-            width: CreateRecipeScreen.pageWidth(context) * .3,
+            width: CreateRecipePage.pageWidth(context) * .3,
             child: InputLabel(
               labelText: "Количество",
               hintText: showHint ? count : null,
               focusNode: widget.ingCountFocusNode,
               controller: ingCountController,
-              fontSize: CreateRecipeScreen.generalFontSize(context),
+              fontSize: CreateRecipePage.generalFontSize(context),
               onSubmit: addNewIngredient,
             ),
           ),
           SizedBox(
-              width: CreateRecipeScreen.pageWidth(context) * .3,
+              width: CreateRecipePage.pageWidth(context) * .3,
               child: ClassicButton(
-                customColor: CreateRecipeScreen.buttonColor, onTap: addNewIngredient, text: "Добавить",
-    fontSize: CreateRecipeScreen.generalFontSize(context),))
+                customColor: CreateRecipePage.buttonColor, onTap: addNewIngredient, text: "Добавить",
+    fontSize: CreateRecipePage.generalFontSize(context),))
         ]),
       ),
     ]);
@@ -164,7 +164,7 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
   TextStyle get ingStyle => TextStyle(
       color: Config.iconColor,
       fontFamily: Config.fontFamily,
-      fontSize: CreateRecipeScreen.generalFontSize(context));
+      fontSize: CreateRecipePage.generalFontSize(context));
 
   String get errorMsg => "Введено недопустимое количество\n"
       "Вначале введите число, а затем единицу измерения\n"

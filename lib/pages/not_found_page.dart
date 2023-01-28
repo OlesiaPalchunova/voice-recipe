@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/config.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
 
-class NotFoundScreen extends StatelessWidget {
-  const NotFoundScreen({super.key,
+class NotFoundPage extends StatelessWidget {
+  const NotFoundPage({super.key,
   this.message = defaultMessage});
 
   static const defaultMessage = "Страница, которую вы запрашиваете, не найдена";
@@ -25,7 +25,7 @@ class NotFoundScreen extends StatelessWidget {
                     Container(
                         height: 500,
                         alignment: Alignment.center,
-                        child: LoginScreen.voiceRecipeIcon(context, 500, 300)
+                        child: LoginPage.voiceRecipeIcon(context, 500, 300)
                     ),
                     Text(message,
                     style: TextStyle(

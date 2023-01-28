@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/api/recipes_getter.dart';
-import 'package:voice_recipe/screens/loading_screen.dart';
-import 'package:voice_recipe/screens/not_found_screen.dart';
-import 'package:voice_recipe/screens/recipe/recipe_screen.dart';
+import 'package:voice_recipe/pages/loading_page.dart';
+import 'package:voice_recipe/pages/not_found_page.dart';
+import 'package:voice_recipe/pages/recipe/recipe_page.dart';
 
 import '../../model/recipes_info.dart';
 
-class FutureRecipeScreen extends StatelessWidget {
-  const FutureRecipeScreen({super.key, required this.recipeId});
+class FutureRecipePage extends StatelessWidget {
+  const FutureRecipePage({super.key, required this.recipeId});
 
   static const route = "/recipe/";
 
@@ -16,21 +16,21 @@ class FutureRecipeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (RecipesGetter().recipesCache.containsKey(recipeId)) {
-      return RecipeScreen(recipe: RecipesGetter().recipesCache[recipeId]!);
+      return RecipePage(recipe: RecipesGetter().recipesCache[recipeId]!);
     }
     return FutureBuilder(
         future: RecipesGetter().getRecipe(recipeId: recipeId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingScreen(postfix: " рецепт",);
+            return const LoadingPage(postfix: " рецепт",);
           }
           Recipe? recipe = snapshot.data;
           if (recipe == null) {
-            return const NotFoundScreen(
+            return const NotFoundPage(
               message: "Рецепт, который вы запрашиваете, не был найден",
             );
           }
-          return RecipeScreen(recipe: recipe);
+          return RecipePage(recipe: recipe);
         });
   }
 }

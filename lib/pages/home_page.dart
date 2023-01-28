@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
-import 'package:voice_recipe/screens/loading_screen.dart';
+import 'package:voice_recipe/pages/loading_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -10,16 +10,16 @@ import 'package:voice_recipe/config.dart';
 
 import '../api/recipes_getter.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   static const route = '/';
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomePageState extends State<HomePage> {
   List<Recipe> recipes = [];
   final List<RecipeHeaderCard> recipeViews = [];
   final List<Advertisement> adViews = [];

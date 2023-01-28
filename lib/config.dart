@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/model/users_info.dart';
-import 'package:voice_recipe/screens/account/login_screen.dart';
+import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
 import 'package:voice_recipe/services/translator.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -185,7 +185,7 @@ class Config {
                   fontSize: 20,
                   onTap: () {
                     Routemaster.of(context).pop();
-                    Routemaster.of(context).push(LoginScreen.route);
+                    Routemaster.of(context).push(LoginPage.route);
                   },
                 )
               ],
