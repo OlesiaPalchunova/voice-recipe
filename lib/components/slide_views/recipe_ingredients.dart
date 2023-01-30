@@ -11,8 +11,7 @@ class IngredientsSlideView extends StatelessWidget {
   }) : super(key: key);
 
   final Recipe recipe;
-  static const _listOffset = 0.03;
-  static const _splitterThickness = .3;
+  static const splitterThickness = .3;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +29,16 @@ class IngredientsSlideView extends StatelessWidget {
           padding: const EdgeInsets.all(Config.padding),
           child: Column(
             children: [
+              const SizedBox(
+                height: Config.margin,
+              ),
               GeneralInfo(recipe: recipe),
               Divider(
                 color: Config.darkModeOn ? Colors.white : Colors.black87,
-                thickness: _splitterThickness,
+                thickness: splitterThickness,
               ),
-              SizedBox(
-                height: Config.pageHeight(context) * _listOffset,
+              const SizedBox(
+                height: Config.margin * 3,
               ),
               IngredientsList(recipe: recipe)
             ],
@@ -75,59 +77,60 @@ class IngredientsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
+        Text(
             "Ингредиенты",
             style: TextStyle(
                 fontFamily: Config.fontFamily,
                 fontSize: titleFontSize(context),
                 fontWeight: FontWeight.bold,
                 color: _textColor),
-          ),
         ),
         const SizedBox(
           height: Config.margin,
         ),
         Column(
-          children: ingredients.map((i) =>
-              Column(
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                    Expanded(
-                      flex: 3,
-                      child: SelectableText(
-                        i.name,
-                        style: TextStyle(
-                            fontFamily: Config.fontFamily,
-                            fontSize: entityFontSize(context),
-                            textBaseline: TextBaseline.alphabetic,
-                            color: _textColor
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          ingCountStr(i),
-                          style: TextStyle(
-                              fontFamily: Config.fontFamily,
-                              fontSize: entityFontSize(context),
-                              color: _textColor
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]),
-            Divider(
-            color: _textColor.withOpacity(0.8),
-            thickness: IngredientsSlideView._splitterThickness,
-            )
-                ],
-              ),).toList(),
+          children: ingredients.map((ing) => ingredientView(context, ing)).toList(),
           ),
+      ],
+    );
+  }
+
+  Widget ingredientView(BuildContext context, Ingredient ing) {
+    return Column(
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+            flex: 3,
+            child: SelectableText(
+              ing.name,
+              style: TextStyle(
+                  fontFamily: Config.fontFamily,
+                  fontSize: entityFontSize(context),
+                  textBaseline: TextBaseline.alphabetic,
+                  color: _textColor
+              ),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                ingCountStr(ing),
+                style: TextStyle(
+                    fontFamily: Config.fontFamily,
+                    fontSize: entityFontSize(context),
+                    color: _textColor
+                ),
+              ),
+            ),
+          ),
+        ]),
+        Divider(
+          color: _textColor.withOpacity(0.8),
+          thickness: IngredientsSlideView.splitterThickness,
+        )
       ],
     );
   }
@@ -181,6 +184,7 @@ class GeneralInfo extends StatelessWidget {
           ],
         ),
         const SizedBox(height: Config.margin,)
+        // recipes at the current moment don't have calories, so I commented this
         // Container(
         //   alignment: Alignment.centerLeft,
         //   margin: const EdgeInsets.symmetric(vertical: Config.margin),

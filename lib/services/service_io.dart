@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/config.dart';
+import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/services/translator.dart';
@@ -18,6 +19,13 @@ class ServiceIO {
 
   static double fontSize(BuildContext context) => Config.isDesktop(context) ?
       20 : 18;
+
+  static void setPageTitle(String title, BuildContext context) {
+    SystemChrome.setApplicationSwitcherDescription(ApplicationSwitcherDescription(
+      label: title,
+      primaryColor: Theme.of(context).primaryColor.value, // This line is required
+    ));
+  }
 
   static void showLoginInviteDialog(BuildContext context) async {
     showDialog(

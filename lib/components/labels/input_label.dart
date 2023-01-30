@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/config.dart';
@@ -40,35 +41,35 @@ class InputLabel extends StatelessWidget {
       withPadding = withContentPadding!;
     }
     return InputDecoration(
-          hintText: hintText,
-          labelText: labelText,
-          contentPadding: withPadding
-              ? null
-              : const EdgeInsets.symmetric(horizontal: Config.margin),
-          labelStyle: TextStyle(
-              color: Config.iconColor.withOpacity(0.7),
-              fontFamily: Config.fontFamily),
-          hintStyle: TextStyle(
+        hintText: hintText,
+        labelText: labelText,
+        contentPadding: withPadding
+            ? null
+            : const EdgeInsets.symmetric(horizontal: Config.margin),
+        labelStyle: TextStyle(
             color: Config.iconColor.withOpacity(0.7),
-            fontFamily: Config.fontFamily,
-          ),
-          floatingLabelAlignment: FloatingLabelAlignment.start,
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(width: .2, color: Colors.transparent),
-              borderRadius: Config.borderRadiusLarge),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: Config.borderRadiusLarge,
-              borderSide: BorderSide(
-                  color: Config.darkModeOn
-                      ? Colors.orangeAccent
-                      : Colors.black54)),
-          hoverColor: !Config.darkModeOn
-              ? Colors.orangeAccent.withOpacity(.2)
-              : Colors.grey.shade800,
-          fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
-          filled: true,
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon);
+            fontFamily: Config.fontFamily),
+        hintStyle: TextStyle(
+          color: Config.iconColor.withOpacity(0.7),
+          fontFamily: Config.fontFamily,
+        ),
+        floatingLabelAlignment: FloatingLabelAlignment.start,
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(width: .2, color: Colors.transparent),
+            borderRadius: Config.borderRadiusLarge),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: Config.borderRadiusLarge,
+            borderSide: BorderSide(
+                color: Config.darkModeOn
+                    ? Colors.orangeAccent
+                    : Colors.black54)),
+        hoverColor: !Config.darkModeOn
+            ? Colors.orangeAccent.withOpacity(.2)
+            : Colors.grey.shade800,
+        fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
+        filled: true,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon);
   }
 
   @override

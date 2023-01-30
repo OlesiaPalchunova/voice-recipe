@@ -9,7 +9,7 @@ import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/constructor_views/header_label.dart';
 import 'package:voice_recipe/components/constructor_views/ingredients_label.dart';
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
-import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/services/db/user_db_manager.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 import 'package:voice_recipe/services/service_io.dart';
 

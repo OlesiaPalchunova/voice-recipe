@@ -17,7 +17,7 @@ class FutureCollectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     if (RecipesGetter().collectionsCache.containsKey(name)) {
       return CollectionPage(recipes: RecipesGetter().collectionsCache[name]!,
-      setName: "Talky Chef",);
+      collectionName: name,);
     }
     return FutureBuilder(
       future: RecipesGetter().getCollection(name),
@@ -29,7 +29,7 @@ class FutureCollectionPage extends StatelessWidget {
           if (collection == null) {
             return const NotFoundPage(message: "Подборка не найдена",);
           }
-          return CollectionPage(recipes: collection, setName: "Talky Chef");
+          return CollectionPage(recipes: collection, collectionName: name);
         });
   }
 }

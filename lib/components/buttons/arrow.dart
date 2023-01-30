@@ -10,9 +10,11 @@ class ArrowButton extends StatefulWidget {
     super.key,
     required this.direction,
     required this.onTap,
+    required this.backColor,
     required this.hideNotify
   });
 
+  final Color backColor;
   final Direction direction;
   final VoidCallback onTap;
   final ValueNotifier<bool> hideNotify;
@@ -23,6 +25,7 @@ class ArrowButton extends StatefulWidget {
 
 class _ArrowButtonState extends State<ArrowButton> {
   SMIBool? hovered;
+
 
   void _onArrowInit(Artboard artboard) {
     StateMachineController? controller =
@@ -49,6 +52,7 @@ class _ArrowButtonState extends State<ArrowButton> {
 
   @override
   Widget build(BuildContext context) {
+    double arrowSize = Config.pageWidth(context) / 16;
     return ValueListenableBuilder(
       valueListenable: widget.hideNotify,
       builder: (context, isHidden, child) {
@@ -68,11 +72,24 @@ class _ArrowButtonState extends State<ArrowButton> {
           onHover: (h) {
             hovered?.change(h);
           },
-          child: RotatedBox(
-              quarterTurns: turn,
-              child: RiveAnimation.asset(
-                  "assets/RiveAssets/arrow_down$postfix.riv",
-                  onInit: _onArrowInit))),
+          child: Container(
+            color: widget.backColor,
+            alignment: widget.direction == Direction.right
+            ? Alignment.centerLeft : Alignment.centerRight,
+            child: SizedBox(
+              height: arrowSize,
+              width: arrowSize,
+              child: RotatedBox(
+                  quarterTurns: turn,
+                  child: Config.darkModeOn ? RiveAnimation.asset(
+                      "assets/RiveAssets/arrow_down.riv",
+                      onInit: _onArrowInit) : RiveAnimation.asset(
+                      "assets/RiveAssets/arrow_down_light.riv",
+                      onInit: _onArrowInit
+                  )
+              ),
+            ),
+          )),
     );
   }
 }

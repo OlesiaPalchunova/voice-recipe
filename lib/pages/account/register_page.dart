@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/services/auth/auth.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
-
-import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
 import '../../components/buttons/login/sign_in_button.dart';
 import '../../components/labels/input_label.dart';
@@ -128,7 +126,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: ClassicButton(
                                 onTap: () => register(Method.email),
                                 text: "Создать аккаунт",
-                                customBorderColor: Colors.black54,
                               ),
                             ),
                             Container(

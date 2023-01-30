@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/comments_model.dart';
-import 'package:voice_recipe/model/db/comment_db_manager.dart';
+import 'package:voice_recipe/services/db/comment_db_manager.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';

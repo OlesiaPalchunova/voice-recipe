@@ -66,14 +66,15 @@ class _SignInButtonState extends State<SignInButton> {
         width: widget.width,
         padding: const EdgeInsets.symmetric(horizontal: Config.padding * 2),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image.asset(widget.imageURL),
-            const SizedBox(width: Config.margin,),
             Text(widget.text, style: TextStyle(
-              color: widget.textColor,
+              color: Config.iconColor,
               fontFamily: Config.fontFamily,
               fontSize: Config.fontSizeMedium(context)
-            ),)
+            ),),
+            const SizedBox(width: Config.margin * 4,),
           ],
         ),
       ),

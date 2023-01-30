@@ -42,9 +42,9 @@ class AccountPage extends StatelessWidget {
                             ServiceIO.showLoginInviteDialog(context);
                             return;
                           }
-                          Routemaster.of(context).push('${FutureCollectionPage.route}created');
+                          Routemaster.of(context).push('/created');
                         },
-                        showTiles: false,
+                        hasSubtitles: false,
                         set: created,
                         widthConstraint: Config.loginPageWidth(context),
                       )

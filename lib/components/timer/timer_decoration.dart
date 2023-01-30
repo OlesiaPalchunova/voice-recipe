@@ -38,9 +38,9 @@ class TimerDecoration extends StatelessWidget {
     return Container(
       decoration: _getTimerBoxDecoration(),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildTimerButton(
+          buildTimerButton(
               onPressed: () {},
               icon: Icon(
                 Icons.play_arrow,
@@ -48,8 +48,8 @@ class TimerDecoration extends StatelessWidget {
                 size: iconSize,
               )
           ),
-          _buildTimerLabel(),
-          _buildTimerButton(
+          buildTimerLabel(),
+          buildTimerButton(
               onPressed: () {},
               icon: Icon(
                 Icons.replay,
@@ -64,25 +64,26 @@ class TimerDecoration extends StatelessWidget {
 
   double get iconSize => 24;
 
-  Widget _buildTimerButton(
+  Widget buildTimerButton(
       {required void Function() onPressed, required Icon icon}) {
     return Container(
       padding: const EdgeInsets.all(Config.padding),
       child: IconButton(
           onPressed: onPressed,
           iconSize: iconSize,
+          padding: const EdgeInsets.all(0.0),
           icon: icon),
     );
   }
 
-  Color _getDigitsColor() {
+  Color getDigitsColor() {
     if (Config.darkModeOn) {
       return Colors.white;
     }
     return Colors.black87;
   }
 
-  Widget _buildTimerLabel() {
+  Widget buildTimerLabel() {
     String strDigits(int n) => n.toString().padLeft(2, '0');
     final hours = strDigits(waitTime.inHours.remainder(24));
     final minutes = strDigits(waitTime.inMinutes.remainder(60));
@@ -94,7 +95,7 @@ class TimerDecoration extends StatelessWidget {
       style: TextStyle(
         fontFamily: Config.fontFamily,
         fontSize: 22,
-        color: _getDigitsColor(),
+        color: getDigitsColor(),
       ),
     );
   }

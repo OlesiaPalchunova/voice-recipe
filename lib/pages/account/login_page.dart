@@ -5,7 +5,6 @@ import 'package:voice_recipe/pages/account/forgot_password_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 
-import '../../components/appbars/title_logo_panel.dart';
 import '../../components/buttons/classic_button.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
@@ -152,7 +151,6 @@ class _LoginPageState extends State<LoginPage> {
                                 child: ClassicButton(
                                   onTap: () => login(Method.email),
                                   text: "Войти",
-                                  customBorderColor: Colors.black54,
                                 )),
                             Container(
                               margin: const EdgeInsets.only(top: Config.margin),

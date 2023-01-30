@@ -9,7 +9,8 @@ class ClassicButton extends StatefulWidget {
       required this.onTap,
       required this.text,
       this.fontSize,
-        this.customColor, this.customBorderColor});
+      this.customColor,
+      this.customBorderColor});
 
   final VoidCallback onTap;
   final String text;
@@ -43,6 +44,11 @@ class _ClassicButtonState extends State<ClassicButton> {
       ? widget.customColor?? ClassicButton.color
       : ClassicButton.hoverColor;
 
+  BoxBorder? get border {
+    if (widget.customBorderColor == null) return null;
+    return Border.all(color: widget.customBorderColor!, width: .2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -69,19 +75,17 @@ class _ClassicButtonState extends State<ClassicButton> {
       child: AnimatedContainer(
         duration: Config.shortAnimationTime,
         decoration: BoxDecoration(
-          color: color,
-              borderRadius: Config.borderRadiusLarge
-        ),
+            color: color,
+            borderRadius: Config.borderRadiusLarge,
+            border: border),
         padding: const EdgeInsets.all(Config.padding)
             .add(const EdgeInsets.symmetric(horizontal: Config.padding)),
         child: Center(
           child: Text(widget.text,
               style: TextStyle(
                   color: Config.iconColor,
-                  fontSize: widget.fontSize?? Config.fontSizeMedium(context),
-                  fontFamily: Config.fontFamily
-              )
-          ),
+                  fontSize: widget.fontSize ?? Config.fontSizeMedium(context),
+                  fontFamily: Config.fontFamily)),
         ),
       ),
     );

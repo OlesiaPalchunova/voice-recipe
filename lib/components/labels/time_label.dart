@@ -59,6 +59,14 @@ class TimeLabel extends StatelessWidget {
     ]);
   }
 
+  static double widthConstraint(BuildContext context) {
+    double resize = 1;
+    if (Config.isDesktop(context)) {
+      resize = .5;
+    }
+    return Config.constructorWidth(context) * resize;
+  }
+
   static Widget buildSetter(BuildContext context,
       {TimeOfDay? time,
         required String buttonText,
@@ -66,13 +74,17 @@ class TimeLabel extends StatelessWidget {
         required VoidCallback onSetTap,
         required VoidCallback onDeleteTap}) {
     return time == null
-        ? ClassicButton(
+        ? SizedBox(
+      width: widthConstraint(context),
+          child: ClassicButton(
       onTap: onSetTap,
       text: buttonText,
-        customColor: CreateRecipePage.buttonColor,
+          customColor: CreateRecipePage.buttonColor,
       fontSize: CreateRecipePage.generalFontSize(context),
-    )
+    ),
+        )
         : Container(
+      width: widthConstraint(context),
       decoration: BoxDecoration(
           color: CreateRecipePage.buttonColor.withOpacity(.9),
           borderRadius: Config.borderRadiusLarge),
@@ -88,7 +100,7 @@ class TimeLabel extends StatelessWidget {
                   fontSize: CreateRecipePage.generalFontSize(context)),
             ),
             SizedBox(
-              width: CreateRecipePage.pageWidth(context) * .4,
+              width: widthConstraint(context) * .4,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

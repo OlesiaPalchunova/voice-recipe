@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 
@@ -8,11 +9,13 @@ class SideBarTile extends StatefulWidget {
       {super.key,
       required this.name,
       required this.onClicked,
-      required this.iconData});
+      required this.iconData,
+      required this.activeIconData});
 
   final String name;
   final VoidCallback onClicked;
   final IconData iconData;
+  final IconData activeIconData;
 
   @override
   State<SideBarTile> createState() => _SideBarTileState();
@@ -34,8 +37,8 @@ class _SideBarTileState extends State<SideBarTile> {
   static double radius(BuildContext context) =>
       Config.isDesktop(context) ? 22 : 20;
 
-  Color get pressedColor => Config.darkModeOn ? ClassicButton.hoverColor :
-      Colors.grey.shade200;
+  Color get pressedColor => Config.darkModeOn ? const Color(0xFF303030) :
+  const Color(0xFFFbF2F1).darken(2);
 
   Color get color => pressed ? pressedColor : Colors.transparent;
 
@@ -59,7 +62,7 @@ class _SideBarTileState extends State<SideBarTile> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.all(Config.padding),
+        padding: Config.paddingAll,
         decoration: BoxDecoration(
           color: color,
           borderRadius: Config.borderRadiusLarge
@@ -72,14 +75,14 @@ class _SideBarTileState extends State<SideBarTile> {
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     boxShadow: [
-                      BoxShadow(color: Colors.orangeAccent, blurRadius: 6)
+                      BoxShadow(color: Colors.orangeAccent, blurRadius: 6, spreadRadius: 1.0)
                     ],
                   ),
                   child: CircleAvatar(
                     radius: radius(context),
                     backgroundColor: Config.backgroundColor,
                     child: Icon(
-                      widget.iconData,
+                      pressed? widget.activeIconData : widget.iconData,
                       color: Config.iconColor,
                       size: radius(context),
                     ),

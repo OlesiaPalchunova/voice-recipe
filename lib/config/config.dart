@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voice_recipe/theme_manager/dark_theme_preference.dart';
@@ -30,7 +31,8 @@ class Config {
   static const fontFamily = "Montserrat";
   static const fontFamilyBold = "MontserratBold";
   static const radius = 6.0;
-  static const largeRadius = 16.0;
+  static const largeRadius = 12.0;
+  static const extraLargeRadius = 32.0;
   static const padding = 10.0;
   static const margin = 10.0;
 
@@ -48,6 +50,8 @@ class Config {
   static const borderRadius = BorderRadius.all(Radius.circular(radius));
   static const borderRadiusLarge =
       BorderRadius.all(Radius.circular(largeRadius));
+  static const borderRadiusExtraLarge =
+  BorderRadius.all(Radius.circular(extraLargeRadius));
   static const backGroundDecorationImage = DecorationImage(
       image: AssetImage("assets/images/decorations/create_back.jpg"),
       fit: BoxFit.cover);
@@ -85,7 +89,8 @@ class Config {
   static const darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);
   static const darkIconBackColor = Color(0xFF202124);
   static const drawerScrimColor = Color.fromRGBO(17, 17, 17, .6);
-  static const darkBlue = Color(0xFF242634);
+  static const darkGrey = Color(0xFF212121);
+  // static const darkBlue = Color(0xFF242634);
   static const darkIconColor = Colors.white;
 
   static const lightIconBackColor = Colors.white;
@@ -104,7 +109,7 @@ class Config {
   static const lightBackColors = [
     Color(0xFFE9F7CA),
     Color(0xFFcae1f7),
-    Color(0xfff7cae4),
+    Color(0xFFFBF2F1),
     Color(0xFFcae1f7),
     Color(0xFFf7ecca),
     Color(0xFFf7d2ca),
@@ -132,19 +137,22 @@ class Config {
       bottomAppBarTheme: const BottomAppBarTheme(
           color: MaterialColor(0xFFf07800, Config.colorScheme)),
       colorScheme: ColorScheme.fromSwatch(
-              primarySwatch:
-                  const MaterialColor(0xFFf07800, Config.colorScheme))
+          primarySwatch:
+          const MaterialColor(0xFFf07800, Config.colorScheme))
           .copyWith(
-              background: const MaterialColor(0xff000000, Config.colorScheme)));
+          background: const MaterialColor(0xff000000, Config.colorScheme)));
 
-  static Color get appBarColor => darkModeOn ? Colors.black87 : Colors.white;
+  static Color get appBarColor => darkModeOn ? const Color(0xFF141414) : Colors.white;
 
   static Color get notPressed => darkModeOn ? darkThemeBackColor : Colors.white;
 
-  static Color get pressed => darkModeOn ? darkBlue : Colors.grey.shade100;
+  static Color get pressed => darkModeOn ? darkGrey : Colors.grey.shade100;
 
   static Color get backgroundColor =>
       darkModeOn ? darkThemeBackColor : Colors.white;
+
+  static Color get drawerColor =>
+      darkModeOn ? const Color(0xFF151515) : const Color(0xFFFBF2F1);
 
   static Color get backgroundEdgeColor =>
       darkModeOn ? darkThemeBackColor : Colors.grey.shade200;
@@ -152,15 +160,18 @@ class Config {
   static Color get backgroundLightedColor =>
       darkModeOn ? Colors.grey.shade900 : Colors.white;
 
+  static Color get activeBackgroundLightedColor =>
+      darkModeOn ? const Color(0xFF303030) : Colors.grey.shade200;
+
   static Color get iconBackColor =>
       darkModeOn ? darkIconBackColor : lightIconBackColor;
 
   static Color get disabledIconBackColor =>
-      darkModeOn ? darkBlue : lightIconDisabledBackColor;
+      darkModeOn ? darkGrey : lightIconDisabledBackColor;
 
   static Color get iconColor => darkModeOn ? darkIconColor : lightIconColor;
 
-  static Color get edgeColor => darkModeOn ? darkBlue : Colors.white;
+  static Color get edgeColor => darkModeOn ? darkGrey : Colors.white;
 
   static List<Color> getGradientColor(int id) {
     return GradientColors.sets[id % GradientColors.sets.length];
@@ -175,7 +186,7 @@ class Config {
       : lightBackColors[id % lightBackColors.length];
 
   static Color getBackEdgeColor(int id) =>
-      darkModeOn ? darkBlue : lightBackColors[id % lightBackColors.length];
+      darkModeOn ? darkGrey : lightBackColors[id % lightBackColors.length];
 
   static double fontSizeMedium(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;

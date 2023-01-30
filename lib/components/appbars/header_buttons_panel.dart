@@ -48,7 +48,7 @@ class HeaderButtonsPanel extends StatelessWidget {
           children: [
             Row(
               children: [
-                _buildAppIcon(),
+                buildAppIcon(),
                 const SizedBox(
                   width: 10,
                 ),
@@ -56,7 +56,7 @@ class HeaderButtonsPanel extends StatelessWidget {
                     onListen: onListen,
                     onMute: onMute,
                     iconSize: _iconSize,
-                    isListening: isListening,
+                    listenNotifyer: isListening,
                     isLocked: isLockedListening)
               ],
             ),
@@ -64,14 +64,14 @@ class HeaderButtonsPanel extends StatelessWidget {
                 onSay: onSay,
                 onStopSaying: onStopSaying,
                 iconSize: _iconSize,
-                isSaying: isSaying),
+                sayNotyfyer: isSaying),
             Row(
               children: [
-                _buildListButton(),
+                buildListButton(),
                 const SizedBox(
                   width: 10,
                 ),
-                _buildCloseButton(context)
+                buildCloseButton(context)
               ],
             )
           ],
@@ -80,7 +80,7 @@ class HeaderButtonsPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildAppIcon() {
+  Widget buildAppIcon() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -92,11 +92,11 @@ class HeaderButtonsPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildListButton() {
+  Widget buildListButton() {
     return HeaderButtonsPanel.buildButton(
         IconButton(
           tooltip: "Список ингредиентов",
-          onPressed: onListen,
+          onPressed: onList,
           icon: Icon(
             Icons.list,
             color: Config.iconColor,
@@ -106,7 +106,7 @@ class HeaderButtonsPanel extends StatelessWidget {
         Config.iconBackColor);
   }
 
-  Widget _buildCloseButton(BuildContext context) {
+  Widget buildCloseButton(BuildContext context) {
     return HeaderButtonsPanel.buildButton(
         IconButton(
           tooltip: "Закрыть рецепт",

@@ -13,10 +13,6 @@ class RecipeStepView extends StatelessWidget {
     step = recipe.steps[idx];
   }
 
-  static const _imageSize = 0.65;
-  static const _borderRadius = 16.0;
-  static const _textBackgroundOpacity = 0.75;
-
   final Recipe recipe;
   final int slideId;
   late final RecipeStep step;
@@ -28,13 +24,10 @@ class RecipeStepView extends StatelessWidget {
     }
     if (step.description.length >= 140) {
       return Config.pageHeight(context) *
-          RecipeStepView._imageSize *
-          0.9 *
-          timerCoefficient;
+          .55 * timerCoefficient;
     }
     return Config.pageHeight(context) *
-        RecipeStepView._imageSize *
-        timerCoefficient;
+        .65 * timerCoefficient;
   }
 
   Widget _buildTimer() {
@@ -60,7 +53,7 @@ class RecipeStepView extends StatelessWidget {
         ? SizedBox(
             height: height,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(RecipeStepView._borderRadius),
+              borderRadius: Config.borderRadiusLarge,
               child: Image(
                 image: NetworkImage(step.imgUrl),
                 fit: BoxFit.cover,
@@ -96,8 +89,7 @@ class RecipeStepView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                           color: !Config.darkModeOn
-                              ? Colors.black87.withOpacity(
-                                  RecipeStepView._textBackgroundOpacity)
+                              ? Colors.black87.withOpacity(.75)
                               : Config.iconBackColor,
                           borderRadius: Config.borderRadiusLarge),
                       alignment: Alignment.center,

@@ -65,7 +65,7 @@ class _RecipePageState extends State<RecipePage> {
   static const faceSlideId = 0;
   static const ingredientsSlideId = 1;
   static const firstStepSlideId = 2;
-  static int _slideId = 0;
+  static int slideId = 0;
   late CommandsListener _listener;
   static final stepsMap = HashMap<int, int>();
   static const Duration slidingTime = Duration(milliseconds: 350);
@@ -85,18 +85,18 @@ class _RecipePageState extends State<RecipePage> {
   @override
   void initState() {
     super.initState();
-    _slideId = stepsMap[widget.recipe.id] ?? 0;
+    slideId = stepsMap[widget.recipe.id] ?? 0;
     checkToHideButtons();
     _initCommandsListener();
   }
 
   void checkToHideButtons() {
-    if (_slideId == 0) {
+    if (slideId == 0) {
       hideBackButton.value = true;
     } else {
       if (hideBackButton.value) hideBackButton.value = false;
     }
-    if (_slideId == lastSlideId) {
+    if (slideId == lastSlideId) {
       hideNextButton.value = true;
     } else {
       if (hideNextButton.value) hideNextButton.value = false;
@@ -106,7 +106,7 @@ class _RecipePageState extends State<RecipePage> {
   @override
   void dispose() {
     super.dispose();
-    stepsMap[widget.recipe.id] = _slideId;
+    stepsMap[widget.recipe.id] = slideId;
     RecipePage.tts.stop();
     _listener.shutdown();
   }
@@ -147,12 +147,13 @@ class _RecipePageState extends State<RecipePage> {
       isShowDoneBtn: false,
       refFuncGoToTab: (refFunc) {
         goToTab = refFunc;
-        if (_slideId > 0) {
-          goToTab(_slideId);
+        if (slideId > 0) {
+          goToTab(slideId);
         }
       },
       onTabChangeCompleted: (id) {
-        _slideId = id;
+        slideId = id;
+        checkToHideButtons();
       },
       indicatorConfig: IndicatorConfig(
         sizeIndicator: sizeIndicator(context),
@@ -200,43 +201,28 @@ class _RecipePageState extends State<RecipePage> {
     );
     bool showButtons = Config.isWeb && Config.pageWidth(context) > 800;
     if (!showButtons) return list;
-    double arrowSize = Config.pageWidth(context) / 16;
-    double contSize =
-        (Config.pageWidth(context) - Config.maxRecipeSlideWidth) / 2;
     list.add(Center(
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: contSize,
-              height: double.infinity,
-              color: backgroundColor,
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                  height: arrowSize,
-                  width: arrowSize,
-                  child: ArrowButton(
-                    hideNotify: hideBackButton,
-                    direction: Direction.left,
-                    onTap: _onPrev,
-                  )),
+            Expanded(
+              child: ArrowButton(
+                hideNotify: hideBackButton,
+                direction: Direction.left,
+                onTap: _onPrev,
+                backColor: backgroundColor,
+              ),
             ),
             const SizedBox(width: Config.maxRecipeSlideWidth),
-            Container(
-              width: contSize,
-              height: double.infinity,
-              color: backgroundColor,
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                  height: arrowSize,
-                  width: arrowSize,
-                  child: ArrowButton(
-                    hideNotify: hideNextButton,
-                    direction: Direction.right,
-                    onTap: _onNext,
-                  )),
-            ),
+            Expanded(
+              child: ArrowButton(
+                hideNotify: hideNextButton,
+                direction: Direction.right,
+                onTap: _onNext,
+                backColor: backgroundColor,
+              ),
+            )
           ]),
     ));
     return list;
@@ -270,21 +256,9 @@ class _RecipePageState extends State<RecipePage> {
                 }
               },
               onMute: () {
-                if (Config.isWeb) {
-                  ServiceIO.showAlertDialog(
-                      "К сожалению, голосове управление на данный момент работает только в мобильной версии.",
-                      context);
-                  return;
-                }
                 _listener.shutdown();
               },
               onListen: () {
-                if (Config.isWeb) {
-                  ServiceIO.showAlertDialog(
-                      "К сожалению, голосове управление на данный момент работает только в мобильной версии.",
-                      context);
-                  return;
-                }
                 _listener.start();
               },
               onSay: _onSay,
@@ -304,11 +278,11 @@ class _RecipePageState extends State<RecipePage> {
   }
 
   void _completeSaying() {
-    _completed = true;
+    completed = true;
     HeaderButtonsPanel.isLockedListening.value = false;
   }
 
-  void _setSayingEndHandler(void Function() callback, int slideId) {
+  void _setSayingEndHandler(void Function() callback, int prevSlideId) {
     RecipePage.tts.setCompletionHandler(() {
       _completeSaying();
       if (_listenedBeforeStart!) {
@@ -316,11 +290,11 @@ class _RecipePageState extends State<RecipePage> {
       }
     });
     a() {
-      if (slideId == _slideId) {
+      if (prevSlideId == slideId) {
         callback();
         _completeSaying();
       }
-      slideId = _slideId;
+      prevSlideId = slideId;
     }
 
     RecipePage.tts.setCancelHandler(a);
@@ -328,22 +302,22 @@ class _RecipePageState extends State<RecipePage> {
   }
 
   static bool? _listenedBeforeStart;
-  static bool _completed = true;
+  static bool completed = true;
 
   _onSay() {
     String text = "";
-    if (_slideId == faceSlideId) {
+    if (slideId == faceSlideId) {
       text = widget.recipe.name;
-    } else if (_slideId == ingredientsSlideId) {
+    } else if (slideId == ingredientsSlideId) {
       text = "Время приготовления: ${widget.recipe.cookTimeMins} минут";
     } else {
-      text = widget.recipe.steps[_slideId - firstStepSlideId].description;
+      text = widget.recipe.steps[slideId - firstStepSlideId].description;
     }
     if (!HeaderButtonsPanel.isListening.value) {
-      if (_completed) {
+      if (completed) {
         _listenedBeforeStart = false;
-        _setSayingEndHandler(() {}, _slideId);
-        _completed = false;
+        _setSayingEndHandler(() {}, slideId);
+        completed = false;
         HeaderButtonsPanel.isLockedListening.value = true;
       }
       RecipePage.tts.speak(text);
@@ -351,8 +325,8 @@ class _RecipePageState extends State<RecipePage> {
     }
     HeaderButtonsPanel.isListening.value = false;
     _listenedBeforeStart = true;
-    _setSayingEndHandler(_restartListening, _slideId);
-    _completed = false;
+    _setSayingEndHandler(_restartListening, slideId);
+    completed = false;
     HeaderButtonsPanel.isLockedListening.value = true;
     RecipePage.tts.speak(text);
   }
@@ -375,12 +349,11 @@ class _RecipePageState extends State<RecipePage> {
       return;
     }
     tapTime = current;
-    int prev = _slideId;
+    int prev = slideId;
     changer();
-    if (prev == _slideId) return;
+    if (prev == slideId) return;
     _onStopSaying();
-    goToTab(_slideId);
-    checkToHideButtons();
+    goToTab(slideId);
     if (HeaderButtonsPanel.isSaying.value) {
       _onSay();
     }
@@ -389,6 +362,8 @@ class _RecipePageState extends State<RecipePage> {
   void _onPrev() {
     _changeSlide(_decrementSlideId);
   }
+
+  int get timerId => slideId + widget.recipe.id * 100;
 
   void _initCommandsListener() {
     _listener = CommandsListener(commandsList: <Command>[
@@ -400,22 +375,19 @@ class _RecipePageState extends State<RecipePage> {
       CloseCommand(onTriggerFunction: () => _onClose(context)),
       StopSayCommand(onTriggerFunction: _onStopSaying),
       StartTimerCommand(onTriggerFunction: () {
-        TimerViewState? state = TimerViewState.getCurrent();
-        if (state != null) {
-          state.startTimer();
-        }
+        if (!TimerView.runNotifyers.containsKey(timerId)) return;
+        var running = TimerView.runNotifyers[timerId]!;
+        running.value = true;
       }),
       StopTimerCommand(onTriggerFunction: () {
-        TimerViewState? state = TimerViewState.getCurrent();
-        if (state != null) {
-          state.stopTimer();
-        }
+        if (!TimerView.runNotifyers.containsKey(timerId)) return;
+        var running = TimerView.runNotifyers[timerId]!;
+        running.value = false;
       }),
       ResetTimerCommand(onTriggerFunction: () {
-        TimerViewState? state = TimerViewState.getCurrent();
-        if (state != null) {
-          state.resetTimer();
-        }
+        if (!TimerView.runNotifyers.containsKey(timerId)) return;
+        var reset = TimerView.resetNotifyers[timerId]!;
+        reset.value = true;
       }),
     ]);
   }
@@ -432,12 +404,12 @@ class _RecipePageState extends State<RecipePage> {
   }
 
   void _decrementSlideId() {
-    _slideId--;
-    _slideId = _slideId < 0 ? 0 : _slideId;
+    slideId--;
+    slideId = slideId < 0 ? 0 : slideId;
   }
 
   void _incrementSlideId() {
-    _slideId++;
-    _slideId = _slideId > lastSlideId ? lastSlideId : _slideId;
+    slideId++;
+    slideId = slideId > lastSlideId ? lastSlideId : slideId;
   }
 }

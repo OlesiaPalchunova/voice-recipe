@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config/config.dart';
@@ -37,8 +37,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
   Widget build(BuildContext context) {
     return Drawer(
       width: min(Config.pageWidth(context) * .7, 400),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(
+            right: Radius.circular(Config.extraLargeRadius)),
+      ),
       child: Material(
-          color: Config.backgroundColor,
+          borderRadius: const BorderRadius.horizontal(
+              right: Radius.circular(Config.extraLargeRadius)),
+          color: Config.drawerColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,34 +52,36 @@ class _SideBarMenuState extends State<SideBarMenu> {
                 padding: const EdgeInsets.all(Config.padding),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: Config.pageHeight(context) / 7,
+                    const SizedBox(
+                      height: 150,
                     ),
                     buildAccountOrLoginLabel(),
                     SideBarTile(
-                        name: "Подборки",
-                        onClicked: onCollectionsTap,
-                        iconData: Config.darkModeOn
-                            ? Icons.book_outlined
-                            : Icons.book_outlined),
-                    Config.isWeb ? SideBarTile(
-                        name: "Создать рецепт",
-                        onClicked: onConstructorTap,
-                        iconData: Config.darkModeOn
-                            ? Icons.create_outlined
-                            : Icons.create_outlined) : const SizedBox(),
+                      name: "Подборки",
+                      onClicked: onCollectionsTap,
+                      iconData: Icons.book_outlined,
+                      activeIconData: Icons.book,
+                    ),
+                    Config.isWeb
+                        ? SideBarTile(
+                            name: "Создать рецепт",
+                            onClicked: onConstructorTap,
+                            iconData: Icons.create_outlined,
+                            activeIconData: Icons.create,
+                          )
+                        : const SizedBox(),
                     SideBarTile(
-                        name: "Голосовые команды",
-                        onClicked: onVoiceCommandsTap,
-                        iconData: Config.darkModeOn
-                            ? Icons.record_voice_over_outlined
-                            : Icons.record_voice_over_outlined),
+                      name: "Голосовые команды",
+                      onClicked: onVoiceCommandsTap,
+                      iconData: Icons.record_voice_over_outlined,
+                      activeIconData: Icons.record_voice_over,
+                    ),
                     SideBarTile(
-                        name: "Понравившиеся",
-                        onClicked: onFavoritesTap,
-                        iconData: Config.darkModeOn
-                            ? Icons.thumb_up_alt_outlined
-                            : Icons.thumb_up_alt_outlined),
+                      name: "Понравившиеся",
+                      onClicked: onFavoritesTap,
+                      iconData: Icons.favorite_outline_outlined,
+                      activeIconData: Icons.favorite,
+                    ),
                   ],
                 ),
               ),
@@ -92,6 +100,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                           fontSize: SideBarMenu.fontSize(context)),
                     ),
                     CupertinoSwitch(
+                      activeColor: Colors.orangeAccent.shade200,
                       value: Config.darkModeOn,
                       onChanged: (value) {
                         setState(() {
@@ -124,7 +133,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
       ServiceIO.showLoginInviteDialog(context);
       return;
     }
-    Routemaster.of(context).push('${FutureCollectionPage.route}favorites');
+    Routemaster.of(context).push('/favorites');
   }
 
   void onProfileLabelTap() {
@@ -143,12 +152,18 @@ class _SideBarMenuState extends State<SideBarMenu> {
             return buildAccountTile(snapshot.data!);
           } else {
             return SideBarTile(
-                name: "Войти",
-                onClicked: onLoginTap,
-                iconData: Icons.login);
+              name: "Войти",
+              onClicked: onLoginTap,
+              iconData: Icons.login,
+              activeIconData: Icons.login_sharp,
+            );
           }
         });
   }
+
+  Color get pressedColor => Config.darkModeOn
+      ? const Color(0xFF303030)
+      : const Color(0xFFFbF2F1).darken(2);
 
   Widget buildAccountTile(User user) {
     return Column(
@@ -156,32 +171,36 @@ class _SideBarMenuState extends State<SideBarMenu> {
         InkWell(
           onTap: onProfileLabelTap,
           borderRadius: Config.borderRadiusLarge,
-          child: Row(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: SideBarMenu.radius(context),
-                  backgroundColor: Config.backgroundColor,
-                  child: ClipRRect(
-                    borderRadius:
-                    BorderRadius.circular(SideBarMenu.radius(context)),
-                    child: Image.network(user.photoURL ?? defaultProfileUrl),
+          hoverColor: pressedColor,
+          child: Padding(
+            padding: Config.paddingAll,
+            child: Row(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    radius: SideBarMenu.radius(context),
+                    backgroundColor: Config.backgroundColor,
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(SideBarMenu.radius(context)),
+                      child: Image.network(user.photoURL ?? defaultProfileUrl),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: Config.margin),
-              Text(
-                "${user.displayName}",
-                style: TextStyle(
-                  fontSize: SideBarMenu.nameFontSize(context),
-                  color: Config.iconColor,
-                  fontFamily: Config.fontFamily,
+                const SizedBox(width: Config.margin),
+                Text(
+                  "${user.displayName}",
+                  style: TextStyle(
+                    fontSize: SideBarMenu.nameFontSize(context),
+                    color: Config.iconColor,
+                    fontFamily: Config.fontFamily,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Divider(
@@ -194,5 +213,4 @@ class _SideBarMenuState extends State<SideBarMenu> {
       ],
     );
   }
-
 }

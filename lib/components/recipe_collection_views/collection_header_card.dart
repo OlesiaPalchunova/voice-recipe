@@ -10,13 +10,13 @@ class CollectionHeaderCard extends StatefulWidget {
       required this.set,
       required this.onTap,
       this.widthConstraint = 0,
-      this.showTiles = true})
+      this.hasSubtitles = true})
       : super(key: key);
 
   final VoidCallback onTap;
   final CollectionsSet set;
   final double widthConstraint;
-  final bool showTiles;
+  final bool hasSubtitles;
 
   @override
   State<CollectionHeaderCard> createState() => _CollectionHeaderCardState();
@@ -34,7 +34,7 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
     super.dispose();
   }
 
-  bool get active => pressed || hovered;
+  bool get active => hovered;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +43,7 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
         ? widget.widthConstraint
         : Config.recipeSlideWidth(context);
     return InkWell(
+      borderRadius: Config.borderRadius,
       onHover: (h) => setState(() {
         hovered = h;
       }),
@@ -51,7 +52,7 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
           widget.onTap();
           pressed = !pressed;
         });
-        if (widget.showTiles | !pressed) {
+        if (widget.hasSubtitles | !pressed) {
           return;
         }
         await Future.delayed(Config.shortAnimationTime).whenComplete(() {
@@ -61,63 +62,62 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
           });
         });
       },
-      child: Card(
-        elevation: 0,
-        color: Colors.white.withOpacity(0),
-        margin: const EdgeInsets.symmetric(vertical: Config.margin / 2),
-        child: Column(
-          children: [
-            Stack(children: [
-              SizedBox(
-                child: AnimatedContainer(
-                  duration: Config.animationTime,
-                  height: cardHeight,
-                  decoration: BoxDecoration(
-                      borderRadius: Config.borderRadius,
-                      color: Config.backgroundLightedColor,
-                      boxShadow: active
-                          ? [
-                              BoxShadow(
-                                  color: Config.getColor(widget.set.id),
-                                  blurRadius: 6,
-                                  spreadRadius: 2)
-                            ]
-                          : []),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: width * 0.5,
+      child: Column(
+        children: [
+          Card(
+            elevation: 3,
+            color: Colors.white.withOpacity(0),
+            margin: const EdgeInsets.symmetric(vertical: Config.margin / 2),
+            child: Column(
+              children: [
+                Stack(children: [
+                  SizedBox(
+                    child: AnimatedContainer(
+                      duration: Config.animationTime,
+                      height: cardHeight,
+                      decoration: BoxDecoration(
+                          borderRadius: Config.borderRadius,
+                          color: active
+                              ? Config.activeBackgroundLightedColor
+                              : Config.backgroundLightedColor),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.5,
+                          ),
+                          Container(
+                            width: width * 0.4,
+                            alignment: Alignment.center,
+                            child: Image(
+                              image: AssetImage(widget.set.imageUrl),
+                              height: active ? cardHeight : cardHeight * 0.9,
+                              // fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        width: width * 0.4,
-                        alignment: Alignment.center,
-                        child: Image(
-                          image: AssetImage(widget.set.imageUrl),
-                          height: active ? cardHeight : cardHeight * 0.9,
-                          // fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                height: cardHeight,
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(left: Config.padding * 2),
-                child: Text(widget.set.name,
-                    style: TextStyle(
-                        fontFamily: Config.fontFamily,
-                        fontSize:
-                            !active ? fontSize(context) : fontSize(context) + 2,
-                        color: Config.iconColor)),
-              ),
-            ]),
-            pressed & widget.showTiles
-                ? CollectionsOptionsList(set: widget.set)
-                : Container(),
-          ],
-        ),
+                  Container(
+                    height: cardHeight,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: Config.padding * 2),
+                    child: Text(widget.set.name,
+                        style: TextStyle(
+                            fontFamily: Config.fontFamily,
+                            fontSize:
+                                !active ? fontSize(context) : fontSize(context) + 2,
+                            color: Config.iconColor)),
+                  ),
+                ]),
+
+              ],
+            ),
+          ),
+          pressed & widget.hasSubtitles
+              ? CollectionsOptionsList(set: widget.set)
+              : const SizedBox(),
+        ],
       ),
     );
   }

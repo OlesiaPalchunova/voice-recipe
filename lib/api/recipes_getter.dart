@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:voice_recipe/api/recipes_sender.dart';
 
-import '../model/db/user_db_manager.dart';
+import '../services/db/user_db_manager.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/api_fields.dart';
-import 'package:voice_recipe/model/db/favorite_recipes_db_manager.dart';
+import 'package:voice_recipe/services/db/favorite_recipes_db_manager.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 class RecipesGetter {
@@ -53,17 +53,17 @@ class RecipesGetter {
     return "${apiUrl}media/$id";
   }
 
-  Future<List<Recipe>?> getCollection(String name) async {
+  Future<List<Recipe>?> getCollection(String name, [int pageId = 0]) async {
     if (name == 'favorites') {
       return _favoriteRecipes;
     }
     if (name == 'created') {
       return _createdRecipes;
     }
-    if (collectionsCache.containsKey(name)) {
-      return collectionsCache[name];
+    if (collectionsCache.containsKey('$name$pageId')) {
+      return collectionsCache['$name$pageId'];
     }
-    var response = await fetchCollection(name);
+    var response = await fetchCollection(name, pageId);
     if (response.statusCode != 200) {
       return null;
     }
@@ -76,7 +76,7 @@ class RecipesGetter {
       if (blackList.contains(recipe.name)) continue;
       recipes.add(recipe);
     }
-    collectionsCache[name] = recipes;
+    collectionsCache['$name$pageId'] = recipes;
     for (Recipe recipe in recipes) {
       recipesCache[recipe.id] = recipe;
     }
@@ -115,7 +115,7 @@ class RecipesGetter {
     num? kilocaloriesCount = recipeJson[kilocalories];
     String recipeName = recipeJson[name];
     for (int i = 0; i < recipeName.length; i++) {
-      if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|.|/"))) {
+      if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|\.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
         break;
       }
@@ -153,8 +153,8 @@ class RecipesGetter {
     return http.get(recipeUrl);
   }
 
-  Future<http.Response> fetchCollection(String name) async {
-    var collectionUri = Uri.parse('${apiUrl}collection/search?name=$name');
+  Future<http.Response> fetchCollection(String name, int pageId) async {
+    var collectionUri = Uri.parse('${apiUrl}collection/search?name=$name&page=$pageId');
     return http.get(collectionUri);
   }
 }

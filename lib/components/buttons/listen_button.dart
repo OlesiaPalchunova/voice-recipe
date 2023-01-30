@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/appbars/header_buttons_panel.dart';
 import 'package:voice_recipe/config/config.dart';
 
+import '../../services/service_io.dart';
+
 class ListenButton extends StatefulWidget {
   const ListenButton({super.key,
     required this.onListen,
     required this.onMute,
     required this.iconSize,
-    required this.isListening,
+    required this.listenNotifyer,
     required this.isLocked
   });
 
   final ValueNotifier<bool> isLocked;
-  final ValueNotifier<bool> isListening;
+  final ValueNotifier<bool> listenNotifyer;
   final void Function() onListen;
   final void Function() onMute;
 
@@ -24,11 +26,12 @@ class ListenButton extends StatefulWidget {
 }
 
 class _ListenButtonState extends State<ListenButton> {
+  late bool isListening = widget.listenNotifyer.value;
 
   @override
   void initState() {
     super.initState();
-    if (widget.isListening.value) {
+    if (isListening) {
       widget.onListen();
     }
   }
@@ -36,12 +39,15 @@ class _ListenButtonState extends State<ListenButton> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: widget.isListening,
-      builder: (context, isListening, child) {
-        if (isListening) {
-          widget.onListen();
-        } else {
-          widget.onMute();
+      valueListenable: widget.listenNotifyer,
+      builder: (context, newIsListening, child) {
+        if (newIsListening != isListening) {
+          isListening = newIsListening;
+          if (newIsListening) {
+            widget.onListen();
+          } else {
+            widget.onMute();
+          }
         }
         return ValueListenableBuilder(
           valueListenable: widget.isLocked,
@@ -49,18 +55,25 @@ class _ListenButtonState extends State<ListenButton> {
             return HeaderButtonsPanel.buildButton(
                 IconButton(
                     onPressed: () {
+                      if (Config.isWeb) {
+                        ServiceIO.showAlertDialog(
+                            "К сожалению, голосове управление на данный момент работает только в мобильной версии.",
+                            context);
+                        return;
+                      }
                       if (isLocked) return;
                       setState(() {
-                        widget.isListening.value = !widget.isListening.value;
+                        isListening = !isListening;
+                        widget.listenNotifyer.value = isListening;
                       });
-                      if (widget.isListening.value) {
+                      if (isListening) {
                         widget.onListen();
                       } else {
                         widget.onMute();
                       }
                     },
                     tooltip: "Голосовое управление",
-                    icon: widget.isListening.value
+                    icon: widget.listenNotifyer.value
                         ? Icon(
                       Icons.mic,
                       color: Config.iconColor,
@@ -71,7 +84,7 @@ class _ListenButtonState extends State<ListenButton> {
                       color: Config.iconColor,
                       size: widget.iconSize,
                     )),
-                widget.isListening.value ? Config.iconBackColor
+                widget.listenNotifyer.value ? Config.iconBackColor
                     : Config.disabledIconBackColor);
           },
         );

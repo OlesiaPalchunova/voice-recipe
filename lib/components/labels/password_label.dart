@@ -3,7 +3,7 @@ import 'package:voice_recipe/components/labels/input_label.dart';
 
 import '../../config/config.dart';
 
-class PasswordLabel extends StatefulWidget {
+class PasswordLabel extends StatelessWidget {
   const PasswordLabel(
       {super.key,
       required this.hintText,
@@ -17,49 +17,20 @@ class PasswordLabel extends StatefulWidget {
   final FocusNode? focusNode;
 
   @override
-  State<PasswordLabel> createState() => _PasswordLabelState();
-}
-
-class _PasswordLabelState extends State<PasswordLabel> {
-  bool _obscureText = true;
-  bool _hovered = false;
-  static const double _disabledOpacity = 0.5;
-  static const double _enabledOpacity = 0.7;
-
-  double get opacity => _hovered ? _enabledOpacity : _disabledOpacity;
-
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: Config.isDesktop(context) ? 60 : 40,
       child: TextFormField(
               onFieldSubmitted: (s) {
-                widget.onSubmit();
+                onSubmit();
               },
-              focusNode: widget.focusNode,
-              obscureText: _obscureText,
+              obscureText: true,
+              focusNode: focusNode,
               obscuringCharacter: '*',
-              controller: widget.controller,
+              controller: controller,
               decoration: InputLabel.buildInputDecoration(
-                  labelText: widget.hintText,
-                  suffixIcon: InkWell(
-                    onHover: (hover) {
-                      setState(() {
-                        _hovered = hover;
-                      });
-                    },
-                    onTap: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    child: Icon(
-                      _obscureText
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      color: Config.iconColor.withOpacity(opacity),
-                    ),
-                  )),
+                  labelText: hintText,
+              ),
               style: TextStyle(
                   color: Config.iconColor.withOpacity(0.8),
                   fontSize: 18,

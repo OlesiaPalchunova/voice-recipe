@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/config.dart';
-import '../../model/db/favorite_recipes_db_manager.dart';
+import '../../services/db/favorite_recipes_db_manager.dart';
 import 'package:rive/rive.dart';
 import 'package:voice_recipe/services/service_io.dart';
 

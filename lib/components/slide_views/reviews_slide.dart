@@ -11,7 +11,7 @@ import 'package:voice_recipe/components/review_views/rate_label.dart';
 import 'package:voice_recipe/components/review_views/comment_card.dart';
 import 'package:voice_recipe/components/review_views/star_panel.dart';
 import 'package:voice_recipe/model/comments_model.dart';
-import 'package:voice_recipe/model/db/comment_db_manager.dart';
+import 'package:voice_recipe/services/db/comment_db_manager.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
@@ -43,9 +43,11 @@ class ReviewsSlide extends StatefulWidget {
 }
 
 class _ReviewsSlideState extends State<ReviewsSlide> {
-  var _isEvaluated = false;
-  bool _disposed = false;
+  var isEvaluated = false;
+  bool disposed = false;
   StreamSubscription<MapEntry<String, Comment>>? subscription;
+  final Color backColor =
+  Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
 
   double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
@@ -54,23 +56,23 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   @override
   initState() {
     super.initState();
-    _disposed = false;
+    disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
       if (rate > 0) {
-        _isEvaluated = true;
+        isEvaluated = true;
       }
     }
     subscription ??= widget.commentsController.stream.listen((event) {
       comments[event.key] = event.value;
-      if (_disposed) return;
+      if (disposed) return;
       setState(() {});
     });
   }
 
   @override
   dispose() {
-    _disposed = true;
+    disposed = true;
     super.dispose();
   }
 
@@ -80,8 +82,6 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final Color backColor =
-        Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
     return Container(
       margin: const EdgeInsets.all(Config.margin),
       alignment: Alignment.topCenter,
@@ -94,170 +94,10 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
           alignment: Alignment.topCenter,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RateLabel(
-                    rate: rates[widget.recipe.id % rates.length],
-                    width: labelWidth,
-                    shadowOn: false,
-                  ),
-                  FavoritesButton(
-                    recipeId: widget.recipe.id,
-                  )
-                ],
-              ),
-              !_isEvaluated
-                  ? Container(
-                      margin: const EdgeInsets.only(top: Config.padding),
-                      padding: const EdgeInsets.all(Config.padding),
-                      decoration: BoxDecoration(
-                          color: backColor,
-                          borderRadius: Config.borderRadiusLarge),
-                      child: Column(
-                        children: [
-                          Row(
-                            textBaseline: TextBaseline.alphabetic,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Оставьте отзыв",
-                                style: TextStyle(
-                                    fontFamily: Config.fontFamily,
-                                    fontSize: fontSize(context),
-                                    color: Config.iconColor),
-                              ),
-                            ],
-                          ),
-                          StarPanel(
-                            id: widget.recipe.id,
-                            onTap: (star) {
-                              ratesMap[widget.recipe.id] = star;
-                            },
-                          )
-                        ],
-                      ),
-                    )
-                  : const SizedBox(),
-              Container(
-                margin: const EdgeInsets.only(top: Config.padding),
-                decoration: BoxDecoration(
-                    color: backColor, borderRadius: Config.borderRadiusLarge),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: Config.padding).
-                      add(const EdgeInsets.only(top: Config.margin)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Поделиться рецептом",
-                                style: TextStyle(
-                                    color: Config.darkModeOn
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontFamily: Config.fontFamily,
-                                    fontSize: fontSize(context)),
-                              ),
-                              SelectableText(
-                                recipeLink,
-                                style: TextStyle(
-                                    color: Config.getColor(widget.recipe.id),
-                                    fontFamily: Config.fontFamily,
-                                    fontSize: fontSize(context) - 2),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: Config.borderRadius,
-                              color: Config.backgroundLightedColor,
-                            ),
-                            height: 40,
-                            width: 40,
-                            child: IconButton(
-                                onPressed: () async {
-                                  await Clipboard.setData(
-                                      ClipboardData(text: recipeLink));
-                                  Future.microtask(() => ServiceIO.showAlertDialog(
-                                      "Ссылка успешно скопирована", context));
-                                },
-                                icon: Icon(
-                                  Icons.link_outlined,
-                                  color: Config.iconColor,
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: Config.paddingAll,
-                      width: Config.recipeSlideWidth(context) * .4,
-                      child: ClassicButton(
-                        onTap: () {
-                          Share.share(recipeLink, subject: widget.recipe.name);
-                        },
-                        text: "Отправить",
-                        fontSize: fontSize(context) - 2,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: Config.padding),
-                // padding: const EdgeInsets.all(Config.padding),
-                decoration: BoxDecoration(
-                    color: backColor, borderRadius: Config.borderRadiusLarge),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(Config.padding),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Комментарии",
-                        style: TextStyle(
-                            color:
-                                Config.darkModeOn ? Colors.white : Colors.black,
-                            fontFamily: Config.fontFamily,
-                            fontSize: fontSize(context)),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        NewCommentCard(
-                            focusNode: ReviewsSlide.newCommentNode,
-                            textController: ReviewsSlide.commentController,
-                            onSubmit: _submitComment,
-                            onCancel: () {},
-                            profileImageUrl: ServiceIO.loggedIn
-                                ? FirebaseAuth.instance.currentUser!.photoURL ??
-                                    defaultProfileUrl
-                                : defaultProfileUrl),
-                        Column(
-                          children: comments.keys
-                              .map((id) => CommentCard(
-                                    onUpdate: _updateComment,
-                                    commentId: id,
-                                    comment: comments[id]!,
-                                    recipeId: widget.recipe.id,
-                                    onDelete: () => setState(() {
-                                      comments.remove(id);
-                                    }),
-                                  ))
-                              .toList(),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              buildRatesSection(),
+              buildStarsSection(),
+              buildShareSection(),
+              buildCommentsSection()
             ],
           ),
         ),
@@ -265,18 +105,199 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     );
   }
 
-  Future _updateComment(String newText, String commentId) async {
+  Widget buildRatesSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        RateLabel(
+          rate: rates[widget.recipe.id % rates.length],
+          width: labelWidth,
+          shadowOn: false,
+        ),
+        FavoritesButton(
+          recipeId: widget.recipe.id,
+        )
+      ],
+    );
+  }
+
+  Widget buildStarsSection() {
+    return !isEvaluated
+        ? Container(
+      margin: const EdgeInsets.only(top: Config.padding),
+      padding: const EdgeInsets.all(Config.padding),
+      decoration: BoxDecoration(
+          color: backColor,
+          borderRadius: Config.borderRadiusLarge),
+      child: Column(
+        children: [
+          Row(
+            textBaseline: TextBaseline.alphabetic,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Оставьте отзыв",
+                style: TextStyle(
+                    fontFamily: Config.fontFamily,
+                    fontSize: fontSize(context),
+                    color: Config.iconColor),
+              ),
+            ],
+          ),
+          StarPanel(
+            id: widget.recipe.id,
+            onTap: (star) {
+              ratesMap[widget.recipe.id] = star;
+            },
+          )
+        ],
+      ),
+    )
+        : const SizedBox();
+  }
+
+  Widget buildShareSection() {
+    return Container(
+      margin: const EdgeInsets.only(top: Config.padding),
+      decoration: BoxDecoration(
+          color: backColor, borderRadius: Config.borderRadiusLarge),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: Config.padding).
+            add(const EdgeInsets.only(top: Config.margin)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Поделиться рецептом",
+                      style: TextStyle(
+                          color: Config.darkModeOn
+                              ? Colors.white
+                              : Colors.black,
+                          fontFamily: Config.fontFamily,
+                          fontSize: fontSize(context)),
+                    ),
+                    const SizedBox(height: Config.margin / 2,),
+                    SelectableText(
+                      recipeLink,
+                      style: TextStyle(
+                          color: Config.iconColor.withOpacity(.7),
+                          fontFamily: Config.fontFamily,
+                          decoration: TextDecoration.underline,
+                          fontSize: fontSize(context) - 2),
+                    ),
+                  ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: Config.borderRadius,
+                    color: Config.backgroundLightedColor,
+                  ),
+                  height: 40,
+                  width: 40,
+                  child: IconButton(
+                      onPressed: () async {
+                        await Clipboard.setData(
+                            ClipboardData(text: recipeLink));
+                        Future.microtask(() => ServiceIO.showAlertDialog(
+                            "Ссылка успешно скопирована", context));
+                      },
+                      icon: Icon(
+                        Icons.link_outlined,
+                        color: Config.iconColor,
+                      )),
+                )
+              ],
+            ),
+          ),
+          Container(
+            padding: Config.paddingAll,
+            width: Config.recipeSlideWidth(context) * .4,
+            child: Visibility(
+              visible: !Config.isWeb,
+              child: ClassicButton(
+                onTap: () {
+                  Share.share(recipeLink, subject: widget.recipe.name);
+                },
+                text: "Отправить",
+                fontSize: fontSize(context) - 2,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildCommentsSection() {
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(top: Config.padding),
+      // padding: const EdgeInsets.all(Config.padding),
+      decoration: BoxDecoration(
+          color: backColor, borderRadius: Config.borderRadiusLarge),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(Config.padding),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Комментарии",
+              style: TextStyle(
+                  color:
+                  Config.darkModeOn ? Colors.white : Colors.black,
+                  fontFamily: Config.fontFamily,
+                  fontSize: fontSize(context)),
+            ),
+          ),
+          Column(
+            children: [
+              NewCommentCard(
+                  focusNode: ReviewsSlide.newCommentNode,
+                  textController: ReviewsSlide.commentController,
+                  onSubmit: onSubmitComment,
+                  onCancel: () {},
+                  profileImageUrl: ServiceIO.loggedIn
+                      ? FirebaseAuth.instance.currentUser!.photoURL ??
+                      defaultProfileUrl
+                      : defaultProfileUrl),
+              Column(
+                children: comments.keys
+                    .map((id) => CommentCard(
+                  onUpdate: onUpdateComment,
+                  commentId: id,
+                  comment: comments[id]!,
+                  recipeId: widget.recipe.id,
+                  onDelete: () => setState(() {
+                    comments.remove(id);
+                  }),
+                ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future onUpdateComment(String newText, String commentId) async {
     if (newText.isEmpty || !ServiceIO.loggedIn) {
       return;
     }
     await CommentDbManager().updateComment(
         newText: newText, recipeId: widget.recipe.id, commentId: commentId);
     await widget.updateComments();
-    if (_disposed) return;
+    if (disposed) return;
     setState(() {});
   }
 
-  Future _submitComment(String result) async {
+  Future onSubmitComment(String result) async {
     if (result.isEmpty || !ServiceIO.loggedIn) {
       return;
     }
@@ -290,13 +311,13 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
           uid: user.uid),
       recipeId: widget.recipe.id,
     );
-    if (!_disposed) {
+    if (!disposed) {
       setState(() {
         ReviewsSlide.commentController.clear();
       });
     }
     await widget.updateComments();
-    if (_disposed) return;
+    if (disposed) return;
     setState(() {});
   }
 }

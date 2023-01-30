@@ -164,13 +164,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: Config.padding),
-                      child: Text(
-                        "Шаг ${step.id}",
-                        style: TextStyle(
-                            color: Config.iconColor,
-                            fontFamily: Config.fontFamily,
-                            fontSize: 18),
-                      ),
+                      child: Config.defaultText("Шаг ${step.id}", fontSize: 18),
                     ),
                     step.waitTime == 0
                         ? Container()

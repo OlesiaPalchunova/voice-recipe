@@ -6,12 +6,12 @@ import 'package:voice_recipe/config/config.dart';
 class SayButton extends StatefulWidget {
   const SayButton(
       {super.key,
-      required this.isSaying,
+      required this.sayNotyfyer,
       required this.onSay,
       required this.onStopSaying,
       required this.iconSize});
 
-  final ValueNotifier<bool> isSaying;
+  final ValueNotifier<bool> sayNotyfyer;
   final void Function() onSay;
   final void Function() onStopSaying;
   final double iconSize;
@@ -23,9 +23,7 @@ class SayButton extends StatefulWidget {
 class _SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   late AnimationController _controller;
 
-  bool get isSaying => widget.isSaying.value;
-
-  set isSaying(bool newValue) => widget.isSaying.value = newValue;
+  late bool isSaying = widget.sayNotyfyer.value;
 
   @override
   void initState() {
@@ -43,12 +41,15 @@ class _SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: widget.isSaying,
-        builder: (context, isSayingVal, child) {
-          if (isSaying) {
-            widget.onSay();
-          } else {
-            widget.onStopSaying();
+        valueListenable: widget.sayNotyfyer,
+        builder: (context, newIsSaying, child) {
+          if (newIsSaying != isSaying) {
+            isSaying = newIsSaying;
+            if (isSaying) {
+              widget.onSay();
+            } else {
+              widget.onStopSaying();
+            }
           }
           return HeaderButtonsPanel.buildButton(_buildSayIcon(),
               !isSaying ? Config.iconBackColor : Config.disabledIconBackColor);

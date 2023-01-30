@@ -63,7 +63,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
     super.didChangeDependencies();
     height = Config.isDesktop(context)
         ? RecipeHeaderCard.maxDesktopHeight
-        : Config.pageHeight(context) * .2;
+        : Config.pageHeight(context) * .3;
     var largeWidth = Config.pageWidth(context) * .9;
     var smallWidth = height * 1.2;
     if (Config.isDesktop(context)) {
@@ -114,7 +114,9 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
   Widget recipeHeader(double cardWidth) {
-    if (widget.sizeDivider == 1 && widget.recipe.name.length < 50) {
+    if (widget.sizeDivider == 1 &&
+        widget.recipe.name.length < 50 &&
+        widget.recipe.cookTimeMins <= 60) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,8 +132,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
             ),
           ),
           TimeLabel(
-            time: TimeLabel.convertToTOD(
-                widget.recipe.cookTimeMins),
+            time: TimeLabel.convertToTOD(widget.recipe.cookTimeMins),
           )
         ],
       );
@@ -148,8 +149,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
         ),
         const SizedBox(height: Config.margin / 2),
         TimeLabel(
-          time: TimeLabel.convertToTOD(
-              widget.recipe.cookTimeMins),
+          time: TimeLabel.convertToTOD(widget.recipe.cookTimeMins),
         )
       ],
     );
@@ -177,7 +177,12 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
               onTap: onTap,
               child: Card(
                   color: Colors.transparent,
-                  elevation: 0,
+                  elevation: 7,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: Config.borderRadiusLarge,
+                    //set border radius more than 50% of height and width to make circle
+                  ),
+                  shadowColor: Config.darkModeOn ? Colors.grey.shade500 : Colors.black87,
                   margin: EdgeInsets.all(
                       smallCards ? Config.margin / 2 : Config.margin),
                   child: AnimatedContainer(
@@ -188,55 +193,33 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                       },
                       duration: Config.shortAnimationTime,
                       decoration: BoxDecoration(
-                          color: Config.backgroundColor,
-                          borderRadius: Config.borderRadiusLarge,
-                          boxShadow: active
-                              ? [
-                                  BoxShadow(
-                                      color: Config.getGradientColor(
-                                              widget.recipe.id)
-                                          .first
-                                          .darken(12),
-                                      spreadRadius: spreadRadius,
-                                      blurRadius: blurRadius,
-                                      offset: const Offset(2, 2)),
-                                  BoxShadow(
-                                      color: Config.getGradientColor(
-                                              widget.recipe.id)
-                                          .last
-                                          .darken(12),
-                                      spreadRadius: spreadRadius,
-                                      blurRadius: blurRadius,
-                                      offset: const Offset(-2, -2))
-                                ]
-                              : []),
+                          color: active
+                              ? Config.activeBackgroundLightedColor
+                              : Config.edgeColor,
+                          borderRadius: Config.borderRadiusLarge),
                       child: Column(children: [
                         Container(
-                          // height: cardHeight * 0.2,
-                          width: cardWidth,
-                          alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(
-                              color: Config.edgeColor,
-                              borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(Config.largeRadius))),
-                          padding: Config.isDesktop(context)
-                              ? Config.paddingAll.add(Config.paddingVert)
-                              : Config.paddingAll,
-                          child: recipeHeader(cardWidth)
-                        ),
-                        Stack(children: [
-                          SizedBox(
-                            height: cardHeight,
                             width: cardWidth,
-                            child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    bottom:
-                                        Radius.circular(Config.largeRadius)),
-                                child: Image(
-                                    image: NetworkImage(
-                                        widget.recipe.faceImageUrl),
-                                    fit: BoxFit.cover)),
-                          ),
+                            alignment: Alignment.centerLeft,
+                            decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(Config.largeRadius))),
+                            padding: Config.isDesktop(context)
+                                ? Config.paddingAll.add(Config.paddingVert)
+                                : Config.paddingAll,
+                            child: recipeHeader(cardWidth)),
+                        Stack(children: [
+                          Container(
+                              height: cardHeight,
+                              width: cardWidth,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.vertical(
+                                      bottom:
+                                          Radius.circular(Config.largeRadius)),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          widget.recipe.faceImageUrl),
+                                      fit: BoxFit.cover))),
                           Positioned(
                               bottom: Config.margin,
                               left: Config.margin,

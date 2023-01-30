@@ -145,14 +145,14 @@ class RecipesSender {
     return res;
   }
 
-  Future<int> makeCollection(String collectionName) async {
+  Future<bool> makeCollection(String collectionName) async {
     var res = await http.post(Uri.parse("${apiUrl}collection?name=$collectionName"));
-    return res.statusCode;
+    return res.statusCode == 200;
   }
   
-  Future<int> addToCollection(String collectionName, int recipeId) async {
+  Future<bool> addToCollection(String collectionName, int recipeId) async {
     var res = await http.post(Uri.parse("${apiUrl}collection/content?collection=$collectionName&recipe=$recipeId"));
-    return res.statusCode;
+    return res.statusCode == 200;
   }
 
   Future<int> sendImage(String imageUrl) async {

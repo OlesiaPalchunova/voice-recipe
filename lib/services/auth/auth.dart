@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
-import 'package:voice_recipe/model/db/user_db_manager.dart';
+import 'package:voice_recipe/services/db/user_db_manager.dart';
 import 'package:voice_recipe/model/users_info.dart';
 
 class AuthenticationManager {
