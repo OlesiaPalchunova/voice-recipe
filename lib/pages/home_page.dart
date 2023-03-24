@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
+import 'package:voice_recipe/pages/not_found_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
@@ -9,6 +10,7 @@ import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../api/recipes_getter.dart';
+import 'account/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   static int currentPage = 0;
   static int maxPage = 30;
   static const collectionName = 'diamond';
+  bool offline = false;
 
   @override
   void initState() {
@@ -69,16 +72,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void initRecipeViews() async {
-    List<Recipe>? mainPage =
-        await RecipesGetter().getCollection(collectionName, currentPage++);
-    if (mainPage != null) {
-      recipes.addAll(mainPage);
-    }
-    adViews.add(const Advertisement());
-    recipeViews
-        .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
-    if (!disposed) {
-      setState(() {});
+    try {
+      List<Recipe>? mainPage =
+      await RecipesGetter().getCollection(collectionName, currentPage++);
+      if (mainPage != null) {
+        recipes.addAll(mainPage);
+      }
+      // adViews.add(const Advertisement());
+      recipeViews
+          .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      if (!disposed) {
+        setState(() {
+          offline = false;
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      setState(() {
+        offline = true;
+      });
     }
   }
 
@@ -90,11 +102,39 @@ class _HomePageState extends State<HomePage> {
           return Scaffold(
               appBar: Config.defaultAppBar,
               drawerScrimColor: Config.drawerScrimColor,
+              backgroundColor: Config.backgroundEdgeColor,
               drawer: const SideBarMenu(),
               body: SafeArea(
-                child: Builder(builder: buildMainContent),
+                child: Builder(builder: !offline ? buildMainContent : buildOffline),
               ));
         });
+  }
+
+  Widget buildOffline(BuildContext context) {
+    String message = "К сожалению, не удалось загрузить рецепты :C\n"
+        "Проверьте соединение с интернетом";
+    return Center(
+        child: Container(
+          alignment: Alignment.center,
+          width: Config.loginPageWidth(context),
+          padding: Config.paddingAll,
+          child: Column(
+            children: [
+              Container(
+                  height: 500,
+                  alignment: Alignment.center,
+                  child: LoginPage.voiceRecipeIcon(context, 500, 200)
+              ),
+              Text(message,
+                style: TextStyle(
+                    color: Config.darkModeOn ? Colors.white : Colors.black,
+                    fontSize: Config.isDesktop(context) ? 22 : 20,
+                    fontFamily: Config.fontFamily
+                ),)
+            ],
+          ),
+        )
+    );
   }
 
   Widget buildMainContent(BuildContext context) {

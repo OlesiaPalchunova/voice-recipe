@@ -20,6 +20,6 @@ const stepNum = "step_num";
 const stepWaitTime = "wait_time_mins";
 
 const scheme = "https://";
-const authority = "server.voicerecipe.ru/";
+const authority = "server.talkychef.ru/";
 const api = "api/v1/";
 const apiUrl = "$scheme$authority$api";

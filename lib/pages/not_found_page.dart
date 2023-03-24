@@ -25,7 +25,7 @@ class NotFoundPage extends StatelessWidget {
                     Container(
                         height: 500,
                         alignment: Alignment.center,
-                        child: LoginPage.voiceRecipeIcon(context, 500, 300)
+                        child: LoginPage.voiceRecipeIcon(context, 500, 200)
                     ),
                     Text(message,
                     style: TextStyle(

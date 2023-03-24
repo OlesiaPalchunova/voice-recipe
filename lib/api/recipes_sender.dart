@@ -29,6 +29,8 @@ class RecipesSender {
       body: recipeJson
     );
     if (response.statusCode != 200) {
+      print(response.bodyBytes);
+      print(response.body);
       return fail;
     }
     var idJson = jsonDecode(response.body);
@@ -73,7 +75,7 @@ class RecipesSender {
         id : faceId
       },
       cookTimeMins : recipe.cookTimeMins,
-      authorId : 1,
+      authorId : "root",
       prepTimeMins : recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null,
       kilocalories : recipe.kilocalories > 0 ? recipe.kilocalories : null,
       proteins : recipe.proteins as double?,
