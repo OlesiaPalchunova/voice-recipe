@@ -6,6 +6,8 @@ import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
+import 'package:voice_recipe/pages/constructor/edit_recipe_page.dart';
+import 'package:voice_recipe/pages/constructor/future_edit_page.dart';
 import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
 import 'package:voice_recipe/pages/home_page.dart';
 import 'package:voice_recipe/pages/collections/collections_list_page.dart';
@@ -48,6 +50,10 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
             ? const MaterialPage(child: FutureCollectionPage(name: "favorites"))
             : const MaterialPage(child: NotFoundPage()),
         '${FutureRecipePage.route}:id': materialRecipeRoute,
+        '${EditRecipePage.route}:id': (info) {
+          int id = int.parse(info.pathParameters['id']!);
+          return MaterialPage(child: FutureEditRecipePage(recipeId: id));
+        },
         '${FutureCollectionPage.route}:name/:id': materialRecipeRoute,
         '/created/:id': materialRecipeRouteForLoggedIn,
         '/favorites/:id': materialRecipeRouteForLoggedIn,

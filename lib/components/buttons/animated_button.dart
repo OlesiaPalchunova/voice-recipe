@@ -29,6 +29,13 @@ class _AnimatedButtonState extends State<AnimatedButton> {
 
   String get postfix => Config.darkModeOn ? "_dark" : "_light";
 
+  double fontSize(BuildContext context) {
+    if (Config.isDesktop(context)) {
+      return widget.fontSize;
+    }
+    return widget.fontSize - 2;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -57,7 +64,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
                 widget.text,
                 style: TextStyle(
                     color: Config.iconColor,
-                    fontSize: widget.fontSize,
+                    fontSize: fontSize(context),
                     fontFamily: Config.fontFamily
                 ),
               ),

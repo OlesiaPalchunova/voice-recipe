@@ -34,6 +34,25 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
     if (widget.headers.containsKey(HeaderField.name)) {
       nameController.text = widget.headers[HeaderField.name];
     }
+    if (widget.headers.containsKey(HeaderField.faceImageUrl)) {
+      currentImageFile = DroppedFile(
+          url: widget.headers[HeaderField.faceImageUrl],
+          name: '',
+          mime: '',
+          size: 1000);
+    }
+    if (widget.headers.containsKey(HeaderField.cookTimeMins)) {
+      int totalMins = widget.headers[HeaderField.cookTimeMins];
+      int mins = totalMins % 60;
+      int hours = (totalMins - mins) ~/ 60;
+      cookTime = TimeOfDay(hour: hours, minute: mins);
+    }
+    if (widget.headers.containsKey(HeaderField.prepTimeMins)) {
+      int totalMins = widget.headers[HeaderField.prepTimeMins];
+      int mins = totalMins % 60;
+      int hours = (totalMins - mins) ~/ 60;
+      prepTime = TimeOfDay(hour: hours, minute: mins);
+    }
     super.initState();
   }
 

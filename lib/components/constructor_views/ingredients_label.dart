@@ -105,6 +105,9 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
         ),
         Divider(
           color: Config.iconColor.withOpacity(0.5),
+          indent: 0,
+          endIndent: 0,
+          height: 5,
           thickness: 0.3,
         )
       ],

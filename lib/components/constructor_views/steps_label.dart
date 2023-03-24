@@ -24,7 +24,8 @@ class CreateStepsLabel extends StatefulWidget {
 }
 
 class CreateStepsLabelState extends State<CreateStepsLabel> {
-  final stepController = TextEditingController();
+  final stepControllers = <TextEditingController>[];
+  final newStepController = TextEditingController();
   static CreateStepsLabelState? current;
   static TimeOfDay? stepTime;
 
@@ -33,20 +34,27 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
   @override
   void initState() {
     current = this;
+    for (var step in steps) {
+      stepControllers.add(TextEditingController(text: step.description));
+    }
     super.initState();
   }
 
   @override
   void dispose() {
     current = null;
-    stepController.dispose();
+    newStepController.dispose();
+    for (var c in stepControllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
   void clear() {
     if (current == null) return;
     stepTime = null;
-    stepController.clear();
+    stepControllers.clear();
+    newStepController.clear();
     widget.insertList.clear();
     setState(() {});
   }
@@ -86,7 +94,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 withContentPadding: true,
                 focusNode: widget.descFocusNode,
                 labelText: "Описание шага",
-                controller: stepController,
+                controller: newStepController,
                 fontSize: CreateRecipePage.generalFontSize(context),
                 onSubmit: addNewStep,
               ),
@@ -164,7 +172,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: Config.padding),
-                      child: Config.defaultText("Шаг ${step.id}", fontSize: 18),
+                      child: Config.defaultText("Шаг ${step.id + 1}", fontSize: 18),
                     ),
                     step.waitTime == 0
                         ? Container()
@@ -188,12 +196,14 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                       borderRadius: Config.borderRadiusLarge),
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(Config.padding),
-                  child: Text(
-                    step.description,
-                    style: const TextStyle(
-                        fontFamily: Config.fontFamily,
-                        fontSize: 16,
-                        color: Colors.white),
+                  child: InputLabel(
+                    verticalExpand: true,
+                    withContentPadding: true,
+                    focusNode: FocusNode(),
+                    labelText: "Описание шага",
+                    controller: stepControllers[step.id],
+                    fontSize: CreateRecipePage.generalFontSize(context),
+                    onSubmit: () => changeStepDesc(step.id),
                   ),
                 ),
                 const SizedBox(
@@ -210,6 +220,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                           other.id--;
                         }
                       }
+                      stepControllers.removeAt(step.id);
                       steps.remove(step);
                     }),
                 toolTip: "Удалить шаг"))
@@ -250,13 +261,17 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
     });
   }
 
+  void changeStepDesc(int id) {
+    steps[id].description = stepControllers[id].text;
+  }
+
   void addNewStep() {
     if (currentImageFile == null) {
       ServiceIO.showAlertDialog(
           "К шагу должно быть приложено изображение", context);
       return;
     }
-    String desc = stepController.text.trim();
+    String desc = newStepController.text.trim();
     if (desc.isEmpty) {
       ServiceIO.showAlertDialog("Описание не может быть пустым", context);
       return;
@@ -265,7 +280,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
     if (stepTime != null) {
       waitTimeMins = stepTime!.hour * 60 + stepTime!.minute;
     }
-    stepController.clear();
+    newStepController.clear();
     stepTime = null;
     setState(() {
       steps.add(RecipeStep(
@@ -273,6 +288,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
           id: steps.length + 1,
           imgUrl: currentImageFile!.url,
           description: desc));
+      stepControllers.add(TextEditingController(text: desc));
       currentImageFile = null;
     });
   }

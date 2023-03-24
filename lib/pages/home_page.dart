@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
       if (mainPage != null) {
         recipes.addAll(mainPage);
       }
-      // adViews.add(const Advertisement());
+      adViews.add(const Advertisement());
       recipeViews
           .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
       if (!disposed) {
