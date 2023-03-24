@@ -58,7 +58,8 @@ dependencies:
   routemaster: ^1.0.1
   flutter_native_splash:
   share_plus:
-#  audioplayers:
+  file_picker:
+
 
 dev_dependencies:
   flutter_test:

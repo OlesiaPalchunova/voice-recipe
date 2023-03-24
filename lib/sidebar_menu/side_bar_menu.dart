@@ -62,14 +62,12 @@ class _SideBarMenuState extends State<SideBarMenu> {
                       iconData: Icons.book_outlined,
                       activeIconData: Icons.book,
                     ),
-                    Config.isWeb
-                        ? SideBarTile(
-                            name: "Создать рецепт",
-                            onClicked: onConstructorTap,
-                            iconData: Icons.create_outlined,
-                            activeIconData: Icons.create,
-                          )
-                        : const SizedBox(),
+                    SideBarTile(
+                      name: "Создать рецепт",
+                      onClicked: onConstructorTap,
+                      iconData: Icons.create_outlined,
+                      activeIconData: Icons.create,
+                    ),
                     SideBarTile(
                       name: "Голосовые команды",
                       onClicked: onVoiceCommandsTap,

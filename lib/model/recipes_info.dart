@@ -1,4 +1,7 @@
 import 'dart:collection';
+import 'dart:typed_data';
+
+import 'package:voice_recipe/model/dropped_file.dart';
 
 class Recipe {
   int id;
@@ -13,9 +16,11 @@ class Recipe {
   List<Ingredient> ingredients;
   List<RecipeStep> steps;
 
+  DroppedFile? faceImageRaw;
+
   Recipe({required this.name, required this.faceImageUrl, required this.id,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
-    required this.ingredients, required this.steps
+    required this.ingredients, required this.steps, this.faceImageRaw
   });
 }
 
@@ -33,10 +38,12 @@ class RecipeStep {
   String imgUrl;
   String description;
   int waitTime;
+  DroppedFile? rawImage;
 
   bool hasImage;
 
-  RecipeStep({required this.id, required this.imgUrl, required this.description, this.waitTime = 0, this.hasImage = true});
+  RecipeStep({required this.id, required this.imgUrl, required this.description, this.waitTime = 0, this.hasImage = true,
+  this.rawImage});
 }
 
 int recipesCounter = 35;

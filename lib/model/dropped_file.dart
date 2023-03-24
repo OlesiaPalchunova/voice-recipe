@@ -1,9 +1,11 @@
+import 'dart:typed_data';
+
 class DroppedFile {
   final String name;
   final String mime;
-  final String url;
+  final Uint8List bytes;
   final int size;
 
   DroppedFile({required this.name, required this.mime,
-  required this.url, required this.size});
+  required this.bytes, required this.size});
 }

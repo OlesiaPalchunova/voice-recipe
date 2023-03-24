@@ -49,12 +49,10 @@ class CreateRecipePage extends StatefulWidget {
       Config.constructorWidth(context);
 }
 
-enum HeaderField { name, faceImageUrl, cookTimeMins, prepTimeMins }
-
 class _CreateRecipePageState extends State<CreateRecipePage> {
   static final List<Ingredient> ingredients = [];
   static final List<RecipeStep> steps = [];
-  static final Map<HeaderField, dynamic> headers = {};
+  static final headers = HeaderInfo();
   final nameFocusNode = FocusNode();
   final ingNameFocusNode = FocusNode();
   final ingCountFocusNode = FocusNode();
@@ -185,11 +183,12 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       return;
     }
     createdRecipe = Recipe(
-      name: headers[HeaderField.name],
-      faceImageUrl: headers[HeaderField.faceImageUrl],
+      name: headers.name!,
+      faceImageUrl: "",
+      faceImageRaw: headers.faceImageRaw!,
       id: Random().nextInt(1000),
-      cookTimeMins: headers[HeaderField.cookTimeMins],
-      prepTimeMins: headers[HeaderField.prepTimeMins],
+      cookTimeMins: headers.cookTimeMins!,
+      prepTimeMins: headers.prepTimeMins!,
       kilocalories: 0,
       ingredients: ingredients,
       steps: steps,

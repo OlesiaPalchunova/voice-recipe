@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:voice_recipe/model/dropped_file.dart';
 
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/api_fields.dart';
@@ -21,13 +23,11 @@ class RecipesSender {
     if (recipeJson == null) {
       return fail;
     }
-    var response = await http.post(
-      Uri.parse('${apiUrl}recipe'),
-      headers: {
-        "Content-Type" : "application/json; charset=UTF-8",
+    var response = await http.post(Uri.parse('${apiUrl}recipe'),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
         },
-      body: recipeJson
-    );
+        body: recipeJson);
     if (response.statusCode != 200) {
       print(response.bodyBytes);
       print(response.body);
@@ -35,11 +35,16 @@ class RecipesSender {
     }
     var idJson = jsonDecode(response.body);
     int? recipeId = idJson[id];
-    return recipeId?? fail;
+    return recipeId ?? fail;
   }
 
   Future<String?> recipeToJson(Recipe recipe) async {
-    int faceId = await sendImage(recipe.faceImageUrl);
+    int faceId;
+    if (recipe.faceImageRaw == null) {
+      faceId = await sendImage(recipe.faceImageUrl);
+    } else {
+      faceId = await sendImageRaw(recipe.faceImageRaw!);
+    }
     if (fail == faceId) {
       return null;
     }
@@ -52,36 +57,32 @@ class RecipesSender {
     for (Ingredient ing in recipe.ingredients) {
       ingsDto.add({
         ingName: ing.name.toLowerCase(),
-        ingUnitName : ing.measureUnit.toLowerCase(),
-        ingCount : ing.count
+        ingUnitName: ing.measureUnit.toLowerCase(),
+        ingCount: ing.count
       });
     }
     List<Map<String, dynamic>> stepsDto = [];
     count = 0;
     for (RecipeStep step in recipe.steps) {
       stepsDto.add({
-        stepMedia : {
-          id : mediaIds[count]
-        },
-        stepDescription : step.description,
-        stepNum : step.id,
-        stepWaitTime : step.waitTime > 0 ? step.waitTime: null
+        stepMedia: {id: mediaIds[count]},
+        stepDescription: step.description,
+        stepNum: step.id,
+        stepWaitTime: step.waitTime > 0 ? step.waitTime : null
       });
       count++;
     }
     Map<String, dynamic> recipeDto = {
-      name : recipe.name,
-      faceMedia : {
-        id : faceId
-      },
-      cookTimeMins : recipe.cookTimeMins,
-      authorId : "root",
-      prepTimeMins : recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null,
-      kilocalories : recipe.kilocalories > 0 ? recipe.kilocalories : null,
-      proteins : recipe.proteins as double?,
-      fats : recipe.fats as double?,
-      carbohydrates : recipe.carbohydrates as double?,
-      ingredientsDistributions : ingsDto,
+      name: recipe.name,
+      faceMedia: {id: faceId},
+      cookTimeMins: recipe.cookTimeMins,
+      authorId: "root",
+      prepTimeMins: recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null,
+      kilocalories: recipe.kilocalories > 0 ? recipe.kilocalories : null,
+      proteins: recipe.proteins as double?,
+      fats: recipe.fats as double?,
+      carbohydrates: recipe.carbohydrates as double?,
+      ingredientsDistributions: ingsDto,
       steps: stepsDto
     };
     var recipeJson = jsonEncode(recipeDto);
@@ -104,28 +105,26 @@ class RecipesSender {
   }
 
   Future<int> sendIngredient(Ingredient ing) async {
-      Map<String, dynamic> ingDto = {
-        ingName: ing.name.toLowerCase(),
-        ingUnitName : ing.measureUnit.toLowerCase(),
-        ingCount : ing.count,
-        ingredientId : ing.id + 10
-      };
-      var response = await http.post(
-          Uri.parse('${apiUrl}recipe'),
-          headers: {
-            "Content-Type" : "application/json; charset=UTF-8",
-          },
-          body: jsonEncode(ingDto)
-      );
-      if (response.statusCode != 200) {
-        return fail;
-      }
-      var idJson = jsonDecode(response.body);
-      int? ingId = idJson[id];
-      if (ingId == null) {
-        return fail;
-      }
-      return ingId;
+    Map<String, dynamic> ingDto = {
+      ingName: ing.name.toLowerCase(),
+      ingUnitName: ing.measureUnit.toLowerCase(),
+      ingCount: ing.count,
+      ingredientId: ing.id + 10
+    };
+    var response = await http.post(Uri.parse('${apiUrl}recipe'),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: jsonEncode(ingDto));
+    if (response.statusCode != 200) {
+      return fail;
+    }
+    var idJson = jsonDecode(response.body);
+    int? ingId = idJson[id];
+    if (ingId == null) {
+      return fail;
+    }
+    return ingId;
   }
 
   Future<List<int>?> loadAllRecipeMedia(List<RecipeStep> steps) async {
@@ -138,7 +137,12 @@ class RecipesSender {
         res.add(defaultMediaId);
         continue;
       }
-      int returnCode = await sendImage(step.imgUrl);
+      int returnCode;
+      if (step.rawImage != null) {
+        returnCode = await sendImageRaw(step.rawImage!);
+      } else {
+        returnCode = await sendImage(step.imgUrl);
+      }
       if (returnCode == fail) {
         return null;
       }
@@ -148,13 +152,36 @@ class RecipesSender {
   }
 
   Future<bool> makeCollection(String collectionName) async {
-    var res = await http.post(Uri.parse("${apiUrl}collection?name=$collectionName"));
+    var res =
+        await http.post(Uri.parse("${apiUrl}collection?name=$collectionName"));
     return res.statusCode == 200;
   }
-  
+
   Future<bool> addToCollection(String collectionName, int recipeId) async {
-    var res = await http.post(Uri.parse("${apiUrl}collection/content?collection=$collectionName&recipe=$recipeId"));
+    var res = await http.post(Uri.parse(
+        "${apiUrl}collection/content?collection=$collectionName&recipe=$recipeId"));
     return res.statusCode == 200;
+  }
+
+  Future<int> sendImageRaw(DroppedFile file) async {
+    var response = await http.post(
+      Uri.parse('${apiUrl}media'),
+      headers: {
+        "Content-Type": file.mime,
+        "Content-Length": file.size.toString()
+      },
+      body: file.bytes,
+    );
+    if (response.statusCode != 200) {
+      print(response.body);
+      return fail;
+    }
+    var idJson = jsonDecode(response.body);
+    int? imageId = idJson[id];
+    if (imageId == null) {
+      return fail;
+    }
+    return imageId;
   }
 
   Future<int> sendImage(String imageUrl) async {

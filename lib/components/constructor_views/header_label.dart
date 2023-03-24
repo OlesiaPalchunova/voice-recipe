@@ -14,11 +14,19 @@ class CreateHeaderLabel extends StatefulWidget {
   const CreateHeaderLabel(
       {super.key, required this.headers, required this.nameFocusNode});
 
-  final Map<HeaderField, dynamic> headers;
+  final HeaderInfo headers;
   final FocusNode nameFocusNode;
 
   @override
   State<CreateHeaderLabel> createState() => CreateHeaderLabelState();
+}
+
+class HeaderInfo {
+  String? name;
+  int? cookTimeMins;
+  int? prepTimeMins;
+  DroppedFile? faceImageRaw;
+  String? faceImageUrl;
 }
 
 class CreateHeaderLabelState extends State<CreateHeaderLabel> {
@@ -28,27 +36,25 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
   static TimeOfDay? cookTime;
   static TimeOfDay? prepTime;
 
+  HeaderInfo get headers => widget.headers;
+
   @override
   void initState() {
     current = this;
-    if (widget.headers.containsKey(HeaderField.name)) {
-      nameController.text = widget.headers[HeaderField.name];
+    if (headers.name != null) {
+      nameController.text = headers.name!;
     }
-    if (widget.headers.containsKey(HeaderField.faceImageUrl)) {
-      currentImageFile = DroppedFile(
-          url: widget.headers[HeaderField.faceImageUrl],
-          name: '',
-          mime: '',
-          size: 1000);
+    if (headers.faceImageRaw != null) {
+      currentImageFile = headers.faceImageRaw;
     }
-    if (widget.headers.containsKey(HeaderField.cookTimeMins)) {
-      int totalMins = widget.headers[HeaderField.cookTimeMins];
+    if (headers.cookTimeMins != null) {
+      int totalMins = headers.cookTimeMins!;
       int mins = totalMins % 60;
       int hours = (totalMins - mins) ~/ 60;
       cookTime = TimeOfDay(hour: hours, minute: mins);
     }
-    if (widget.headers.containsKey(HeaderField.prepTimeMins)) {
-      int totalMins = widget.headers[HeaderField.prepTimeMins];
+    if (headers.prepTimeMins != null) {
+      int totalMins = headers.prepTimeMins!;
       int mins = totalMins % 60;
       int hours = (totalMins - mins) ~/ 60;
       prepTime = TimeOfDay(hour: hours, minute: mins);
@@ -65,7 +71,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
 
   void onDrop(DroppedFile file) {
     setState(() {
-      widget.headers[HeaderField.faceImageUrl] = file.url;
+      headers.faceImageRaw = file;
       currentImageFile = file;
     });
   }
@@ -92,7 +98,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
             onSubmit: () {
               String name = nameController.text.trim();
               if (name.isEmpty) return;
-              widget.headers[HeaderField.name] = name;
+              headers.name = name;
             },
           ),
         ),
@@ -117,7 +123,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
               ),
               SizedBox(
                   width: CreateRecipePage.pageWidth(context) * .5,
-                  child: currentImageFile == null
+                  child: currentImageFile == null && headers.faceImageUrl == null
                       ? ImageDropZone(
                           customButtonColor: CreateRecipePage.buttonColor,
                           onDrop: onDrop,
@@ -212,10 +218,10 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
     nameController.clear();
     cookTime = null;
     prepTime = null;
-    widget.headers.remove(HeaderField.name);
-    widget.headers.remove(HeaderField.faceImageUrl);
-    widget.headers.remove(HeaderField.cookTimeMins);
-    widget.headers.remove(HeaderField.prepTimeMins);
+    headers.name = null;
+    headers.faceImageRaw = null;
+    headers.cookTimeMins = null;
+    headers.prepTimeMins = null;
     if (current != null) {
       setState(() {});
     }
@@ -241,15 +247,15 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
     if (prepTime != null) {
       prepTimeMinsFinal = prepTime!.hour * 60 + prepTime!.minute;
     }
-    widget.headers[HeaderField.name] = recipeName;
-    widget.headers[HeaderField.faceImageUrl] = currentImageFile!.url;
-    widget.headers[HeaderField.cookTimeMins] = cookTimeMinsFinal;
-    widget.headers[HeaderField.prepTimeMins] = prepTimeMinsFinal;
+    headers.name = recipeName;
+    headers.faceImageRaw = currentImageFile!;
+    headers.cookTimeMins = cookTimeMinsFinal;
+    headers.prepTimeMins = prepTimeMinsFinal;
     return true;
   }
 
   Widget stepImagePreview() {
-    if (currentImageFile == null) {
+    if (currentImageFile == null && headers.faceImageUrl == null) {
       return Container();
     }
     return Container(
@@ -258,18 +264,24 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
         children: [
           SizedBox(
             child: ClipRRect(
-                borderRadius: Config.borderRadiusLarge,
-                child: Image(
-                  image: NetworkImage(currentImageFile!.url),
-                  fit: BoxFit.fitWidth,
-                )),
+              borderRadius: Config.borderRadiusLarge,
+              child: headers.faceImageUrl == null
+                  ? Image.memory(
+                      currentImageFile!.bytes,
+                      fit: BoxFit.fitWidth,
+                    )
+                  : Image.network(
+                      headers.faceImageUrl!,
+                      fit: BoxFit.fitWidth,
+                    ),
+            ),
           ),
           Container(
               alignment: Alignment.topRight,
               child: DeleteButton(
                   onPressed: () => setState(() {
                         if (currentImageFile == null) return;
-                        widget.headers.remove(HeaderField.faceImageUrl);
+                        headers.faceImageRaw = null;
                         currentImageFile = null;
                       }),
                   toolTip: "Убрать изображение"))

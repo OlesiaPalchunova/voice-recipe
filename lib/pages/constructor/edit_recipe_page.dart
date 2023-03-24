@@ -1,21 +1,14 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/constructor_views/header_label.dart';
 import 'package:voice_recipe/components/constructor_views/ingredients_label.dart';
 import 'package:voice_recipe/components/constructor_views/steps_label.dart';
-import 'package:voice_recipe/services/db/user_db_manager.dart';
-import 'package:voice_recipe/components/utils/animated_loading.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
-import 'create_recipe_page.dart';
 
 class EditRecipePage extends StatefulWidget {
   const EditRecipePage({super.key, required this.recipe});
@@ -55,7 +48,7 @@ class EditRecipePage extends StatefulWidget {
 class _EditRecipePageState extends State<EditRecipePage> {
   final List<Ingredient> ingredients = [];
   final List<RecipeStep> steps = [];
-  final Map<HeaderField, dynamic> headers = {};
+  final headers = HeaderInfo();
   final nameFocusNode = FocusNode();
   final ingNameFocusNode = FocusNode();
   final ingCountFocusNode = FocusNode();
@@ -68,10 +61,10 @@ class _EditRecipePageState extends State<EditRecipePage> {
   @override
   void initState() {
     super.initState();
-    headers[HeaderField.name] = recipe.name;
-    headers[HeaderField.cookTimeMins] = recipe.cookTimeMins;
-    headers[HeaderField.prepTimeMins] = recipe.prepTimeMins;
-    headers[HeaderField.faceImageUrl] = recipe.faceImageUrl;
+    headers.name = recipe.name;
+    headers.cookTimeMins = recipe.cookTimeMins;
+    headers.prepTimeMins = recipe.prepTimeMins;
+    headers.faceImageUrl = recipe.faceImageUrl;
     steps.addAll(recipe.steps);
     ingredients.addAll(recipe.ingredients);
   }

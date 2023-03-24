@@ -80,10 +80,13 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               currentImageFile == null
-                  ? ImageDropZone(
-                      customButtonColor: CreateRecipePage.buttonColor,
-                      onDrop: handleDropFile,
-                      fontSize: CreateRecipePage.generalFontSize(context),
+                  ? SizedBox(
+                      width: CreateRecipePage.pageWidth(context) * .5,
+                      child: ImageDropZone(
+                        customButtonColor: CreateRecipePage.buttonColor,
+                        onDrop: handleDropFile,
+                        fontSize: CreateRecipePage.generalFontSize(context),
+                      ),
                     )
                   : stepImagePreview(),
               const SizedBox(
@@ -159,10 +162,13 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
               children: [
                 ClipRRect(
                     borderRadius: Config.borderRadiusLarge,
-                    child: Image(
-                      image: NetworkImage(step.imgUrl),
-                      fit: BoxFit.fitWidth,
-                    )),
+                    child: step.rawImage == null
+                        ? Image(
+                            image: NetworkImage(step.imgUrl),
+                            fit: BoxFit.fitWidth,
+                          )
+                        : Image.memory(step.rawImage!.bytes,
+                            fit: BoxFit.fitWidth)),
                 const SizedBox(
                   height: Config.padding,
                 ),
@@ -172,7 +178,8 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(left: Config.padding),
-                      child: Config.defaultText("Шаг ${step.id + 1}", fontSize: 18),
+                      child: Config.defaultText("Шаг ${step.id + 1}",
+                          fontSize: 18),
                     ),
                     step.waitTime == 0
                         ? Container()
@@ -190,9 +197,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      color: !Config.darkModeOn
-                          ? Colors.black87.withOpacity(.75)
-                          : Config.iconBackColor,
+                      color: Config.backgroundLightedColor,
                       borderRadius: Config.borderRadiusLarge),
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(Config.padding),
@@ -238,8 +243,8 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
         children: [
           ClipRRect(
               borderRadius: Config.borderRadiusLarge,
-              child: Image(
-                image: NetworkImage(currentImageFile!.url),
+              child: Image.memory(
+                currentImageFile!.bytes,
                 fit: BoxFit.fitWidth,
               )),
           Container(
@@ -285,8 +290,9 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
     setState(() {
       steps.add(RecipeStep(
           waitTime: waitTimeMins,
-          id: steps.length + 1,
-          imgUrl: currentImageFile!.url,
+          id: steps.length,
+          rawImage: currentImageFile!,
+          imgUrl: "",
           description: desc));
       stepControllers.add(TextEditingController(text: desc));
       currentImageFile = null;
