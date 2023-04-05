@@ -1,13 +1,15 @@
-# TalkyChef
+# Talky Chef
 
 Рецепты с голосовым помощником.
 Перемещайтесь по рецепту, даже если руки заняты!
 
-www.voicerecipe.ru
+talkychef.ru
 
-Мой первый проект на Flutter, уже довольно объемный, успел поработать с
+Мой первый проект на Flutter, успел поработать с
 - firebase auth
 - firestore database
+- local notifications service
 - rive animations
+- navigator 2.0
 
-На данный момент в нашей базе данных свыше 10000 рецептов.
+В данный момент проект собирается под Android и Web.
