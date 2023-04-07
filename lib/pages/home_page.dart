@@ -71,14 +71,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void showFoundRecipes(List<Recipe> recipes) {
+    setState(() {
+      recipeViews
+          .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+    });
+  }
+
   void initRecipeViews() async {
     try {
       List<Recipe>? mainPage =
-      await RecipesGetter().getCollection(collectionName, currentPage++);
+          await RecipesGetter().getCollection(collectionName, currentPage++);
       if (mainPage != null) {
         recipes.addAll(mainPage);
       }
-      adViews.add(const Advertisement());
+      // adViews.add(const Advertisement());
       recipeViews
           .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
       if (!disposed) {
@@ -105,7 +112,8 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Config.backgroundEdgeColor,
               drawer: const SideBarMenu(),
               body: SafeArea(
-                child: Builder(builder: !offline ? buildMainContent : buildOffline),
+                child: Builder(
+                    builder: !offline ? buildMainContent : buildOffline),
               ));
         });
   }
@@ -115,26 +123,25 @@ class _HomePageState extends State<HomePage> {
         "Проверьте соединение с интернетом";
     return Center(
         child: Container(
-          alignment: Alignment.center,
-          width: Config.loginPageWidth(context),
-          padding: Config.paddingAll,
-          child: Column(
-            children: [
-              Container(
-                  height: 500,
-                  alignment: Alignment.center,
-                  child: LoginPage.voiceRecipeIcon(context, 500, 200)
-              ),
-              Text(message,
-                style: TextStyle(
-                    color: Config.darkModeOn ? Colors.white : Colors.black,
-                    fontSize: Config.isDesktop(context) ? 22 : 20,
-                    fontFamily: Config.fontFamily
-                ),)
-            ],
-          ),
-        )
-    );
+      alignment: Alignment.center,
+      width: Config.loginPageWidth(context),
+      padding: Config.paddingAll,
+      child: Column(
+        children: [
+          Container(
+              height: 500,
+              alignment: Alignment.center,
+              child: LoginPage.voiceRecipeIcon(context, 500, 200)),
+          Text(
+            message,
+            style: TextStyle(
+                color: Config.darkModeOn ? Colors.white : Colors.black,
+                fontSize: Config.isDesktop(context) ? 22 : 20,
+                fontFamily: Config.fontFamily),
+          )
+        ],
+      ),
+    ));
   }
 
   Widget buildMainContent(BuildContext context) {
@@ -161,41 +168,49 @@ class _HomePageState extends State<HomePage> {
             color: Config.backgroundEdgeColor,
             child: SizedBox(
               width: Config.widePageWidth(context),
-              child: Column(children: [
-                Container(
-                  margin: const EdgeInsets.all(Config.margin).add(
-                      const EdgeInsets.symmetric(
-                          horizontal: Config.margin * 2)),
-                  child: SizedBox(
+              child: Stack(
+                children: [
+                  Column(children: [
+                    Container(
+                      margin: const EdgeInsets.all(Config.margin).add(
+                          const EdgeInsets.symmetric(
+                              horizontal: Config.margin * 2)),
+                      child: SizedBox(
+                          height: Config.isDesktop(context) ? 60 : 40,
+                          width: 500,
+                    )),
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   child: Column(
+                    //     children: adViews,
+                    //   ),
+                    // ),
+                    const SizedBox(height: Config.margin),
+                    Wrap(children: recipeViews),
+                    const SizedBox(height: Config.margin),
+                    isLoadingMore
+                        ? const Center(child: CircularProgressIndicator())
+                        : const SizedBox()
+                  ]),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(Config.margin).add(
+                        const EdgeInsets.symmetric(
+                            horizontal: Config.margin * 2)),
+                    child: SizedBox(
                       // height: Config.isDesktop(context) ? 60 : 40,
-                      width: 500,
-                      child: SearchField(
-                        onChanged: handleSearch,
-                        focusNode: searchFocusNode,
-                      )),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: adViews,
+                        width: 500,
+                        child: SearchField(
+                          focusNode: searchFocusNode,
+                          updateRecipes: showFoundRecipes,
+                        )),
                   ),
-                ),
-                const SizedBox(height: Config.margin),
-                Wrap(children: recipeViews),
-                const SizedBox(height: Config.margin),
-                isLoadingMore
-                    ? const Center(child: CircularProgressIndicator())
-                    : const SizedBox()
-              ]),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  void handleSearch(String string) {
-    ServiceIO.showAlertDialog(
-        "К сожалению, поиск сейчас не работает.", context);
   }
 }

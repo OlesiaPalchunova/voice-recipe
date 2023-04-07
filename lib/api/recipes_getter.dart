@@ -53,6 +53,25 @@ class RecipesGetter {
     return "${apiUrl}media/$id";
   }
 
+  Future<List<Recipe>?> findRecipes(String request, [int? limit]) async {
+    if (request.isEmpty) {
+      return null;
+    }
+    var response = await fetchBySearch(request, limit);
+    if (response.statusCode != 200) {
+      return null;
+    }
+    var decodedBody = utf8.decode(response.body.codeUnits);
+    List<dynamic> recipesJson = jsonDecode(decodedBody);
+    List<Recipe> recipes = [];
+    for (dynamic recipeJson in recipesJson) {
+      Recipe recipe = recipeFromJson(recipeJson);
+      if (blackList.contains(recipe.name)) continue;
+      recipes.add(recipe);
+    }
+    return recipes;
+  }
+
   Future<List<Recipe>?> getCollection(String name, [int pageId = 0]) async {
     if (name == 'favorites') {
       return _favoriteRecipes;
@@ -156,5 +175,14 @@ class RecipesGetter {
   Future<http.Response> fetchCollection(String name, int pageId) async {
     var collectionUri = Uri.parse('${apiUrl}collection/search?name=$name&page=$pageId');
     return http.get(collectionUri);
+  }
+
+  Future<http.Response> fetchBySearch(String request, int? limit) async {
+    String limitPostfix = "";
+    if (limit != null) {
+      limitPostfix = "?limit=$limit";
+    }
+    var searchUri = Uri.parse('${apiUrl}recipe/search/$request$limitPostfix');
+    return http.get(searchUri);
   }
 }
