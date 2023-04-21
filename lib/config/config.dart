@@ -74,6 +74,8 @@ class Config {
 
   static EdgeInsetsGeometry get paddingAll => const EdgeInsets.all(padding);
 
+  static EdgeInsetsGeometry get zeroPadding => const EdgeInsets.all(0.0);
+
   static EdgeInsetsGeometry get paddingVert =>
       const EdgeInsets.symmetric(vertical: padding);
 
@@ -83,7 +85,8 @@ class Config {
           fontSize: fontSize,
           color: Config.iconColor,
           fontFamily: Config.fontFamily,
-        ));
+        ),
+    overflow: TextOverflow.visible,);
   }
 
   static const darkThemeBackColor = Color(0xff171717); //Color(0xFF242634);

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/advertisement.dart';
-import 'package:voice_recipe/pages/not_found_page.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_menu.dart';
 import 'package:voice_recipe/components/utils/slider_gesture_handler.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/components/recipe_header_card.dart';
-import 'package:voice_recipe/components/utils/search_field.dart';
+import 'package:voice_recipe/components/search/search_field.dart';
 import 'package:voice_recipe/config/config.dart';
-import 'package:voice_recipe/services/service_io.dart';
 
 import '../api/recipes_getter.dart';
+import '../components/buttons/search_button.dart';
 import 'account/login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -85,7 +84,7 @@ class _HomePageState extends State<HomePage> {
       if (mainPage != null) {
         recipes.addAll(mainPage);
       }
-      // adViews.add(const Advertisement());
+      adViews.add(const Advertisement());
       recipeViews
           .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
       if (!disposed) {
@@ -144,70 +143,96 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
+  double iconSize(BuildContext context) => Config.isDesktop(context) ? 30 : 15;
+
   Widget buildMainContent(BuildContext context) {
-    return SliderGestureHandler(
-      handleKeyboard: false,
-      ignoreVerticalSwipes: false,
-      handleSideTaps: false,
-      customOnTap: () => searchFocusNode.unfocus(),
-      onRight: () {},
-      onEscape: () {},
-      onLeft: () => Scaffold.of(context).openDrawer(),
-      child: Scrollbar(
-        thickness: Config.isDesktop(context) ? 20 : 0,
-        radius: const Radius.elliptical(6, 12),
+    return Scrollbar(
+      thickness: Config.isDesktop(context) ? 20 : 0,
+      radius: const Radius.elliptical(6, 12),
+      controller: scrollController,
+      interactive: true,
+      thumbVisibility: Config.isDesktop(context),
+      child: SingleChildScrollView(
         controller: scrollController,
-        interactive: true,
-        thumbVisibility: Config.isDesktop(context),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          scrollDirection: Axis.vertical,
-          child: Container(
-            alignment: Alignment.topCenter,
-            color: Config.backgroundEdgeColor,
-            child: SizedBox(
-              width: Config.widePageWidth(context),
-              child: Stack(
-                children: [
-                  Column(children: [
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        scrollDirection: Axis.vertical,
+        physics: RangeMaintainingScrollPhysics(),
+        child: Container(
+          alignment: Alignment.topCenter,
+          color: Config.backgroundEdgeColor,
+          child: SizedBox(
+            width: Config.widePageWidth(context),
+            child: Column(children: [
+              Container(
+                margin: const EdgeInsets.all(Config.margin).add(
+                    const EdgeInsets.symmetric(horizontal: Config.margin * 2)),
+                child: SizedBox(
+                  height: Config.isDesktop(context) ? 50 : 40,
+                  width: 500,
+                  child: SearchButton(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          barrierColor: Colors.transparent,
+                          useSafeArea: false,
+                          builder: (context) => AlertDialog(
+                              backgroundColor: Colors.transparent,
+                              // contentPadding: Config.zeroPadding,
+                              insetPadding: EdgeInsets.zero,
+                              elevation: 0,
+                              title: const SizedBox(
+                                height: Config.padding * 3.5,
+                              ),
+                              alignment: Alignment.topCenter,
+                              content: SizedBox(
+                                  width: 500,
+                                  height: Config.pageHeight(context) * .6,
+                                  child: SearchField(focusNode: FocusNode()))));
+                    },
+                    text: 'Найти рецепт',
+                  ),
+                ),
+              ),
+              SliderGestureHandler(
+                handleKeyboard: false,
+                ignoreVerticalSwipes: false,
+                handleSideTaps: false,
+                // customOnTap: () => searchFocusNode.unfocus(),
+                onRight: () {},
+                onEscape: () {},
+                onLeft: () => Scaffold.of(context).openDrawer(),
+                child: Column(
+                  children: [
                     Container(
-                      margin: const EdgeInsets.all(Config.margin).add(
-                          const EdgeInsets.symmetric(
-                              horizontal: Config.margin * 2)),
-                      child: SizedBox(
-                          height: Config.isDesktop(context) ? 60 : 40,
-                          width: 500,
-                    )),
-                    // Container(
-                    //   alignment: Alignment.center,
-                    //   child: Column(
-                    //     children: adViews,
-                    //   ),
-                    // ),
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: adViews,
+                      ),
+                    ),
                     const SizedBox(height: Config.margin),
                     Wrap(children: recipeViews),
                     const SizedBox(height: Config.margin),
                     isLoadingMore
                         ? const Center(child: CircularProgressIndicator())
                         : const SizedBox()
-                  ]),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.all(Config.margin).add(
-                        const EdgeInsets.symmetric(
-                            horizontal: Config.margin * 2)),
-                    child: SizedBox(
-                      // height: Config.isDesktop(context) ? 60 : 40,
-                        width: 500,
-                        child: SearchField(
-                          focusNode: searchFocusNode,
-                          updateRecipes: showFoundRecipes,
-                        )),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              )
+            ]
+                // Container(
+                //   alignment: Alignment.center,
+                //   margin: const EdgeInsets.all(Config.margin).add(
+                //       const EdgeInsets.symmetric(
+                //           horizontal: Config.margin * 2)),
+                //   child: SizedBox(
+                //     // height: Config.isDesktop(context) ? 60 : 40,
+                //       width: 500,
+                //       child: SearchField(
+                //         focusNode: searchFocusNode,
+                //         updateRecipes: showFoundRecipes,
+                //       )),
+                // ),
+                ),
           ),
         ),
       ),

@@ -38,7 +38,7 @@ class InputLabel extends StatelessWidget {
           bool? withContentPadding}) {
     bool withPadding = false;
     if (withContentPadding != null) {
-      withPadding = withContentPadding!;
+      withPadding = withContentPadding;
     }
     return InputDecoration(
         hintText: hintText,
@@ -66,7 +66,7 @@ class InputLabel extends StatelessWidget {
         hoverColor: !Config.darkModeOn
             ? Colors.orangeAccent.withOpacity(.2)
             : Colors.grey.shade800,
-        fillColor: Config.darkModeOn ? Colors.white12 : Colors.white70,
+        fillColor: Config.darkModeOn ? Colors.grey.shade900 : Colors.white,
         filled: true,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon);
