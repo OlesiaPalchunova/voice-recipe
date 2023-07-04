@@ -51,7 +51,7 @@ class _FavoritesButtonState extends State<FavoritesButton>
     disposed = false;
     if (!notifyers.containsKey(widget.recipeId)) {
       notifyers[widget.recipeId] = ValueNotifier(false);
-    }    
+    }
     if (ServiceIO.loggedIn) {
       checkIfIsFavorite();
     }
@@ -97,7 +97,20 @@ class _FavoritesButtonState extends State<FavoritesButton>
                 height: width,
                 child: SizedBox(
                   child: RiveAnimation.asset("assets/RiveAssets/like$postfix.riv",
-                    onInit: _onLikeInit
+                    onInit: (Artboard artboard) {
+                      StateMachineController? controller =
+                      StateMachineController.fromArtboard(artboard, 'State Machine 1');
+                      if (controller == null) return;
+                      artboard.addController(controller);
+                      hoveredController = controller.findInput<bool>('Hover') as SMIBool;
+                      pressedController = controller.findInput<bool>('Pressed') as SMIBool;
+                      if (pressed) {
+                        hoveredController?.change(true);
+                        pressedController?.change(true);
+                      } else {
+                        pressedController?.change(false);
+                      }
+                    }
                   )
                 ),
               )

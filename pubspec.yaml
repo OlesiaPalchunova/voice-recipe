@@ -59,6 +59,7 @@ dependencies:
   flutter_native_splash:
   share_plus:
   file_picker:
+  audioplayers:
 
 
 dev_dependencies:
