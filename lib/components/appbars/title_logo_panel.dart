@@ -25,6 +25,7 @@ class TitleLogoPanel extends StatefulWidget {
   }
 }
 
+
 class _TitleLogoPanelState extends State<TitleLogoPanel> {
   void update() {
     setState(() {});
@@ -40,7 +41,7 @@ class _TitleLogoPanelState extends State<TitleLogoPanel> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(),
+              //Container(),
               Text(
                 widget.title,
                 style: TextStyle(
@@ -49,10 +50,10 @@ class _TitleLogoPanelState extends State<TitleLogoPanel> {
                     fontWeight: FontWeight.normal,
                     color: Config.iconColor),
               ),
-              Container(
-                  padding: const EdgeInsets.all(5),
-                  width: 40,
-                  child: Image.asset("assets/images/voice_recipe.png")),
+              // Container(
+              //     padding: const EdgeInsets.all(5),
+              //     width: 40,
+              //     child: Image.asset("assets/images/voice_recipe.png")),
             ],
           );
         });

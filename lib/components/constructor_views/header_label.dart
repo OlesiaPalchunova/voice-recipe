@@ -127,7 +127,7 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
                       ? ImageDropZone(
                           customButtonColor: CreateRecipePage.buttonColor,
                           onDrop: onDrop,
-                          fontSize: CreateRecipePage.generalFontSize(context))
+                          fontSize: 13)
                       : stepImagePreview()),
             ],
           ),

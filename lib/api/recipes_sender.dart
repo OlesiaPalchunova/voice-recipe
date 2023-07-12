@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -10,7 +11,6 @@ import 'package:voice_recipe/api/api_fields.dart';
 class RecipesSender {
   static const int fail = -1;
   static RecipesSender singleton = RecipesSender._internal();
-  static const int defaultMediaId = 172;
 
   RecipesSender._internal();
 
@@ -23,7 +23,7 @@ class RecipesSender {
     if (recipeJson == null) {
       return fail;
     }
-    var response = await http.post(Uri.parse('${apiUrl}recipe'),
+    var response = await http.post(Uri.parse('${apiUrl}recipes'),
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
         },
@@ -46,6 +46,7 @@ class RecipesSender {
       faceId = await sendImageRaw(recipe.faceImageRaw!);
     }
     if (fail == faceId) {
+
       return null;
     }
     List<int>? mediaIds = await loadAllRecipeMedia(recipe.steps);
@@ -65,7 +66,7 @@ class RecipesSender {
     count = 0;
     for (RecipeStep step in recipe.steps) {
       stepsDto.add({
-        stepMedia: {id: mediaIds[count]},
+        stepMedia: mediaIds[count] == 0 ? {id: null} : {id: mediaIds[count]},
         stepDescription: step.description,
         stepNum: step.id,
         stepWaitTime: step.waitTime > 0 ? step.waitTime : null
@@ -111,7 +112,7 @@ class RecipesSender {
       ingCount: ing.count,
       ingredientId: ing.id + 10
     };
-    var response = await http.post(Uri.parse('${apiUrl}recipe'),
+    var response = await http.post(Uri.parse('${apiUrl}recipes'),
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
         },
@@ -134,14 +135,15 @@ class RecipesSender {
     var res = <int>[];
     for (RecipeStep step in steps) {
       if (!step.hasImage) {
-        res.add(defaultMediaId);
+        res.add(0);
         continue;
       }
       int returnCode;
       if (step.rawImage != null) {
         returnCode = await sendImageRaw(step.rawImage!);
       } else {
-        returnCode = await sendImage(step.imgUrl);
+        // returnCode = await sendImage(step.imgUrl);
+        returnCode = 0;
       }
       if (returnCode == fail) {
         return null;
@@ -153,13 +155,13 @@ class RecipesSender {
 
   Future<bool> makeCollection(String collectionName) async {
     var res =
-        await http.post(Uri.parse("${apiUrl}collection?name=$collectionName"));
+        await http.post(Uri.parse("${apiUrl}collections?name=$collectionName"));
     return res.statusCode == 200;
   }
 
   Future<bool> addToCollection(String collectionName, int recipeId) async {
     var res = await http.post(Uri.parse(
-        "${apiUrl}collection/content?collection=$collectionName&recipe=$recipeId"));
+        "${apiUrl}collections/content?collections=$collectionName&recipes=$recipeId"));
     return res.statusCode == 200;
   }
 
@@ -174,6 +176,7 @@ class RecipesSender {
     );
     if (response.statusCode != 200) {
       print(response.body);
+
       return fail;
     }
     var idJson = jsonDecode(response.body);

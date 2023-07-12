@@ -130,19 +130,22 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
         ),
       ),
       Container(
-        padding: Config.paddingAll,
+        //padding: Config.paddingAll,
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          SizedBox(
-            width: CreateRecipePage.pageWidth(context) * .3,
-            child:
-                InputLabel(
-                  labelText: "Название",
-                  hintText: showHint ? ing.name : null,
-                  controller: ingNameController,
-                  fontSize: CreateRecipePage.generalFontSize(context),
-                focusNode: widget.ingNameFocusNode,
-                ),
+          Padding(
+            padding: const EdgeInsets.only(right: 6.0),
+            child: SizedBox(
+              width: CreateRecipePage.pageWidth(context) * .3,
+              child:
+                  InputLabel(
+                    labelText: "Название",
+                    hintText: showHint ? ing.name : null,
+                    controller: ingNameController,
+                    fontSize: CreateRecipePage.generalFontSize(context),
+                  focusNode: widget.ingNameFocusNode,
+                  ),
+            ),
           ),
           SizedBox(
             width: CreateRecipePage.pageWidth(context) * .3,
@@ -155,11 +158,14 @@ class CreateIngredientsLabelState extends State<CreateIngredientsLabel> {
               onSubmit: addNewIngredient,
             ),
           ),
-          SizedBox(
-              width: CreateRecipePage.pageWidth(context) * .3,
-              child: ClassicButton(
-                customColor: CreateRecipePage.buttonColor, onTap: addNewIngredient, text: "Добавить",
-    fontSize: CreateRecipePage.generalFontSize(context),))
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: SizedBox(
+                width: CreateRecipePage.pageWidth(context) * .3,
+                child: ClassicButton(
+                  customColor: CreateRecipePage.buttonColor, onTap: addNewIngredient, text: "Добавить",
+    fontSize: CreateRecipePage.generalFontSize(context),)),
+          )
         ]),
       ),
     ]);

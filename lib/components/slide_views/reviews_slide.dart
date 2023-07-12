@@ -34,7 +34,8 @@ class ReviewsSlide extends StatefulWidget {
   final Map<String, Comment> comments = {};
 
   Future updateComments() async {
-    var commentsDb = await CommentDbManager().getComments(recipe.id);
+    // var commentsDb = await CommentDbManager().getComments(recipe.id);
+    var commentsDb = recipe.comments;
     for (MapEntry<String, Comment> entry in commentsDb.entries) {
       commentsController.add(entry);
       comments[entry.key] = entry.value;
@@ -78,7 +79,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   double get labelWidth => min(65, Config.recipeSlideWidth(context) / 6);
 
-  String get recipeLink => "https://talkychef.ru/recipe/${widget.recipe.id}";
+  String get recipeLink => "https://talkychef.ru/recipes/${widget.recipe.id}";
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +226,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                   Share.share(recipeLink, subject: widget.recipe.name);
                 },
                 text: "Отправить",
-                fontSize: fontSize(context) - 2,
+                fontSize: fontSize(context) - 3,
               ),
             ),
           )

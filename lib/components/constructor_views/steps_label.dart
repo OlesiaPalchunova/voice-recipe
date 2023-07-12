@@ -163,10 +163,11 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
                 ClipRRect(
                     borderRadius: Config.borderRadiusLarge,
                     child: step.rawImage == null
-                        ? Image(
-                            image: NetworkImage(step.imgUrl),
-                            fit: BoxFit.fitWidth,
-                          )
+                        // ? Image(
+                        //     image: NetworkImage(step.imgUrl),
+                        //     fit: BoxFit.fitWidth,
+                        //   )
+                        ? Image.asset("assets/images/voice_recipe.png")
                         : Image.memory(step.rawImage!.bytes,
                             fit: BoxFit.fitWidth)),
                 const SizedBox(
@@ -271,11 +272,12 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
   }
 
   void addNewStep() {
-    if (currentImageFile == null) {
-      ServiceIO.showAlertDialog(
-          "К шагу должно быть приложено изображение", context);
-      return;
-    }
+    // if (currentImageFile == null) {
+    //   ServiceIO.showAlertDialog(
+    //       "К шагу должно быть приложено изображение", context);
+    //   return;
+    //   // currentImageFile = "",
+    // }
     String desc = newStepController.text.trim();
     if (desc.isEmpty) {
       ServiceIO.showAlertDialog("Описание не может быть пустым", context);
@@ -291,7 +293,7 @@ class CreateStepsLabelState extends State<CreateStepsLabel> {
       steps.add(RecipeStep(
           waitTime: waitTimeMins,
           id: steps.length,
-          rawImage: currentImageFile!,
+          rawImage: currentImageFile,
           imgUrl: "",
           description: desc));
       stepControllers.add(TextEditingController(text: desc));

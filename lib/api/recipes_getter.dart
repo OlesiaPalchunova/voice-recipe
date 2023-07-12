@@ -103,6 +103,7 @@ class RecipesGetter {
   }
 
   Recipe recipeFromJson(dynamic recipeJson) {
+
     List<dynamic> ingredientsJson = recipeJson[ingredientsDistributions];
     List<Ingredient> ingredients = [];
     for (dynamic i in ingredientsJson) {
@@ -116,6 +117,7 @@ class RecipesGetter {
     List<dynamic> stepsJson = recipeJson[steps];
     List<RecipeStep> recipeSteps = [];
     for (dynamic s in stepsJson) {
+      print('1');
       var waitTimeMinsRef = s[stepWaitTime];
       int waitTimeMins = 0;
       if (waitTimeMinsRef != null) {
@@ -123,8 +125,8 @@ class RecipesGetter {
       }
       recipeSteps.add(RecipeStep(
           id: s[stepNum],
-          imgUrl: getImageUrl(s[stepMedia][id]),
-          hasImage: s[stepMedia][id] != RecipesSender.defaultMediaId,
+          imgUrl: s[stepMedia] != null ? getImageUrl(s[stepMedia][id]) : 'bgf',
+          hasImage: s[stepMedia] != null,
           description: s[stepDescription],
           waitTime: waitTimeMins
       ));
@@ -168,12 +170,12 @@ class RecipesGetter {
   }
 
   Future<http.Response> fetchRecipe(int id) async {
-    var recipeUrl = Uri.parse('${apiUrl}recipe/$id');
+    var recipeUrl = Uri.parse('${apiUrl}recipes/$id');
     return http.get(recipeUrl);
   }
 
   Future<http.Response> fetchCollection(String name, int pageId) async {
-    var collectionUri = Uri.parse('${apiUrl}collection/search?name=$name&page=$pageId');
+    var collectionUri = Uri.parse('${apiUrl}collections/search?name=$name&page=$pageId');
     return http.get(collectionUri);
   }
 
@@ -182,7 +184,7 @@ class RecipesGetter {
     if (limit != null) {
       limitPostfix = "?limit=$limit";
     }
-    var searchUri = Uri.parse('${apiUrl}recipe/search/$request$limitPostfix');
+    var searchUri = Uri.parse('${apiUrl}recipes/search/$request$limitPostfix');
     return http.get(searchUri);
   }
 }

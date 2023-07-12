@@ -104,7 +104,7 @@ class NewCommentCardState extends State<NewCommentCard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(),
+            // Container(),
             Row(
                 children: [
                   ClassicButton(
@@ -114,7 +114,7 @@ class NewCommentCardState extends State<NewCommentCard> {
                   ),
                   const SizedBox(width: Config.padding,),
                   ClassicButton(
-                    text: widget.initialFocused ? "Обновить" : "Оставить комментарий",
+                    text: widget.initialFocused ? "Обновить" : "   Оставить   \nкомментарий",
                     onTap: onSubmit,
                     fontSize: fontSize(context),
                   ),

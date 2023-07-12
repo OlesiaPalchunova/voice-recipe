@@ -167,7 +167,7 @@ class _RecipePageState extends State<RecipePage> {
           width: sizeIndicator(context),
           height: 10,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4), color: activeColor),
+              borderRadius: BorderRadius.circular(4), color: activeColor), //activeColor
         ),
         spaceBetweenIndicator: sizeIndicator(context) * .5,
         typeIndicatorAnimation: TypeIndicatorAnimation.sizeTransition,

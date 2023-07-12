@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
 import 'package:voice_recipe/services/service_io.dart';
@@ -56,10 +57,13 @@ class _ImageDropZoneState extends State<ImageDropZone> {
                 withData: true,
                 allowedExtensions: ['jpg', 'jpeg', 'png'],
               );
-              if (result == null) return;
-              var file = result.files.first;
-              print(result.files.first.path);
-
+              var file;
+              if (result == null) return; // Image.asset("assets/images/voice_recipe.png",height: 100, width: 100);
+              // if (result == null) file = Image(image: AssetImage("assets/images/voice_recipe.png"));
+              else {
+                file = result.files.first;
+                print(result.files.first.path);
+              }
               widget.onDrop(DroppedFile(
                   name: file.name,
                   mime: "image/${file.extension}",
@@ -155,4 +159,5 @@ class _ImageDropZoneState extends State<ImageDropZone> {
     widget
         .onDrop(DroppedFile(name: name, mime: mime, bytes: bytes, size: size));
   }
+
 }

@@ -95,10 +95,11 @@ flutter:
     - assets/images/
     - assets/images/sets/
     - assets/images/icons/
-    - assets/videos/
     - assets/sounds/
     - assets/RiveAssets/
     - assets/images/decorations/
+    - assets/images/catalogues/
+    - assets/images/dishes/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -113,19 +114,19 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-     - family: Montserrat
-       fonts:
-         - asset: assets/fonts/Montserrat/static/Montserrat-Regular.ttf
-     - family: MontserratBold
-       fonts:
-         - asset: assets/fonts/Montserrat/static/Montserrat-Bold.ttf
-  #         style: italic
-     - family: VoiceRecipeMedia
-       fonts:
-         - asset: assets/fonts/VoiceRecipeMedia.ttf
-     - family: VoiceRecipe
-       fonts:
-         - asset: assets/fonts/VoiceRecipe.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/static/Montserrat-Regular.ttf
+    - family: MontserratBold
+      fonts:
+        - asset: assets/fonts/Montserrat/static/Montserrat-Bold.ttf
+    #         style: italic
+    - family: VoiceRecipeMedia
+      fonts:
+        - asset: assets/fonts/VoiceRecipeMedia.ttf
+    - family: VoiceRecipe
+      fonts:
+        - asset: assets/fonts/VoiceRecipe.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
@@ -153,19 +154,19 @@ flutter_native_splash:
   # https://developer.android.com/guide/topics/ui/splash-page
   # Following are Android 12 specific parameter.
   android_12:
-  # The image parameter sets the splash page icon image.  If this parameter is not specified,
-  # the app's launcher icon will be used instead.
-  # Please note that the splash page will be clipped to a circle on the center of the page.
-  # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
-  # 640 pixels in diameter.
-  # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
-  # 768 pixels in diameter.
+    # The image parameter sets the splash page icon image.  If this parameter is not specified,
+    # the app's launcher icon will be used instead.
+    # Please note that the splash page will be clipped to a circle on the center of the page.
+    # App icon with an icon background: This should be 960×960 pixels, and fit within a circle
+    # 640 pixels in diameter.
+    # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
+    # 768 pixels in diameter.
     image: assets/images/voice_recipe.png
 
-  # Splash page background color.
+    # Splash page background color.
     color: "#FF9933"
 
-  # App icon background color.
+    # App icon background color.
     icon_background_color: "#FF9933"
 
     # The branding property allows you to specify an image used as branding in the splash page.

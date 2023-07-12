@@ -16,6 +16,8 @@ import 'package:voice_recipe/pages/collections/collections_list_page.dart';
 import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/pages/account/auth_page.dart';
 
+import '../pages/user_page_template.dart';
+
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});
 
@@ -132,6 +134,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
       return;
     }
     Routemaster.of(context).push('/favorites');
+  }
+
+  void onUserTap() async {
+    // if (!ServiceIO.loggedIn) {
+    //   ServiceIO.showLoginInviteDialog(context);
+    //   return;
+    // }
+    Routemaster.of(context).push(UserPage.route);
   }
 
   void onProfileLabelTap() {

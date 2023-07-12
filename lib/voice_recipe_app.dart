@@ -4,6 +4,8 @@ import 'package:voice_recipe/pages/account/auth_page.dart';
 import 'package:voice_recipe/pages/account/forgot_password_page.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
+import 'package:voice_recipe/pages/profile_collection/catalogue_page.dart';
+import 'package:voice_recipe/pages/user/user_page.dart';
 import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/pages/constructor/edit_recipe_page.dart';
@@ -15,8 +17,6 @@ import 'package:voice_recipe/pages/not_found_page.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import 'config/config.dart';
-
-//check all
 
 class VoiceRecipeApp extends StatefulWidget {
   const VoiceRecipeApp({super.key});
@@ -39,6 +39,8 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
             const MaterialPage(child: CollectionsListPage()),
         LoginPage.route: (_) => const MaterialPage(child: LoginPage()),
         RegisterPage.route: (_) => const MaterialPage(child: RegisterPage()),
+        UserPage.route: (_) => const MaterialPage(child: UserPage()),
+        CataloguePage.route: (_) => const MaterialPage(child: CataloguePage(name: '', posts: [],)),
         ForgotPasswordPage.route: (_) =>
             const MaterialPage(child: ForgotPasswordPage()),
         '${FutureCollectionPage.route}:name': (info) {
@@ -50,6 +52,12 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
             : const MaterialPage(child: NotFoundPage()),
         '/favorites': (_) => ServiceIO.loggedIn
             ? const MaterialPage(child: FutureCollectionPage(name: "favorites"))
+            : const MaterialPage(child: NotFoundPage()),
+        '/user': (_) => ServiceIO.loggedIn
+            ? const MaterialPage(child: FutureCollectionPage(name: "user"))
+            : const MaterialPage(child: NotFoundPage()),
+        '/catalogue': (_) => ServiceIO.loggedIn
+            ? const MaterialPage(child: FutureCollectionPage(name: "catalogue"))
             : const MaterialPage(child: NotFoundPage()),
         '${FutureRecipePage.route}:id': materialRecipeRoute,
         '${EditRecipePage.route}:id': (info) {

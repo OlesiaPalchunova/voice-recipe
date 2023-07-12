@@ -25,7 +25,7 @@ class CreateRecipePage extends StatefulWidget {
   State<CreateRecipePage> createState() => _CreateRecipePageState();
 
   static double generalFontSize(BuildContext context) =>
-      Config.isDesktop(context) ? 16 : 14;
+      Config.isDesktop(context) ? 16 : 13;
 
   static double titleFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 18 : 16;
@@ -197,6 +197,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
       Future.delayed(const Duration(milliseconds: 2000), () {
         if (recipeId == RecipesSender.fail) {
+          print('111111');
           ServiceIO.showAlertDialog(
               "Приносим свои извинения, сервер не отвечает", context);
         } else {

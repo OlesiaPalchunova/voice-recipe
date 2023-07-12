@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/say_button.dart';
 
 import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
+
+
+import '../../pages/user/user_page.dart';
 
 class HeaderButtonsPanel extends StatelessWidget {
   const HeaderButtonsPanel({
@@ -28,6 +32,7 @@ class HeaderButtonsPanel extends StatelessWidget {
   static final isLockedListening = ValueNotifier(false);
   static final isSaying = ValueNotifier(false);
 
+
   static Container buildButton(IconButton iconButton, Color color) {
     return Container(
         decoration: BoxDecoration(
@@ -42,13 +47,13 @@ class HeaderButtonsPanel extends StatelessWidget {
     return Center(
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(Config.padding),
+        padding: const EdgeInsets.all(3.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                buildAppIcon(),
+                buildUserIcon(context),
                 const SizedBox(
                   width: 10,
                 ),
@@ -89,6 +94,25 @@ class HeaderButtonsPanel extends StatelessWidget {
       child: const Image(
           height: _iconSize * 1.65,
           image: AssetImage("assets/images/voice_recipe.png")),
+    );
+  }
+
+  Widget buildUserIcon(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        Routemaster.of(context).push(UserPage.route);
+      },
+      child: Container(
+        height: 60,
+        width: 60,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Config.iconBackColor,
+          image: DecorationImage(
+              image: AssetImage('assets/images/user.jpg')
+          ),
+        ),
+      ),
     );
   }
 

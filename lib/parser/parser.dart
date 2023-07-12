@@ -76,6 +76,7 @@ class CookPadParser {
             continue; //        /ru/step_attachment/images/3869c4519b6b5998
           }
           String id = imageId.substring("/ru/step_attachment/images/".length);
+          print(id);
           stepImageUrl =
               "https://img-global.cpcdn.com/steps/$id/640x640sq70/photo.jpg";
         }

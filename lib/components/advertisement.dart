@@ -49,7 +49,7 @@ class _AdvertisementState extends State<Advertisement> {
         valueListenable: Config.darkThemeProvider,
         builder: (context, darkModeOn, child) {
           return Container(
-            height: 220,
+            height: 250,
             alignment: Alignment.center,
             width: Advertisement.width(context),
             decoration: const BoxDecoration(

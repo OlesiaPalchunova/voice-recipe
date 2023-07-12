@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:voice_recipe/model/comments_model.dart';
 
+import 'package:http/http.dart' as http;
+import 'package:voice_recipe/api/api_fields.dart';
+
+
 class CommentDbManager {
   static const recipesPath = "recipes";
   static const commentsPath = "comments";
@@ -22,11 +26,16 @@ class CommentDbManager {
   Future addNewComment(
       {required Comment comment, required int recipeId}) async {
     try {
-      await _db
-          .collection(recipesPath)
-          .doc(recipeId.toString())
-          .collection(commentsPath)
-          .add(_buildCommentData(comment));
+      print('dbrh');
+      // await _db
+      //     .collection(recipesPath)
+      //     .doc(recipeId.toString())
+      //     .collection(commentsPath)
+      //     .add(_buildCommentData(comment));
+      String uid = comment.uid;
+      String content = comment.text;
+      var res = await http.post(Uri.parse(
+          "${apiUrl}comments?user_uid=$uid&recipe_id=$recipeId&content=$content"));
     } on Error catch(e) {
       debugPrint(e.toString());
     }

@@ -60,13 +60,14 @@ class _CommentCardState extends State<CommentCard> {
           child: Column(
             children: [
               nickname.isNotEmpty
-                  ? Row(
+                  ? Column(
                       children: [
                         Container(
                           alignment: Alignment.topLeft,
                           child: SelectableText(
                             nickname,
                             style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                 color: Config.iconColor,
                                 fontFamily: Config.fontFamily,
                                 fontSize: CommentCard.nameFontSize(context)),
