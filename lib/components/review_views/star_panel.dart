@@ -6,6 +6,8 @@ import '../../config/config.dart';
 
 import 'package:rive/rive.dart';
 
+import '../../services/db/rate_db.dart';
+
 class StarPanel extends StatefulWidget {
   const StarPanel({super.key, required this.id, required this.onTap});
 
@@ -74,6 +76,7 @@ class StarPanelState extends State<StarPanel> {
                       currentRate = newRate;
                       widget.onTap(currentRate);
                       starsTable[widget.id] = currentRate;
+                      RateDbManager().addNewMark(recipeId: widget.id, userUid: "root", mark: currentRate);
                     }
                     currentRate = newRate;
                   }

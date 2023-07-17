@@ -76,13 +76,17 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
       width = largeWidth;
     }
   }
+  // var rate =  RateDbManager().addNewMark()
 
   bool get active => hovered || pressed;
 
   double get labelWidth => 60;
 
   Widget get rateLabel => RateLabel(
-        rate: rates[widget.recipe.id % rates.length],
+        rate: (widget.recipe.mark * 10).round()/10,
+        // rate: RateDbManager().addNewMark(
+        //
+        // ),
         width: labelWidth,
       );
 

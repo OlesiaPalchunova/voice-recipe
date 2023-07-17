@@ -92,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             LoginPage.inputWrapper(
                                 InputLabel(
                                     focusNode: _secondNameFocusNode,
-                                    labelText: "Фамилия",
+                                    labelText: "Логин",
                                     controller: _secondNameController),
                                 context),
                             LoginPage.inputWrapper(

@@ -8,14 +8,26 @@ import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/services/translator.dart';
 
 import '../model/users_info.dart';
+import 'auth/Token.dart';
+import 'auth/auth.dart';
 
 class ServiceIO {
+  static bool isToken = false;
   static User? get user => FirebaseAuth.instance.currentUser;
 
   static String get profileImageUrl =>
       loggedIn ? user!.photoURL ?? defaultProfileUrl : defaultProfileUrl;
 
-  static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
+  // static bool get loggedIn => FirebaseAuth.instance.currentUser != null;
+  static void setToken(){
+    isToken = true;
+  }
+  // static bool get loggedIn => isToken;
+  static bool get loggedIn {
+    print("444444444444444444444444444444");
+    print(Token.isToken());
+    return Token.isToken();
+  }
 
   static double fontSize(BuildContext context) => Config.isDesktop(context) ?
       20 : 18;

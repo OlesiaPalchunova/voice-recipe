@@ -192,6 +192,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       kilocalories: 0,
       ingredients: ingredients,
       steps: steps,
+      mark: 0
     );
     AnimatedLoading().execute(context, task: () async {
       int recipeId = await RecipesSender().sendRecipe(createdRecipe!);

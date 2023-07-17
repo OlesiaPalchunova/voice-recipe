@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voice_recipe/services/auth/auth.dart';
 import 'package:voice_recipe/pages/account/forgot_password_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 
+import '../../api/api_fields.dart';
 import '../../components/buttons/classic_button.dart';
 import '../../components/labels/input_label.dart';
 import '../../components/labels/password_label.dart';
@@ -12,8 +16,14 @@ import '../../components/buttons/login/ref_button.dart';
 import '../../components/buttons/login/sign_in_button.dart';
 import '../../config/config.dart';
 
+import 'package:voice_recipe/services/service_io.dart';
+
+import 'package:http/http.dart' as http;
+
+import '../../services/auth/Token.dart';
+
 enum Method {
-  email, google
+  nickname, google, email
 }
 
 class LoginPage extends StatefulWidget {
@@ -51,21 +61,25 @@ class LoginPage extends StatefulWidget {
       child: child,
     );
   }
+
+
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
+  final _nicknameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _emailFocusNode = FocusNode();
+  final _nicknameFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
 
-  String get email => _emailController.text.trim();
+  String get nickname => _nicknameController.text.trim();
 
   String get password => _passwordController.text.trim();
 
+
+
   @override
   dispose() {
-    _emailController.dispose();
+    _nicknameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -78,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Config.backgroundEdgeColor,
       body: GestureDetector(
         onTap: () {
-          _emailFocusNode.unfocus();
+          _nicknameFocusNode.unfocus();
           _passwordFocusNode.unfocus();
         },
         child: SingleChildScrollView(
@@ -127,10 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             LoginPage.inputWrapper(
                                 InputLabel(
-                                  focusNode: _emailFocusNode,
-                                  labelText: 'Email',
-                                  controller: _emailController,
-                                  onSubmit: () => login(Method.email),
+                                  focusNode: _nicknameFocusNode,
+                                  labelText: 'Логин',
+                                  controller: _nicknameController,
+                                  onSubmit: () => login(Method.nickname),
                                 ),
                                 context),
                             LoginPage.inputWrapper(
@@ -138,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                                   focusNode: _passwordFocusNode,
                                   hintText: "Пароль",
                                   controller: _passwordController,
-                                  onSubmit: () => login(Method.email),
+                                  onSubmit: () => login(Method.nickname),
                                 ),
                                 context),
                             RefButton(
@@ -149,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: Config.loginPageHeight(context) / 12,
                                 width: LoginPage.buttonWidth(context),
                                 child: ClassicButton(
-                                  onTap: () => login(Method.email),
+                                  onTap: () => login(Method.nickname),
                                   text: "Войти",
                                 )),
                             Container(
@@ -181,19 +195,81 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+//   late SharedPreferences prefs;
+//
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     initSharedPref();
+//   }
+//
+//   void initSharedPref() async{
+//     prefs = await SharedPreferences.getInstance();
+//     ServiceIO.setToken();
+//   }
+//
+//   // Сохранение токена доступа
+//   Future<void> saveAccessToken(String token) async {
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     prefs.setString('accessToken', token);
+//   }
+//
+// // Извлечение токена доступа
+//   Future<String?> getAccessToken() async {
+//     final SharedPreferences prefs = await SharedPreferences.getInstance();
+//     return prefs.getString('accessToken');
+//   }
+
+  void loginUser() async{
+    print("1111111111111111");
+    if (_nicknameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
+      print("22222222222222");
+      var reqBody = {
+        "login":_nicknameController.text,
+        "password":_passwordController.text,
+      };
+      print("333333333333333333");
+
+      var response = await http.post(Uri.parse('${apiUrl}login'),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(reqBody)
+      );
+
+      print("44444444444444444");
+      var jsonResponse = jsonDecode(response.body);
+
+
+      print("666666666666666666");
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        var accessToken = jsonResponse["accessToken"];
+        print(jsonResponse["accessToken"]);
+        // print(jsonResponse["refreshToken"]);
+        Token.saveToken(accessToken);
+      } else {
+        print("555555555555555555");
+      }
+
+    }
+  }
+
   void login(Method method) async {
     AnimatedLoading().execute(
       context,
       task: () async {
-        bool logged = false;
-        if (method == Method.email) {
-          logged = await AuthenticationManager()
-              .signIn(context, email, password);
-        } else {
-          logged = await AuthenticationManager()
-              .signInWithGoogle(context);
-        }
-        return logged;
+        loginUser();
+        return true;
+        // bool logged = false;
+        // if (method == Method.nickname) {
+        //   logged = await AuthenticationManager()
+        //       .signIn(context, nickname, password);
+        // } else {
+        //   logged = await AuthenticationManager()
+        //       .signInWithGoogle(context);
+        // }
+        // return logged;
       },
       onSuccess: () => Routemaster.of(context).pop()
     );

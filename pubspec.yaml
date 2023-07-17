@@ -60,6 +60,9 @@ dependencies:
   share_plus:
   file_picker:
   audioplayers:
+  jwt_decoder:
+  webview_flutter: 2.7.0
+  cookie_jar:
 
 
 dev_dependencies:

@@ -73,6 +73,8 @@ class RecipesGetter {
   }
 
   Future<List<Recipe>?> getCollection(String name, [int pageId = 0]) async {
+    print("4444444444");
+    print(name);
     if (name == 'favorites') {
       return _favoriteRecipes;
     }
@@ -84,6 +86,9 @@ class RecipesGetter {
     }
     var response = await fetchCollection(name, pageId);
     if (response.statusCode != 200) {
+      print(response.body);
+      print(response.statusCode);
+      print(response.request);
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
@@ -117,7 +122,6 @@ class RecipesGetter {
     List<dynamic> stepsJson = recipeJson[steps];
     List<RecipeStep> recipeSteps = [];
     for (dynamic s in stepsJson) {
-      print('1');
       var waitTimeMinsRef = s[stepWaitTime];
       int waitTimeMins = 0;
       if (waitTimeMinsRef != null) {
@@ -135,6 +139,7 @@ class RecipesGetter {
     num? prepTime = recipeJson[prepTimeMins];
     num? kilocaloriesCount = recipeJson[kilocalories];
     String recipeName = recipeJson[name];
+    double mark = recipeJson["avgMark"] != null ? recipeJson["avgMark"] : 0.0;
     for (int i = 0; i < recipeName.length; i++) {
       if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|\.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
@@ -150,11 +155,14 @@ class RecipesGetter {
         kilocalories: kilocaloriesCount == null ? 0.0 : kilocaloriesCount as double,
         ingredients: ingredients,
         steps: recipeSteps,
+        mark: mark,
     );
     return recipe;
   }
 
   Future<Recipe?> getRecipe({required int recipeId}) async {
+    print("99999999");
+
     if (recipesCache.containsKey(recipeId)) {
       return recipesCache[recipeId];
     }
@@ -184,6 +192,8 @@ class RecipesGetter {
     if (limit != null) {
       limitPostfix = "?limit=$limit";
     }
+    print("8888888888");
+
     var searchUri = Uri.parse('${apiUrl}recipes/search/$request$limitPostfix');
     return http.get(searchUri);
   }
