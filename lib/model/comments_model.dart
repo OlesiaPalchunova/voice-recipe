@@ -4,18 +4,27 @@ class Comment {
   final String uid;
   final String userName;
   final String profileUrl;
+  final int id;
 
   Comment({
     required this.postTime,
     required this.text,
     required this.uid,
     required this.userName,
-    required this.profileUrl
+    required this.profileUrl,
+    required this.id
   });
 }
 
 String since(DateTime time) {
-  var diff = DateTime.now().difference(time);
+
+  print("time now: " + DateTime.now().toString());
+  var date = time.toString().replaceAll("Z", "456");
+  print("time: " + DateTime.parse(date).toString());
+
+  var dt = DateTime.parse(date);
+  var diff = DateTime.now().difference(dt);
+  print(diff.toString());
   if (diff.inMinutes < 60) {
     if (diff.inMinutes == 0) {
       return "только что";

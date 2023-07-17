@@ -157,7 +157,8 @@ class _CommentCardState extends State<CommentCard> {
   }
 
   Future deleteComment() async {
-    await CommentDbManager().deleteComment(widget.recipeId, widget.commentId);
+    // await CommentDbManager().deleteComment(widget.recipeId, widget.commentId);
+    await CommentDbManager().deleteComment(widget.commentId);
     widget.onDelete();
   }
 

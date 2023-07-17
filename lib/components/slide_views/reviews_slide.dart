@@ -29,16 +29,21 @@ class ReviewsSlide extends StatefulWidget {
   @override
   State<ReviewsSlide> createState() => _ReviewsSlideState();
 
-  final StreamController<MapEntry<String, Comment>> commentsController =
+  final StreamController<MapEntry<int, Comment>> commentsController =
       StreamController.broadcast();
-  final Map<String, Comment> comments = {};
+  final Map<int, Comment> comments = {};
 
   Future updateComments() async {
-    // var commentsDb = await CommentDbManager().getComments(recipe.id);
-    var commentsDb = recipe.comments;
-    for (MapEntry<String, Comment> entry in commentsDb.entries) {
-      commentsController.add(entry);
-      comments[entry.key] = entry.value;
+    var commentsDb = await CommentDbManager().getComments(recipe.id);
+    var commentsDb1 = await CommentDbManager().getComments1(recipe.id);
+    // var commentsDb = recipe.comments;
+    // for (MapEntry<String, Comment> entry in commentsDb.entries) {
+    //   commentsController.add(entry);
+    //   comments[entry.key] = entry.value;
+    // }
+    for (Comment comment in commentsDb1!) {
+      // commentsController.add(comment);
+      comments[comment.id] = comment;
     }
   }
 }
@@ -46,13 +51,13 @@ class ReviewsSlide extends StatefulWidget {
 class _ReviewsSlideState extends State<ReviewsSlide> {
   var isEvaluated = false;
   bool disposed = false;
-  StreamSubscription<MapEntry<String, Comment>>? subscription;
+  StreamSubscription<MapEntry<int, Comment>>? subscription;
   final Color backColor =
   Config.darkModeOn ? Colors.black12 : Colors.white.withOpacity(.8);
 
   double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
-  Map<String, Comment> get comments => widget.comments;
+  Map<int, Comment> get comments => widget.comments;
 
   @override
   initState() {
@@ -271,7 +276,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                 children: comments.keys
                     .map((id) => CommentCard(
                   onUpdate: onUpdateComment,
-                  commentId: id,
+                  commentId: id.toString(),
                   comment: comments[id]!,
                   recipeId: widget.recipe.id,
                   onDelete: () => setState(() {
@@ -303,8 +308,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       return;
     }
     var user = FirebaseAuth.instance.currentUser!;
+
     await CommentDbManager().addNewComment(
+
       comment: Comment(
+          id: 56,
           profileUrl: user.photoURL ?? defaultProfileUrl,
           userName: user.displayName ?? "Пользователь",
           postTime: DateTime.now(),
@@ -312,6 +320,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
           uid: user.uid),
       recipeId: widget.recipe.id,
     );
+
     if (!disposed) {
       setState(() {
         ReviewsSlide.commentController.clear();

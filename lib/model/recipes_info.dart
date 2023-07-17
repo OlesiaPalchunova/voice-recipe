@@ -16,13 +16,13 @@ class Recipe {
   int? carbohydrates;
   List<Ingredient> ingredients;
   List<RecipeStep> steps;
-  List<Comment> comments;
+  // List<Comment> comments;
 
   DroppedFile? faceImageRaw;
 
   Recipe({required this.name, required this.faceImageUrl, required this.id,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
-    required this.ingredients, required this.steps, this.faceImageRaw, required this.comments
+    required this.ingredients, required this.steps, this.faceImageRaw
   });
 }
 
