@@ -19,6 +19,9 @@ import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../services/auth/authorization.dart';
+import '../../services/db/rate_db.dart';
+
 class ReviewsSlide extends StatefulWidget {
   ReviewsSlide({super.key, required this.recipe});
 
@@ -165,7 +168,9 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                     // style: ButtonStyle(
                     //   foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                     // ),
-                    onPressed: () { },
+                    onPressed: () {
+                      RateDbManager.deleteMark(widget.recipe.id);
+                    },
                     child:
                     Container(
                       // color: Colors.redAccent[100],
@@ -195,6 +200,10 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       ),
     )
         : const SizedBox();
+  }
+
+  void DeleteRate(){
+
   }
 
   Widget buildShareSection() {
@@ -329,9 +338,10 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   Future onUpdateComment(String newText, String commentId) async {
-    if (newText.isEmpty || !ServiceIO.loggedIn) {
-      return;
-    }
+    // if (newText.isEmpty || !ServiceIO.loggedIn) {
+    //   return;
+    // }
+    print("nnnnnnnnnn");
     await CommentDbManager().updateComment(
         newText: newText, recipeId: widget.recipe.id, commentId: commentId);
     await widget.updateComments();
@@ -340,26 +350,41 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   Future onSubmitComment(String result) async {
-    if (result.isEmpty || !ServiceIO.loggedIn) {
-      return;
-    }
+    // if (result.isEmpty || !ServiceIO.loggedIn) {
+    //   return;
+    // }
     // var user = FirebaseAuth.instance.currentUser!;
+    Comment comment = Comment(
+        id: 56,
+        // profileUrl: user.photoURL ?? defaultProfileUrl,
+        // userName: user.displayName ?? "Пользователь",
+        // uid: user.uid,
 
-    await CommentDbManager().addNewComment(
-
-      comment: Comment(
-          id: 56,
-          // profileUrl: user.photoURL ?? defaultProfileUrl,
-          // userName: user.displayName ?? "Пользователь",
-          // uid: user.uid,
-
-          profileUrl: defaultProfileUrl,
-          userName: "Пользователь",
-          postTime: DateTime.now(),
-          text: result,
-          uid: "89"),
+        profileUrl: defaultProfileUrl,
+        userName: "Пользователь",
+        postTime: DateTime.now(),
+        text: result,
+        uid: "89");
+    print("gggggggggggggggggg");
+    var res = await CommentDbManager().addNewComment(
+      comment: comment,
       recipeId: widget.recipe.id,
     );
+    print("777777777777777777777");
+    if (res == -2) {
+      var auth = Authorization.refreshTokens();
+      print("rrrrrrrrrrr66rrrrrrrrrrrr");
+      if (auth == 200) {
+        print("ssssssssssssssssssssssss");
+        await CommentDbManager().addNewComment(
+          comment: comment,
+          recipeId: widget.recipe.id,
+        );
+      } else {
+        print("0000000000000000000000");
+        ServiceIO.showLoginInviteDialog(context);
+      }
+    }
 
     if (!disposed) {
       setState(() {

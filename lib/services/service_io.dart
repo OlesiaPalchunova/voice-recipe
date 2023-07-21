@@ -24,8 +24,6 @@ class ServiceIO {
   }
   // static bool get loggedIn => isToken;
   static bool get loggedIn {
-    print("444444444444444444444444444444");
-    print(Token.isToken());
     return Token.isToken();
   }
 

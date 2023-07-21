@@ -21,6 +21,7 @@ import 'package:voice_recipe/services/service_io.dart';
 import 'package:http/http.dart' as http;
 
 import '../../services/auth/Token.dart';
+import '../../services/auth/authorization.dart';
 
 enum Method {
   nickname, google, email
@@ -222,23 +223,18 @@ class _LoginPageState extends State<LoginPage> {
 //   }
 
   void loginUser() async{
-    print("1111111111111111");
     if (_nicknameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
-      print("22222222222222");
       var reqBody = {
         "login":_nicknameController.text,
         "password":_passwordController.text,
       };
-      print("333333333333333333");
 
       var response = await http.post(Uri.parse('${apiUrl}login'),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(reqBody)
       );
 
-      print("44444444444444444");
       var jsonResponse = jsonDecode(response.body);
-
 
       print("666666666666666666");
       print(response.statusCode);
@@ -247,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
         var accessToken = jsonResponse["accessToken"];
         print(jsonResponse["accessToken"]);
         // print(jsonResponse["refreshToken"]);
-        Token.saveToken(accessToken);
+        Token.saveAccessToken(accessToken);
       } else {
         print("555555555555555555");
       }
@@ -259,7 +255,8 @@ class _LoginPageState extends State<LoginPage> {
     AnimatedLoading().execute(
       context,
       task: () async {
-        loginUser();
+        Authorization.loginUser(_nicknameController.text, _passwordController.text);
+        Authorization.refreshTokens();
         return true;
         // bool logged = false;
         // if (method == Method.nickname) {

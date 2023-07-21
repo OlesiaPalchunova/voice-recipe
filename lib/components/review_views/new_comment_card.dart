@@ -14,7 +14,6 @@ class NewCommentCard extends StatefulWidget {
     required this.profileImageUrl,
     this.initialFocused = false
   });
-
   final FocusNode focusNode;
   final TextEditingController textController;
   final void Function(String) onSubmit;
@@ -68,14 +67,17 @@ class NewCommentCardState extends State<NewCommentCard> {
             ),
             maxLines: null,
             onTap: () {
-              if (ServiceIO.loggedIn) {
                 setState(() {
                   _focused = true;
                 });
-                return;
-              }
-              widget.focusNode.unfocus();
-              ServiceIO.showLoginInviteDialog(context);
+              // if (ServiceIO.loggedIn) {
+              //   setState(() {
+              //     _focused = true;
+              //   });
+              //   return;
+              // }
+              // widget.focusNode.unfocus();
+              // ServiceIO.showLoginInviteDialog(context);
             },
             onSubmitted: (s) => onSubmit(),
             decoration: InputDecoration(

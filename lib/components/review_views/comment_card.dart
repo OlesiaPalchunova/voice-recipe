@@ -5,6 +5,7 @@ import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
 import '../../model/users_info.dart';
+import '../../services/auth/Token.dart';
 import 'new_comment_card.dart';
 
 class CommentCard extends StatefulWidget {
@@ -121,8 +122,9 @@ class _CommentCardState extends State<CommentCard> {
   }
 
   List<PopupMenuEntry<int>> getCommentOptions(BuildContext context) {
-    if (ServiceIO.loggedIn) {
-      String uid = ServiceIO.user!.uid;
+    // if (ServiceIO.loggedIn) {
+    // String uid = ServiceIO.user!.uid;
+    String uid = Token.getUid();
       if (widget.comment.uid == uid) {
         return <PopupMenuEntry<int>>[
           PopupMenuItem(
@@ -137,7 +139,7 @@ class _CommentCardState extends State<CommentCard> {
           ),
         ];
       }
-    }
+    // }
     return <PopupMenuEntry<int>>[
       PopupMenuItem(
         value: 1,
@@ -172,14 +174,18 @@ class _CommentCardState extends State<CommentCard> {
 
   @override
   Widget build(BuildContext context) {
+    print("bbbbbbbbbbbb");
+    print(editMode);
     if (editMode) {
+      print("mmmmmmmmmmmmmmm");
       return NewCommentCard(
         initialFocused: true,
         focusNode: CommentCard.editNode,
         textController: editController,
-        profileImageUrl: ServiceIO.profileImageUrl,
+        profileImageUrl: "ServiceIO.profileImageUrl",
         onSubmit: (text) {
           if (text.trim() != widget.comment.text.trim()) {
+            print("xxxxxxxxxxxxx");
             widget.onUpdate(text, widget.commentId);
           }
           setState(() {

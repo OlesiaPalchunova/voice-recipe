@@ -32,12 +32,14 @@ class CommentDbManager {
 
   Future addNewComment(
       {required Comment comment, required int recipeId}) async {
-      String? commentJson = await commentToJson(comment, recipeId);
+    print("yyyyyyyyyyyyyyyyy");
+
+    String? commentJson = await commentToJson(comment, recipeId);
       print(commentJson);
       if (commentJson == null) {
         return fail;
       }
-      var accessToken = Token.getToken();
+      var accessToken = Token.getAccessToken();
       print("SSSSSSSSSSS");
       print(accessToken);
       var response = await http.post(Uri.parse("${apiUrl}comments"),
@@ -46,8 +48,10 @@ class CommentDbManager {
           "Content-Type": "application/json; charset=UTF-8",
         },
           body: commentJson);
+      print("kkkkkkkkkkkkkkkkkk");
+      print(response.statusCode);
       if (response.statusCode != 200) {
-        print(response.body);
+        if (response.statusCode == 401) return -2;
         return fail;
       }
       print("7777777777777");
@@ -63,7 +67,7 @@ class CommentDbManager {
     // String string = DateFormat.format(DateTime.now());
     Map<String, dynamic> commentDto;
     commentDto = {
-      "user_uid": "root",
+      "user_uid": Token.getUid(),
       "recipe_id": recipeId,
       "content": comment.text,
       "post_time": date,
@@ -74,17 +78,23 @@ class CommentDbManager {
 
   Future updateComment({
     required String newText, required int recipeId, required String commentId}) async {
+    print("qqqqqqqqqqqq");
     String? commentJson = await changedCommentToJson(newText, recipeId, int.parse(commentId));
+
     if (commentJson == null) {
       return fail;
     }
-      var response = await http.put(Uri.parse("${apiUrl}comments"),
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-          body: commentJson);
+    var accessToken = Token.getAccessToken();
+    print("qqqqqqqqqqqq");
+    var response = await http.put(Uri.parse("${apiUrl}comments"),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: commentJson);
+    print("qqqqqqqqqqqq");
+    print(response.statusCode);
     if (response.statusCode != 200) {
-      print(response.bodyBytes);
       print(response.body);
       return fail;
     }
@@ -92,14 +102,17 @@ class CommentDbManager {
   }
 
   Future<String?> changedCommentToJson(String text, int recipeId, int commentId) async {
-
-    List<Map<String, dynamic>> commentDto = [];
-    commentDto.add({
+    print("aaaaaaaaaaaaaa");
+    Map<String, dynamic> commentDto;
+    commentDto = {
       "id": commentId,
+      "user_uid": Token.getUid(),
       "recipe_id": recipeId,
       "content": text,
-    });
+      "post_time": null,
+    };
     var commentJson = jsonEncode(commentDto);
+    print(commentJson);
     return commentJson;
   }
 
@@ -173,7 +186,7 @@ class CommentDbManager {
     Comment comment = Comment(
         id: commentJson["id"],
         uid: commentJson["user_uid"],
-        userName: "dbfgn",
+        userName: commentJson["user_uid"],
         postTime: DateTime.parse(commentJson["post_time"]),
         text: commentJson["content"],
         profileUrl: "",
@@ -201,9 +214,11 @@ class CommentDbManager {
   // }
 
   Future<http.Response> deleteComment(String id) async {
+    var accessToken = Token.getAccessToken();
     final http.Response response = await http.delete(
       Uri.parse('${apiUrl}comments/$id'),
       headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );

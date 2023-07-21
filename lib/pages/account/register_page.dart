@@ -8,6 +8,8 @@ import '../../components/labels/password_label.dart';
 import '../../config/config.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
+import '../../services/auth/authorization.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -18,15 +20,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final _firstNameController = TextEditingController();
-  final _secondNameController = TextEditingController();
+  final _displayNameController = TextEditingController();
+  final _nickNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
-  final _firstNameFocusNode = FocusNode();
-  final _secondNameFocusNode = FocusNode();
+  final _displayNameFocusNode = FocusNode();
+  final _nickNameFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
   String get email => _emailController.text.trim();
@@ -35,14 +37,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String get confirmPassword => _confirmPasswordController.text.trim();
 
-  String get firstName => _firstNameController.text.trim();
+  String get firstName => _displayNameController.text.trim();
 
-  String get secondName => _secondNameController.text.trim();
+  String get secondName => _nickNameController.text.trim();
 
   @override
   dispose() {
-    _firstNameController.dispose();
-    _secondNameController.dispose();
+    _displayNameController.dispose();
+    _nickNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -61,8 +63,8 @@ class _RegisterPageState extends State<RegisterPage> {
       body: GestureDetector(
         onTap: () {
           _emailFocusNode.unfocus();
-          _firstNameFocusNode.unfocus();
-          _secondNameFocusNode.unfocus();
+          _displayNameFocusNode.unfocus();
+          _nickNameFocusNode.unfocus();
           _passwordFocusNode.unfocus();
           _confirmPasswordFocusNode.unfocus();
         },
@@ -85,15 +87,15 @@ class _RegisterPageState extends State<RegisterPage> {
                           children: [
                             LoginPage.inputWrapper(
                                 InputLabel(
-                                    focusNode: _firstNameFocusNode,
+                                    focusNode: _displayNameFocusNode,
                                     labelText: "Имя",
-                                    controller: _firstNameController),
+                                    controller: _displayNameController),
                                 context),
                             LoginPage.inputWrapper(
                                 InputLabel(
-                                    focusNode: _secondNameFocusNode,
+                                    focusNode: _nickNameFocusNode,
                                     labelText: "Логин",
-                                    controller: _secondNameController),
+                                    controller: _nickNameController),
                                 context),
                             LoginPage.inputWrapper(
                                 InputLabel(
@@ -160,19 +162,22 @@ class _RegisterPageState extends State<RegisterPage> {
     AnimatedLoading().execute(
       context,
       task: () async {
-        bool logged = false;
-        if (method == Method.email) {
-          logged = await AuthenticationManager().signUp(
-              context,
-              email,
-              password,
-              confirmPassword,
-              firstName,
-              secondName);
-        } else {
-          logged = await AuthenticationManager().signInWithGoogle(context);
-        }
-        return logged;
+        Authorization.registerUser(_nickNameController.text, _passwordController.text, _displayNameController.text, _emailController.text);
+        return true;
+
+        // bool logged = false;
+        // if (method == Method.email) {
+        //   logged = await AuthenticationManager().signUp(
+        //       context,
+        //       email,
+        //       password,
+        //       confirmPassword,
+        //       firstName,
+        //       secondName);
+        // } else {
+        //   logged = await AuthenticationManager().signInWithGoogle(context);
+        // }
+        // return logged;
       },
       onSuccess: () => Navigator.of(context).pop()
     );

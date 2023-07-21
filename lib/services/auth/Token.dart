@@ -1,37 +1,69 @@
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'Cookie.dart';
 
 class Token{
 
-  static String token = "000";
+  static String accesstoken = "000";
+  static String refreshtoken = "000";
 
-  static void saveToken(String newToken){
-    Cookies.getData();
-    Cookies.getDataFromCookie();
-    token = newToken;
+  final storage = FlutterSecureStorage();
+
+  static void saveAccessToken(String newToken){
+    print("ccccccccccccccccccccccccc");
+    accesstoken = newToken;
   }
 
-  static String getToken(){
-    return token;
+  static String getAccessToken(){
+    return accesstoken;
+  }
+
+  static void saveRefreshToken(String newToken){
+    print("ccccccccccccccccccccccccc");
+    refreshtoken = newToken;
+  }
+
+  static String getRefreshToken(){
+    return refreshtoken;
   }
 
   static bool isToken(){
-    return token != "000";
+    return accesstoken != "000";
   }
 
-  // static late SharedPreferences prefs;
-  //
-  // void initSharedPref() async{
-  //   prefs = await SharedPreferences.getInstance();
-  // }
-  //
-  // static Future<void> saveAccessToken(String token) async {
-  //   initSharedPref();
-  //   prefs.setString('accessToken', token);
-  // }
-  //
-  // static Future<String?> getAccessToken() async {
-  //   return prefs.getString('accessToken');
-  // }
+  static String getUid(){
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(accesstoken);
+    print(decodedToken["login"]);
+    return decodedToken["login"];
+  }
+
+  void Initialize() async {
+    await storage.write(key: 'access_token', value: 'your_access_token_here');
+    await storage.write(key: 'refresh_token', value: 'your_refresh_token_here');
+  }
+
+  Future<String?> getAccessToken1() async {
+    String? accessToken = await storage.read(key: 'access_token');
+    return accessToken;
+  }
+
+  Future<String?> getRefreshToken1() async {
+    String? refreshToken = await storage.read(key: 'refresh_token');
+    return refreshToken;
+  }
+
+  void deleteAccessToken1() async {
+    await storage.delete(key: 'access_token');
+  }
+
+  void deleteRefreshToken1() async {
+    await storage.delete(key: 'refresh_token');
+  }
+
+  void deleteAll1() async {
+    await storage.deleteAll();
+  }
+
 }
