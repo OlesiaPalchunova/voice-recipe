@@ -32,7 +32,9 @@ import 'package:voice_recipe/model/voice_commands/start_timer_command.dart';
 import 'package:voice_recipe/model/voice_commands/stop_timer_command.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
+import '../../model/profile.dart';
 import '../../model/voice_commands/stop_say.dart';
+import '../../services/db/profile_db.dart';
 
 class RecipePage extends StatefulWidget {
   RecipePage({
@@ -77,17 +79,28 @@ class _RecipePageState extends State<RecipePage> {
   late Color activeColor = Config.getColor(widget.recipe.id);
   DateTime tapTime = DateTime.now();
 
+  static Profile profile = Profile(uid: "uid", display_name: "display_name", image: "image", info: "info", tg_link: "tg_link", vk_link: "vk_link");
+
   double sizeIndicator(BuildContext context) =>
       .3 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
 
   Color get inactiveColor => activeColor;
 
+  Future initProfile() async{
+    Profile profile1 = await ProfileDB.getProfileId("lesia");
+    setState(() {
+      profile = profile1;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    initProfile();
     slideId = stepsMap[widget.recipe.id] ?? 0;
     checkToHideButtons();
     _initCommandsListener();
+
   }
 
   void checkToHideButtons() {
@@ -103,13 +116,7 @@ class _RecipePageState extends State<RecipePage> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    stepsMap[widget.recipe.id] = slideId;
-    RecipePage.tts.stop();
-    _listener.shutdown();
-  }
+
 
   int get lastSlideId => widget.slides.length - 1;
 
@@ -244,6 +251,8 @@ class _RecipePageState extends State<RecipePage> {
             alignment: Alignment.center,
             width: Config.maxRecipeSlideWidth,
             child: HeaderButtonsPanel(
+              // user_id: widget.recipe.,
+              profile: profile,
               id: widget.recipe.id,
               onClose: _onClose,
               onList: () {
@@ -411,5 +420,13 @@ class _RecipePageState extends State<RecipePage> {
   void _incrementSlideId() {
     slideId++;
     slideId = slideId > lastSlideId ? lastSlideId : slideId;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    stepsMap[widget.recipe.id] = slideId;
+    RecipePage.tts.stop();
+    _listener.shutdown();
   }
 }

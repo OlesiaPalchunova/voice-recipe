@@ -1,7 +1,11 @@
+// import 'dart:html';
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
@@ -40,6 +44,41 @@ class _ImageDropZoneState extends State<ImageDropZone> {
             Config.isWeb ? buildWebView(context) : buildPortableView(context));
   }
 
+  Future<DroppedFile?> _convertToDroppedFile(XFile? imageFile) async {
+    if (imageFile == null) return null;
+
+    String name = imageFile.name;
+    String mime = 'image/jpeg'; // Замените это на фактический MIME-тип изображения (image/jpeg, image/png и т.д.)
+
+    Uint8List bytes = await imageFile.readAsBytes();
+    int size = bytes.lengthInBytes;
+
+    return DroppedFile(
+      name: name,
+      mime: mime,
+      bytes: bytes,
+      size: size,
+    );
+  }
+
+  var imageFile;
+  var pickedFile;
+  File? _imageFile;
+
+  static DroppedFile? dropped_image;
+
+  Future<void> _getImageFromGallery() async {
+    imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    pickedFile = XFile(imageFile.path);
+    dropped_image = await _convertToDroppedFile(pickedFile);
+
+    if (imageFile != null) {
+      setState(() {
+        _imageFile = File(imageFile.path);
+      });
+    }
+  }
+
   Widget buildPortableView(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
@@ -49,30 +88,49 @@ class _ImageDropZoneState extends State<ImageDropZone> {
         child: SizedBox(
           width: Config.recipeSlideWidth(context) * .4,
           height: 50,
-          child: ClassicButton(
-            customColor: widget.customButtonColor,
-            onTap: () async {
-              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                type: FileType.custom,
-                withData: true,
-                allowedExtensions: ['jpg', 'jpeg', 'png'],
-              );
-              var file;
-              if (result == null) return; // Image.asset("assets/images/voice_recipe.png",height: 100, width: 100);
-              // if (result == null) file = Image(image: AssetImage("assets/images/voice_recipe.png"));
-              else {
-                file = result.files.first;
-                print(result.files.first.path);
-              }
-              widget.onDrop(DroppedFile(
-                  name: file.name,
-                  mime: "image/${file.extension}",
-                  bytes: file.bytes!,
-                  size: file.size));
-            },
-            text: "Выбрать файл",
-            fontSize: widget.fontSize,
+          child: Column(
+            children: [
+              ClassicButton(
+                customColor: widget.customButtonColor,
+                onTap: () async {
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    withData: true,
+                    allowedExtensions: ['jpeg', 'png'],
+                  );
+                  var file;
+                  if (result == null) return; // Image.asset("assets/images/voice_recipe.png",height: 100, width: 100);
+                  // if (result == null) file = Image(image: AssetImage("assets/images/voice_recipe.png"));
+                  else {
+                    file = result.files.first;
+                    print(result.files.first.path);
+                  }
+                  widget.onDrop(DroppedFile(
+                      name: file.name,
+                      mime: "image/jpeg",
+                      bytes: file.bytes!,
+                      size: file.size));
+                },
+                text: "Выбрать файл",
+                fontSize: widget.fontSize,
+              ),
+              // Container(
+              //   // width: 40,
+              //   child: ElevatedButton(
+              //     // onPressed: () => _pickAndLoadFile(context),
+              //     onPressed: () => _getImageFromGallery(),
+              //     child: Container(
+              //         margin: EdgeInsets.only(left: 0),
+              //         child: Icon(Icons.add_circle, size: 50, color: Colors.deepOrange,)),
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.transparent,
+              //       elevation: 0,
+              //     ),
+              //   ),
+              // ),
+            ],
           ),
+
         ));
   }
 

@@ -9,5 +9,6 @@ class UserAccountInfo {
     this.imageProfileUrl = defaultProfileUrl});
 }
 
-const String defaultProfileUrl = "https://i.ibb.co/tmxmsTS/profile.png";
+// const String defaultProfileUrl = "https://i.ibb.co/tmxmsTS/profile.png";
+const String defaultProfileUrl = "https://i.ibb.co/JCwbG4Q/user.jpg";
 

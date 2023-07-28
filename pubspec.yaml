@@ -63,6 +63,9 @@ dependencies:
   jwt_decoder:
   webview_flutter: 2.7.0
   cookie_jar:
+  flutter_svg:
+  flutter_rating_bar:
+  image_picker:
 
 
 dev_dependencies:

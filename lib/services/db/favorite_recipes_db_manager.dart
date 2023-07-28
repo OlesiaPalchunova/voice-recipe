@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:voice_recipe/services/db/user_db.dart';
 import 'package:voice_recipe/services/db/user_db_manager.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
@@ -16,9 +18,9 @@ class FavoriteRecipesDbManager {
     if (initialized || !ServiceIO.loggedIn) {
       return;
     }
-    var user = ServiceIO.user!;
+    // var user = ServiceIO.user!;
     try {
-      var userData = await UserDbManager().getUserData(user.uid);
+      var userData = await UserDbManager().getUserData(UserDB.uid!);
       List<dynamic> favoritesFromBd = userData[UserDbManager.favorites];
       for (dynamic elem in favoritesFromBd) {
         favorites.add(elem);

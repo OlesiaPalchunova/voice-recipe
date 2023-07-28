@@ -128,7 +128,8 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
                           customButtonColor: CreateRecipePage.buttonColor,
                           onDrop: onDrop,
                           fontSize: 13)
-                      : stepImagePreview()),
+                      : stepImagePreview()
+              ),
             ],
           ),
           Container(

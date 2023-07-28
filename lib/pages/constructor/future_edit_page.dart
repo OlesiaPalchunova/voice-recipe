@@ -15,9 +15,9 @@ class FutureEditRecipePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (RecipesGetter().recipesCache.containsKey(recipeId)) {
-      return EditRecipePage(recipe: RecipesGetter().recipesCache[recipeId]!);
-    }
+    // if (RecipesGetter().recipesCache.containsKey(recipeId)) {
+    //   return EditRecipePage(recipe: RecipesGetter().recipesCache[recipeId]!);
+    // }
     return FutureBuilder(
         future: RecipesGetter().getRecipe(recipeId: recipeId),
         builder: (context, snapshot) {

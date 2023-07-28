@@ -5,6 +5,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:voice_recipe/services/db/user_db.dart';
 import 'package:voice_recipe/sidebar_menu/side_bar_tile.dart';
 
 import 'package:voice_recipe/config/config.dart';
@@ -17,6 +18,7 @@ import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/pages/account/auth_page.dart';
 
 import '../pages/user_page_template.dart';
+import '../services/auth/Token.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});
@@ -125,6 +127,10 @@ class _SideBarMenuState extends State<SideBarMenu> {
   }
 
   void onConstructorTap() {
+    if (!ServiceIO.loggedIn) {
+      ServiceIO.showCreateInviteDialog(context);
+      return;
+    }
     Routemaster.of(context).push(CreateRecipePage.route);
   }
 
@@ -153,11 +159,11 @@ class _SideBarMenuState extends State<SideBarMenu> {
   }
 
   Widget buildAccountOrLoginLabel() {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
+    return StreamBuilder(
+        stream: Stream.value(Token.isToken()),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildAccountTile(snapshot.data!);
+          if (snapshot.data == true) {
+            return buildAccountTile();
           } else {
             return SideBarTile(
               name: "Войти",
@@ -173,7 +179,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
       ? const Color(0xFF303030)
       : const Color(0xFFFbF2F1).darken(2);
 
-  Widget buildAccountTile(User user) {
+  Widget buildAccountTile() {
     return Column(
       children: [
         InkWell(
@@ -194,13 +200,13 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     child: ClipRRect(
                       borderRadius:
                           BorderRadius.circular(SideBarMenu.radius(context)),
-                      child: Image.network(user.photoURL ?? defaultProfileUrl),
+                      child: Image.network(defaultProfileUrl),
                     ),
                   ),
                 ),
                 const SizedBox(width: Config.margin),
                 Text(
-                  "${user.displayName}",
+                  "${UserDB.uid}",
                   style: TextStyle(
                     fontSize: SideBarMenu.nameFontSize(context),
                     color: Config.iconColor,

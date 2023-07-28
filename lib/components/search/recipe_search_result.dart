@@ -66,10 +66,15 @@ class _RecipeSearchResultState extends State<RecipeSearchResult> {
   }
 
   void navigateToRecipe(BuildContext context, Recipe recipe) {
+    print("route:");
     String route = FutureRecipePage.route + recipe.id.toString();
+    print("route: $route");
     String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+    print("route: $currentRoute");
+    print(HomePage.route);
     if (currentRoute != HomePage.route) {
       route = '$currentRoute/${recipe.id}';
+      print("route: $route");
     }
     Routemaster.of(context).push(route);
   }

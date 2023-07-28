@@ -1,18 +1,33 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:voice_recipe/components/recipe_header_card.dart';
 
 import '../../config/config.dart';
 
 import 'package:rive/rive.dart';
 
+import '../../model/recipes_info.dart';
 import '../../services/db/rate_db.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../services/db/user_db.dart';
+import '../../services/service_io.dart';
 
 class StarPanel extends StatefulWidget {
-  const StarPanel({super.key, required this.id, required this.onTap});
+  StarPanel({
+    Key? key,
+    required this.id,
+    required this.onTap,
+    required this.rate,
+    required this.recipe,
+  }) : super(key: key);
 
   final int id;
   final Function(int) onTap;
+  final int rate;
+  Recipe recipe;
 
   @override
   State<StarPanel> createState() => StarPanelState();
@@ -27,10 +42,26 @@ class StarPanelState extends State<StarPanel> {
   StateMachineController? controller;
   SMIInput<double>? inputValue;
 
+  static int rate = 0;
+
+  Future initRate() async {
+    int rate1 = await RateDbManager().getMarkById(widget.id, "lesia");
+    setState(() {
+      _initialRating = rate1;
+      print(":(((((((((((((((");
+      print(rate);
+    });
+  }
+
   @override
   void initState() {
+    initRate();
+    print("55555555555555");
+    print(widget.rate);
     current = this;
-    currentRate = starsTable[widget.id] ?? -1;
+    currentRate = starsTable[widget.id] ?? 1;
+    print("rrrrrrrrrrrrrrr $currentRate");
+    // _initialRating = widget.rate;
     super.initState();
   }
 
@@ -52,7 +83,32 @@ class StarPanelState extends State<StarPanel> {
     return 0;
   }
 
+  String getState(int rate) {
+    if (rate == 1) return "1_star";
+    if (rate == 2) return "2_stars";
+    if (rate == 3) return "3_stars";
+    if (rate == 4) return "4_stars";
+    if (rate == 5) return "5_stars";
+    print("oooooooooooooo");
+    print(rate);
+    return " ";
+  }
+
   String get postfix => Config.darkModeOn ? "" : "_light";
+
+  int _initialRating = 0;
+
+  void _resetRating() {
+    print("hhhh");
+    setState(() {
+      print("hhhh");
+      _initialRating = 0;
+      print("hhhh");
+    });
+  }
+
+  var isSet = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,37 +116,51 @@ class StarPanelState extends State<StarPanel> {
     final width = Config.loginPageWidth(context) * k;
     return InkWell(
       onTap: () {},
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: SizedBox(
-          width: width,
-          height: 80,
-          child: RiveAnimation.asset('assets/RiveAssets/rating_animation$postfix.riv',
-            fit: BoxFit.fitWidth,
-            onInit: (artboard) {
-              controller = StateMachineController.fromArtboard(
-                  artboard, 'State Machine 1',
-                  onStateChange: (stateMachineName, stateName) {
-                    int newRate = getRate(stateName);
-                    if (currentRate != newRate) {
-                      currentRate = newRate;
-                      widget.onTap(currentRate);
-                      starsTable[widget.id] = currentRate;
-                      RateDbManager().addNewMark(recipeId: widget.id, userUid: "root", mark: currentRate);
-                    }
-                    currentRate = newRate;
-                  }
-              );
-              if (controller == null) return;
-              artboard.addController(controller!);
-              inputValue = controller!.findInput<double>('rating') as SMINumber;
-              if (currentRate > 0) {
-                inputValue?.change(currentRate.toDouble());
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [RatingBar.builder(
+          initialRating: _initialRating.toDouble(),
+          direction: Axis.horizontal,
+          allowHalfRating: false,
+          itemCount: 5,
+          itemSize: 40.0,
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          onRatingUpdate: (rating) {
+            if (_initialRating == 0) {
+              RateDbManager().addNewMark(recipeId: widget.id, userUid: UserDB.uid, mark: rating.toInt());
+              initRate();
+              if (!ServiceIO.loggedIn) {
+                ServiceIO.showMarkInviteDialog(context);
               }
+            } else {
+            RateDbManager().updateMark(id: 0, userUid: UserDB.uid ?? "", recipeId:  widget.id, mark: rating);
+            if (!ServiceIO.loggedIn) {
+              ServiceIO.showMarkInviteDialog(context);
             }
-          )
-        )
+          }
+            _initialRating = rating.toInt();
+          },
+        ),
+          SizedBox(width: 20),
+          ElevatedButton(
+            onPressed:() {
+              var log = ServiceIO.loggedIn;
+              print("log: $log");
+              if (!ServiceIO.loggedIn) ServiceIO.showMarkInviteDialog(context);
+              RateDbManager().deleteMark(widget.id);
+              setState(() {
+                _initialRating = 0;
+              });
+            },
+            child: Text('Убрать'),
+          ),
+      ]
+
       )
     );
   }
+
 }

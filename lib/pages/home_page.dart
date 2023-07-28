@@ -9,6 +9,7 @@ import 'package:voice_recipe/config/config.dart';
 
 import '../api/recipes_getter.dart';
 import '../components/buttons/search_button.dart';
+import '../services/db/rate_db.dart';
 import 'account/login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -65,15 +66,17 @@ class _HomePageState extends State<HomePage> {
     if (newPortion != null) {
       recipes.addAll(newPortion);
       recipes = recipes;
-      recipeViews
-          .addAll(newPortion.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      recipeViews.addAll(newPortion.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      // recipeViews.addAll(await Future.wait(newPortion.map((recipe) async {
+      //   int mark = await RateDbManager().getMark(recipe.id, "lesia");
+      //   return RecipeHeaderCard(recipe: recipe, mark: mark);
+      // })));
     }
   }
 
   void showFoundRecipes(List<Recipe> recipes) {
     setState(() {
-      recipeViews
-          .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      recipeViews.addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
     });
   }
 
@@ -85,8 +88,7 @@ class _HomePageState extends State<HomePage> {
         recipes.addAll(mainPage);
       }
       adViews.add(const Advertisement());
-      recipeViews
-          .addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
+      recipeViews.addAll(recipes.map((e) => RecipeHeaderCard(recipe: e)).toList());
       if (!disposed) {
         setState(() {
           offline = false;

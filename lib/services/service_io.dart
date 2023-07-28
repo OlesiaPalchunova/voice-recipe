@@ -62,6 +62,56 @@ class ServiceIO {
         ));
   }
 
+  static void showMarkInviteDialog(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          contentPadding: const EdgeInsets.all(Config.padding * 2),
+          actionsPadding: const EdgeInsets.all(Config.padding * 2),
+          backgroundColor: Config.backgroundEdgeColor,
+          content: Text(
+            "Войдите, чтобы ставить \nоценки на рецепты",
+            style: TextStyle(
+                color: Config.iconColor, fontFamily: Config.fontFamily, fontSize: 18),
+          ),
+          actions: [
+            ClassicButton(
+              text: "Войти",
+              fontSize: fontSize(context),
+              onTap: () {
+                Routemaster.of(context).pop();
+                Routemaster.of(context).push(LoginPage.route);
+              },
+            )
+          ],
+        ));
+  }
+
+  static void showCreateInviteDialog(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          contentPadding: const EdgeInsets.all(Config.padding * 2),
+          actionsPadding: const EdgeInsets.all(Config.padding * 2),
+          backgroundColor: Config.backgroundEdgeColor,
+          content: Text(
+            "Войдите, чтобы создавать\nрецепты и оставлять комментарии",
+            style: TextStyle(
+                color: Config.iconColor, fontFamily: Config.fontFamily, fontSize: 18),
+          ),
+          actions: [
+            ClassicButton(
+              text: "Войти",
+              fontSize: fontSize(context),
+              onTap: () {
+                Routemaster.of(context).pop();
+                Routemaster.of(context).push(LoginPage.route);
+              },
+            )
+          ],
+        ));
+  }
+
   static Future<TimeOfDay?> showTimeInputDialog(BuildContext context, String helpText,
       [TimeOfDay initialTime = const TimeOfDay(hour: 0, minute: 0)]) async {
     TimeOfDay? selectedTime = await showTimePicker(

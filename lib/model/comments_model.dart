@@ -18,9 +18,7 @@ class Comment {
 
 String since(DateTime time) {
 
-  print("time now: " + DateTime.now().toString());
   var date = time.toString().replaceAll("Z", "456");
-  print("time: " + DateTime.parse(date).toString());
 
   var dt = DateTime.parse(date);
   var diff = DateTime.now().difference(dt);

@@ -1,8 +1,6 @@
 {
   "name": "Windows 10",
-  "media": {
-    "id": 11
-  },
+  "media": 11,
   "cook_time_mins": 20000,
   "author_id": 1,
   "prep_time_mins": null,
@@ -19,9 +17,7 @@
   ],
   "steps": [
     {
-      "media": {
-        "id": 12
-      },
+      "media": 12,
       "description": "Ну привет, сладенький)",
       "step_num": 1,
       "wait_time_mins": 44

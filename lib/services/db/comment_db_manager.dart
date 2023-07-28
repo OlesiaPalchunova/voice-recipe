@@ -6,6 +6,9 @@ import 'package:voice_recipe/model/comments_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:voice_recipe/api/api_fields.dart';
+import 'package:voice_recipe/model/users_info.dart';
+import 'package:voice_recipe/services/auth/authorization.dart';
+import 'package:voice_recipe/services/db/user_db.dart';
 
 import '../../pages/account/login_page.dart';
 import '../auth/Token.dart';
@@ -30,7 +33,7 @@ class CommentDbManager {
 
   CommentDbManager._internal();
 
-  Future addNewComment(
+  Future tryAddNewComment(
       {required Comment comment, required int recipeId}) async {
     print("yyyyyyyyyyyyyyyyy");
 
@@ -39,7 +42,7 @@ class CommentDbManager {
       if (commentJson == null) {
         return fail;
       }
-      var accessToken = Token.getAccessToken();
+      var accessToken = await Token.getAccessToken();
       print("SSSSSSSSSSS");
       print(accessToken);
       var response = await http.post(Uri.parse("${apiUrl}comments"),
@@ -51,13 +54,34 @@ class CommentDbManager {
       print("kkkkkkkkkkkkkkkkkk");
       print(response.statusCode);
       if (response.statusCode != 200) {
-        if (response.statusCode == 401) return -2;
+        if (response.statusCode == 401) return 401;
         return fail;
       }
       print("7777777777777");
       var idJson = jsonDecode(response.body);
       int? commentId = idJson[id];
       return commentId ?? fail;
+  }
+
+  Future addNewComment(
+      {required Comment comment, required int recipeId}) async {
+    var status = await tryAddNewComment(comment: comment, recipeId: recipeId);
+    print(status);
+    if (status == 200) return status;
+
+    if (status == 401) {
+      int status_access = await Authorization.refreshAccessToken();
+      print(status_access);
+
+      if (status_access == 200) return await tryAddNewComment(comment: comment, recipeId: recipeId);
+      if (status_access == 401) {
+        int status_refresh = await Authorization.refreshTokens();
+        if (status_refresh == 200) return await tryAddNewComment(comment: comment, recipeId: recipeId);
+      }
+    }
+    print("cvcvcvcvcvcv");
+    print(recipeId);
+    return status;
   }
 
   Future<String?> commentToJson(Comment comment, int recipeId) async {
@@ -67,7 +91,7 @@ class CommentDbManager {
     // String string = DateFormat.format(DateTime.now());
     Map<String, dynamic> commentDto;
     commentDto = {
-      "user_uid": Token.getUid(),
+      "user_uid": await UserDB.getUserUid(),
       "recipe_id": recipeId,
       "content": comment.text,
       "post_time": date,
@@ -76,29 +100,43 @@ class CommentDbManager {
     return commentJson;
   }
 
-  Future updateComment({
+  Future tryUpdateComment({
     required String newText, required int recipeId, required String commentId}) async {
-    print("qqqqqqqqqqqq");
     String? commentJson = await changedCommentToJson(newText, recipeId, int.parse(commentId));
 
     if (commentJson == null) {
       return fail;
     }
-    var accessToken = Token.getAccessToken();
-    print("qqqqqqqqqqqq");
+    var accessToken = await Token.getAccessToken();
     var response = await http.put(Uri.parse("${apiUrl}comments"),
         headers: {
           'Authorization': 'Bearer $accessToken',
           "Content-Type": "application/json; charset=UTF-8",
         },
         body: commentJson);
-    print("qqqqqqqqqqqq");
-    print(response.statusCode);
-    if (response.statusCode != 200) {
-      print(response.body);
-      return fail;
+    return response.statusCode;
+  }
+
+  Future updateComment({
+    required String newText, required int recipeId, required String commentId}) async {
+    var status = await tryUpdateComment(newText: newText, recipeId: recipeId, commentId: commentId);
+    print("iyiyiyiy");
+    print(status);
+    if (status == 200) return status;
+
+    if (status == 401) {
+      print("iiiiiiiiiiiiii  1");
+      int status_access = await Authorization.refreshAccessToken();
+      print("iiiiiiiiiiiiii  1");
+      print(status_access);
+
+      if (status_access == 200) return await tryUpdateComment(newText: newText, recipeId: recipeId, commentId: commentId);
+      if (status_access == 401) {
+        int status_refresh = await Authorization.refreshTokens();
+        if (status_refresh == 200) return await tryUpdateComment(newText: newText, recipeId: recipeId, commentId: commentId);
+      }
     }
-    return;
+    return status;
   }
 
   Future<String?> changedCommentToJson(String text, int recipeId, int commentId) async {
@@ -106,7 +144,7 @@ class CommentDbManager {
     Map<String, dynamic> commentDto;
     commentDto = {
       "id": commentId,
-      "user_uid": Token.getUid(),
+      "user_uid": await UserDB.getUserUid(),
       "recipe_id": recipeId,
       "content": text,
       "post_time": null,
@@ -116,50 +154,9 @@ class CommentDbManager {
     return commentJson;
   }
 
-  Future<Map<String, Comment>> getComments(int recipeId) async {
-    QuerySnapshot<Map<String, dynamic>> res;
-    try {
-      res = await CommentDbManager().getCommentsDocs(recipeId);
-    } on Error catch(e) {
-      debugPrint('Failed to get comments');
-      debugPrint(e.toString());
-      return {};
-    }
-    var comments = <String, Comment>{};
-    for (QueryDocumentSnapshot<Map<String, dynamic>> doc in res.docs) {
-      try {
-        comments[doc.id] = Comment(
-            id: 665,
-            postTime: DateTime.fromMillisecondsSinceEpoch(doc.data()[postTimeField]),
-            text: doc.data()[textField],
-            uid: doc.data()[uidField],
-            userName: doc.data()[nameField],
-            profileUrl: doc.data()[photoField]
-        );
-      } on Error catch(e) {
-        debugPrint(e.toString());
-    }
-    }
-    return comments;
-  }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> getCommentsDocs(
-      int recipeId) async{
-    try {
-      var res = await _db
-          .collection(recipesPath)
-          .doc(recipeId.toString())
-          .collection(commentsPath)
-          .get();
-      return res;
-    } on Error catch(_) {
-      rethrow;
-    }
-  }
-
   Future<List<Comment>?> getComments1(int recipeId) async {
-    print("11111111");
     var response = await fetchComments(recipeId);
+    print(response.statusCode);
     if (response.statusCode != 200) {
       return null;
     }
@@ -180,16 +177,16 @@ class CommentDbManager {
   }
 
   Comment commentFromJson(dynamic commentJson) {
-    // String date = commentJson["post_time"].replaceAll('Z', ' ');
-    var date = DateTime.parse(commentJson["post_time"]);
-    // print(date.toISOString().replace('Z', ''));
+    print("llllllllll");
+    // var date = DateTime.parse(commentJson["post_time"]);
+    // print(date);
     Comment comment = Comment(
         id: commentJson["id"],
         uid: commentJson["user_uid"],
         userName: commentJson["user_uid"],
-        postTime: DateTime.parse(commentJson["post_time"]),
+        postTime: commentJson["post_time"] != null ? DateTime.parse(commentJson["post_time"]) : DateTime.now(),
         text: commentJson["content"],
-        profileUrl: "",
+        profileUrl: defaultProfileUrl,
     );
 
     return comment;
@@ -200,21 +197,8 @@ class CommentDbManager {
     return http.get(collectionUri);
   }
 
-  // Future deleteComment(int recipeId, String id) async {
-  //   try {
-  //     await _db
-  //         .collection(recipesPath)
-  //         .doc(recipeId.toString())
-  //         .collection(commentsPath)
-  //         .doc(id)
-  //         .delete();
-  //   } on Error catch(e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
-
-  Future<http.Response> deleteComment(String id) async {
-    var accessToken = Token.getAccessToken();
+  Future tryDeleteComment(String id) async {
+    var accessToken = await Token.getAccessToken();
     final http.Response response = await http.delete(
       Uri.parse('${apiUrl}comments/$id'),
       headers: <String, String>{
@@ -223,7 +207,26 @@ class CommentDbManager {
       },
     );
 
-    return response;
+    print("fffffffffffff");
+    print(response.statusCode);
+    print(accessToken);
+
+    return response.statusCode;
+  }
+
+  Future deleteComment(String id) async {
+    var status = await tryDeleteComment(id);
+    if (status == 200) return status;
+
+    if (status == 401) {
+      int status_access = await Authorization.refreshAccessToken();
+      if (status_access == 200) return await tryDeleteComment(id);
+      if (status_access == 401) {
+        int status_refresh = await Authorization.refreshTokens();
+        if (status_refresh == 200) return await tryDeleteComment(id);
+      }
+    }
+    return status;
   }
 
   Map<String, dynamic> _buildCommentData(Comment comment) {

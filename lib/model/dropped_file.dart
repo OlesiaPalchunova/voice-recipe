@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 class DroppedFile {
   final String name;
@@ -8,4 +11,6 @@ class DroppedFile {
 
   DroppedFile({required this.name, required this.mime,
   required this.bytes, required this.size});
+
+
 }

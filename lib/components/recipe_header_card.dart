@@ -4,6 +4,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
 import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
+import 'package:voice_recipe/services/db/rate_db.dart';
 
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/config/config.dart';
@@ -15,11 +16,13 @@ class RecipeHeaderCard extends StatefulWidget {
   const RecipeHeaderCard(
       {Key? key,
       required this.recipe,
+      // required this.mark,
       this.sizeDivider = 1,
       this.showLike = true})
       : super(key: key);
 
   final Recipe recipe;
+  // final int mark;
   final double sizeDivider;
   final bool showLike;
   static const maxDesktopHeight = 270.0;
@@ -52,10 +55,20 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   var hovered = false;
   late double height;
   late double width;
+  static double mark = 0.0;
+
+  Future initMark() async{
+    double mark1 = await RateDbManager().getMark(widget.recipe.id);
+    setState(() {
+      RateDbManager.mark = mark1;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    RateDbManager.mark = widget.recipe.mark;
+    initMark();
   }
 
   @override
@@ -241,10 +254,13 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
 
   void navigateToRecipe(BuildContext context, Recipe recipe) {
     String route = FutureRecipePage.route + recipe.id.toString();
+    print("route: $route");
     String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+    print("route: $route");
     if (currentRoute != HomePage.route) {
       route = '$currentRoute/${recipe.id}';
     }
     Routemaster.of(context).push(route);
+    print("0000000000000000000000000000");
   }
 }

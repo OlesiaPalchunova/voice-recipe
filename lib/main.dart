@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voice_recipe/services/auth/Token.dart';
+import 'package:voice_recipe/services/db/user_db.dart';
 import 'package:voice_recipe/voice_recipe_app.dart';
 import 'config/config.dart';
 import 'services/local_notice_service.dart';
@@ -21,4 +23,6 @@ Future<void> main() async {
   await Config.init(); // define whether app should have light theme or dark
   runApp(const VoiceRecipeApp());
   FlutterNativeSplash.remove();
+  Token.init();
+  UserDB.init();
 }

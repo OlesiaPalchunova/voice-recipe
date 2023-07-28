@@ -8,6 +8,8 @@ import 'package:voice_recipe/model/dropped_file.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/api/api_fields.dart';
 
+import '../services/auth/Token.dart';
+
 class RecipesSender {
   static const int fail = -1;
   static RecipesSender singleton = RecipesSender._internal();
@@ -19,18 +21,23 @@ class RecipesSender {
   }
 
   Future<int> sendRecipe(Recipe recipe) async {
+    print("ooooooooooooooooo");
     String? recipeJson = await recipeToJson(recipe);
     if (recipeJson == null) {
       return fail;
     }
+    var accessToken = await Token.getAccessToken();
     var response = await http.post(Uri.parse('${apiUrl}recipes'),
         headers: {
+          'Authorization': 'Bearer $accessToken',
           "Content-Type": "application/json; charset=UTF-8",
         },
         body: recipeJson);
+    print("ooooooooooooooooo");
+    print(response.body);
     if (response.statusCode != 200) {
-      print(response.bodyBytes);
-      print(response.body);
+      // print(response.bodyBytes);
+      // print(response.body);
       return fail;
     }
     var idJson = jsonDecode(response.body);
@@ -44,9 +51,11 @@ class RecipesSender {
       faceId = await sendImage(recipe.faceImageUrl);
     } else {
       faceId = await sendImageRaw(recipe.faceImageRaw!);
+      print("!!!!!!!!!!!!!");
+      print(faceId);
     }
     if (fail == faceId) {
-
+      print("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
       return null;
     }
     List<int>? mediaIds = await loadAllRecipeMedia(recipe.steps);
@@ -55,8 +64,14 @@ class RecipesSender {
     }
     List<Map<String, dynamic>> ingsDto = [];
     int count = 0;
+    print("//////////////");
     for (Ingredient ing in recipe.ingredients) {
+      print(count);
+      print(ing.name.toLowerCase());
+      print(ing.measureUnit.toLowerCase());
+      print(ing.count);
       ingsDto.add({
+        ingredientId:count++,
         ingName: ing.name.toLowerCase(),
         ingUnitName: ing.measureUnit.toLowerCase(),
         ingCount: ing.count
@@ -64,20 +79,35 @@ class RecipesSender {
     }
     List<Map<String, dynamic>> stepsDto = [];
     count = 0;
+    print("//////////////");
     for (RecipeStep step in recipe.steps) {
+      print(mediaIds[count] == 0 ? null : mediaIds[count]);
+      print(step.description);
+      print(step.id);
+      print(step.waitTime > 0 ? step.waitTime : null);
       stepsDto.add({
-        stepMedia: mediaIds[count] == 0 ? {id: null} : {id: mediaIds[count]},
+        stepMedia: mediaIds[count] == 0 ? null : mediaIds[count],
         stepDescription: step.description,
         stepNum: step.id,
         stepWaitTime: step.waitTime > 0 ? step.waitTime : null
       });
       count++;
     }
+    print("//////////////");
+    print(recipe.name);
+    print(faceId);
+    print(recipe.cookTimeMins);
+    print(recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null);
+    print(recipe.kilocalories > 0 ? recipe.kilocalories : null);
+    print(recipe.proteins as double?);
+    print(recipe.fats as double?);
+    print(recipe.carbohydrates as double?);
     Map<String, dynamic> recipeDto = {
       name: recipe.name,
-      faceMedia: {id: faceId},
+      faceMedia: faceId,
+      id: 0,
       cookTimeMins: recipe.cookTimeMins,
-      authorId: "root",
+      authorId: "lesia",
       prepTimeMins: recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null,
       kilocalories: recipe.kilocalories > 0 ? recipe.kilocalories : null,
       proteins: recipe.proteins as double?,
@@ -166,9 +196,14 @@ class RecipesSender {
   }
 
   Future<int> sendImageRaw(DroppedFile file) async {
+    print(file.mime);
+    print(file.size.toString());
+    print(file.bytes);
+    var accessToken = await Token.getAccessToken();
     var response = await http.post(
       Uri.parse('${apiUrl}media'),
       headers: {
+        'Authorization': 'Bearer $accessToken',
         "Content-Type": file.mime,
         "Content-Length": file.size.toString()
       },
@@ -176,10 +211,12 @@ class RecipesSender {
     );
     if (response.statusCode != 200) {
       print(response.body);
+      print(response.statusCode);
 
       return fail;
     }
     var idJson = jsonDecode(response.body);
+    print("ID JSON: $idJson");
     int? imageId = idJson[id];
     if (imageId == null) {
       return fail;

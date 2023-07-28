@@ -280,7 +280,8 @@ class CookPadParser {
         kilocalories: 0,
         ingredients: ingredients,
         steps: steps,
-        mark: 0);
+        mark: 0,
+        user_mark: 0,);
     return result;
   }
 

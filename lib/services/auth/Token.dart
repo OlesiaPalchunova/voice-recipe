@@ -1,64 +1,49 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../db/user_db.dart';
 import 'Cookie.dart';
 
 class Token{
+  static final FlutterSecureStorage storage = FlutterSecureStorage();
+  static bool is_token = false;
 
-  static String accesstoken = "000";
-  static String refreshtoken = "000";
-
-  final storage = FlutterSecureStorage();
-
-  static void saveAccessToken(String newToken){
-    print("ccccccccccccccccccccccccc");
-    accesstoken = newToken;
-  }
-
-  static String getAccessToken(){
-    return accesstoken;
-  }
-
-  static void saveRefreshToken(String newToken){
-    print("ccccccccccccccccccccccccc");
-    refreshtoken = newToken;
-  }
-
-  static String getRefreshToken(){
-    return refreshtoken;
+  static void init() async{
+    if (await storage.containsKey(key: 'access_token')) is_token = true;
+    print("uuuuuuuuuuuuuuu");
+    print(is_token);
   }
 
   static bool isToken(){
-    return accesstoken != "000";
+    return is_token;
   }
 
-  static String getUid(){
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(accesstoken);
-    print(decodedToken["login"]);
-    return decodedToken["login"];
+  static Future<void> setAccessToken(String newAccessToken) async {
+    await storage.write(key: 'access_token', value: newAccessToken);
+    is_token = true;
   }
 
-  void Initialize() async {
-    await storage.write(key: 'access_token', value: 'your_access_token_here');
-    await storage.write(key: 'refresh_token', value: 'your_refresh_token_here');
+  static void setRefreshToken(String newRefreshToken) async {
+    await storage.write(key: 'refresh_token', value: newRefreshToken);
   }
 
-  Future<String?> getAccessToken1() async {
-    String? accessToken = await storage.read(key: 'access_token');
-    return accessToken;
+  static Future getAccessToken() async {
+    return await storage.read(key: 'access_token');
   }
 
-  Future<String?> getRefreshToken1() async {
-    String? refreshToken = await storage.read(key: 'refresh_token');
-    return refreshToken;
+  static Future getRefreshToken() async {
+    return await storage.read(key: 'refresh_token');
   }
 
-  void deleteAccessToken1() async {
+  static void deleteAccessToken() async {
     await storage.delete(key: 'access_token');
+    is_token = false;
+    UserDB.deleteUid();
+    UserDB.deleteName();
+    UserDB.deletePassword();
   }
 
-  void deleteRefreshToken1() async {
+  static void deleteRefreshToken() async {
     await storage.delete(key: 'refresh_token');
   }
 

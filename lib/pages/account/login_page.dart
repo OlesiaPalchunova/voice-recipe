@@ -243,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
         var accessToken = jsonResponse["accessToken"];
         print(jsonResponse["accessToken"]);
         // print(jsonResponse["refreshToken"]);
-        Token.saveAccessToken(accessToken);
+        Token.setAccessToken(accessToken);
       } else {
         print("555555555555555555");
       }
@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
       context,
       task: () async {
         Authorization.loginUser(_nicknameController.text, _passwordController.text);
-        Authorization.refreshTokens();
+        // Authorization.refreshTokens();
         return true;
         // bool logged = false;
         // if (method == Method.nickname) {

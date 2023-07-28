@@ -1,8 +1,6 @@
 {
   "name": "Рис от типочка",
-  "media": {
-    "id": 1
-  },
+  "media": 1,
   "cook_time_mins": 30.0,
   "author_id": 1,
   "prep_time_mins": null,
@@ -20,9 +18,7 @@
   ],
   "steps": [
     {
-      "media": {
-        "id": 1
-      },
+      "media": 1
       "description": "Нарезать морковь на трехосные эллипсоиды, лук на гиперболические параболоиды, чеснок на двуполостные гиперболоиды.",
       "step_num": 1,
       "wait_time_mins": null

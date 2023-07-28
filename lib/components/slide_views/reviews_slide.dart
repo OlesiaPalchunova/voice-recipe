@@ -19,6 +19,7 @@ import '../../model/recipes_info.dart';
 import '../../model/users_info.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../services/auth/Token.dart';
 import '../../services/auth/authorization.dart';
 import '../../services/db/rate_db.dart';
 
@@ -37,7 +38,6 @@ class ReviewsSlide extends StatefulWidget {
   final Map<int, Comment> comments = {};
 
   Future updateComments() async {
-    var commentsDb = await CommentDbManager().getComments(recipe.id);
     var commentsDb1 = await CommentDbManager().getComments1(recipe.id);
     // var commentsDb = recipe.comments;
     // for (MapEntry<String, Comment> entry in commentsDb.entries) {
@@ -62,9 +62,21 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   Map<int, Comment> get comments => widget.comments;
 
+  static int rate = 0;
+
+  Future initRate() async {
+    int rate1 = await RateDbManager().getMarkById(widget.recipe.id, "lesia");
+    setState(() {
+      rate = rate1;
+      print(":(((((((((((((((");
+      print(rate);
+    });
+  }
+
   @override
   initState() {
     super.initState();
+    initRate();
     disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
@@ -119,7 +131,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RateLabel(
-          rate: (widget.recipe.mark * 10).round()/10,
+          rate: (rate * 10).round()/10,
           width: labelWidth,
           shadowOn: false,
         ),
@@ -156,43 +168,45 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
           Row(
             children: [
               StarPanel(
+                recipe: widget.recipe,
                 id: widget.recipe.id,
                 onTap: (star) {
                   ratesMap[widget.recipe.id] = star;
                 },
+                rate: rate,
               ),
-              Column(
-                children: [
-                  SizedBox(height: 10,),
-                  TextButton(
-                    // style: ButtonStyle(
-                    //   foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                    // ),
-                    onPressed: () {
-                      RateDbManager.deleteMark(widget.recipe.id);
-                    },
-                    child:
-                    Container(
-                      // color: Colors.redAccent[100],
-                      width: 75,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: Text('Убрать',
-                          style: TextStyle(
-                              fontFamily: Config.fontFamily,
-                              fontSize: fontSize(context)-3,
-                            color: Colors.black,
-                              ),
-                          ),
-                      ),
-                    )
-                    ),
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     SizedBox(height: 10,),
+              //     TextButton(
+              //       // style: ButtonStyle(
+              //       //   foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              //       // ),
+              //       onPressed: () {
+              //         RateDbManager.deleteMark(widget.recipe.id);
+              //       },
+              //       child:
+              //       Container(
+              //         // color: Colors.redAccent[100],
+              //         width: 75,
+              //         height: 50,
+              //         decoration: BoxDecoration(
+              //           borderRadius: BorderRadius.circular(10),
+              //           color: Colors.white,
+              //         ),
+              //         child: Center(
+              //           child: Text('Убрать',
+              //             style: TextStyle(
+              //                 fontFamily: Config.fontFamily,
+              //                 fontSize: fontSize(context)-3,
+              //               color: Colors.black,
+              //                 ),
+              //             ),
+              //         ),
+              //       )
+              //       ),
+              //   ],
+              // ),
               // ),
             ],
           )
@@ -370,20 +384,8 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       comment: comment,
       recipeId: widget.recipe.id,
     );
-    print("777777777777777777777");
-    if (res == -2) {
-      var auth = Authorization.refreshTokens();
-      print("rrrrrrrrrrr66rrrrrrrrrrrr");
-      if (auth == 200) {
-        print("ssssssssssssssssssssssss");
-        await CommentDbManager().addNewComment(
-          comment: comment,
-          recipeId: widget.recipe.id,
-        );
-      } else {
-        print("0000000000000000000000");
-        ServiceIO.showLoginInviteDialog(context);
-      }
+    if (res == 401) {
+      ServiceIO.showLoginInviteDialog(context);
     }
 
     if (!disposed) {

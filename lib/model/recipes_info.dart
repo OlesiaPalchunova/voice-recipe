@@ -6,6 +6,7 @@ import 'package:voice_recipe/model/dropped_file.dart';
 
 class Recipe {
   int id;
+  // String user_uid;
   String name;
   String faceImageUrl;
   int cookTimeMins;
@@ -17,13 +18,15 @@ class Recipe {
   List<Ingredient> ingredients;
   List<RecipeStep> steps;
   double mark;
+  int user_mark;
   // List<Comment> comments;
 
   DroppedFile? faceImageRaw;
 
   Recipe({required this.name, required this.faceImageUrl, required this.id,
+    // required this.user_uid,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
-    required this.ingredients, required this.steps, this.faceImageRaw, required this.mark
+    required this.ingredients, required this.steps, this.faceImageRaw, required this.mark, required this.user_mark
   });
 }
 

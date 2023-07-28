@@ -5,7 +5,7 @@ import 'package:voice_recipe/pages/account/forgot_password_page.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 import 'package:voice_recipe/pages/account/register_page.dart';
 import 'package:voice_recipe/pages/profile_collection/catalogue_page.dart';
-import 'package:voice_recipe/pages/user/user_page.dart';
+import 'package:voice_recipe/pages/account/user_page.dart';
 import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/pages/constructor/edit_recipe_page.dart';
@@ -17,6 +17,7 @@ import 'package:voice_recipe/pages/not_found_page.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import 'config/config.dart';
+import 'model/profile.dart';
 
 class VoiceRecipeApp extends StatefulWidget {
   const VoiceRecipeApp({super.key});
@@ -26,6 +27,7 @@ class VoiceRecipeApp extends StatefulWidget {
 }
 
 class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
+  // Profile profile = Profile();
   final routes = RouteMap(
       onUnknownRoute: (route) {
         return const MaterialPage(child: NotFoundPage());
@@ -39,7 +41,7 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
             const MaterialPage(child: CollectionsListPage()),
         LoginPage.route: (_) => const MaterialPage(child: LoginPage()),
         RegisterPage.route: (_) => const MaterialPage(child: RegisterPage()),
-        UserPage.route: (_) => const MaterialPage(child: UserPage()),
+        // UserAccount.route: (_) => const MaterialPage(child: UserAccount(profile: profile,)),
         CataloguePage.route: (_) => const MaterialPage(child: CataloguePage(name: '', posts: [],)),
         ForgotPasswordPage.route: (_) =>
             const MaterialPage(child: ForgotPasswordPage()),

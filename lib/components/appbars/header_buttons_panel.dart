@@ -6,6 +6,8 @@ import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/components/buttons/listen_button.dart';
 
 
+import '../../model/profile.dart';
+import '../../pages/account/user_page.dart';
 import '../../pages/user/user_page.dart';
 
 class HeaderButtonsPanel extends StatelessWidget {
@@ -18,6 +20,8 @@ class HeaderButtonsPanel extends StatelessWidget {
     required this.onSay,
     required this.onStopSaying,
     required this.id,
+    required this.profile,
+    // required this.user_id,
   });
 
   static const _iconSize = 25.0;
@@ -28,10 +32,13 @@ class HeaderButtonsPanel extends StatelessWidget {
   final void Function() onSay;
   final void Function() onStopSaying;
   final int id;
+  final Profile profile;
+
+
+  // final String user_id;
   static final isListening = ValueNotifier(false);
   static final isLockedListening = ValueNotifier(false);
   static final isSaying = ValueNotifier(false);
-
 
   static Container buildButton(IconButton iconButton, Color color) {
     return Container(
@@ -97,10 +104,17 @@ class HeaderButtonsPanel extends StatelessWidget {
     );
   }
 
+  Future getProfile() async {
+
+  }
+
   Widget buildUserIcon(BuildContext context) {
     return InkWell(
       onTap: (){
-        Routemaster.of(context).push(UserPage.route);
+        // Routemaster.of(context).push(UserAccount.route);
+        print("::::::::;;;;;;;;;;;;;;;;;");
+        print(profile.uid);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserAccount(profile: profile,)));
       },
       child: Container(
         height: 60,

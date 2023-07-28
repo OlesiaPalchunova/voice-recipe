@@ -3,6 +3,7 @@ import '../../api/recipes_getter.dart';
 import '../../components/recipe_header_card.dart';
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
+import '../../services/db/rate_db.dart';
 
 class CollectionPage extends StatefulWidget {
   const CollectionPage(
@@ -66,8 +67,7 @@ class _CollectionPageState extends State<CollectionPage> {
   }
 
   Future<void> fetchNewRecipesPortion() async {
-    var newPortion =
-        await RecipesGetter().getCollection(widget.collectionName, currentPage++);
+    var newPortion = await RecipesGetter().getCollection(widget.collectionName, currentPage++);
     if (newPortion != null && newPortion.isNotEmpty) {
       end += newPortion.length;
       recipes.addAll(newPortion);
@@ -76,6 +76,20 @@ class _CollectionPageState extends State<CollectionPage> {
       currentPage = maxPage;
     }
   }
+
+  // Future<void> fetchNewRecipesPortion() async {
+  //   var newPortion = await RecipesGetter().getCollection(widget.collectionName, currentPage++);
+  //   if (newPortion != null && newPortion.isNotEmpty) {
+  //     end += newPortion.length;
+  //     recipes.addAll(newPortion);
+  //     recipeCards.addAll(await Future.wait(newPortion.map((recipe) async {
+  //       int mark = await RateDbManager().getMark(recipe.id, "lesia");
+  //       return RecipeHeaderCard(recipe: recipe, mark: mark);
+  //     })));
+  //   } else {
+  //     currentPage = maxPage;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
