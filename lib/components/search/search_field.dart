@@ -53,18 +53,24 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     return Column(children: [
       SizedBox(
+        width: 323,
         height: Config.isDesktop(context) ? 60 : 40,
         child: InputLabel(
             focusNode: widget.focusNode,
-            labelText: "Поиск",
+            labelText: "Найти рецепт",
             controller: controller,
             prefixIcon: Container(
                 width: iconSize(context),
                 height: iconSize(context),
-                padding: const EdgeInsets.fromLTRB(5.0, 0, 5.0, 5.0),
-                child: RiveAnimation.asset(
-                    "assets/RiveAssets/search$postfix.riv",
-                    onInit: _onInit)),
+                padding: const EdgeInsets.fromLTRB(0.0, 3.0, 5.0, 5.0),
+                child: Icon(
+                  Icons.search,
+                  color: Config.iconColor,
+                ),
+                // child: RiveAnimation.asset(
+                //     "assets/RiveAssets/search$postfix.riv",
+                //     onInit: _onInit)
+                ),
             onChanged: onChanged,
             onSubmit: onFullRequest),
       ),
@@ -116,11 +122,22 @@ class _SearchFieldState extends State<SearchField> {
         padding: Config.paddingAll,
         child: SizedBox(
           width: 120,
-          child: ClassicButton(
-            text: "Скрыть",
-            onTap: () {
+          child: TextButton(
+            onPressed: () {
+              // Add your button click logic here
               Navigator.of(context).pop();
             },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.deepOrange[300]!), // Set the background color
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set the text color
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0), // Set the border radius
+                  // side: BorderSide(color: Colors.black), // Set the border color
+                ),
+              ),
+            ),
+            child: Text('Скрыть'),
           ),
         ),
       )

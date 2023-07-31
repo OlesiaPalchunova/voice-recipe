@@ -848,10 +848,34 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.1.12",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.0.37",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "url_launcher_linux",
       "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "url_launcher_platform_interface",
@@ -956,7 +980,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-07-26T05:41:40.353722Z",
+  "generated": "2023-07-29T04:16:23.419542Z",
   "generator": "pub",
   "generatorVersion": "3.0.6"
 }

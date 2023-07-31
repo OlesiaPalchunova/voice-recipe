@@ -218,13 +218,11 @@ class RateDbManager{
     };
 
     var response = await http.get(Uri.parse('${apiUrl}marks/$recipe_id'), headers: headers);
-    print("888888888");
+    print(response.statusCode);
 
     var decodedBody = utf8.decode(response.body.codeUnits);
-    print(decodedBody);
     var markJson = 0.0;
-    if (decodedBody != null) markJson = jsonDecode(decodedBody);
-    print("888888888");
+    if (decodedBody != "") markJson = jsonDecode(decodedBody);
 
     double mark = markJson;
     return mark;

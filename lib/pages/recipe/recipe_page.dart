@@ -79,7 +79,7 @@ class _RecipePageState extends State<RecipePage> {
   late Color activeColor = Config.getColor(widget.recipe.id);
   DateTime tapTime = DateTime.now();
 
-  static Profile profile = Profile(uid: "uid", display_name: "display_name", image: "image", info: "info", tg_link: "tg_link", vk_link: "vk_link");
+  static Profile profile = Profile(uid: "NotFluffyEnough", display_name: "Тимофей", image: "image", info: "Обожаю готовить", tg_link: "", vk_link: "https://vk.com/timofeytrubinov");
 
   double sizeIndicator(BuildContext context) =>
       .3 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
@@ -87,7 +87,7 @@ class _RecipePageState extends State<RecipePage> {
   Color get inactiveColor => activeColor;
 
   Future initProfile() async{
-    Profile profile1 = await ProfileDB.getProfileId("lesia");
+    Profile profile1 = await ProfileDB.getProfileId(widget.recipe.user_uid);
     setState(() {
       profile = profile1;
     });

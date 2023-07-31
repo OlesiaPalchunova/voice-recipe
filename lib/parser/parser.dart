@@ -272,6 +272,7 @@ class CookPadParser {
       }
     }
     Recipe result = Recipe(
+        user_uid: "root",
         name: name,
         faceImageUrl: faceImageUrl,
         id: id,

@@ -20,7 +20,9 @@ class FutureCollectionPage extends StatelessWidget {
       collectionName: name,);
     }
     return FutureBuilder(
-      future: RecipesGetter().getCollection(name),
+      // future: RecipesGetter().getCollection(name),
+        future: RecipesGetter().getCollection("diamond"),
+
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingPage(postfix: " подборку",);

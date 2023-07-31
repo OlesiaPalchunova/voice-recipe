@@ -27,6 +27,7 @@ import '../../services/db/user_db.dart';
 
 import 'package:image_picker/image_picker.dart';
 
+import '../profile_collection/collection_page.dart';
 import '../user/user_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -77,17 +78,19 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TitleLogoPanel(title: "Мой профиль").appBar(),
-      backgroundColor: Config.backgroundEdgeColor,
+      // backgroundColor: Config.backgroundEdgeColor,
+      backgroundColor: Colors.deepOrange[50],
       body: SingleChildScrollView(
         child: Center(
           child: Container(
             alignment: Alignment.center,
-            width: Config.loginPageWidth(context),
+            // width: Config.loginPageWidth(context),
+            width: 400,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    padding: const EdgeInsets.all(Config.padding),
+                    // padding: const EdgeInsets.all(Config.padding),
                     alignment: Alignment.center,
                     child: buildProfile(context)
                 ),
@@ -146,8 +149,14 @@ class _AccountPageState extends State<AccountPage> {
                 SizedBox(height: 15,),
                 InkWell(
                   onTap: (){
-                    Routemaster.of(context).push('/created');
+                    // Routemaster.of(context).push('/created');
                     // Routemaster.of(context).push(UserPage.route);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CollectionPage(),
+                      ),
+                    );
                   },
                   child: Card(
                     // elevation: 3,
@@ -282,7 +291,7 @@ class _AccountPageState extends State<AccountPage> {
                       controller: second_old_password,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        errorText: second_old_password.text.isNotEmpty ? null : "введите текст",
+                        // errorText: second_old_password.text.isNotEmpty ? null : "введите текст",
                         hintText: 'Введите пароль еще раз',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -377,157 +386,340 @@ class _AccountPageState extends State<AccountPage> {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(),
-            IconButton(
-                onPressed: () {
-                  Token.deleteAccessToken();
-                  Token.deleteRefreshToken();
-                  Routemaster.of(context).pop();
-                },
-                tooltip: "Выйти из аккаунта",
-                icon: Icon(Icons.logout, color: Config.iconColor))
-          ],
-        ),
-        Center(
-          child: Stack(
-            alignment: Alignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Config.backgroundColor,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(90),
-                    // child: Image.network(defaultProfileUrl),
-                    child: _buildWidgetFromData(),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 105,
-                left: 95,
-                child:Container(
-                    // width: 40,
-                    child: ElevatedButton(
-                      // onPressed: () => _pickAndLoadFile(context),
-                      onPressed: () => _getImageFromGallery(),
+              Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 100.0),
                       child: Container(
-                          margin: EdgeInsets.only(left: 0),
-                          child: Icon(Icons.add_circle, size: 50, color: Colors.deepOrange,)),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 80,
+                          backgroundColor: Config.backgroundColor,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(90),
+                            // child: Image.network(defaultProfileUrl),
+                            child: _buildWidgetFromData(),
+                          ),
                         ),
                       ),
                     ),
-              )
-            ]
+                    Positioned(
+                      top: 105,
+                      left: 195,
+                      child:Container(
+                        // width: 40,
+                        child: ElevatedButton(
+                          // onPressed: () => _pickAndLoadFile(context),
+                          onPressed: () => _getImageFromGallery(),
+                          child: Container(
+                              margin: EdgeInsets.only(left: 0),
+                              child: Icon(Icons.add_circle, size: 50, color: Colors.deepOrange,)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0, top: 10),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Радиус, делающий углы карточки круглыми
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      // color: Colors.white,
+                      child: IconButton(
+                          onPressed: () {
+                            Token.deleteAccessToken();
+                            Token.deleteRefreshToken();
+                            Routemaster.of(context).pop();
+                          },
+                          tooltip: "Выйти из аккаунта",
+                          icon: Icon(Icons.logout, color: Config.iconColor)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        SizedBox(height: 10,),
+        Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                  child: Text("Логин", style: TextStyle(color: Colors.grey[500]),),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: 290,
+                  height: 35,
+                  child: TextFormField(
+                    controller: _loginController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Введите текст...',
+                      contentPadding: EdgeInsets.only(top: -5.0),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 7,)
+            ],
+          ),
+        ),
+        SizedBox(height: 7,),
+        Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                  child: Text("Имя", style: TextStyle(color: Colors.grey[500]),),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: 290,
+                  height: 35,
+                  child: TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Введите текст...',
+                      contentPadding: EdgeInsets.only(top: -5.0),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 7,)
+            ],
+          ),
+        ),
+        SizedBox(height: 7,),
+        Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                  child: Text("Описание", style: TextStyle(color: Colors.grey[500]),),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: 290,
+                  height: 35,
+                  child: TextFormField(
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Введите текст...',
+                      contentPadding: EdgeInsets.only(top: -5.0),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 7,)
+            ],
+          ),
+        ),
+        SizedBox(height: 7,),
+        Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                  child: Text("Ссылка на Телеграм", style: TextStyle(color: Colors.grey[500]),),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: 290,
+                  height: 35,
+                  child: TextFormField(
+                    controller: _tgController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Введите текст...',
+                      contentPadding: EdgeInsets.only(top: -5.0),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 7,)
+            ],
+          ),
+        ),
+        SizedBox(height: 7,),
+        Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                  child: Text("Ссылка на ВКонтакте", style: TextStyle(color: Colors.grey[500]),),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: SizedBox(
+                  width: 290,
+                  height: 35,
+                  child: TextFormField(
+                    controller: _vkController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Введите текст...',
+                      contentPadding: EdgeInsets.only(top: -5.0),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 7,)
+            ],
           ),
         ),
         SizedBox(height: 10,),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, bottom: 0.0),
-            child: Text("Логин", style: TextStyle(color: Colors.grey[500]),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-          child: TextFormField(
-            controller: _loginController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              hintText: 'Введите текст...',
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-            child: Text("Имя", style: TextStyle(color: Colors.grey[500]),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-          child: TextFormField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              hintText: 'Введите текст...',
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-            child: Text("Описание", style: TextStyle(color: Colors.grey[500]),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-          child: TextFormField(
-            controller: _descriptionController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              hintText: 'Придумайте описание...',
-            ),
-          ),
-        ),
-        SizedBox(height: 10,),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-            child: Text("Ссылка на Телеграм", style: TextStyle(color: Colors.grey[500]),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-          child: TextFormField(
-            controller: _tgController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              hintText: 'Оставьте ссылку...',
-            ),
-          ),
-        ),
-        SizedBox(height: 10,),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-            child: Text("Ссылка на ВКонтакте", style: TextStyle(color: Colors.grey[500]),),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-          child: TextFormField(
-            controller: _vkController,
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              hintText: 'Оставьте ссылку...',
-            ),
-          ),
-        ),
-        SizedBox(height: 10,),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+        //     child: Text("Имя", style: TextStyle(color: Colors.grey[500]),),
+        //   ),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
+        //   child: TextFormField(
+        //     controller: _nameController,
+        //     decoration: InputDecoration(
+        //       border: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: Colors.grey),
+        //       ),
+        //       hintText: 'Введите текст...',
+        //     ),
+        //   ),
+        // ),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+        //     child: Text("Описание", style: TextStyle(color: Colors.grey[500]),),
+        //   ),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
+        //   child: TextFormField(
+        //     controller: _descriptionController,
+        //     decoration: InputDecoration(
+        //       border: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: Colors.grey),
+        //       ),
+        //       hintText: 'Придумайте описание...',
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10,),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+        //     child: Text("Ссылка на Телеграм", style: TextStyle(color: Colors.grey[500]),),
+        //   ),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
+        //   child: TextFormField(
+        //     controller: _tgController,
+        //     decoration: InputDecoration(
+        //       border: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: Colors.grey),
+        //       ),
+        //       hintText: 'Оставьте ссылку...',
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10,),
+        // Align(
+        //   alignment: Alignment.centerLeft,
+        //   child: Padding(
+        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+        //     child: Text("Ссылка на ВКонтакте", style: TextStyle(color: Colors.grey[500]),),
+        //   ),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
+        //   child: TextFormField(
+        //     controller: _vkController,
+        //     decoration: InputDecoration(
+        //       border: UnderlineInputBorder(
+        //         borderSide: BorderSide(color: Colors.grey),
+        //       ),
+        //       hintText: 'Оставьте ссылку...',
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10,),
         ElevatedButton.icon(
           onPressed: () {
             // Действие при нажатии кнопки

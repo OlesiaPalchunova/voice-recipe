@@ -158,6 +158,7 @@ class RecipesGetter {
     num? prepTime = recipeJson[prepTimeMins];
     num? kilocaloriesCount = recipeJson[kilocalories];
     String recipeName = recipeJson[name];
+    String userUid = recipeJson[authorId];
 
     double mark = recipeJson["avg_mark"] ?? 0.0;
     int user_mark = recipeJson["user_mark"] ?? 0;
@@ -173,7 +174,7 @@ class RecipesGetter {
         name: recipeName,
         faceImageUrl: getImageUrl(recipeJson[faceMedia]),
         id: recipeJson[id],
-        // user_uid: recipeJson["author_uid"],
+        user_uid: userUid,
         cookTimeMins: cookTime.floor(),
         prepTimeMins: prepTime == null ? 0 : prepTime.floor(),
         kilocalories: kilocaloriesCount == null ? 0.0 : kilocaloriesCount as double,

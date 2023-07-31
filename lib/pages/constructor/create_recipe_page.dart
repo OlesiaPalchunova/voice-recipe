@@ -15,6 +15,7 @@ import 'package:voice_recipe/services/service_io.dart';
 
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
+import '../../services/db/user_db.dart';
 
 class CreateRecipePage extends StatefulWidget {
   const CreateRecipePage({super.key});
@@ -184,6 +185,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     }
     createdRecipe = Recipe(
       name: headers.name!,
+      user_uid: UserDB.uid!,
       faceImageUrl: "",
       faceImageRaw: headers.faceImageRaw!,
       id: Random().nextInt(1000),
@@ -196,6 +198,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       user_mark: 0,
     );
     AnimatedLoading().execute(context, task: () async {
+      print("((((((((((((((((((((((object))))))))))))))))))))))");
+      print(headers.userUid);
       int recipeId = await RecipesSender().sendRecipe(createdRecipe!);
       Future.delayed(const Duration(milliseconds: 2000), () {
         if (recipeId == RecipesSender.fail) {

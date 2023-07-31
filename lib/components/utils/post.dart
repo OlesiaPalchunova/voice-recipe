@@ -12,21 +12,24 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0, top: 10.0),
+      padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
       child: Container(
-        width: 170,
-        height: 200,
+        width: 160,
+        height: 210,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
         child: Column(
           children: [
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             Row(

@@ -32,13 +32,24 @@ class CataloguePage  extends StatefulWidget{
 
 
 class _CataloguePageState extends State<CataloguePage> {
+  _CataloguePageState({required this.name, required this.posts});
+
   final String name;
   final List<Post> posts;
 
-  _CataloguePageState({required this.name, required this.posts});
+  List<Post> new_posts = [];
 
-  final List<Post> new_posts =[];
+  // final List<Post> new_posts =[];
   int i = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (var post in posts) {
+      if(post.catalogue == name) new_posts.add(post);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +82,9 @@ class _CataloguePageState extends State<CataloguePage> {
             delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     // return posts[index].catalogue == name ? posts[index] : posts[index+1];
-                    return posts[index];
+                    return new_posts[index];
               },
-              childCount: posts.length,
+              childCount: new_posts.length,
             ),
           ),
           SliverPadding(

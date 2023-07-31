@@ -107,7 +107,7 @@ class RecipesSender {
       faceMedia: faceId,
       id: 0,
       cookTimeMins: recipe.cookTimeMins,
-      authorId: "lesia",
+      authorId: recipe.user_uid,
       prepTimeMins: recipe.prepTimeMins > 0 ? recipe.prepTimeMins : null,
       kilocalories: recipe.kilocalories > 0 ? recipe.kilocalories : null,
       proteins: recipe.proteins as double?,

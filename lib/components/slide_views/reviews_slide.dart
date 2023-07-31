@@ -63,9 +63,10 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   Map<int, Comment> get comments => widget.comments;
 
   static int rate = 0;
+  static double mark = 0.0;
 
   Future initRate() async {
-    int rate1 = await RateDbManager().getMarkById(widget.recipe.id, "lesia");
+    int rate1 = await RateDbManager().getMarkById(widget.recipe.id, widget.recipe.user_uid);
     setState(() {
       rate = rate1;
       print(":(((((((((((((((");
@@ -73,10 +74,22 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     });
   }
 
+  Future initMark() async {
+    double new_mark = await RateDbManager().getMark(widget.recipe.id);
+    setState(() {
+      mark = new_mark;
+      print(":(((((((((((((((");
+      print(mark);
+    });
+  }
+
   @override
   initState() {
     super.initState();
+    initMark();
     initRate();
+
+
     disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
@@ -131,7 +144,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RateLabel(
-          rate: (rate * 10).round()/10,
+          rate: (mark * 10).round()/10,
           width: labelWidth,
           shadowOn: false,
         ),
@@ -172,6 +185,13 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                 id: widget.recipe.id,
                 onTap: (star) {
                   ratesMap[widget.recipe.id] = star;
+                },
+                setRate: (new_rate){
+                  setState(() {
+                    mark = new_rate;
+                    print("88888888888");
+                    print(new_rate);
+                  });
                 },
                 rate: rate,
               ),
@@ -364,6 +384,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   }
 
   Future onSubmitComment(String result) async {
+    print("-------------------------");
     // if (result.isEmpty || !ServiceIO.loggedIn) {
     //   return;
     // }

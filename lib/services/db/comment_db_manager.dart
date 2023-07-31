@@ -53,6 +53,7 @@ class CommentDbManager {
           body: commentJson);
       print("kkkkkkkkkkkkkkkkkk");
       print(response.statusCode);
+      print(response.body);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) return 401;
         return fail;
@@ -65,6 +66,7 @@ class CommentDbManager {
 
   Future addNewComment(
       {required Comment comment, required int recipeId}) async {
+    print("kkkkkkkkkkkkk");
     var status = await tryAddNewComment(comment: comment, recipeId: recipeId);
     print(status);
     if (status == 200) return status;
@@ -91,10 +93,11 @@ class CommentDbManager {
     // String string = DateFormat.format(DateTime.now());
     Map<String, dynamic> commentDto;
     commentDto = {
+      "id": 0,
       "user_uid": await UserDB.getUserUid(),
       "recipe_id": recipeId,
       "content": comment.text,
-      "post_time": date,
+      "post_time": "2017-07-21T17:32:28Z",
     };
     var commentJson = jsonEncode(commentDto);
     return commentJson;

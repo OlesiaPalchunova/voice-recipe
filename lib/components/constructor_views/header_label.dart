@@ -23,6 +23,7 @@ class CreateHeaderLabel extends StatefulWidget {
 
 class HeaderInfo {
   String? name;
+  String? userUid;
   int? cookTimeMins;
   int? prepTimeMins;
   DroppedFile? faceImageRaw;

@@ -67,8 +67,10 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   @override
   void initState() {
     super.initState();
-    RateDbManager.mark = widget.recipe.mark;
+    // RateDbManager.mark = widget.recipe.mark;
     initMark();
+    print("=================");
+    print(widget.recipe.faceImageUrl);
   }
 
   @override
@@ -172,6 +174,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     var cardWidth = width;
@@ -261,6 +264,5 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
       route = '$currentRoute/${recipe.id}';
     }
     Routemaster.of(context).push(route);
-    print("0000000000000000000000000000");
   }
 }

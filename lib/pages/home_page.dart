@@ -189,10 +189,14 @@ class _HomePageState extends State<HomePage> {
                               content: SizedBox(
                                   width: 500,
                                   height: Config.pageHeight(context) * .6,
-                                  child: SearchField(focusNode: FocusNode()))));
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 30.0),
+                                    child: SearchField(focusNode: FocusNode()),
+                                  ))));
                     },
                     text: 'Найти рецепт',
                   ),
+                  //   child: SearchField(focusNode: FocusNode())
                 ),
               ),
               SliderGestureHandler(

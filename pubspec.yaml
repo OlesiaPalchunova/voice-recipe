@@ -66,6 +66,7 @@ dependencies:
   flutter_svg:
   flutter_rating_bar:
   image_picker:
+  url_launcher: ^6.1.12
 
 
 dev_dependencies:
