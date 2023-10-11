@@ -117,7 +117,7 @@ class RecipesGetter {
       recipe.mark = mark;
       if (blackList.contains(recipe.name)) continue;
       recipes.add(recipe);
-      if (count == 10) break;
+      if (count == 20) break;
     }
     collectionsCache['$name$pageId'] = recipes;
     for (Recipe recipe in recipes) {

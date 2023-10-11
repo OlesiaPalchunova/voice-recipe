@@ -25,13 +25,15 @@ class Authorization {
         body: jsonEncode(reqBody)
     );
     print("666666666666666666");
+    print(response.body);
 
-    var jsonResponse = jsonDecode(response.body);
+
 
     print("666666666666666666");
     print(response.statusCode);
 
     if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
       var accessToken = jsonResponse["accessToken"];
       var refreshToken = jsonResponse["refreshToken"];
       print(refreshToken);
@@ -54,17 +56,25 @@ class Authorization {
       "login":nickname,
       "password":password,
       "display_name":displayName,
-      // "email":email,
+      "email":email,
     };
+
+    print(nickname);
+    print(password);
+    print(displayName);
+    print(email);
 
     var response = await http.post(Uri.parse('${apiUrl}registration/mobile'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(reqBody)
     );
 
-    var jsonResponse = jsonDecode(response.body);
+    print(response.statusCode);
+    print(response.body);
+    print("8888888");
 
     if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
       var accessToken = jsonResponse["accessToken"];
       var refreshToken = jsonResponse["refreshToken"];
 

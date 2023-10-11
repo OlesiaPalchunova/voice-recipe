@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import '../../config/config.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -215,6 +217,7 @@ class _AccountPageState extends State<AccountPage> {
 
   Widget _buildWidgetFromData() {
     if (_imageFile != null) {
+      print("444444444444444444444444444");
       return Container(
           width: 400, // Specify the desired width of the image
           height: 300,
@@ -237,15 +240,6 @@ class _AccountPageState extends State<AccountPage> {
 
   Future UpdateData() async{
     await UserDB.init();
-    // setState(() {
-    //   _loginController.text = UserDB.uid;
-    //   _nameController.text = UserDB.name;
-    //   _descriptionController.text = UserDB.info ?? "";
-    //   _tgController.text = UserDB.tg ?? "";
-    //   _vkController.text = UserDB.vk ?? "";
-    //
-    //   networkImage = UserDB.image ?? "null";
-    // });
   }
 
   static void _showSnackbar(BuildContext context, String text) {
@@ -445,6 +439,7 @@ class _AccountPageState extends State<AccountPage> {
                           onPressed: () {
                             Token.deleteAccessToken();
                             Token.deleteRefreshToken();
+                            UserDB.deleteAll();
                             Routemaster.of(context).pop();
                           },
                           tooltip: "Выйти из аккаунта",

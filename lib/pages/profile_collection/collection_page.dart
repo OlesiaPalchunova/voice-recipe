@@ -4,10 +4,14 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:voice_recipe/services/db/collection_db.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
+import '../../model/collection.dart';
 import '../../model/collection_model.dart';
+import '../../services/db/collection_db.dart';
 import '../../model/dropped_file.dart';
+import '../../services/db/user_db.dart';
 
 class CollectionPage extends StatefulWidget {
   CollectionPage({super.key});
@@ -19,18 +23,102 @@ class CollectionPage extends StatefulWidget {
 }
 
 class _CollectionPageState extends State<CollectionPage> {
-  final List<CollectionModel> collections = [
-    CollectionModel(name: "Сладкое", count: 3, imageUrl: "https://www.obedsmile.ru/images/stories/article/kak-pravilno-est-sladkoe.jpg"),
-    CollectionModel(name: "Ужин", count: 3, imageUrl: "https://e2.edimdoma.ru/data/posts/0002/4280/24280-ed4_wide.jpg?1637656619"),
-    CollectionModel(name: "Закуски", count: 3, imageUrl: "https://img1.russianfood.com/dycontent/images_upl/418/big_417048.jpg"),
-    CollectionModel(name: "Праздничное", count: 3, imageUrl: "https://lingua-airlines.ru/wp-content/uploads/2017/12/christmas.jpg"),
-  ];
+  // final List<CollectionModel> collections = [
+  //   CollectionModel(name: "Сладкое", count: 3, imageUrl: "https://www.obedsmile.ru/images/stories/article/kak-pravilno-est-sladkoe.jpg"),
+  //   CollectionModel(name: "Ужин", count: 3, imageUrl: "https://e2.edimdoma.ru/data/posts/0002/4280/24280-ed4_wide.jpg?1637656619"),
+  //   CollectionModel(name: "Закуски", count: 3, imageUrl: "https://img1.russianfood.com/dycontent/images_upl/418/big_417048.jpg"),
+  //   CollectionModel(name: "Праздничное", count: 3, imageUrl: "https://lingua-airlines.ru/wp-content/uploads/2017/12/christmas.jpg"),
+  // ];
+
+  final List<CollectionModel> collections = [];
 
   // bool isImage = false;
   var imageFile;
   var pickedFile;
   static DroppedFile? dropped_image;
   File? _imageFile;
+  static Collection collection = Collection(id: 0, name: "null", imageUrl: "null", number: 0);
+  static CollectionModel myCollection = CollectionModel(id: 0, name: "Default", count: 0, imageUrl: "Default");
+  static CollectionModel favoriteCollection = CollectionModel(id: 0, name: "Default", count: 0, imageUrl: "Default");
+
+  int isAddedCollections = 0;
+
+  static List<Collection> collectionsDB = [];
+
+  TextEditingController _collectionNameController = TextEditingController();
+
+  Future initCollection() async{
+    List<CollectionModel> c = [];
+    await CollectionDB.getCollections(c, 'les').then((result) {
+      setState(() {
+        print("collections");
+
+        int stop = 0;
+
+        for (var collection in c) {
+          if (collection.name == UserDB.uid + "saved") {
+            myCollection = collection;
+            stop++;
+          }
+          if (collection.name == UserDB.uid + "liked") {
+            myCollection = collection;
+            stop++;
+          }
+          if (stop == 2) break;
+        }
+
+        collections.clear();
+        collections.addAll(c);
+
+        print(collections);
+      });
+    });;
+
+    setState(() {
+      print("collections");
+
+      while(isAddedCollections != 1)
+      print(isAddedCollections);
+      collections.clear();
+      collections.addAll(c);
+
+      print(collections);
+    });
+    // for (dynamic s in collectionsDB){
+    //   print(s);
+    //   collections.add(
+    //       CollectionModel(
+    //         id: s["name"],
+    //         name: s["name"],
+    //         count: s["number"],
+    //         // imageUrl: s["imageUrl"],
+    //         imageUrl: "https://www.obedsmile.ru/images/stories/article/kak-pravilno-est-sladkoe.jpg",
+    //       )
+    //   );
+    // }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("collectionsDB");
+    initCollection();
+    print("collectionsDB");
+    print(collectionsDB);
+    // for (dynamic s in collectionsDB){
+    //   print(s);
+    //   collections.add(
+    //       CollectionModel(
+    //         name: s["name"],
+    //         count: s["number"],
+    //         // imageUrl: s["imageUrl"],
+    //         imageUrl: "https://www.obedsmile.ru/images/stories/article/kak-pravilno-est-sladkoe.jpg",
+    //       )
+    //   );
+    // }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,56 +174,49 @@ class _CollectionPageState extends State<CollectionPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          content: Container(
-            height: 300,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 70,
-                  child: TextField(
-                    // controller: first_old_password,
-                    decoration: InputDecoration(
-                      hintText: 'Название коллекции',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        // borderSide: BorderSide(color: Colors.blue, width: 0.0),
+          content: SingleChildScrollView(
+            child: Container(
+              height: 300,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 70,
+                    child: TextField(
+                      controller: _collectionNameController,
+                      decoration: InputDecoration(
+                        hintText: 'Название коллекции',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          // borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 230,
-                  height: 230,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.deepOrange[100]
-                  ),
-                  child:  addImage()
-                  // _imageFile == null
-                  //   ? Center(
-                  //     child: TextButton(
-                  //       onPressed: () {
-                  //         getImageFromGallery();
-                  //       },
-                  //       child: Text("Добавьте картинку", style: TextStyle(fontSize: 20),),
-                  //       style: TextButton.styleFrom(
-                  //         primary: Colors.black, // Set the text color here
-                  //         backgroundColor: Colors.white, // Set the background color here
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(30.0),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   )
-                  //     : Container(child: Image.file(_imageFile!))
-                )
-              ],
+                  Container(
+                    width: 230,
+                    height: 230,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.deepOrange[100]
+                    ),
+                    child:  addImage()
+                  )
+                ],
+              ),
             ),
           ),
           actions: [
             Center(
               child: TextButton(
                 onPressed: () {
+                  print("ppppppppppppp");
+                  print(_collectionNameController.text);
+                  CollectionDB.addCollection(
+                      imageFile: dropped_image,
+                      collection: collection,
+                      name: _collectionNameController.text
+                  );
+                  initCollection();
                 },
                 style: TextButton.styleFrom(
                   primary: Colors.white, // Set the text color here
@@ -145,7 +226,7 @@ class _CollectionPageState extends State<CollectionPage> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
                   child: Text('Добавить коллекцию', style: TextStyle(fontSize: 20),),
                 ),
               ),
@@ -184,18 +265,23 @@ class _CollectionPageState extends State<CollectionPage> {
 
   Future<void> getImageFromGallery() async {
     imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    // pickedFile = XFile(imageFile.path);
-    // dropped_image = await convertToDroppedFile(pickedFile);
-    //
+    pickedFile = XFile(imageFile.path);
+    dropped_image = await convertToDroppedFile(pickedFile);
+
     // isImage = true;
+    print("(((((((((imageFile)))))))))");
+    print(imageFile);
 
     if (imageFile != null) {
       setState(() {
         _imageFile = File(imageFile.path);
-        build(context);
+        AddCollection(context);
+
+        // build(context);
         print("8888888888888888888");
         print(_imageFile);
       });
+
     }
   }
 
@@ -215,5 +301,7 @@ class _CollectionPageState extends State<CollectionPage> {
       size: size,
     );
   }
+
+
 
 }

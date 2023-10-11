@@ -9,6 +9,8 @@ import '../../model/profile.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../services/db/collection_db.dart';
+
 class UserAccount extends StatefulWidget {
 
   static var route = "/account/";
@@ -29,6 +31,8 @@ class _UserAccount extends State<UserAccount> {
     super.initState();
     print("ppppppppppp");
     print(widget.profile.uid);
+    // CollectionDB.getCollections(widget.profile.uid);
+
   }
 
   final List<Post> posts = [

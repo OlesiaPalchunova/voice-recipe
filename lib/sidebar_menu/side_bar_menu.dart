@@ -200,7 +200,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
                     child: ClipRRect(
                       borderRadius:
                           BorderRadius.circular(SideBarMenu.radius(context)),
-                      child: Image.network(defaultProfileUrl),
+                      child: addImage(),
                     ),
                   ),
                 ),
@@ -226,5 +226,21 @@ class _SideBarMenuState extends State<SideBarMenu> {
         ),
       ],
     );
+  }
+}
+
+Widget addImage(){
+  print("99999999999999999999");
+  if (UserDB.image != "null"){
+    print("yyyyyyyyyyyyyyyyyyy  111");
+    return Image(
+      image: NetworkImage(UserDB.image ?? defaultProfileUrl),
+      width: 50,
+      height: 50,
+      fit: BoxFit.cover,
+    );
+  } else {
+    print("yyyyyyyyyyyyyyyyyyy  222");
+    return Image.asset("assets/images/user.jpg");
   }
 }

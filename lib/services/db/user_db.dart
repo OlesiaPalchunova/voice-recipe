@@ -66,7 +66,7 @@ class UserDB{
     password = "";
   }
 
-  void deleteAll1() async {
+  static void deleteAll() async {
     await storage.deleteAll();
   }
 

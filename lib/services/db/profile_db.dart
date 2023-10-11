@@ -133,44 +133,98 @@ class ProfileDB{
     return passworJson;
   }
 
-  Future<Profile> tryGetProfile() async {
-    var response = await fetchProfile();
-    print(")))))))))))");
-    print(response.statusCode);
+  // Future<Profile> tryGetProfile() async {
+  //   var response = await fetchProfile();
+  //   print(")))))))))))");
+  //   print(response.statusCode);
+  //   // if (response.statusCode != 200) return null;
+  //
+  //   var decodedBody = utf8.decode(response.body.codeUnits);
+  //   print(decodedBody);
+  //   var profileJson = jsonDecode(decodedBody);
+  //
+  //   Profile profile;
+  //   profile = Profile(
+  //     uid: profileJson["uid"],
+  //     display_name: profileJson["display_name"],
+  //     image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : "null",
+  //     info: profileJson["info"] ?? " ",
+  //     tg_link: profileJson["tg_link"] ?? " ",
+  //     vk_link: profileJson["vk_link"] ?? " ",
+  //   );
+  //
+  //   return profile;
+  // }
+  //
+  // Future getProfile() async {
+  //   var status = await tryGetProfile();
+  //   print(status);
+  //   if (status == 200) return status;
+  //
+  //   if (status == 401) {
+  //     int status_access = await Authorization.refreshAccessToken();
+  //     print(status_access);
+  //
+  //     if (status_access == 200) return await tryGetProfile();
+  //     if (status_access == 401) {
+  //       int status_refresh = await Authorization.refreshTokens();
+  //       if (status_refresh == 200) return await tryGetProfile();
+  //     }
+  //   }
+  //   print("cvcvcvcvcvcv");
+  //   return status;
+  // }
 
-    var decodedBody = utf8.decode(response.body.codeUnits);
-    print(decodedBody);
-    var profileJson = jsonDecode(decodedBody);
+  Future tryGetProfile() async {
+    var accessToken = await Token.getAccessToken();
+    final Map<String, String> headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Custom-Header': 'Custom Value',
+    };
+    var profileUri = Uri.parse('${apiUrl}profile');
+    var response = await http.get(profileUri, headers: headers);
+    // var response = await fetchProfile();
+    print(")))))2))))))");
+    print(response.body);
 
-    Profile profile = Profile(
-      uid: profileJson["uid"],
-      display_name: profileJson["display_name"],
-      image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : "null",
-      info: profileJson["info"] ?? " ",
-      tg_link: profileJson["tg_link"] ?? " ",
-      vk_link: profileJson["vk_link"] ?? " ",
-    );
-
-    return profile;
+    return response;
   }
 
   Future getProfile() async {
-    var status = await tryGetProfile();
+    var response = await tryGetProfile();
+    var status = response.statusCode;
     print(status);
-    if (status == 200) return status;
+    // if (status == 200) return status;
 
     if (status == 401) {
       int status_access = await Authorization.refreshAccessToken();
       print(status_access);
 
-      if (status_access == 200) return await tryGetProfile();
-      if (status_access == 401) {
+      if (status_access == 200) response = await tryGetProfile();
+      else if (status_access == 401) {
         int status_refresh = await Authorization.refreshTokens();
-        if (status_refresh == 200) return await tryGetProfile();
+        if (status_refresh == 200) response = await tryGetProfile();
       }
     }
+    if (response.statusCode == 200){
+      var decodedBody = utf8.decode(response.body.codeUnits);
+      print(decodedBody);
+      var profileJson = jsonDecode(decodedBody);
+
+      Profile profile;
+      profile = Profile(
+        uid: profileJson["uid"],
+        display_name: profileJson["display_name"],
+        image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : "null",
+        info: profileJson["info"] ?? " ",
+        tg_link: profileJson["tg_link"] ?? " ",
+        vk_link: profileJson["vk_link"] ?? " ",
+      );
+
+      return profile;
+    }
     print("cvcvcvcvcvcv");
-    return status;
+    return null;
   }
 
   String getImageUrl(int id) {
@@ -178,7 +232,7 @@ class ProfileDB{
   }
 
   Profile profileFromJson(dynamic profileJson) {
-    Profile comment = Profile(
+    Profile profile = Profile(
     uid: profileJson["uid"],
     display_name: profileJson["display_name"],
     image: getImageUrl(profileJson["media_id"]) ?? " ",
@@ -187,7 +241,7 @@ class ProfileDB{
     vk_link: profileJson["vk_link"] ?? " ",
     );
 
-    return comment;
+    return profile;
   }
 
   Future<http.Response> fetchProfile() async {
@@ -206,12 +260,13 @@ class ProfileDB{
     // if (response.statusCode != 200) {
     //   return null;
     // }
+    print("00000000000");
+    print(response.statusCode);
 
     var decodedBody = utf8.decode(response.body.codeUnits);
     var profileJson = jsonDecode(decodedBody);
 
-    print("00000000000");
-    print(response.statusCode);
+
     print(profileJson);
 
     Profile profile = profileIdFromJson(profileJson);
