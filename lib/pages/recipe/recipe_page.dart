@@ -79,7 +79,7 @@ class _RecipePageState extends State<RecipePage> {
   late Color activeColor = Config.getColor(widget.recipe.id);
   DateTime tapTime = DateTime.now();
 
-  static Profile profile = Profile(uid: "root", display_name: "Тимофей", image: "image", info: "Обожаю готовить", tg_link: "", vk_link: "https://vk.com/timofeytrubinov");
+  static Profile profile = Profile(uid: "root", display_name: "Тимофей", image: "", info: "Обожаю готовить", tg_link: "", vk_link: "https://vk.com/timofeytrubinov");
   // static Profile profile2 = ProfileDB.getProfileId("les");
 
   double sizeIndicator(BuildContext context) =>

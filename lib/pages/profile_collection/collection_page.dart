@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:voice_recipe/model/collections_info.dart';
 import 'package:voice_recipe/services/db/collection_db.dart';
 
 import '../../components/appbars/title_logo_panel.dart';
@@ -30,7 +31,7 @@ class _CollectionPageState extends State<CollectionPage> {
   //   CollectionModel(name: "Праздничное", count: 3, imageUrl: "https://lingua-airlines.ru/wp-content/uploads/2017/12/christmas.jpg"),
   // ];
 
-  final List<CollectionModel> collections = [];
+  List<CollectionModel> collections = [];
 
   // bool isImage = false;
   var imageFile;
@@ -77,7 +78,7 @@ class _CollectionPageState extends State<CollectionPage> {
     setState(() {
       print("collections");
 
-      while(isAddedCollections != 1)
+      // while(isAddedCollections != 1)
       print(isAddedCollections);
       collections.clear();
       collections.addAll(c);
@@ -102,10 +103,15 @@ class _CollectionPageState extends State<CollectionPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("collectionsDB");
-    initCollection();
-    print("collectionsDB");
-    print(collectionsDB);
+    myCollection = CollectionsInfo.myCollection;
+    favoriteCollection = CollectionsInfo.favoriteCollection;
+    collections = CollectionsInfo.restCollections;
+    print(collections);
+    print("(((((((((collections)))))))))");
+    // print("collectionsDB");
+    // initCollection();
+    // print("collectionsDB");
+    // print(collectionsDB);
     // for (dynamic s in collectionsDB){
     //   print(s);
     //   collections.add(

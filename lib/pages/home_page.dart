@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   static int maxPage = 30;
   static const collectionName = 'diamond';
   bool offline = false;
+  bool isRecipeSearch = true;
 
   @override
   void initState() {
@@ -168,35 +169,82 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin: const EdgeInsets.all(Config.margin).add(
                     const EdgeInsets.symmetric(horizontal: Config.margin * 2)),
-                child: SizedBox(
-                  height: Config.isDesktop(context) ? 50 : 40,
+                child: Container(
                   width: 500,
-                  child: SearchButton(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          barrierColor: Colors.transparent,
-                          useSafeArea: false,
-                          builder: (context) => AlertDialog(
-                              backgroundColor: Colors.transparent,
-                              // contentPadding: Config.zeroPadding,
-                              insetPadding: EdgeInsets.zero,
-                              elevation: 0,
-                              title: const SizedBox(
-                                height: Config.padding * 3.5,
-                              ),
-                              alignment: Alignment.topCenter,
-                              content: SizedBox(
-                                  width: 500,
-                                  height: Config.pageHeight(context) * .6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 30.0),
-                                    child: SearchField(focusNode: FocusNode()),
-                                  ))));
-                    },
-                    text: 'Найти рецепт',
+                  decoration: BoxDecoration(
+                      color: Colors.white54,
+                    borderRadius: BorderRadius.circular(15)
                   ),
-                  //   child: SearchField(focusNode: FocusNode())
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 280,
+                          child: Row(
+                            children: [
+                              TextButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isRecipeSearch = true;
+                                    });
+                                  },
+                                  child: Text(
+                                      "Поиск рецепта",
+                                    style: TextStyle(
+                                      color: Colors.black
+                                    )
+                                  )
+                              ),
+                              Text("|"),
+                              TextButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      isRecipeSearch = false;
+                                    });
+                                  },
+                                  child: Text(
+                                      "Поиск коллекции",
+                                    style: TextStyle(
+                                        color: Colors.black
+                                    ),
+                                  )
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Config.isDesktop(context) ? 50 : 40,
+                        width: 600,
+                        child: SearchButton(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                barrierColor: Colors.transparent,
+                                useSafeArea: false,
+                                builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.transparent,
+                                    // contentPadding: Config.zeroPadding,
+                                    insetPadding: EdgeInsets.zero,
+                                    elevation: 0,
+                                    title: const SizedBox(
+                                      height: Config.padding * 3.5,
+                                    ),
+                                    alignment: Alignment.topCenter,
+                                    content: SizedBox(
+                                        width: 500,
+                                        height: Config.pageHeight(context) * .6,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 80.0),
+                                          child: SearchField(focusNode: FocusNode(), isRecipeSearch: isRecipeSearch),
+                                        ))));
+                          },
+                          text: isRecipeSearch ? 'Найти рецепт' : 'Найти коллекцию',
+                        ),
+                        //   child: SearchField(focusNode: FocusNode())
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SliderGestureHandler(

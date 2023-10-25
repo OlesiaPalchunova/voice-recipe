@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:voice_recipe/api/recipes_sender.dart';
 import 'package:voice_recipe/model/dropped_file.dart';
+import 'package:voice_recipe/model/users_info.dart';
 
 import '../../api/api_fields.dart';
 import '../../model/profile.dart';
@@ -184,9 +185,6 @@ class ProfileDB{
     var profileUri = Uri.parse('${apiUrl}profile');
     var response = await http.get(profileUri, headers: headers);
     // var response = await fetchProfile();
-    print(")))))2))))))");
-    print(response.body);
-
     return response;
   }
 
@@ -215,7 +213,7 @@ class ProfileDB{
       profile = Profile(
         uid: profileJson["uid"],
         display_name: profileJson["display_name"],
-        image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : "null",
+        image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : defaultProfileUrl,
         info: profileJson["info"] ?? " ",
         tg_link: profileJson["tg_link"] ?? " ",
         vk_link: profileJson["vk_link"] ?? " ",
@@ -227,7 +225,7 @@ class ProfileDB{
     return null;
   }
 
-  String getImageUrl(int id) {
+  static String getImageUrl(int id) {
     return "${apiUrl}media/$id";
   }
 
@@ -256,12 +254,12 @@ class ProfileDB{
 
   static Future<Profile> getProfileId(String login) async {
     var response = await fetchProfileId(login);
-    print("+++++++++++++++");
     // if (response.statusCode != 200) {
     //   return null;
     // }
-    print("00000000000");
     print(response.statusCode);
+    print(response.request);
+
 
     var decodedBody = utf8.decode(response.body.codeUnits);
     var profileJson = jsonDecode(decodedBody);
@@ -276,11 +274,10 @@ class ProfileDB{
 
   static Profile profileIdFromJson(dynamic profileJson) {
     String uid = profileJson[0]['uid'];
-    print("00000000000");
     Profile profile = Profile(
       uid: profileJson[0]["uid"],
-      display_name: profileJson[0]["display_name"],
-      image: profileJson[0]["image"] ?? " ",
+      display_name: profileJson[0]["display_name"] ?? " ",
+      image: profileJson[0][faceMedia] != null ? getImageUrl(profileJson[0][faceMedia]) : defaultProfileUrl,
       info: profileJson[0]["info"] ?? " ",
       tg_link: profileJson[0]["tg_link"] ?? " ",
       vk_link: profileJson[0]["vk_link"] ?? " ",
@@ -295,9 +292,7 @@ class ProfileDB{
       'Authorization': 'Bearer $accessToken',
       'Custom-Header': 'Custom Value',
     };
-    print("+++++++++++++++");
     var profileUri = Uri.parse('${apiUrl}profile/$login');
-    print("+++++++++++++++");
     return http.get(profileUri, headers: headers);
   }
 }

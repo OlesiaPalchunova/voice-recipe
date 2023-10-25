@@ -7,11 +7,13 @@ import 'package:voice_recipe/components/labels/input_label.dart';
 import 'package:rive/rive.dart';
 
 import '../../model/recipes_info.dart';
+import '../../services/db/collection_db.dart';
 
 class SearchField extends StatefulWidget {
-  const SearchField({super.key, required this.focusNode});
+  const SearchField({super.key, required this.focusNode, required this.isRecipeSearch});
 
   final FocusNode focusNode;
+  final bool isRecipeSearch;
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -57,7 +59,7 @@ class _SearchFieldState extends State<SearchField> {
         height: Config.isDesktop(context) ? 60 : 40,
         child: InputLabel(
             focusNode: widget.focusNode,
-            labelText: "Найти рецепт",
+            labelText: widget.isRecipeSearch ? "Найти рецепт" : "Найти коллекцию",
             controller: controller,
             prefixIcon: Container(
                 width: iconSize(context),
@@ -77,7 +79,7 @@ class _SearchFieldState extends State<SearchField> {
       Visibility(
         visible: searchResults.isNotEmpty,
         child: SizedBox(
-            height: Config.pageHeight(context) * .4,
+            height: Config.pageHeight(context) * .3,
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -150,7 +152,9 @@ class _SearchFieldState extends State<SearchField> {
       return;
     }
     shownAll = true;
-    var recipes = await RecipesGetter().findRecipes(requestString, 30);
+    var recipes;
+    if (widget.isRecipeSearch) recipes =  await RecipesGetter().findRecipes(requestString, 30);
+    else var collections = await CollectionDB.getCollectionsBySearch(requestString, 30);
     if (recipes == null) {
       setState(() {
         searchResults = [];
@@ -174,7 +178,9 @@ class _SearchFieldState extends State<SearchField> {
     } else {
       hovered?.change(true);
     }
-    var recipes = await RecipesGetter().findRecipes(request, 10);
+    var recipes;
+    if (widget.isRecipeSearch) recipes =  await RecipesGetter().findRecipes(requestString, 10);
+    else var collections = await CollectionDB.getCollectionsBySearch(requestString, 10);
     if (recipes == null) {
       setState(() {
         searchResults = [];

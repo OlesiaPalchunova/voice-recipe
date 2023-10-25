@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:voice_recipe/model/collections_info.dart';
+
 import '../../config/config.dart';
 
 import 'package:file_picker/file_picker.dart';
@@ -23,13 +25,16 @@ import '../../components/constructor_views/password_label.dart';
 import '../../components/text_form_field_widget.dart';
 import '../../model/dropped_file.dart';
 import '../../model/profile.dart';
+import '../../model/recipes_info.dart';
 import '../../services/auth/Token.dart';
+import '../../services/db/collection_db.dart';
 import '../../services/db/profile_db.dart';
 import '../../services/db/user_db.dart';
 
 import 'package:image_picker/image_picker.dart';
 
 import '../profile_collection/collection_page.dart';
+import '../profile_collection/specific_collections_page.dart';
 import '../user/user_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -76,6 +81,18 @@ class _AccountPageState extends State<AccountPage> {
     // _vkController.text = widget.profile.vk_link ?? "";
   }
 
+  Future openMyCollection() async {
+    var collection_id = CollectionsInfo.myCollection.id;
+    Map<int, Recipe>? collection;
+    if (collection_id == 0) collection = {};
+    else collection = await CollectionDB.getCollection(collection_id);
+    if (collection != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +116,8 @@ class _AccountPageState extends State<AccountPage> {
                 SizedBox(height: 15,),
                 InkWell(
                   onTap: (){
-                    Routemaster.of(context).push('/created');
+                    // Routemaster.of(context).push('/created');
+                    openMyCollection();
                   },
                   child: Card(
                     // elevation: 3,

@@ -8,8 +8,10 @@ import 'package:http/http.dart' as http;
 import 'package:voice_recipe/api/api_fields.dart';
 import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/services/auth/authorization.dart';
+import 'package:voice_recipe/services/db/profile_db.dart';
 import 'package:voice_recipe/services/db/user_db.dart';
 
+import '../../model/profile.dart';
 import '../../pages/account/login_page.dart';
 import '../auth/Token.dart';
 
@@ -35,7 +37,6 @@ class CommentDbManager {
 
   Future tryAddNewComment(
       {required Comment comment, required int recipeId}) async {
-    print("yyyyyyyyyyyyyyyyy");
 
     String? commentJson = await commentToJson(comment, recipeId);
       print(commentJson);
@@ -43,7 +44,6 @@ class CommentDbManager {
         return fail;
       }
       var accessToken = await Token.getAccessToken();
-      print("SSSSSSSSSSS");
       print(accessToken);
       var response = await http.post(Uri.parse("${apiUrl}comments"),
         headers: {
@@ -51,14 +51,12 @@ class CommentDbManager {
           "Content-Type": "application/json; charset=UTF-8",
         },
           body: commentJson);
-      print("kkkkkkkkkkkkkkkkkk");
       print(response.statusCode);
       print(response.body);
       if (response.statusCode != 200) {
         if (response.statusCode == 401) return 401;
         return fail;
       }
-      print("7777777777777");
       var idJson = jsonDecode(response.body);
       int? commentId = idJson[id];
       return commentId ?? fail;
@@ -66,7 +64,6 @@ class CommentDbManager {
 
   Future addNewComment(
       {required Comment comment, required int recipeId}) async {
-    print("kkkkkkkkkkkkk");
     var status = await tryAddNewComment(comment: comment, recipeId: recipeId);
     print(status);
     if (status == 200) return status;
@@ -81,7 +78,6 @@ class CommentDbManager {
         if (status_refresh == 200) return await tryAddNewComment(comment: comment, recipeId: recipeId);
       }
     }
-    print("cvcvcvcvcvcv");
     print(recipeId);
     return status;
   }
@@ -157,39 +153,52 @@ class CommentDbManager {
     return commentJson;
   }
 
+  static String getImageUrl(int id) {
+    return "${apiUrl}media/$id";
+  }
+
   Future<List<Comment>?> getComments1(int recipeId) async {
     var response = await fetchComments(recipeId);
     print(response.statusCode);
+    print("((((((((get))))))))");
     if (response.statusCode != 200) {
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
     var commentsJson = jsonDecode(decodedBody);
 
+
     // var commentsJson = allcommentsJson["comments"];
     List<Comment> comments = [];
     for (var commentJson in commentsJson) {
-      Comment comment = commentFromJson(commentJson);
-      // if (blackList.contains(recipe.name)) continue;
+      print("(((((commentJson)))))");
+      print(commentJson);
+      Profile profile = await ProfileDB.getProfileId(commentJson["user_uid"]);
+      print("((((((((((profile))))))))))");
+      print(profile.image);
+      print(profile.display_name);
+      Comment comment = commentFromJson(commentJson, profile.image);
+      print(commentJson);
+
       comments.add(comment);
-      print(comment.text);
-      print(comment.id);
-      print(comment.postTime);
     }
+    print(comments);
     return comments;
   }
 
-  Comment commentFromJson(dynamic commentJson) {
+  Comment commentFromJson(dynamic commentJson, String image) {
     print("llllllllll");
+    // print(image != " " && image != null ? getImageUrl(image) : defaultProfileUrl);
     // var date = DateTime.parse(commentJson["post_time"]);
     // print(date);
+
     Comment comment = Comment(
         id: commentJson["id"],
         uid: commentJson["user_uid"],
         userName: commentJson["user_uid"],
         postTime: commentJson["post_time"] != null ? DateTime.parse(commentJson["post_time"]) : DateTime.now(),
         text: commentJson["content"],
-        profileUrl: defaultProfileUrl,
+        profileUrl: image,
     );
 
     return comment;

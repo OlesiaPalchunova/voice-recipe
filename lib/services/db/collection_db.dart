@@ -8,6 +8,7 @@ import 'package:voice_recipe/services/db/rate_db.dart';
 import '../../api/api_fields.dart';
 import '../../api/recipes_sender.dart';
 import '../../model/collection_model.dart';
+import '../../model/collections_info.dart';
 import '../../model/dropped_file.dart';
 import '../../model/recipes_info.dart';
 import '../auth/Token.dart';
@@ -235,9 +236,11 @@ class CollectionDB{
   }
 
 
-  Future<List<Recipe>?> getCollection(int id) async {
+  static Future<Map<int, Recipe>?> getCollection(int id) async {
     var response = await fetchCollection(id);
     print(response.statusCode);
+    // print(response.body);
+    // print(response.request);
     if (response.statusCode != 200) {
       print(response.body);
       print(response.statusCode);
@@ -247,7 +250,8 @@ class CollectionDB{
     var decodedBody = utf8.decode(response.body.codeUnits);
     var collectionJson = jsonDecode(decodedBody);
     List<dynamic> recipesJson = collectionJson;
-    List<Recipe> recipes = [];
+    // List<Recipe> recipes = [];
+    Map<int, Recipe> recipes = {};
     int count = 0;
     for (dynamic recipeJson in recipesJson) {
       count++;
@@ -256,12 +260,12 @@ class CollectionDB{
       print("+++++++++++++++++++++++++++++=");
       print(mark);
       recipe.mark = mark;
-      recipes.add(recipe);
+      recipes[recipe.id] = recipe;
     }
     return recipes;
   }
 
-  Recipe recipeFromJson(dynamic recipeJson) {
+  static Recipe recipeFromJson(dynamic recipeJson) {
 
     List<dynamic> ingredientsJson = recipeJson[ingredientsDistributions];
     List<Ingredient> ingredients = [];
@@ -321,7 +325,7 @@ class CollectionDB{
     return recipe;
   }
 
-  Future<http.Response> fetchCollection(int id) async {
+  static Future<http.Response> fetchCollection(int id) async {
     final Map<String, String> headers = {
       'Custom-Header': 'Custom Value',
       // Add more custom headers as needed
@@ -337,7 +341,7 @@ class CollectionDB{
       {required int collection_id, required int recipe_id}) async {
     var accessToken = await Token.getAccessToken();
     print(accessToken);
-    var response = await http.post(Uri.parse("${apiUrl}collections?collection_id=$collection_id&recipe_id=$recipe_id"),
+    var response = await http.post(Uri.parse("${apiUrl}collections/content?collection_id=$collection_id&recipe_id=$recipe_id"),
         headers: {
           'Authorization': 'Bearer $accessToken',
           "Content-Type": "application/json; charset=UTF-8",
@@ -384,7 +388,7 @@ class CollectionDB{
       {required int recipe_id}) async {
     var accessToken = await Token.getAccessToken();
     print(accessToken);
-    var response = await http.post(Uri.parse("${apiUrl}collections?recipe_id=$recipe_id"),
+    var response = await http.post(Uri.parse("${apiUrl}collections/liked?recipe_id=$recipe_id"),
         headers: {
           'Authorization': 'Bearer $accessToken',
           "Content-Type": "application/json; charset=UTF-8",
@@ -393,6 +397,7 @@ class CollectionDB{
     print("010101");
     print(response.statusCode);
     print(response.body);
+    print(response.request);
 
     // print(response.body);
     if (response.statusCode != 200) {
@@ -403,24 +408,33 @@ class CollectionDB{
     // var idJson = jsonDecode(response.body);
     // int? commentId = idJson[id];
     print("010122");
-    return -1;
+    return response.statusCode;
   }
 
-  static Future addLikedCollection(
+  Future addLikedCollection(
       {required int recipe_id}) async {
     print("kkkkkk222kkkkkkk");
     var status = await tryAddLikedCollection(recipe_id: recipe_id);
     print(status);
-    if (status == 200) return status;
+    if (status == 200) {
+      CollectionsInfo.init();
+      return status;
+    }
 
     if (status == 401) {
       int status_access = await Authorization.refreshAccessToken();
       print(status_access);
 
-      if (status_access == 200) return await tryAddLikedCollection(recipe_id: recipe_id);
+      if (status_access == 200) {
+        CollectionsInfo.init();
+        return await tryAddLikedCollection(recipe_id: recipe_id);
+      }
       if (status_access == 401) {
         int status_refresh = await Authorization.refreshTokens();
-        if (status_refresh == 200) return await tryAddLikedCollection(recipe_id: recipe_id);
+        if (status_refresh == 200) {
+          CollectionsInfo.init();
+          return await tryAddLikedCollection(recipe_id: recipe_id);
+        }
       }
     }
     return status;
@@ -445,7 +459,7 @@ class CollectionDB{
     return response.statusCode;
   }
 
-  static Future deleteRecipeFromCollection(int collection_id, int recipe_id) async {
+  Future deleteRecipeFromCollection(int collection_id, int recipe_id) async {
     var status = await tryDeleteRecipeFromCollection(collection_id, recipe_id);
     if (status == 200) return status;
 
@@ -460,15 +474,16 @@ class CollectionDB{
     return status;
   }
 
-  static Future getCollectionsBySearch(List<CollectionModel> collections, String name, int limit) async {
+  static Future<List<CollectionModel>?> getCollectionsBySearch(String name, int limit) async {
     final Map<String, String> headers = {
       'Custom-Header': 'Custom Value',
     };
 
-    var response = await http.get(Uri.parse('${apiUrl}/collections/search/$name?limit=$limit'), headers: headers);
+    var response = await http.get(Uri.parse('${apiUrl}collections/search/$name?limit=$limit'), headers: headers);
     print("3636363");
     print(response.statusCode);
-    print(response.body);
+    print(name);
+    print(response.request);
 
     var decodedBody = utf8.decode(response.body.codeUnits);
     var colectionsJson;
@@ -476,7 +491,7 @@ class CollectionDB{
     print("kkkkkkkkkkk");
     print(colectionsJson);
 
-    // List<CollectionModel> collections = [];
+    List<CollectionModel> collections = [];
 
     for (dynamic i in colectionsJson) {
       print(i);
@@ -488,7 +503,7 @@ class CollectionDB{
       ));
     }
 
-    return 1;
+    return collections;
 
   }
 }

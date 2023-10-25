@@ -10,8 +10,6 @@ class Token{
 
   static void init() async{
     if (await storage.containsKey(key: 'access_token')) is_token = true;
-    print("uuuuuuuuuuuuuuu");
-    print(is_token);
   }
 
   static bool isToken(){

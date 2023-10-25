@@ -61,7 +61,10 @@ class RecipesGetter {
       return null;
     }
     var response = await fetchBySearch(request, limit);
+    print(7777777);
+    print(response.request);
     if (response.statusCode != 200) {
+
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
@@ -78,8 +81,6 @@ class RecipesGetter {
   }
 
   Future<List<Recipe>?> getCollection(String name, [int pageId = 0]) async {
-    print("4444444444");
-    print(name);
     if (name == 'favorites') {
       return _favoriteRecipes;
     }
@@ -90,7 +91,6 @@ class RecipesGetter {
       return collectionsCache['$name$pageId'];
     }
     var response = await fetchCollection(name, pageId);
-    print("((((((((((((((((((((((((((((((((kkkkkkkkkkkkk))))))))))))))))))))))))))))))))");
     print(response.statusCode);
     if (response.statusCode != 200) {
       print(response.body);
@@ -99,21 +99,15 @@ class RecipesGetter {
       return null;
     }
     var decodedBody = utf8.decode(response.body.codeUnits);
-    print("(((((((((((((((((((((");
     var collectionJson = jsonDecode(decodedBody);
-    print("(((((((((((((((((((((");
     // List<dynamic> recipesJson = collectionJson["recipes"];
     List<dynamic> recipesJson = collectionJson;
-    print("(((((((((((((((((((((");
     List<Recipe> recipes = [];
-    print("(((((((((((((((((((((");
     int count = 0;
     for (dynamic recipeJson in recipesJson) {
       count++;
       Recipe recipe = recipeFromJson(recipeJson);
       double mark = await RateDbManager().getMark(recipe.id);
-      print("+++++++++++++++++++++++++++++=");
-      print(mark);
       recipe.mark = mark;
       if (blackList.contains(recipe.name)) continue;
       recipes.add(recipe);
@@ -162,8 +156,6 @@ class RecipesGetter {
 
     double mark = recipeJson["avg_mark"] ?? 0.0;
     int user_mark = recipeJson["user_mark"] ?? 0;
-    print(mark);
-    print(recipeJson[id]);
     for (int i = 0; i < recipeName.length; i++) {
       if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|\.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
@@ -206,7 +198,6 @@ class RecipesGetter {
   Future<http.Response> fetchRecipe(int id) async {
     var accessToken = await Token.getAccessToken();
     print(accessToken);
-    print("676767676");
     final Map<String, String> headers = {
       'Authorization': 'Bearer $accessToken',
       'Custom-Header': 'Custom Value',
@@ -217,10 +208,8 @@ class RecipesGetter {
   }
 
   Future<http.Response> fetchCollection(String name, int pageId) async {
-    print("lkllklklklk");
     print(ServiceIO.loggedIn);
     if (ServiceIO.loggedIn) {
-      print("lkllklklklk");
       Authorization.refreshAccessToken();
     }
     var accessToken = await Token.getAccessToken();
@@ -230,21 +219,16 @@ class RecipesGetter {
       'Custom-Header': 'Custom Value',
       // Add more custom headers as needed
     };
-    print("kkkkkkkkkkkkk");
     // var collectionUri = Uri.parse('${apiUrl}collections/search?name=$name&page=$pageId');
     var collectionUri = Uri.parse('${apiUrl}recipes');
-    print("kkkkkkkkkkkkk");
     return http.get(collectionUri, headers: headers);
   }
 
   Future<http.Response> fetchBySearch(String request, int? limit) async {
-    print("yyyyyyyyy");
     if (ServiceIO.loggedIn) {
-      print("lkllklklklk");
       Authorization.refreshAccessToken();
     }
     var accessToken = await Token.getAccessToken();
-    print(accessToken);
     final Map<String, String> headers = {
       'Authorization': 'Bearer $accessToken',
       'Custom-Header': 'Custom Value',
@@ -254,7 +238,6 @@ class RecipesGetter {
     if (limit != null) {
       limitPostfix = "?limit=$limit";
     }
-    print("8888888888");
 
     var searchUri = Uri.parse('${apiUrl}recipes/search/$request$limitPostfix');
     return http.get(searchUri, headers: headers);

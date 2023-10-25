@@ -22,7 +22,10 @@ String since(DateTime time) {
 
   var dt = DateTime.parse(date);
   var diff = DateTime.now().difference(dt);
+  print("0000000");
   print(diff.toString());
+  print(diff.inMinutes);
+
   if (diff.inMinutes < 60) {
     if (diff.inMinutes == 0) {
       return "только что";

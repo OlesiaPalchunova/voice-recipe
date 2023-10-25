@@ -16,12 +16,16 @@ class RecipeHeaderCard extends StatefulWidget {
   const RecipeHeaderCard(
       {Key? key,
       required this.recipe,
+        this.isSaved = false,
+        this.collectionId = -1,
       // required this.mark,
       this.sizeDivider = 1,
       this.showLike = true})
       : super(key: key);
 
   final Recipe recipe;
+  final bool isSaved;
+  final int collectionId;
   // final int mark;
   final double sizeDivider;
   final bool showLike;
@@ -106,7 +110,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
       );
 
   Widget get favButton => FavoritesButton(
-        recipeId: widget.recipe.id,
+        recipeId: widget.recipe.id, isSaved: widget.isSaved, collectionId: widget.collectionId,
       );
 
   void onTap() async {
@@ -137,7 +141,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
         widget.recipe.name.length < 50 &&
         widget.recipe.cookTimeMins <= 60) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -152,7 +156,8 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
           ),
           TimeLabel(
             time: TimeLabel.convertToTOD(widget.recipe.cookTimeMins),
-          )
+          ),
+          // IconButton(onPressed: (){}, icon: Icon(Icons.add_box))
         ],
       );
     }
@@ -249,7 +254,12 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                               right: Config.margin,
                               child: widget.showLike
                                   ? favButton
-                                  : const SizedBox())
+                                  : const SizedBox()),
+                          // Positioned(
+                          //     bottom: Config.margin,
+                          //     right: Config.margin,
+                          //     child: IconButton(onPressed: (){}, icon: Icon(Icons.add_box)))
+
                         ])
                       ]))));
         });
@@ -260,9 +270,10 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
     print("route: $route");
     String currentRoute = Routemaster.of(context).currentRoute.fullPath;
     print("route: $route");
-    if (currentRoute != HomePage.route) {
-      route = '$currentRoute/${recipe.id}';
-    }
+    // if (currentRoute != HomePage.route) {
+    //   route = '$currentRoute/recipe/${recipe.id}';
+    // }
+    print(route);
     Routemaster.of(context).push(route);
   }
 }

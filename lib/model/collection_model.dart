@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:voice_recipe/model/collection.dart';
+import 'package:voice_recipe/model/recipes_info.dart';
 
+import '../pages/profile_collection/specific_collections_page.dart';
 import '../services/db/collection_db.dart';
 import 'dropped_file.dart';
 
@@ -39,71 +41,96 @@ class _CollectionModelState extends State<CollectionModel> {
   File? _imageFile;
   static Collection collection = Collection(id: 0, name: "null", imageUrl: "null", number: 0);
 
+  Future openCollection() async {
+    // List<Recipe> collection = await CollectionDB.getCollection(widget.id).then((result) {
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => SpecificCollectionPage(recipes: collection),
+    //   ));
+    // });;
+
+    Map<int, Recipe>? collection = await CollectionDB.getCollection(widget.id);
+    if (collection != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: widget.id,),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Container(
-        width: 300,
-        height: 180,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white
-        ),
-        child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
+    return InkWell(
+      onTap: () {
+        // await CollectionDB.getCollections(c, 'les').then((result){}
+        // Navigator.of(context).push(MaterialPageRoute(
+        //   builder: (context) => SpecificCollectionPage(),
+        // ));
+        print("((((((((((7777))))))))))");
+        openCollection();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Container(
+          width: 300,
+          height: 180,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white
+          ),
+          child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.deepOrange[100]
+                    ),
+                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.deepOrange[100]
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image(
-                      image: NetworkImage(widget.imageUrl), // Укажите URL изображения здесь
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.cover,
+                      child: Image(
+                        image: NetworkImage(widget.imageUrl), // Укажите URL изображения здесь
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    Text(widget.name, style: TextStyle(fontSize: 20),),
-                    Text("Число рецептов: ${widget.count}"),
-                    SizedBox(height: 5,),
-                    OutlinedButton(
-                      onPressed: () {
-                        AddCollection(context);
-                      },
-                      child: Text(
-                        'Редактировать',
-                        style: TextStyle(color: Colors.orange),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(0.0, -4.0),
-                      child: OutlinedButton(
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Text(widget.name, style: TextStyle(fontSize: 20),),
+                      Text("Число рецептов: ${widget.count}"),
+                      SizedBox(height: 5,),
+                      OutlinedButton(
                         onPressed: () {
-                          CollectionDB.deleteCollection(widget.id);
+                          AddCollection(context);
                         },
                         child: Text(
-                          '      Удалить       ',
-                          style: TextStyle(color: Colors.red),
+                          'Редактировать',
+                          style: TextStyle(color: Colors.orange),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ]
+                      Transform.translate(
+                        offset: Offset(0.0, -4.0),
+                        child: OutlinedButton(
+                          onPressed: () {
+                            CollectionDB.deleteCollection(widget.id);
+                          },
+                          child: Text(
+                            '      Удалить       ',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ]
+          ),
         ),
       ),
     );

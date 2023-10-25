@@ -17,8 +17,12 @@ import 'package:voice_recipe/pages/collections/collections_list_page.dart';
 import 'package:voice_recipe/model/users_info.dart';
 import 'package:voice_recipe/pages/account/auth_page.dart';
 
+import '../model/collections_info.dart';
+import '../model/recipes_info.dart';
+import '../pages/profile_collection/specific_collections_page.dart';
 import '../pages/user_page_template.dart';
 import '../services/auth/Token.dart';
+import '../services/db/collection_db.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({super.key});
@@ -139,7 +143,18 @@ class _SideBarMenuState extends State<SideBarMenu> {
       ServiceIO.showLoginInviteDialog(context);
       return;
     }
-    Routemaster.of(context).push('/favorites');
+    // Routemaster.of(context).push('/favorites');
+    var collection_id = CollectionsInfo.favoriteCollection.id;
+    Map<int, Recipe>? collection;
+    print(999999);
+    print(collection_id);
+    if (collection_id == 0) collection = {};
+    else collection = await CollectionDB.getCollection(collection_id);
+    if (collection != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id),
+      ));
+    }
   }
 
   void onUserTap() async {
