@@ -6,7 +6,7 @@ import '../classic_button.dart';
 
 class SignInButton extends StatefulWidget {
   const SignInButton(
-      {super.key,
+      {key,
       required this.text,
       required this.imageURL,
       required this.onPressed,

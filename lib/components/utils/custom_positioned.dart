@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class CustomPositioned extends StatelessWidget {
-  const CustomPositioned({super.key, this.scale = 1, required this.child,
+  const CustomPositioned({key, this.scale = 1, required this.child,
   this.topOffset = 100});
 
   final double scale;

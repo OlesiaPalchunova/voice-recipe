@@ -8,7 +8,7 @@ import 'package:voice_recipe/config/config.dart';
 
 class TimerView extends StatefulWidget {
   TimerView(
-      {super.key,
+      {key,
       required this.waitTimeMins,
       required this.id,
       this.colorId = 0,
@@ -80,14 +80,14 @@ class _TimerViewState extends State<TimerView> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: TimerView.resetNotifyers[widget.id]!,
-      builder: (context, newIsReset, child) {
+      builder: (context, bool newIsReset, child) {
         if (newIsReset) {
           resetTimer();
           TimerView.resetNotifyers[widget.id]!.value = false;
         }
         return ValueListenableBuilder(
             valueListenable: TimerView.runNotifyers[widget.id]!,
-            builder: (context, newIsRunning, child) {
+            builder: (context, bool newIsRunning, child) {
               if (newIsRunning != isRunning) {
                 isRunning = newIsRunning;
                 if (isRunning) {

@@ -7,7 +7,7 @@ import 'package:voice_recipe/pages/account/login_page.dart';
 import '../../config/config.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  const ForgotPasswordPage({key});
 
   static const route = '/login/reset-password';
 

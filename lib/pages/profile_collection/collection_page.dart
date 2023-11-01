@@ -15,7 +15,7 @@ import '../../model/dropped_file.dart';
 import '../../services/db/user_db.dart';
 
 class CollectionPage extends StatefulWidget {
-  CollectionPage({super.key});
+  CollectionPage({key});
 
 
   @override

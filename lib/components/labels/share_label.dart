@@ -11,7 +11,7 @@ enum ShareOption {
 }
 
 class ShareLabel extends StatelessWidget {
-  const ShareLabel({super.key});
+  const ShareLabel({key});
 
   @override
   Widget build(BuildContext context) {

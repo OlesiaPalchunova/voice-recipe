@@ -10,7 +10,7 @@ import '../config/config.dart';
 import 'buttons/animated_button.dart';
 
 class Advertisement extends StatefulWidget {
-  const Advertisement({super.key});
+  const Advertisement({key});
 
   @override
   State<Advertisement> createState() => _AdvertisementState();

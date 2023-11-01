@@ -12,7 +12,7 @@ import '../../pages/user/user_page.dart';
 
 class HeaderButtonsPanel extends StatelessWidget {
   const HeaderButtonsPanel({
-    super.key,
+    key,
     required this.onClose,
     required this.onList,
     required this.onListen,

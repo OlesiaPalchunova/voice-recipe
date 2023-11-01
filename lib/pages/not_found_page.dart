@@ -5,7 +5,7 @@ import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
 class NotFoundPage extends StatelessWidget {
-  const NotFoundPage({super.key,
+  const NotFoundPage({key,
   this.message = defaultMessage});
 
   static const defaultMessage = "Страница, которую вы запрашиваете, не найдена";

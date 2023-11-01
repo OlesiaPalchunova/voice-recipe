@@ -28,7 +28,7 @@ enum Method {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({key});
 
   static const route = '/login';
 

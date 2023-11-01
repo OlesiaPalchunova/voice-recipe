@@ -15,7 +15,7 @@ import 'package:file_picker/file_picker.dart';
 
 class ImageDropZone extends StatefulWidget {
   const ImageDropZone(
-      {super.key,
+      {key,
       required this.onDrop,
       this.fontSize = 18,
       this.customButtonColor});

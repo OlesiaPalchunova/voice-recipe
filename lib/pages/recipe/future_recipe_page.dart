@@ -7,7 +7,7 @@ import 'package:voice_recipe/pages/recipe/recipe_page.dart';
 import '../../model/recipes_info.dart';
 
 class FutureRecipePage extends StatelessWidget {
-  const FutureRecipePage({super.key, required this.recipeId});
+  const FutureRecipePage({key, required this.recipeId});
 
   static const route = "/recipe/";
 
@@ -24,7 +24,7 @@ class FutureRecipePage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingPage(postfix: " рецепт",);
           }
-          Recipe? recipe = snapshot.data;
+          Recipe? recipe = snapshot.data as Recipe?;
           if (recipe == null) {
             return const NotFoundPage(
               message: "Рецепт, который вы запрашиваете, не был найден",

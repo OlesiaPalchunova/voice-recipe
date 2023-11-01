@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../config/config.dart';
 
 class RateLabel extends StatelessWidget {
-  const RateLabel({super.key, required this.rate, this.width = 80,
+  const RateLabel({key, required this.rate, this.width = 80,
   this.shadowOn = true});
 
   final double rate;

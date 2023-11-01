@@ -13,7 +13,7 @@ import '../services/db/rate_db.dart';
 import 'account/login_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({key});
 
   static const route = '/';
 

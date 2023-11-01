@@ -5,7 +5,7 @@ import '../../config/config.dart';
 import 'classic_button.dart';
 
 class DeleteButton extends StatefulWidget {
-  const DeleteButton({super.key, required this.onPressed,
+  const DeleteButton({key, required this.onPressed,
   this.toolTip, this.margin});
 
   final VoidCallback onPressed;

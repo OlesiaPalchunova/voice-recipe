@@ -7,7 +7,7 @@ enum Direction { left, right }
 
 class ArrowButton extends StatefulWidget {
   const ArrowButton({
-    super.key,
+    key,
     required this.direction,
     required this.onTap,
     required this.backColor,
@@ -55,7 +55,7 @@ class _ArrowButtonState extends State<ArrowButton> {
     double arrowSize = Config.pageWidth(context) / 16;
     return ValueListenableBuilder(
       valueListenable: widget.hideNotify,
-      builder: (context, isHidden, child) {
+      builder: (context, bool isHidden, child) {
         return Visibility(
             visible: !isHidden,
             child: child!

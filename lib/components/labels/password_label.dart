@@ -5,7 +5,7 @@ import '../../config/config.dart';
 
 class PasswordLabel extends StatelessWidget {
   const PasswordLabel(
-      {super.key,
+      {key,
       required this.hintText,
       required this.controller,
       required this.onSubmit,

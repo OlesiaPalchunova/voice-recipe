@@ -220,7 +220,7 @@ class RecipesGetter {
       // Add more custom headers as needed
     };
     // var collectionUri = Uri.parse('${apiUrl}collections/search?name=$name&page=$pageId');
-    var collectionUri = Uri.parse('${apiUrl}recipes');
+    var collectionUri = Uri.parse('${apiUrl}recipes?page=$pageId');
     return http.get(collectionUri, headers: headers);
   }
 

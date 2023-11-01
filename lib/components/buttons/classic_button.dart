@@ -5,7 +5,7 @@ import '../../config/config.dart';
 
 class ClassicButton extends StatefulWidget {
   const ClassicButton(
-      {super.key,
+      {key,
       required this.onTap,
       required this.text,
       this.fontSize,

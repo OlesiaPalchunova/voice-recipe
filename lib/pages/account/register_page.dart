@@ -11,7 +11,7 @@ import 'package:voice_recipe/pages/account/login_page.dart';
 import '../../services/auth/authorization.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({key});
 
   static const route = '/login/register';
 

@@ -6,7 +6,7 @@ import '../config/config.dart';
 
 class SideBarTile extends StatefulWidget {
   const SideBarTile(
-      {super.key,
+      {key,
       required this.name,
       required this.onClicked,
       required this.iconData,

@@ -6,7 +6,7 @@ import '../buttons/classic_button.dart';
 import 'comment_card.dart';
 
 class NewCommentCard extends StatefulWidget {
-  const NewCommentCard({super.key,
+  const NewCommentCard({key,
     required this.focusNode,
     required this.textController,
     required this.onSubmit,

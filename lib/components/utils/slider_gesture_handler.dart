@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class SliderGestureHandler extends StatefulWidget {
   const SliderGestureHandler(
-      {super.key,
+      {key,
       required this.onLeft,
       required this.onRight,
       required this.onEscape,

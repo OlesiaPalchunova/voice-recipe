@@ -10,7 +10,7 @@ import '../../model/recipes_info.dart';
 import '../../services/db/collection_db.dart';
 
 class SearchField extends StatefulWidget {
-  const SearchField({super.key, required this.focusNode, required this.isRecipeSearch});
+  const SearchField({key, required this.focusNode, required this.isRecipeSearch});
 
   final FocusNode focusNode;
   final bool isRecipeSearch;

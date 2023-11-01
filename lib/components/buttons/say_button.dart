@@ -5,7 +5,7 @@ import 'package:voice_recipe/config/config.dart';
 
 class SayButton extends StatefulWidget {
   const SayButton(
-      {super.key,
+      {key,
       required this.sayNotyfyer,
       required this.onSay,
       required this.onStopSaying,
@@ -42,7 +42,7 @@ class _SayButtonState extends State<SayButton> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: widget.sayNotyfyer,
-        builder: (context, newIsSaying, child) {
+        builder: (context, bool newIsSaying, child) {
           if (newIsSaying != isSaying) {
             isSaying = newIsSaying;
             if (isSaying) {

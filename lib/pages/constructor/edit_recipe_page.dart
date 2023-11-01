@@ -11,7 +11,7 @@ import '../../config/config.dart';
 import '../../model/recipes_info.dart';
 
 class EditRecipePage extends StatefulWidget {
-  const EditRecipePage({super.key, required this.recipe});
+  const EditRecipePage({key, required this.recipe});
 
   static const route = '/edit/';
 

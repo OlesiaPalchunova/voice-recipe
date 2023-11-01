@@ -5,7 +5,7 @@ import '../../config/config.dart';
 
 class InputLabel extends StatelessWidget {
   const InputLabel(
-      {super.key,
+      {key,
       required this.labelText,
       required this.controller,
       this.focusNode,

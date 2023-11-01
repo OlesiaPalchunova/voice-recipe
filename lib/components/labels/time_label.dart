@@ -6,7 +6,7 @@ import '../buttons/classic_button.dart';
 import '../buttons/delete_button.dart';
 
 class TimeLabel extends StatelessWidget {
-  const TimeLabel({super.key, required this.time,
+  const TimeLabel({key, required this.time,
   this.iconSize = 20, this.customFontSize});
 
   final TimeOfDay time;

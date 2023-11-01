@@ -4,7 +4,7 @@ import 'package:voice_recipe/model/recipes_info.dart';
 import 'package:voice_recipe/config/config.dart';
 
 class MiniIngredientsList extends StatefulWidget {
-  const MiniIngredientsList({super.key, required this.recipe});
+  const MiniIngredientsList({key, required this.recipe});
 
   final Recipe recipe;
 

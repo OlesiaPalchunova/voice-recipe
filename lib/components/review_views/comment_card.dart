@@ -11,7 +11,7 @@ import 'new_comment_card.dart';
 
 class CommentCard extends StatefulWidget {
   const CommentCard(
-      {super.key,
+      {key,
       required this.commentId,
       required this.comment,
       required this.recipeId,

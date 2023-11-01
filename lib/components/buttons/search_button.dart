@@ -5,7 +5,7 @@ import '../../config/config.dart';
 import 'classic_button.dart';
 
 class SearchButton extends StatefulWidget {
-  const SearchButton({super.key, required this.onTap, required this.text});
+  const SearchButton({key, required this.onTap, required this.text});
 
   final VoidCallback onTap;
   final String text;

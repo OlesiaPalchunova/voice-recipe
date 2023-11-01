@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_recipe/config/config.dart';
 
 class RefButton extends StatefulWidget {
-  const RefButton({super.key, required this.text, required this.onTap});
+  const RefButton({key, required this.text, required this.onTap});
 
   final String text;
   final VoidCallback onTap;

@@ -7,7 +7,7 @@ import '../../model/recipes_info.dart';
 import '../loading_page.dart';
 
 class FutureCollectionPage extends StatelessWidget {
-  const FutureCollectionPage({super.key, required this.name});
+  const FutureCollectionPage({key, required this.name});
 
   static const route = "/collections/";
 
@@ -27,7 +27,7 @@ class FutureCollectionPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingPage(postfix: " подборку",);
           }
-          List<Recipe>? collection = snapshot.data;
+          List<Recipe>? collection = snapshot.data as List<Recipe>?;
           if (collection == null) {
             return const NotFoundPage(message: "Подборка не найдена",);
           }

@@ -4,7 +4,7 @@ import 'package:rive/rive.dart';
 import '../config/config.dart';
 
 class LoadingPage extends StatelessWidget {
-  const LoadingPage({super.key, this.postfix = ''});
+  const LoadingPage({key, this.postfix = ''});
 
   final String postfix;
 

@@ -14,7 +14,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 
 class FavoritesButton extends StatefulWidget {
   const FavoritesButton(
-      {super.key,
+      {key,
         required this.recipeId, this.collectionId = -1,
       this.width = 60, this.shadowOn = true, this.isSaved = false
       });

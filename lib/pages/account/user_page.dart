@@ -17,7 +17,7 @@ class UserAccount extends StatefulWidget {
   final Profile profile;
 
 
-  const UserAccount({super.key, required this.profile});
+  const UserAccount({key, required this.profile});
 
   @override
   State<UserAccount> createState() => _UserAccount();

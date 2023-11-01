@@ -160,7 +160,8 @@ class CommentDbManager {
   Future<List<Comment>?> getComments1(int recipeId) async {
     var response = await fetchComments(recipeId);
     print(response.statusCode);
-    print("((((((((get))))))))");
+    print(response.request);
+    print("((((((((comment))))))))");
     if (response.statusCode != 200) {
       return null;
     }

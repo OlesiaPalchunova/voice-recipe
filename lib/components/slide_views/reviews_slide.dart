@@ -24,7 +24,7 @@ import '../../services/auth/authorization.dart';
 import '../../services/db/rate_db.dart';
 
 class ReviewsSlide extends StatefulWidget {
-  ReviewsSlide({super.key, required this.recipe});
+  ReviewsSlide({key, required this.recipe});
 
   final Recipe recipe;
   static final FocusNode newCommentNode = FocusNode();

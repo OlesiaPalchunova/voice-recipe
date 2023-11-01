@@ -25,7 +25,7 @@ import '../services/auth/Token.dart';
 import '../services/db/collection_db.dart';
 
 class SideBarMenu extends StatefulWidget {
-  const SideBarMenu({super.key});
+  const SideBarMenu({key});
 
   @override
   State<SideBarMenu> createState() => _SideBarMenuState();

@@ -8,7 +8,7 @@ import '../../services/auth/Token.dart';
 import '../../services/db/profile_db.dart';
 
 class AuthPage extends StatelessWidget{
-  const AuthPage({super.key});
+  const AuthPage({key});
 
   static const route = '/profile';
 

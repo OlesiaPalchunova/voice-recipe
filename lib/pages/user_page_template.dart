@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UserPage extends StatelessWidget {
-  const UserPage({super.key});
+  const UserPage({key});
 
   static const route = "/account/";
 

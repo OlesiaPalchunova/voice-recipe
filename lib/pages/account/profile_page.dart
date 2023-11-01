@@ -38,7 +38,7 @@ import '../profile_collection/specific_collections_page.dart';
 import '../user/user_page.dart';
 
 class AccountPage extends StatefulWidget {
-  AccountPage({super.key, required this.profile});
+  AccountPage({key, required this.profile});
 
   Profile profile;
 

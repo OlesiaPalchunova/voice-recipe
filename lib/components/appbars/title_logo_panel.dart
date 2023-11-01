@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../config/config.dart';
 
 class TitleLogoPanel extends StatefulWidget {
-  const TitleLogoPanel({super.key, required this.title});
+  const TitleLogoPanel({key, required this.title});
 
   final String title;
 

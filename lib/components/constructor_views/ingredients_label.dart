@@ -11,7 +11,7 @@ import '../buttons/classic_button.dart';
 import '../labels/input_label.dart';
 
 class CreateIngredientsLabel extends StatefulWidget {
-  const CreateIngredientsLabel({super.key, required this.insertList,
+  const CreateIngredientsLabel({key, required this.insertList,
   required this.ingNameFocusNode, required this.ingCountFocusNode});
 
   final List<Ingredient> insertList;

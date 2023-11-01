@@ -18,7 +18,7 @@ import '../../model/recipes_info.dart';
 import '../../services/db/user_db.dart';
 
 class CreateRecipePage extends StatefulWidget {
-  const CreateRecipePage({super.key});
+  const CreateRecipePage({key});
 
   static const route = '/constructor';
 

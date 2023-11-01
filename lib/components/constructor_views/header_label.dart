@@ -12,7 +12,7 @@ import '../labels/input_label.dart';
 
 class CreateHeaderLabel extends StatefulWidget {
   const CreateHeaderLabel(
-      {super.key, required this.headers, required this.nameFocusNode});
+      {key, required this.headers, required this.nameFocusNode});
 
   final HeaderInfo headers;
   final FocusNode nameFocusNode;

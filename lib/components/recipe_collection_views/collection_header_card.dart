@@ -85,23 +85,24 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
                           SizedBox(
                             width: width * 0.5,
                           ),
-                          Container(
-                            width: width * 0.4,
-                            alignment: Alignment.center,
-                            child: Image(
-                              image: AssetImage(widget.set.imageUrl),
-                              height: active ? cardHeight : cardHeight * 0.9,
-                              // fit: BoxFit.fitWidth,
-                            ),
-                          ),
+                          // Container(
+                          //   width: width * 0.4,
+                          //   alignment: Alignment.center,
+                          //   child: Image(
+                          //     image: AssetImage(widget.set.imageUrl),
+                          //     height: active ? cardHeight : cardHeight * 0.9,
+                          //     // fit: BoxFit.fitWidth,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                   ),
                   Container(
+                    width: 300,
                     height: cardHeight,
                     alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(left: Config.padding * 2),
+                    padding: const EdgeInsets.only(left: Config.padding),
                     child: Text(widget.set.name,
                         style: TextStyle(
                             fontFamily: Config.fontFamily,

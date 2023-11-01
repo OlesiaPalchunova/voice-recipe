@@ -20,7 +20,7 @@ import 'config/config.dart';
 import 'model/profile.dart';
 
 class VoiceRecipeApp extends StatefulWidget {
-  const VoiceRecipeApp({super.key});
+  const VoiceRecipeApp({key});
 
   @override
   State<VoiceRecipeApp> createState() => _VoiceRecipeAppState();

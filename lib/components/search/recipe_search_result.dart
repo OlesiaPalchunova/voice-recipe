@@ -7,7 +7,7 @@ import '../../pages/home_page.dart';
 import '../../pages/recipe/future_recipe_page.dart';
 
 class RecipeSearchResult extends StatefulWidget {
-  const RecipeSearchResult({super.key, required this.recipe});
+  const RecipeSearchResult({key, required this.recipe});
 
   final Recipe recipe;
 

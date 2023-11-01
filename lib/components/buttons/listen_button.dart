@@ -6,7 +6,7 @@ import 'package:voice_recipe/config/config.dart';
 import '../../services/service_io.dart';
 
 class ListenButton extends StatefulWidget {
-  const ListenButton({super.key,
+  const ListenButton({key,
     required this.onListen,
     required this.onMute,
     required this.iconSize,
@@ -40,7 +40,7 @@ class _ListenButtonState extends State<ListenButton> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: widget.listenNotifyer,
-      builder: (context, newIsListening, child) {
+      builder: (context, bool newIsListening, child) {
         if (newIsListening != isListening) {
           isListening = newIsListening;
           if (newIsListening) {
@@ -51,7 +51,7 @@ class _ListenButtonState extends State<ListenButton> {
         }
         return ValueListenableBuilder(
           valueListenable: widget.isLocked,
-          builder: (context, isLocked, child) {
+          builder: (context, bool isLocked, child) {
             return HeaderButtonsPanel.buildButton(
                 IconButton(
                     onPressed: () {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../config/config.dart';
 
 class TitleUserPanel extends StatefulWidget {
-  const TitleUserPanel({super.key, required this.title});
+  const TitleUserPanel({key, required this.title});
 
   final String title;
 

@@ -7,7 +7,7 @@ import '../../services/db/rate_db.dart';
 
 class SpecificCollectionPage extends StatefulWidget {
   const SpecificCollectionPage(
-      {super.key,
+      {key,
         required this.recipes,
         this.collectionId = -1,
         this.showLikes = true});

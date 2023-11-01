@@ -14,7 +14,7 @@ import '../labels/input_label.dart';
 
 class CreateStepsLabel extends StatefulWidget {
   const CreateStepsLabel(
-      {super.key, required this.insertList, required this.descFocusNode});
+      {key, required this.insertList, required this.descFocusNode});
 
   final List<RecipeStep> insertList;
   final FocusNode descFocusNode;
