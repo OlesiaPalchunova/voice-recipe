@@ -1,14 +1,18 @@
 import 'package:voice_recipe/api/recipes_getter.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
+import 'package:voice_recipe/services/db/category_db.dart';
 
 class CollectionsSet {
   final int id;
   final String name;
-  final String imageUrl;
-  final List<Collection> options;
 
-  CollectionsSet({required this.id, required this.name, required this.imageUrl,
-    required this.options});
+  CollectionsSet({required this.id, required this.name});
+
+  List<CollectionsSet> sets = [];
+
+  Future initSelections() async {
+    sets = await CategoryDB().getSelections();
+  }
 }
 
 class Collection {
@@ -17,7 +21,7 @@ class Collection {
   final String collectionName;
 
   Collection({required this.id, required this.name,
-  required this.collectionName});
+    required this.collectionName});
 
   Future<List<Recipe>> getRecipes() async {
     var res = await RecipesGetter().getCollection(collectionName);
@@ -50,17 +54,11 @@ final List<Collection> categoriesSetOptions = [
 ];
 
 final List<CollectionsSet> sets = <CollectionsSet>[
-  CollectionsSet(id: 1, name: "По времени", imageUrl: "assets/images/sets/clock.png", options: timesSetOptions),
-  CollectionsSet(id: 2, name: "Национальные\nкухни", imageUrl: "assets/images/sets/national.png",
-  options: nationalSetOptions),
-  CollectionsSet(id: 3, name: "Премиальные\nрецепты", imageUrl: "assets/images/sets/premium.png",
-  options: premiumSetOptions),
-  CollectionsSet(id: 4, name: "По виду блюда", imageUrl: "assets/images/sets/business_lunch.png",
-  options: categoriesSetOptions),
+  CollectionsSet(id: 1, name: "По времени"),
+  CollectionsSet(id: 2, name: "Национальные\nкухни"),
+  CollectionsSet(id: 3, name: "Премиальные\nрецепты"),
+  CollectionsSet(id: 4, name: "По виду блюда"),
 ];
 
-final CollectionsSet fav = CollectionsSet(id: 5, name: "Избранное", imageUrl: "assets/images/sets/favorites.png",
-options: []);
-final CollectionsSet created = CollectionsSet(id: 6, name: "Мои рецепты", imageUrl: "assets/images/sets/created.png",
-options: []);
-
+final CollectionsSet fav = CollectionsSet(id: 5, name: "Избранное");
+final CollectionsSet created = CollectionsSet(id: 6, name: "Мои рецепты");

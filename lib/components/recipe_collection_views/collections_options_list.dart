@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_option_tile.dart';
+import 'package:voice_recipe/services/db/category_db.dart';
 
 import '../../config/config.dart';
 import '../../model/sets_info.dart';
 
 class CollectionsOptionsList extends StatefulWidget {
-  const CollectionsOptionsList({super.key, required this.set});
+  const CollectionsOptionsList({key, required this.set});
 
   final CollectionsSet set;
 
@@ -14,7 +15,8 @@ class CollectionsOptionsList extends StatefulWidget {
 }
 
 class _CollectionsOptionsListState extends State<CollectionsOptionsList> with SingleTickerProviderStateMixin {
-  late final _setOptions = widget.set.options;
+  // late final _setOptions = widget.set.options;
+  late final _setOptions;
   static const _initialDelayTime = Duration(milliseconds: 20);
   static const _itemSlideTime = Duration(milliseconds: 250);
   static const _staggerTime = Duration(milliseconds: 40);
@@ -28,9 +30,14 @@ class _CollectionsOptionsListState extends State<CollectionsOptionsList> with Si
   late AnimationController _staggeredController;
   final List<Interval> _itemSlideIntervals = [];
 
+  Future initOptions() async {
+    _setOptions = await CategoryDB().getCategoriesOfSelections(selection_id: widget.set.id);
+  }
+
   @override
   void initState() {
     super.initState();
+    initOptions();
     _createAnimationIntervals();
     _staggeredController = AnimationController(
       vsync: this,
