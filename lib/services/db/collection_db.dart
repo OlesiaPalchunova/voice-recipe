@@ -85,18 +85,20 @@ class CollectionDB{
   }
 
   static Future tryUpdateCollection(
-      {required Collection collection, required DroppedFile? imageFile, required String name, required int id}) async {
+      {required Collection collection, required DroppedFile? imageFile, required String name, required int id, required String imageUrl}) async {
 
     var imageId = null;
-    if (imageFile != null) imageId = await RecipesSender().sendImageRaw(imageFile);
-    collection.imageUrl = getImageUrl(imageId);
+    if (imageFile != null) {
+      imageId = await RecipesSender().sendImageRaw(imageFile);
+      collection.imageUrl = getImageUrl(imageId);
+    }
 
     Map<String, dynamic> collectionDto;
     collectionDto = {
       "name": name,
       "number": 0,
       "id": id,
-      "media_id": imageId
+      "media_id": imageId ?? getIdFromImageUrl(imageUrl)
     };
     var collectionJson = jsonEncode(collectionDto);
 
@@ -113,6 +115,8 @@ class CollectionDB{
         body: collectionJson
     );
     print("010101");
+    print(imageId ?? getIdFromImageUrl(imageUrl));
+    print(id);
     print(response.statusCode);
     print(response.body);
 
@@ -129,9 +133,9 @@ class CollectionDB{
   }
 
   static Future updateCollection(
-      {required Collection collection, required DroppedFile? imageFile, required String name, required int id}) async {
+      {required Collection collection, required DroppedFile? imageFile, required String name, required int id, required String imageUrl}) async {
     print("kkkkkk222kkkkkkk");
-    var status = await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id);
+    var status = await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id, imageUrl: imageUrl);
     print(status);
     if (status == 200) return status;
 
@@ -139,10 +143,10 @@ class CollectionDB{
       int status_access = await Authorization.refreshAccessToken();
       print(status_access);
 
-      if (status_access == 200) return await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id);
+      if (status_access == 200) return await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id, imageUrl: imageUrl);
       if (status_access == 401) {
         int status_refresh = await Authorization.refreshTokens();
-        if (status_refresh == 200) return await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id);
+        if (status_refresh == 200) return await tryUpdateCollection(collection: collection, imageFile: imageFile, name: name, id: id, imageUrl: imageUrl);
       }
     }
     return status;
@@ -167,6 +171,16 @@ class CollectionDB{
 
   static String getImageUrl(int id) {
     return "${apiUrl}media/$id";
+  }
+
+  static int getIdFromImageUrl(String imageUrl) {
+    final parts = imageUrl.split('/');
+    if (parts.length >= 2) {
+      print(parts.last);
+      return int.parse(parts.last);
+    } else {
+      return -1;
+    }
   }
 
   static Future getCollections(List<CollectionModel> collections, String login) async {

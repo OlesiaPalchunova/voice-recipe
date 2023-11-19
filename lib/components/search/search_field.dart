@@ -152,9 +152,11 @@ class _SearchFieldState extends State<SearchField> {
       return;
     }
     shownAll = true;
+    var collections;
     var recipes;
     if (widget.isRecipeSearch) recipes =  await RecipesGetter().findRecipes(requestString, 30);
-    else var collections = await CollectionDB.getCollectionsBySearch(requestString, 30);
+    else collections = await CollectionDB.getCollectionsBySearch(requestString, 30);
+    print(collections.length);
     if (recipes == null) {
       setState(() {
         searchResults = [];

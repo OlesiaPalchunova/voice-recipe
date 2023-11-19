@@ -4,11 +4,15 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
 import 'package:voice_recipe/components/review_views/rate_label.dart';
 import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
+import 'package:voice_recipe/services/db/category_db.dart';
 import 'package:voice_recipe/services/db/rate_db.dart';
 
+import '../model/category_model.dart';
+import '../model/dialog/category_choice.dart';
 import '../model/recipes_info.dart';
 import 'package:voice_recipe/config/config.dart';
 
+import '../model/sets_info.dart';
 import '../pages/home_page.dart';
 import 'labels/time_label.dart';
 
@@ -20,7 +24,8 @@ class RecipeHeaderCard extends StatefulWidget {
         this.collectionId = -1,
       // required this.mark,
       this.sizeDivider = 1,
-      this.showLike = true})
+      this.showLike = true,
+        this.showCategories = false,})
       : super(key: key);
 
   final Recipe recipe;
@@ -29,6 +34,7 @@ class RecipeHeaderCard extends StatefulWidget {
   // final int mark;
   final double sizeDivider;
   final bool showLike;
+  final bool showCategories;
   static const maxDesktopHeight = 270.0;
 
   static double cardWidth(BuildContext context) {
@@ -50,6 +56,13 @@ class RecipeHeaderCard extends StatefulWidget {
     return width;
   }
 
+  static Future delete(BuildContext context, int category_id) async {
+    final state = context.findAncestorStateOfType<_RecipeHeaderCardState>();
+    if (state != null) {
+      await state.delete(category_id);
+    }
+  }
+
   @override
   State<RecipeHeaderCard> createState() => _RecipeHeaderCardState();
 }
@@ -60,6 +73,18 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   late double height;
   late double width;
   static double mark = 0.0;
+  List<CategoryModel> categories = [];
+  Map<int, Collection> allCategories = {};
+
+  // Future getCategories() async {
+  //   allCategories = await CategoryDB().getCategories();
+  //   setState(() {
+  //     for (var c in categories) {
+  //       print(c.id);
+  //       if (allCategories.containsKey(c.id)) allCategories.remove(c.id);
+  //     }
+  //   });
+  // }
 
   Future initMark() async{
     double mark1 = await RateDbManager().getMark(widget.recipe.id);
@@ -68,13 +93,42 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
     });
   }
 
+  Future initCategories() async {
+    print(8888);
+    var categories_temp = await CategoryDB().getCategoriesOfRecipe(widget.recipe.id);
+    allCategories = await CategoryDB().getCategories();
+    setState(() {
+      categories = categories_temp;
+
+      for (var c in categories) {
+        print(c.id);
+        if (allCategories.containsKey(c.id)) allCategories.remove(c.id);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // RateDbManager.mark = widget.recipe.mark;
     initMark();
+    if (widget.showCategories) {
+      initCategories();
+      // getCategories();
+    }
+
     print("=================");
+    print(widget.collectionId);
     print(widget.recipe.faceImageUrl);
+  }
+
+  Future delete(int category_id) async {
+    await CategoryDB().deleteRecipeFromCategory(
+      recipe_id: widget.recipe.id,
+      category_id: category_id,
+    );
+    initCategories();
+    print(888);
   }
 
   @override
@@ -180,6 +234,18 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
   }
 
 
+  Future<bool?> showCategories(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CategoryChoice(recipe_id: widget.recipe.id, allCategories: allCategories, categories: [],);
+      },
+    );
+    print(444444444);
+    initCategories();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var cardWidth = width;
@@ -239,8 +305,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                               width: cardWidth,
                               decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.vertical(
-                                      bottom:
-                                          Radius.circular(Config.largeRadius)),
+                                      bottom: Radius.circular(Config.largeRadius)),
                                   image: DecorationImage(
                                       image: NetworkImage(
                                           widget.recipe.faceImageUrl),
@@ -260,7 +325,44 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                           //     right: Config.margin,
                           //     child: IconButton(onPressed: (){}, icon: Icon(Icons.add_box)))
 
-                        ])
+                        ]),
+                        widget.showCategories ?
+                        Container(
+                          // width: 100,
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Column(
+                            children: [
+                              Wrap(
+                                spacing: 0.0,  // Расстояние между элементами по горизонтали.
+                                runSpacing: 0.0,  // Расстояние между строками.
+                                children: [
+                                  for (var category in categories) category,
+
+                                ],
+                              ),
+                              Container(
+                                height: 40,
+                                width: 40,
+                                padding: const EdgeInsets.all(0.0),
+                                child: IconButton(
+                                    onPressed: () async {
+                                      print(categories.length);
+                                      var result = await showCategories(context);
+                                      // await initCategories();
+
+                                    },
+                                    icon: Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Icon(Icons.add_box),
+                                    )
+                                ),
+                              )
+                            ],
+                          )
+                        ) : Container(width: 100,)
                       ]))));
         });
   }

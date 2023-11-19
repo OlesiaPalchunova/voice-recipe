@@ -5,7 +5,7 @@ import 'package:voice_recipe/components/recipe_collection_views/collection_heade
 import 'package:voice_recipe/config/config.dart';
 
 class CollectionsListPage extends StatefulWidget {
-  const CollectionsListPage({super.key});
+  const CollectionsListPage({key});
 
   static const route = "/collections";
 
@@ -14,6 +14,8 @@ class CollectionsListPage extends StatefulWidget {
 }
 
 class _CollectionsListPage extends State<CollectionsListPage> {
+  // CollectionsSet c = CollectionsSet(id: 0, name: "");
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,9 +32,9 @@ class _CollectionsListPage extends State<CollectionsListPage> {
                 itemCount: sets.length,
                 itemBuilder: (_, index) => CollectionHeaderCard(
                     widthConstraint:
-                        Config.pageWidth(context) > Config.pageHeight(context)
-                            ? Config.maxRecipeSlideWidth
-                            : 0,
+                    Config.pageWidth(context) > Config.pageHeight(context)
+                        ? Config.maxRecipeSlideWidth
+                        : 0,
                     set: sets[index],
                     onTap: () {}),
               ),

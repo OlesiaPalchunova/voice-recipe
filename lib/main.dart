@@ -4,6 +4,7 @@ import 'package:voice_recipe/services/db/user_db.dart';
 import 'package:voice_recipe/voice_recipe_app.dart';
 import 'config/config.dart';
 import 'model/collections_info.dart';
+import 'model/sets_info.dart';
 import 'services/local_notice_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
@@ -27,4 +28,7 @@ Future<void> main() async {
   Token.init();
   await UserDB.init();
   CollectionsInfo.init();
+  // CollectionsSet c = CollectionsSet(id: 0, name: "");
+  // print(88888);
+  await initSelections();
 }

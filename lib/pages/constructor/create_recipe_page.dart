@@ -13,8 +13,11 @@ import 'package:voice_recipe/services/db/user_db_manager.dart';
 import 'package:voice_recipe/components/utils/animated_loading.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
+import '../../components/constructor_views/category_label.dart';
 import '../../config/config.dart';
+import '../../model/category_model.dart';
 import '../../model/recipes_info.dart';
+import '../../services/db/category_db.dart';
 import '../../services/db/user_db.dart';
 
 class CreateRecipePage extends StatefulWidget {
@@ -58,6 +61,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final ingNameFocusNode = FocusNode();
   final ingCountFocusNode = FocusNode();
   final descFocusNode = FocusNode();
+  final List<CategoryModel> categories = [];
 
   final int recipeId = 0;
 
@@ -140,6 +144,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         ingCountFocusNode: ingCountFocusNode,
       ),
       CreateStepsLabel(insertList: steps, descFocusNode: descFocusNode),
+      CategoryLabel(categories: categories),
       Container(
         margin: Config.paddingAll,
         alignment: Alignment.centerLeft,
@@ -163,6 +168,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       fontSize: CreateRecipePage.generalFontSize(context));
 
   void submitRecipe() async {
+    print("categories.length");
+    print(categories.length);
     if (!ServiceIO.loggedIn) {
       ServiceIO.showLoginInviteDialog(context);
       return;
@@ -207,7 +214,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
           ServiceIO.showAlertDialog(
               "Приносим свои извинения, сервер не отвечает", context);
         } else {
+          print(99999999);
+          for (var c in categories) {
+            print(777);
+            CategoryDB.addRecipeToCategory(recipe_id: recipeId, category_id: c.id);
+          }
           UserDbManager().addNewCreated(ServiceIO.user!.uid, recipeId);
+
         }
       });
       return recipeId != RecipesSender.fail;

@@ -88,7 +88,7 @@ class _AccountPageState extends State<AccountPage> {
     else collection = await CollectionDB.getCollection(collection_id);
     if (collection != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id),
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id, showCategories: true,),
       ));
     }
   }

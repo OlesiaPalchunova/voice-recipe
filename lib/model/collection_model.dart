@@ -33,13 +33,14 @@ class _CollectionModelState extends State<CollectionModel> {
   void initState() {
     super.initState();
     _collectionNameController.text = widget.name;
+    collection = Collection(id: widget.id, name: widget.name, imageUrl: widget.imageUrl, number: widget.count);
   }
 
   var imageFile;
   var pickedFile;
   static DroppedFile? dropped_image;
   File? _imageFile;
-  static Collection collection = Collection(id: 0, name: "null", imageUrl: "null", number: 0);
+  late Collection collection;
 
   Future openCollection() async {
     // List<Recipe> collection = await CollectionDB.getCollection(widget.id).then((result) {
@@ -183,11 +184,12 @@ class _CollectionModelState extends State<CollectionModel> {
                       id: widget.id,
                       imageFile: dropped_image,
                       collection: collection,
-                      name: _collectionNameController.text
+                      name: _collectionNameController.text,
+                      imageUrl: widget.imageUrl
                   );
                   setState(() {
                     widget.name = _collectionNameController.text;
-                    // widget.imageUrl = collection.imageUrl;
+                    widget.imageUrl = collection.imageUrl;
                   });
                   Navigator.of(context).pop();
                   // initCollection();
