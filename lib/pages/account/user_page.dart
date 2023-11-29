@@ -73,7 +73,7 @@ class _UserAccount extends State<UserAccount> {
       length: 4,
       child: Scaffold(
         backgroundColor: Colors.deepOrange[50],
-        appBar: const TitleUserPanel(title: "Страница пользователя").appBar(),
+        appBar: const TitleUserPanel(title: " пользователя").appBar(),
         body: CustomScrollView(            //scrollDirection: Axis.vertical,
           slivers: <Widget>[
             SliverToBoxAdapter(

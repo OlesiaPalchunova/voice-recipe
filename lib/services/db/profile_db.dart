@@ -252,14 +252,14 @@ class ProfileDB{
     return http.get(profileUri, headers: headers);
   }
 
-  static Future<Profile> getProfileId(String login) async {
+  static Future<Profile?> getProfileId(String login) async {
     var response = await fetchProfileId(login);
     // if (response.statusCode != 200) {
     //   return null;
     // }
     print(response.statusCode);
     print(response.request);
-
+    if (response.statusCode != 200) return null;
 
     var decodedBody = utf8.decode(response.body.codeUnits);
     var profileJson = jsonDecode(decodedBody);
@@ -267,20 +267,22 @@ class ProfileDB{
 
     print(profileJson);
 
-    Profile profile = profileIdFromJson(profileJson);
+    Profile? profile = profileIdFromJson(profileJson);
 
     return profile;
   }
 
   static Profile profileIdFromJson(dynamic profileJson) {
-    String uid = profileJson[0]['uid'];
+    String uid = profileJson['uid'];
+    print("(((uid)))");
+    print(uid);
     Profile profile = Profile(
-      uid: profileJson[0]["uid"],
-      display_name: profileJson[0]["display_name"] ?? " ",
-      image: profileJson[0][faceMedia] != null ? getImageUrl(profileJson[0][faceMedia]) : defaultProfileUrl,
-      info: profileJson[0]["info"] ?? " ",
-      tg_link: profileJson[0]["tg_link"] ?? " ",
-      vk_link: profileJson[0]["vk_link"] ?? " ",
+      uid: profileJson["uid"],
+      display_name: profileJson["display_name"] ?? " ",
+      image: profileJson[faceMedia] != null ? getImageUrl(profileJson[faceMedia]) : defaultProfileUrl,
+      info: profileJson["info"] ?? " ",
+      tg_link: profileJson["tg_link"] ?? " ",
+      vk_link: profileJson["vk_link"] ?? " ",
     );
 
     return profile;

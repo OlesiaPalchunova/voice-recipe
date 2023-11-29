@@ -328,7 +328,7 @@ class _RecipeHeaderCardState extends State<RecipeHeaderCard> {
                         ]),
                         widget.showCategories ?
                         Container(
-                          // width: 100,
+                          width: cardWidth,
                           // height: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10)

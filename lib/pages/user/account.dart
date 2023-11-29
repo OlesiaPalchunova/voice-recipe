@@ -6,6 +6,7 @@ import 'package:voice_recipe/components/utils/post.dart';
 import '../../components/appbars/title_logo_panel.dart';
 import '../../components/appbars/user_page_panel.dart';
 import '../../components/utils/account_info.dart';
+import '../../services/BannerAdPage.dart';
 
 class UserAccount extends StatefulWidget {
 
@@ -44,7 +45,8 @@ class _UserAccount extends State<UserAccount> {
       length: 4,
       child: Scaffold(
         backgroundColor: Colors.grey[200],
-        appBar: const TitleUserPanel(title: "Страница пользователя").appBar(),
+        bottomNavigationBar: BottomBannerAd(),
+        appBar: const TitleUserPanel(title: "").appBar(),
         body: CustomScrollView(            //scrollDirection: Axis.vertical,
           slivers: <Widget>[
                 SliverToBoxAdapter(

@@ -125,5 +125,10 @@ public final class GeneratedPluginRegistrant {
     } catch(Exception e) {
       Log.e(TAG, "Error registering plugin webview_flutter_android, io.flutter.plugins.webviewflutter.WebViewFlutterPlugin", e);
     }
+    try {
+      flutterEngine.getPlugins().add(new com.yandex.mobile.ads.flutter.YandexMobileAdsPlugin());
+    } catch(Exception e) {
+      Log.e(TAG, "Error registering plugin yandex_mobileads, com.yandex.mobile.ads.flutter.YandexMobileAdsPlugin", e);
+    }
   }
 }

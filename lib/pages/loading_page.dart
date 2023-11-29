@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../config/config.dart';
+import '../services/BannerAdPage.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({super.key, this.postfix = ''});
@@ -13,6 +14,7 @@ class LoadingPage extends StatelessWidget {
     return Scaffold(
         appBar: Config.defaultAppBar,
         backgroundColor: Config.backgroundEdgeColor,
+        bottomNavigationBar: BottomBannerAd(),
         body: Center(
             child: Container(
                 alignment: Alignment.center,

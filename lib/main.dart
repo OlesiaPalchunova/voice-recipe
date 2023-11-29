@@ -31,4 +31,5 @@ Future<void> main() async {
   // CollectionsSet c = CollectionsSet(id: 0, name: "");
   // print(88888);
   await initSelections();
+
 }

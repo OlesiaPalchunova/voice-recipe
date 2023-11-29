@@ -67,6 +67,7 @@ dependencies:
   flutter_rating_bar:
   image_picker:
   url_launcher: ^6.1.12
+  yandex_mobileads: ^6.1.0
 
 
 dev_dependencies:

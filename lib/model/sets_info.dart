@@ -8,12 +8,12 @@ class CollectionsSet {
 
   CollectionsSet({required this.id, required this.name});
 
-  // List<CollectionsSet> sets = [];
-  //
-  // Future initSelections() async {
-  //   print("9999");
-  //   sets = await CategoryDB().getSelections();
-  // }
+// List<CollectionsSet> sets = [];
+//
+// Future initSelections() async {
+//   print("9999");
+//   sets = await CategoryDB().getSelections();
+// }
 }
 
 List<CollectionsSet> sets = [];

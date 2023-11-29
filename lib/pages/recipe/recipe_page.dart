@@ -34,6 +34,7 @@ import 'package:voice_recipe/services/service_io.dart';
 
 import '../../model/profile.dart';
 import '../../model/voice_commands/stop_say.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/profile_db.dart';
 
 class RecipePage extends StatefulWidget {
@@ -83,17 +84,19 @@ class _RecipePageState extends State<RecipePage> {
   // static Profile profile2 = ProfileDB.getProfileId("les");
 
   double sizeIndicator(BuildContext context) =>
-      .3 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
+      .5 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
 
   Color get inactiveColor => activeColor;
 
   Future initProfile() async{
     print(widget.recipe.user_uid);
-    Profile profile1 = await ProfileDB.getProfileId(widget.recipe.user_uid);
+    Profile? profile1 = await ProfileDB.getProfileId(widget.recipe.user_uid);
     print(profile1);
-    setState(() {
-      profile = profile1;
-    });
+    if (profile1 != null) {
+      setState(() {
+        profile = profile1;
+      });
+    }
   }
 
   @override
@@ -103,7 +106,6 @@ class _RecipePageState extends State<RecipePage> {
     slideId = stepsMap[widget.recipe.id] ?? 0;
     checkToHideButtons();
     _initCommandsListener();
-
   }
 
   void checkToHideButtons() {
@@ -168,23 +170,23 @@ class _RecipePageState extends State<RecipePage> {
       indicatorConfig: IndicatorConfig(
         sizeIndicator: sizeIndicator(context),
         indicatorWidget: Container(
-          width: sizeIndicator(context),
+          width: sizeIndicator(context)*1.2,
           height: 10,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4), color: inactiveColor),
         ),
         activeIndicatorWidget: Container(
-          width: sizeIndicator(context),
+          width: sizeIndicator(context)*1.2,
           height: 10,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4), color: activeColor), //activeColor
         ),
-        spaceBetweenIndicator: sizeIndicator(context) * .5,
+        spaceBetweenIndicator: sizeIndicator(context) * .3,
         typeIndicatorAnimation: TypeIndicatorAnimation.sizeTransition,
       ),
       navigationBarConfig: NavigationBarConfig(
         navPosition: NavPosition.bottom,
-        padding: const EdgeInsets.all(0.0),
+        padding: EdgeInsets.zero,
       ),
       isAutoScroll: false,
       isLoopAutoScroll: false,
@@ -278,6 +280,7 @@ class _RecipePageState extends State<RecipePage> {
             ),
           ),
         ),
+        bottomNavigationBar: BottomBannerAd(),
         body: Container(
           alignment: Alignment.topCenter,
           color: Config.darkModeOn

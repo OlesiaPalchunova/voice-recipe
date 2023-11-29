@@ -4,6 +4,8 @@ import 'package:voice_recipe/components/appbars/title_logo_panel.dart';
 import 'package:voice_recipe/config/config.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
+import '../services/BannerAdPage.dart';
+
 class NotFoundPage extends StatelessWidget {
   const NotFoundPage({super.key,
   this.message = defaultMessage});
@@ -16,6 +18,7 @@ class NotFoundPage extends StatelessWidget {
     return Scaffold(
         appBar: const TitleLogoPanel(title: "Страница не найдена").appBar(),
         backgroundColor: Config.backgroundEdgeColor,
+        bottomNavigationBar: BottomBannerAd(),
         body: Center(
             child: Container(
                 alignment: Alignment.center,

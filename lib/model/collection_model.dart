@@ -61,17 +61,13 @@ class _CollectionModelState extends State<CollectionModel> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // await CollectionDB.getCollections(c, 'les').then((result){}
-        // Navigator.of(context).push(MaterialPageRoute(
-        //   builder: (context) => SpecificCollectionPage(),
-        // ));
         print("((((((((((7777))))))))))");
         openCollection();
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
         child: Container(
-          width: 300,
+          width: 350,
           height: 180,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -100,7 +96,7 @@ class _CollectionModelState extends State<CollectionModel> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Column(
                     children: [
                       Text(widget.name, style: TextStyle(fontSize: 20),),

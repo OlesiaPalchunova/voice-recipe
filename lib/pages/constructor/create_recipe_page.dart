@@ -17,6 +17,7 @@ import '../../components/constructor_views/category_label.dart';
 import '../../config/config.dart';
 import '../../model/category_model.dart';
 import '../../model/recipes_info.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/category_db.dart';
 import '../../services/db/user_db.dart';
 
@@ -82,6 +83,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
         title: "Создать новый рецепт",
       ).appBar(),
       backgroundColor: backgroundColor,
+      bottomNavigationBar: BottomBannerAd(),
       body: GestureDetector(
         onTap: () {
           nameFocusNode.unfocus();

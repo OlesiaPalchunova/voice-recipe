@@ -4,6 +4,8 @@ import 'package:voice_recipe/model/sets_info.dart';
 import 'package:voice_recipe/components/recipe_collection_views/collection_header_card.dart';
 import 'package:voice_recipe/config/config.dart';
 
+import '../../services/BannerAdPage.dart';
+
 class CollectionsListPage extends StatefulWidget {
   const CollectionsListPage({key});
 
@@ -20,6 +22,7 @@ class _CollectionsListPage extends State<CollectionsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const TitleLogoPanel(title: "Подборки").appBar(),
+        bottomNavigationBar: BottomBannerAd(),
         body: Builder(
           builder: (context) => Container(
             color: Config.backgroundEdgeColor,

@@ -9,6 +9,7 @@ import 'package:voice_recipe/config/config.dart';
 
 import '../api/recipes_getter.dart';
 import '../components/buttons/search_button.dart';
+import '../services/BannerAdPage.dart';
 import '../services/db/rate_db.dart';
 import 'account/login_page.dart';
 
@@ -113,6 +114,7 @@ class _HomePageState extends State<HomePage> {
               drawerScrimColor: Config.drawerScrimColor,
               backgroundColor: Config.backgroundEdgeColor,
               drawer: const SideBarMenu(),
+              bottomNavigationBar: BottomBannerAd(),
               body: SafeArea(
                 child: Builder(
                     builder: !offline ? buildMainContent : buildOffline),
@@ -220,8 +222,9 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             showDialog(
                                 context: context,
-                                barrierColor: Colors.transparent,
+                                // barrierColor: Colors.transparent,
                                 useSafeArea: false,
+                                barrierDismissible: true,
                                 builder: (context) => AlertDialog(
                                     backgroundColor: Colors.transparent,
                                     // contentPadding: Config.zeroPadding,
@@ -231,13 +234,12 @@ class _HomePageState extends State<HomePage> {
                                       height: Config.padding * 3.5,
                                     ),
                                     alignment: Alignment.topCenter,
-                                    content: SizedBox(
-                                        width: 500,
-                                        height: Config.pageHeight(context) * .6,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 80.0),
-                                          child: SearchField(focusNode: FocusNode(), isRecipeSearch: isRecipeSearch),
-                                        ))));
+                                    content: Padding(
+                                      padding: const EdgeInsets.only(top: 80.0),
+                                      child: SearchField(focusNode: FocusNode(), isRecipeSearch: isRecipeSearch),
+                                    ),
+                                )
+                            );
                           },
                           text: isRecipeSearch ? 'Найти рецепт' : 'Найти коллекцию',
                         ),

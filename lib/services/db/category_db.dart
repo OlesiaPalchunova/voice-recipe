@@ -32,9 +32,9 @@ class CategoryDB{
     Map<int, Collection> categories = {};
     for (var category in categoriesJson) {
       categories[category["id"]] = Collection(
-          id: category["id"],
-          name: category["name"],
-          collectionName:  category["name"],
+        id: category["id"],
+        name: category["name"],
+        collectionName:  category["name"],
       );
     }
     return categories;
@@ -88,8 +88,8 @@ class CategoryDB{
     List<CategoryModel> categories = [];
     for (var category in categoriesJson) {
       categories.add( CategoryModel(
-          id: category["id"],
-          name: category["name"],
+        id: category["id"],
+        name: category["name"],
       ));
     }
     return categories;
@@ -228,9 +228,9 @@ class CategoryDB{
     List<Collection> categories = [];
     for (var categoryJson in categoriesJson) {
       categories.add( Collection(
-          id: categoryJson["id"],
-          name: categoryJson["name"],
-          collectionName: categoryJson["name"],
+        id: categoryJson["id"],
+        name: categoryJson["name"],
+        collectionName: categoryJson["name"],
       ));
     }
     return categories;

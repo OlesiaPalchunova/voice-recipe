@@ -3,6 +3,7 @@ import '../../api/recipes_getter.dart';
 import '../../components/recipe_header_card.dart';
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/rate_db.dart';
 
 class SpecificCollectionPage extends StatefulWidget {
@@ -103,6 +104,7 @@ class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: Config.defaultAppBar,
+        bottomNavigationBar: BottomBannerAd(),
         body: Builder(
           builder: (context) => Container(
               alignment: Alignment.topCenter,

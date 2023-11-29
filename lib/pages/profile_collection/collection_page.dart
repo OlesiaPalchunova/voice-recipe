@@ -10,6 +10,7 @@ import 'package:voice_recipe/services/db/collection_db.dart';
 import '../../components/appbars/title_logo_panel.dart';
 import '../../model/collection.dart';
 import '../../model/collection_model.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/collection_db.dart';
 import '../../model/dropped_file.dart';
 import '../../services/db/user_db.dart';
@@ -132,42 +133,54 @@ class _CollectionPageState extends State<CollectionPage> {
         appBar: const TitleLogoPanel(title: "Мои коллекции").appBar(),
         // backgroundColor: Config.backgroundEdgeColor,
         backgroundColor: Colors.deepOrange[50],
+        bottomNavigationBar: BottomBannerAd(),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: [
-              for (CollectionModel e in collections) e,
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                child: TextButton(
-                  onPressed: () {
-                    AddCollection(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set the background color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0), // Set the border radius
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Wrap(
+                  spacing: 0.0,  // Расстояние между элементами по горизонтали.
+                  runSpacing: 0.0,  // Расстояние между строками.
+                  children: [
+                    for (CollectionModel e in collections) e,
+                  ],
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Container(
+                    width: 300,
+                    child: TextButton(
+                      onPressed: () {
+                        AddCollection(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set the background color
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0), // Set the border radius
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.add, size: 40,),
+                            SizedBox(width: 10,),
+                            Text(
+                              'Добавить',
+                              style: TextStyle(fontSize: 25, color: Colors.black), // Set the text color
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 60.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.add, size: 40,),
-                        SizedBox(width: 10,),
-                        Text(
-                          'Добавить',
-                          style: TextStyle(fontSize: 25, color: Colors.black), // Set the text color
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
     );

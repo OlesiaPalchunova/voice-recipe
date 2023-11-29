@@ -21,6 +21,7 @@ import '../model/collections_info.dart';
 import '../model/recipes_info.dart';
 import '../pages/profile_collection/specific_collections_page.dart';
 import '../pages/user_page_template.dart';
+import '../services/BannerAdPage.dart';
 import '../services/auth/Token.dart';
 import '../services/db/collection_db.dart';
 
@@ -124,6 +125,11 @@ class _SideBarMenuState extends State<SideBarMenu> {
 
   void onCollectionsTap() {
     Routemaster.of(context).push(CollectionsListPage.route);
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (context) => BannerAdPage(),
+    //   ),
+    // );
   }
 
   void onVoiceCommandsTap() {
