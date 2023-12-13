@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api_fields.dart';
+import '../../model/collections_info.dart';
 import '../db/user_db.dart';
 import 'Token.dart';
 
@@ -44,7 +45,8 @@ class Authorization {
       Token.setAccessToken(accessToken);
       Token.setRefreshToken(refreshToken);
 
-      UserDB.addUser(nickname, "user", password);
+      await UserDB.init();
+      CollectionsInfo.init();
     } else {
       print("555555555555555555");
     }
@@ -140,6 +142,7 @@ class Authorization {
       "refreshToken": oldRefreshToken,
     };
 
+
     try {
       print("kjkjkkjkjkjkjkj");
       final response = await http.post(
@@ -153,7 +156,7 @@ class Authorization {
       if (response.statusCode == 200) {
         print("khkhkhkh");
         Map<String, dynamic> responseData = json.decode(response.body);
-        print("khkhkhkh");
+        print(responseData);
         String newAccessToken = responseData['accessToken'];
         print("khkhkhkh");
         // Token.saveAccessToken(newAccessToken);
@@ -164,7 +167,6 @@ class Authorization {
 
         print('Токены успешно обновлены');
       } else {
-        // Обработайте ошибку
         print('Ошибка обновления токенов: ${response.statusCode}');
       }
       return response.statusCode;

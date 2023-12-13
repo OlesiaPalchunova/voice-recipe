@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Container(
-              height: 500,
+              height: 400,
               alignment: Alignment.center,
               child: LoginPage.voiceRecipeIcon(context, 500, 200)),
           Text(

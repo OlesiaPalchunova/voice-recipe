@@ -45,7 +45,7 @@ class CollectionDB{
     // var idJson = jsonDecode(response.body);
     // int? commentId = idJson[id];
     print("010122");
-    return -1;
+    return 200;
   }
 
   static Future addCollection(
@@ -129,7 +129,7 @@ class CollectionDB{
     // var idJson = jsonDecode(response.body);
     // int? commentId = idJson[id];
     print("010122");
-    return -1;
+    return response.statusCode;
   }
 
   static Future updateCollection(
@@ -183,7 +183,7 @@ class CollectionDB{
     }
   }
 
-  static Future getCollections(List<CollectionModel> collections, String login) async {
+  static Future getCollections(List<Collection> collections, String login) async {
     final Map<String, String> headers = {
       'Custom-Header': 'Custom Value',
     };
@@ -203,7 +203,8 @@ class CollectionDB{
 
     for (dynamic i in colectionsJson) {
       print(i);
-      collections.add(CollectionModel(
+      print(collections.length);
+      collections.add(Collection(
         id: i["id"],
         name: i["name"],
         count: i["number"],
@@ -488,7 +489,7 @@ class CollectionDB{
     return status;
   }
 
-  static Future<List<CollectionModel>?> getCollectionsBySearch(String name, int limit) async {
+  static Future<List<Collection>?> getCollectionsBySearch(String name, int limit) async {
     final Map<String, String> headers = {
       'Custom-Header': 'Custom Value',
     };
@@ -505,11 +506,11 @@ class CollectionDB{
     print("kkkkkkkkkkk");
     print(colectionsJson);
 
-    List<CollectionModel> collections = [];
+    List<Collection> collections = [];
 
     for (dynamic i in colectionsJson) {
       print(i);
-      collections.add(CollectionModel(
+      collections.add(Collection(
         id: i["id"],
         name: i["name"],
         count: i["number"],

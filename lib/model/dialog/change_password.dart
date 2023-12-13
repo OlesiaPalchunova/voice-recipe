@@ -23,7 +23,11 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool isValid2 = true;
   bool isValid3 = true;
 
-  String error = "";
+  String error1 = "";
+  String error2 = "";
+  String error3 = "";
+
+  String _error = "";
 
   static void _showSnackbar(BuildContext context, String text) {
     final snackBar = SnackBar(
@@ -38,17 +42,23 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   Widget PasswordField(int number, TextEditingController controller, String text) {
     bool isValid;
+    String error;
     bool _obscureText;
     if (number == 1) {
       isValid = isValid1;
+      error = error1;
       _obscureText = _obscureText1;
     } else if (number == 2) {
       isValid = isValid2;
+      error = error2;
       _obscureText = _obscureText2;
     } else {
       isValid = isValid3;
+      error = error3;
       _obscureText = _obscureText3;
     }
+
+
     return Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: Container(
@@ -59,10 +69,41 @@ class _ChangePasswordState extends State<ChangePassword> {
             controller: controller,
             obscureText: _obscureText,
             onChanged: (String value){
+              int count_digits = 0;
+              for (int i = 0; i < controller.text.length; i++) {
+                if (controller.text[i].codeUnits[0] >= "0".codeUnits[0] &&
+                    controller.text[i].codeUnits[0] <=
+                        "9".codeUnits[0]) count_digits++;
+              }
+              int len = controller.text.length;
+              if (len >= 4 && len <= 32 && count_digits > 0 && count_digits < len) isValid = true;
+              else isValid = false;
+
+
+
+              if (len == 0) error = "поле не должно быть пустым";
+              else if (len < 4) error = "пароль слишком короткий";
+              else if (len > 32) error = "пароль слишком длинный";
+              else if (count_digits == 0) error = "должна быть хотя бы одна цифра";
+              else if (count_digits == len) error = "должна быть хотя бы одна не цифра";
+              else error = "атварт";
+
+              print("((((((isValid))))))");
+              print(isValid);
+              print(error);
+
               setState(() {
-                if (number == 1) isValid1 = controller.text.length > 0;
-                else if (number == 2) isValid2 = controller.text.length > 0;
-                else isValid3 = controller.text.length > 0;
+
+                if (number == 1) {
+                  isValid1 = isValid;
+                  error1 = error;
+                } else if (number == 2) {
+                  isValid2 = isValid;
+                  error2 = error;
+                } else {
+                  isValid3 = isValid;
+                  error3 = error;
+                }
               });
             },
             decoration: InputDecoration(
@@ -81,7 +122,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 },
                 icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
               ),
-              errorText: isValid ? null : 'неправильный ввод',
+              errorText: isValid ? null : error,
               errorStyle: TextStyle(height: 0.5),
             ),
           ),
@@ -104,7 +145,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                error,
+                _error,
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 15
@@ -145,12 +186,12 @@ class _ChangePasswordState extends State<ChangePassword> {
               int status;
               if (first_old_password.text.isEmpty || new_password.text.isEmpty || second_new_password.text.isEmpty) {
                 setState(() {
-                  error = "Введите все поля";
+                  _error = "Введите все поля";
                 });
               }
               else if (second_new_password.text != new_password.text) {
                 setState(() {
-                  error = "Проверьте новый пароль";
+                  _error = "Проверьте новый пароль";
                 });
               }
               else {

@@ -44,7 +44,7 @@ class RecipePage extends StatefulWidget {
   }) : super(key: key) {
     tts.setLanguage("ru");
     reviewPage.updateComments();
-    slides.add(facePage);
+    // slides.add(facePage);
     slides.add(ingPage);
     for (int i = 2; i <= recipe.steps.length + 1; i++) {
       slides.add(RecipeStepView(recipe: recipe, slideId: i));
@@ -52,11 +52,16 @@ class RecipePage extends StatefulWidget {
     slides.add(reviewPage);
   }
 
+
+
   final Recipe recipe;
   static final FlutterTts tts = FlutterTts();
   late final IngredientsSlideView ingPage =
       IngredientsSlideView(recipe: recipe);
-  late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
+  // late final RecipeFaceSlideView facePage = RecipeFaceSlideView(
+  //   recipe: recipe,
+  //   goToLastSlide: _RecipePageState.goToLastSlide()
+  // );
   late final ReviewsSlide reviewPage = ReviewsSlide(recipe: recipe);
   final List<Widget> slides = [];
 
@@ -80,11 +85,23 @@ class _RecipePageState extends State<RecipePage> {
   late Color activeColor = Config.getColor(widget.recipe.id);
   DateTime tapTime = DateTime.now();
 
+  final List<Widget> slides = [];
+  late final IngredientsSlideView ingPage =
+  IngredientsSlideView(recipe: widget.recipe);
+  late final RecipeFaceSlideView facePage = RecipeFaceSlideView(
+      recipe: widget.recipe,
+      goToLastSlide: goToLastSlide
+  );
+  late final ReviewsSlide reviewPage = ReviewsSlide(recipe: widget.recipe);
+
+
+
   static Profile profile = Profile(uid: "root", display_name: "Тимофей", image: "", info: "Обожаю готовить", tg_link: "", vk_link: "https://vk.com/timofeytrubinov");
   // static Profile profile2 = ProfileDB.getProfileId("les");
 
   double sizeIndicator(BuildContext context) =>
-      .5 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
+      .5 * Config.constructorWidth(context) / (slides.length * 1.5);
+
 
   Color get inactiveColor => activeColor;
 
@@ -99,6 +116,13 @@ class _RecipePageState extends State<RecipePage> {
     }
   }
 
+  void goToLastSlide() {
+    setState(() {
+      slideId = lastSlideId;
+      goToTab(slideId);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +130,12 @@ class _RecipePageState extends State<RecipePage> {
     slideId = stepsMap[widget.recipe.id] ?? 0;
     checkToHideButtons();
     _initCommandsListener();
+    slides.add(facePage);
+    slides.add(ingPage);
+    for (int i = 2; i <= widget.recipe.steps.length + 1; i++) {
+      slides.add(RecipeStepView(recipe: widget.recipe, slideId: i));
+    }
+    slides.add(reviewPage);
   }
 
   void checkToHideButtons() {
@@ -123,11 +153,11 @@ class _RecipePageState extends State<RecipePage> {
 
 
 
-  int get lastSlideId => widget.slides.length - 1;
+  int get lastSlideId => slides.length - 1;
 
   Widget buildSlider(BuildContext context) {
     listContentConfig.clear();
-    for (Widget slide in widget.slides) {
+    for (Widget slide in slides) {
       listContentConfig.add(ContentConfig(
           marginTitle: const EdgeInsets.all(0.0),
           verticalScrollbarBehavior: ScrollbarBehavior.hide,
@@ -246,6 +276,27 @@ class _RecipePageState extends State<RecipePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          // actions: [
+          //   Container(
+          //     width: 50,
+          //     height: 20,
+          //     decoration: BoxDecoration(
+          //       color: Colors.white70,
+          //       borderRadius: BorderRadius.circular(10)
+          //     ),
+          //     child: IconButton(
+          //       icon: Icon(Icons.comment),
+          //       onPressed: () {
+          //         setState(() {
+          //           // Перейти на последний слайд
+          //           slideId = lastSlideId;
+          //           goToTab(slideId);
+          //         });
+          //       },
+          //     ),
+          //   ),
+            // Другие кнопки AppBar, если есть
+          // ],
           shadowColor: Config.darkModeOn ? Colors.black87 : Colors.transparent,
           automaticallyImplyLeading: false,
           toolbarHeight: 60,

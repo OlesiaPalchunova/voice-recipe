@@ -49,6 +49,7 @@ class ReviewsSlide extends StatefulWidget {
     print(333333333333);
     comments.clear();
     for (Comment comment in commentsDb1!.reversed) {
+      print(comment.id);
       comments[comment.id] = comment;
       commentsController.add(MapEntry(comment.id, comment));
     }
@@ -393,7 +394,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                   textController: ReviewsSlide.commentController,
                   onSubmit: onSubmitComment,
                   onCancel: () {},
-                   profileImageUrl: defaultProfileUrl),
+                  profileImageUrl: defaultProfileUrl),
                   // profileImageUrl: ServiceIO.loggedIn
                   //     ? FirebaseAuth.instance.currentUser!.photoURL ??
                   //     defaultProfileUrl

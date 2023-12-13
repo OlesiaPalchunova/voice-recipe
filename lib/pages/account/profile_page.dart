@@ -443,6 +443,7 @@ class _AccountPageState extends State<AccountPage> {
                             Token.deleteAccessToken();
                             Token.deleteRefreshToken();
                             UserDB.deleteAll();
+                            CollectionsInfo.delete();
                             Routemaster.of(context).pop();
                           },
                           tooltip: "Выйти из аккаунта",
