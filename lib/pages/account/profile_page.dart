@@ -23,9 +23,11 @@ import 'package:voice_recipe/services/service_io.dart';
 import '../../components/buttons/classic_button.dart';
 import '../../components/constructor_views/password_label.dart';
 import '../../components/text_form_field_widget.dart';
+import '../../model/dialog/change_password.dart';
 import '../../model/dropped_file.dart';
 import '../../model/profile.dart';
 import '../../model/recipes_info.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/auth/Token.dart';
 import '../../services/db/collection_db.dart';
 import '../../services/db/profile_db.dart';
@@ -59,8 +61,10 @@ class _AccountPageState extends State<AccountPage> {
   String networkImage = "null";
 
   TextEditingController first_old_password = TextEditingController();
-  TextEditingController second_old_password = TextEditingController();
   TextEditingController new_password = TextEditingController();
+  TextEditingController second_new_password = TextEditingController();
+
+  bool isEditing = false;
 
 
   @override
@@ -88,7 +92,7 @@ class _AccountPageState extends State<AccountPage> {
     else collection = await CollectionDB.getCollection(collection_id);
     if (collection != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id),
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id, showCategories: true,),
       ));
     }
   }
@@ -99,6 +103,7 @@ class _AccountPageState extends State<AccountPage> {
       appBar: const TitleLogoPanel(title: "Мой профиль").appBar(),
       // backgroundColor: Config.backgroundEdgeColor,
       backgroundColor: Colors.deepOrange[50],
+      bottomNavigationBar: BottomBannerAd(),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -108,12 +113,12 @@ class _AccountPageState extends State<AccountPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // SizedBox(height: 15,),
                 Container(
-                    // padding: const EdgeInsets.all(Config.padding),
+                    padding: const EdgeInsets.all(Config.padding),
                     alignment: Alignment.center,
                     child: buildProfile(context)
                 ),
-                SizedBox(height: 15,),
                 InkWell(
                   onTap: (){
                     // Routemaster.of(context).push('/created');
@@ -121,8 +126,9 @@ class _AccountPageState extends State<AccountPage> {
                   },
                   child: Card(
                     // elevation: 3,
+
                     color: Colors.white.withOpacity(0),
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    margin: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: [
                         Stack(children: [
@@ -130,13 +136,14 @@ class _AccountPageState extends State<AccountPage> {
                             child: AnimatedContainer(
                               duration: Config.animationTime,
                               height: 70,
+                              width: Config.loginPageWidth(context) * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: Config.borderRadius,
                                   color: Colors.white),
                               child: Row(
                                 children: [
                                   SizedBox(
-                                    width: 240,
+                                    width: 220,
                                   ),
                                   Container(
                                     width: 80,
@@ -181,7 +188,7 @@ class _AccountPageState extends State<AccountPage> {
                   child: Card(
                     // elevation: 3,
                     color: Colors.white.withOpacity(0),
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    margin: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: [
                         Stack(children: [
@@ -189,13 +196,14 @@ class _AccountPageState extends State<AccountPage> {
                             child: AnimatedContainer(
                               duration: Config.animationTime,
                               height: 70,
+                              width: Config.loginPageWidth(context) * 0.8,
                               decoration: BoxDecoration(
                                   borderRadius: Config.borderRadius,
                                   color: Colors.white),
                               child: Row(
                                 children: [
                                   SizedBox(
-                                    width: 240,
+                                    width: 220,
                                   ),
                                   Container(
                                     width: 80,
@@ -230,6 +238,7 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
       ),
+
     );
   }
 
@@ -269,119 +278,6 @@ class _AccountPageState extends State<AccountPage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  bool _isValid = true;
-
-  void ChangePassword(BuildContext context){
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          content: Container(
-            height: 170,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                  child: TextField(
-                    controller: first_old_password,
-                    decoration: InputDecoration(
-                      hintText: 'Введите старый пароль',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        // borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: TextField(
-                      controller: second_old_password,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        // errorText: second_old_password.text.isNotEmpty ? null : "введите текст",
-                        hintText: 'Введите пароль еще раз',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          // borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: TextField(
-                    controller: new_password,
-                    onChanged: (String value){
-                      setState(() {
-                        _isValid = false;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Придумайте новый пароль',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        // borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                      ),
-                      errorText: _isValid ? null : 'Invalid email format',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  if (first_old_password.text.isNotEmpty && second_old_password.text.isNotEmpty && new_password.text.isNotEmpty &&
-                      first_old_password.text == second_old_password.text) {
-                    _showSnackbar(context, "Пароль изменен");
-                    ProfileDB.updatePassword(login: UserDB.uid, password: new_password.text);
-                  } else {
-                    print("baaaaaaaaaad");
-                    print(new_password.text);
-
-                    // final snackBar = SnackBar(
-                    //   content: Align(
-                    //     alignment: Alignment.center,
-                    //     child: Container(
-                    //       width: 200, // Ограничиваем ширину контейнера
-                    //       child: Text('Это сплывающее окно'),
-                    //     ),
-                    //   ),
-                    //   duration: Duration(seconds: 2),
-                    //   // behavior: SnackBarBehavior.fixed, // Используем fixed для отображения в центре
-                    //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                    // );
-                    //
-                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-
-                },
-                style: TextButton.styleFrom(
-                  primary: Colors.white, // Set the text color here
-                  backgroundColor: Colors.deepOrange, // Set the background color here
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  child: Text('Изменить пароль', style: TextStyle(fontSize: 20),),
-                ),
-              ),
-            )
-          ],
-        )
-    );
-  }
-
   Future update() async {
     await ProfileDB().updateProfile(
       userUid: _loginController.text,
@@ -392,6 +288,93 @@ class _AccountPageState extends State<AccountPage> {
       vkLink: _vkController.text,
     );
     await UserDB.init();
+  }
+
+  Future ChangePasswordDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ChangePassword();
+      },
+    );
+  }
+
+  Widget changeField(String text, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: Container(
+        width: Config.loginPageWidth(context) * 0.8,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                child: Text(text, style: TextStyle(color: Colors.grey[500]),),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 0.0),
+              child: SizedBox(
+                width: Config.loginPageWidth(context) * 0.7,
+                // height: 35,
+                child: TextFormField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    hintText: 'Введите текст...',
+                    contentPadding: EdgeInsets.only(top: -5.0),
+                  ),
+                  minLines: 1,
+                  maxLines: null,
+                ),
+              ),
+            ),
+            SizedBox(height: 7,)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget infoField(String text, String info) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        width: Config.loginPageWidth(context) * 0.8,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
+                child: Text(text, style: TextStyle(color: Colors.grey[500]),),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: SizedBox(
+                width: Config.loginPageWidth(context) * 0.7,
+                child: Text(
+                    info,
+                  softWrap: true,
+                )
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildProfile(BuildContext context) {
@@ -419,6 +402,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
                     ),
+                    isEditing ?
                     Positioned(
                       top: 105,
                       left: 195,
@@ -436,7 +420,8 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                       ),
-                    ),
+                    )
+                    : SizedBox()
                   ]
                 ),
               Align(
@@ -458,6 +443,7 @@ class _AccountPageState extends State<AccountPage> {
                             Token.deleteAccessToken();
                             Token.deleteRefreshToken();
                             UserDB.deleteAll();
+                            CollectionsInfo.delete();
                             Routemaster.of(context).pop();
                           },
                           tooltip: "Выйти из аккаунта",
@@ -468,276 +454,62 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ],
           ),
-        SizedBox(height: 10,),
-        Container(
-          width: 330,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
-                  child: Text("Логин", style: TextStyle(color: Colors.grey[500]),),
-                ),
+        isEditing ? Column(
+          children: [
+            changeField("Логин", _loginController),
+            changeField("Имя", _nameController),
+            changeField("Описание", _descriptionController),
+            changeField("Ссылка на Телеграм", _tgController),
+            changeField("Ссылка на ВКонтакте", _vkController),
+          ],
+        )
+        : Column(
+          children: [
+            infoField("Логин", _loginController.text),
+            infoField("Имя", _nameController.text),
+            infoField("Описание", _descriptionController.text),
+            infoField("Ссылка на Телеграм", _tgController.text),
+            infoField("Ссылка на ВКонтакте", _vkController.text),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+            onPressed: (){
+              if (isEditing) {
+                update();
+                _showSnackbar(context, "Изменения сохранены");
+              }
+              setState(() {
+                isEditing = !isEditing;
+              });
+            },
+            child: Text(
+              isEditing ? "Сохранить изменения" : "Изменить данные",
+              style: TextStyle(
+                  fontSize: 20
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: SizedBox(
-                  width: 290,
-                  height: 35,
-                  child: TextFormField(
-                    controller: _loginController,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Введите текст...',
-                      contentPadding: EdgeInsets.only(top: -5.0),
-                    ),
+            ),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.deepOrange), // Цвет фона кнопки
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)), // Отступы внутри кнопки
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Радиус, делающий края круглыми
                   ),
                 ),
-              ),
-              SizedBox(height: 7,)
-            ],
+                fixedSize: MaterialStateProperty.all<Size>(
+                  Size(Config.loginPageWidth(context) * 0.8, 55),
+                )
+            ),
           ),
         ),
-        SizedBox(height: 7,),
-        Container(
-          width: 330,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
-                  child: Text("Имя", style: TextStyle(color: Colors.grey[500]),),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: SizedBox(
-                  width: 290,
-                  height: 35,
-                  child: TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Введите текст...',
-                      contentPadding: EdgeInsets.only(top: -5.0),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 7,)
-            ],
-          ),
-        ),
-        SizedBox(height: 7,),
-        Container(
-          width: 330,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
-                  child: Text("Описание", style: TextStyle(color: Colors.grey[500]),),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: SizedBox(
-                  width: 290,
-                  height: 35,
-                  child: TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Введите текст...',
-                      contentPadding: EdgeInsets.only(top: -5.0),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 7,)
-            ],
-          ),
-        ),
-        SizedBox(height: 7,),
-        Container(
-          width: 330,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
-                  child: Text("Ссылка на Телеграм", style: TextStyle(color: Colors.grey[500]),),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: SizedBox(
-                  width: 290,
-                  height: 35,
-                  child: TextFormField(
-                    controller: _tgController,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Введите текст...',
-                      contentPadding: EdgeInsets.only(top: -5.0),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 7,)
-            ],
-          ),
-        ),
-        SizedBox(height: 7,),
-        Container(
-          width: 330,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, top: 7.0),
-                  child: Text("Ссылка на ВКонтакте", style: TextStyle(color: Colors.grey[500]),),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: SizedBox(
-                  width: 290,
-                  height: 35,
-                  child: TextFormField(
-                    controller: _vkController,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Введите текст...',
-                      contentPadding: EdgeInsets.only(top: -5.0),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 7,)
-            ],
-          ),
-        ),
-        SizedBox(height: 10,),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-        //     child: Text("Имя", style: TextStyle(color: Colors.grey[500]),),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-        //   child: TextFormField(
-        //     controller: _nameController,
-        //     decoration: InputDecoration(
-        //       border: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: Colors.grey),
-        //       ),
-        //       hintText: 'Введите текст...',
-        //     ),
-        //   ),
-        // ),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-        //     child: Text("Описание", style: TextStyle(color: Colors.grey[500]),),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-        //   child: TextFormField(
-        //     controller: _descriptionController,
-        //     decoration: InputDecoration(
-        //       border: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: Colors.grey),
-        //       ),
-        //       hintText: 'Придумайте описание...',
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(height: 10,),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-        //     child: Text("Ссылка на Телеграм", style: TextStyle(color: Colors.grey[500]),),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-        //   child: TextFormField(
-        //     controller: _tgController,
-        //     decoration: InputDecoration(
-        //       border: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: Colors.grey),
-        //       ),
-        //       hintText: 'Оставьте ссылку...',
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(height: 10,),
-        // Align(
-        //   alignment: Alignment.centerLeft,
-        //   child: Padding(
-        //     padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-        //     child: Text("Ссылка на ВКонтакте", style: TextStyle(color: Colors.grey[500]),),
-        //   ),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 0.0, left: 20.0),
-        //   child: TextFormField(
-        //     controller: _vkController,
-        //     decoration: InputDecoration(
-        //       border: UnderlineInputBorder(
-        //         borderSide: BorderSide(color: Colors.grey),
-        //       ),
-        //       hintText: 'Оставьте ссылку...',
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(height: 10,),
+
         ElevatedButton.icon(
-          onPressed: () {
-            // Действие при нажатии кнопки
+          onPressed: () async {
             print('Кнопка с текстом и иконкой нажата!');
-            ChangePassword(context);
+            await ChangePasswordDialog(context);
           },
           icon: Icon(Icons.key), // Иконка
           label: Text('Изменить пароль'),
@@ -750,7 +522,7 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ),
             fixedSize: MaterialStateProperty.all<Size>(
-              Size(330, 40),
+              Size(Config.loginPageWidth(context) * 0.8, 40),
             )
           ),// Текст
         ),
@@ -761,7 +533,7 @@ class _AccountPageState extends State<AccountPage> {
             borderRadius: BorderRadius.circular(20), // Радиус, делающий углы карточки круглыми
           ),
           child: Container(
-            width: 330,
+            width: Config.loginPageWidth(context) * 0.8,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -772,11 +544,11 @@ class _AccountPageState extends State<AccountPage> {
                 Text(
                   "Перейти по ссылке на соц. сети",
                   style: TextStyle(
-                    fontSize: 18
+                    fontSize: 15
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 70.0, vertical: 10.0),
                   child: Row(
                     children: [
                       Image.asset(
@@ -797,42 +569,6 @@ class _AccountPageState extends State<AccountPage> {
             ),
           ),
         ),
-        SizedBox(height: 10.0,),
-        TextButton(
-            onPressed: (){
-              update();
-              // ProfileDB().updateProfile(
-              //   userUid: _loginController.text,
-              //   displayName: _nameController.text,
-              //   imageFile: dropped_image,
-              //   info: _descriptionController.text,
-              //   tgLink: _tgController.text,
-              //   vkLink: _vkController.text,
-              // );
-              // UserDB.init();
-              _showSnackbar(context, "Изменения сохранены");
-              // Routemaster.of(context).push(UserPage.route);
-            },
-            child: Text(
-              "Сохранить изменения",
-              style: TextStyle(
-                fontSize: 20
-              ),
-            ),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.deepOrange), // Цвет фона кнопки
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(10)), // Отступы внутри кнопки
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // Радиус, делающий края круглыми
-              ),
-            ),
-            fixedSize: MaterialStateProperty.all<Size>(
-              Size(330, 55),
-            )
-          ),
-        )
       ],
     );
   }

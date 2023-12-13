@@ -3,6 +3,7 @@ import '../../api/recipes_getter.dart';
 import '../../components/recipe_header_card.dart';
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/rate_db.dart';
 
 class SpecificCollectionPage extends StatefulWidget {
@@ -10,10 +11,12 @@ class SpecificCollectionPage extends StatefulWidget {
       {key,
         required this.recipes,
         this.collectionId = -1,
-        this.showLikes = true});
+        this.showLikes = true,
+        this.showCategories = false});
 
   final Map<int, Recipe>? recipes;
   final bool showLikes;
+  final bool showCategories;
   final int collectionId;
 
   @override
@@ -58,7 +61,7 @@ class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
     recipeCards.addAll(recipes!.entries.map((entry) {
       int recipeId = entry.key;
       Recipe recipe = entry.value;
-      return RecipeHeaderCard(recipe: recipe, isSaved: true, collectionId: widget.collectionId,);
+      return RecipeHeaderCard(recipe: recipe, isSaved: true, collectionId: widget.collectionId, showCategories: widget.showCategories,);
     }));
 
     // recipeCards.addAll(recipes.map((recipe) => RecipeHeaderCard(recipe: recipe)));
@@ -101,6 +104,7 @@ class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: Config.defaultAppBar,
+        bottomNavigationBar: BottomBannerAd(),
         body: Builder(
           builder: (context) => Container(
               alignment: Alignment.topCenter,

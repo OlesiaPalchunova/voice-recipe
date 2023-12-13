@@ -8,15 +8,20 @@ import 'package:voice_recipe/model/recipes_info.dart';
 
 import '../pages/profile_collection/specific_collections_page.dart';
 import '../services/db/collection_db.dart';
+import 'dialog/update _collection.dart';
 import 'dropped_file.dart';
 
 class CollectionModel extends StatefulWidget {
-  String name;
-  int count;
-  final int id;
-  String imageUrl;
+  // String name;
+  // int count;
+  // final int id;
+  // String imageUrl;
+  Collection collection;
+  final void Function(int id) onDelete;
+  final void Function(int id, DroppedFile? dropped_image, String imageUrl, String name, Collection collection) onUpdate;
+  final void Function() onInit;
 
-  CollectionModel({required this.name, required this.count, required this.imageUrl, required this.id});
+  CollectionModel({required this.collection, required this.onDelete, required this.onUpdate, required this.onInit});
 
 
   @override
@@ -25,21 +30,25 @@ class CollectionModel extends StatefulWidget {
 }
 
 class _CollectionModelState extends State<CollectionModel> {
-
+  String get name => widget.collection.name;
+  int get count => widget.collection.count;
+  int get id => widget.collection.id;
+  String get imageUrl => widget.collection.imageUrl;
+  Collection get collection => widget.collection;
 
   TextEditingController _collectionNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _collectionNameController.text = widget.name;
+    _collectionNameController.text = name;
+    // collection = Collection(id: widget.id, name: widget.name, imageUrl: widget.imageUrl, count: widget.count);
   }
 
   var imageFile;
   var pickedFile;
   static DroppedFile? dropped_image;
   File? _imageFile;
-  static Collection collection = Collection(id: 0, name: "null", imageUrl: "null", number: 0);
 
   Future openCollection() async {
     // List<Recipe> collection = await CollectionDB.getCollection(widget.id).then((result) {
@@ -48,10 +57,10 @@ class _CollectionModelState extends State<CollectionModel> {
     //   ));
     // });;
 
-    Map<int, Recipe>? collection = await CollectionDB.getCollection(widget.id);
+    Map<int, Recipe>? collection = await CollectionDB.getCollection(id);
     if (collection != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: widget.id,),
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: id,),
       ));
     }
   }
@@ -60,17 +69,13 @@ class _CollectionModelState extends State<CollectionModel> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // await CollectionDB.getCollections(c, 'les').then((result){}
-        // Navigator.of(context).push(MaterialPageRoute(
-        //   builder: (context) => SpecificCollectionPage(),
-        // ));
         print("((((((((((7777))))))))))");
         openCollection();
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
         child: Container(
-          width: 300,
+          width: 350,
           height: 180,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -90,7 +95,7 @@ class _CollectionModelState extends State<CollectionModel> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image(
-                        image: NetworkImage(widget.imageUrl), // Укажите URL изображения здесь
+                        image: NetworkImage(imageUrl), // Укажите URL изображения здесь
                         width: 200,
                         height: 200,
                         fit: BoxFit.cover,
@@ -99,15 +104,15 @@ class _CollectionModelState extends State<CollectionModel> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Column(
                     children: [
-                      Text(widget.name, style: TextStyle(fontSize: 20),),
-                      Text("Число рецептов: ${widget.count}"),
+                      Text(name, style: TextStyle(fontSize: 20),),
+                      Text("Число рецептов: ${count}"),
                       SizedBox(height: 5,),
                       OutlinedButton(
                         onPressed: () {
-                          AddCollection(context);
+                          EditCollection(context);
                         },
                         child: Text(
                           'Редактировать',
@@ -117,9 +122,11 @@ class _CollectionModelState extends State<CollectionModel> {
                       Transform.translate(
                         offset: Offset(0.0, -4.0),
                         child: OutlinedButton(
-                          onPressed: () {
-                            CollectionDB.deleteCollection(widget.id);
-                          },
+                          // onPressed: () {
+                          //   // CollectionDB.deleteCollection(id);
+                          //   onDelete()
+                          // },
+                          onPressed: () => widget.onDelete(id),
                           child: Text(
                             '      Удалить       ',
                             style: TextStyle(color: Colors.red),
@@ -136,177 +143,15 @@ class _CollectionModelState extends State<CollectionModel> {
     );
   }
 
-  void AddCollection(BuildContext context){
+  void Update() {
+    widget.onUpdate;
+  }
+
+  void EditCollection(BuildContext context){
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          content: SingleChildScrollView(
-            child: Container(
-              height: 300,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 70,
-                    child: TextFormField(
-                      controller: _collectionNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          // borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                      width: 230,
-                      height: 230,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.deepOrange[100]
-                      ),
-                      child:  addImage()
-                  )
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  print("ppppppppppppp");
-                  print(_collectionNameController.text);
-                  CollectionDB.updateCollection(
-                      id: widget.id,
-                      imageFile: dropped_image,
-                      collection: collection,
-                      name: _collectionNameController.text
-                  );
-                  setState(() {
-                    widget.name = _collectionNameController.text;
-                    // widget.imageUrl = collection.imageUrl;
-                  });
-                  Navigator.of(context).pop();
-                  // initCollection();
-                },
-                style: TextButton.styleFrom(
-                  primary: Colors.white, // Set the text color here
-                  backgroundColor: Colors.deepOrange, // Set the background color here
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-                  child: Text('Изменить коллекцию', style: TextStyle(fontSize: 20),),
-                ),
-              ),
-            )
-          ],
-        )
+        builder: (context) => UpdateCollection(text: name, id: id, imageUrl: imageUrl, onInit: widget.onInit)
     );
   }
 
-  Widget addImage(){
-    print("99999999999999999999");
-    if (_imageFile == null){
-      print("yyyyyyyyyyyyyyyyyyy  111");
-      return Container(
-          width: 400, // Specify the desired width of the image
-          height: 300,
-          child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                    width: 400, // Specify the desired width of the image
-                    height: 300,
-                    child: Image.network(widget.imageUrl, fit: BoxFit.cover)
-                ),
-                TextButton(
-                  onPressed: () => getImageFromGallery(),
-                  child: Text("Изменить картинку", style: TextStyle(fontSize: 20, color: Colors.white),),
-                  style: TextButton.styleFrom(
-                    primary: Colors.black, // Set the text color here
-                    backgroundColor: Colors.deepOrange, // Set the background color here
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                ),
-              ],
-          )
-
-      );
-    } else {
-      print("yyyyyyyyyyyyyyyyyyy  222");
-      return Container(
-          width: 400, // Specify the desired width of the image
-          height: 300,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                  width: 400, // Specify the desired width of the image
-                  height: 300,
-                  child: Image.file(_imageFile!, fit: BoxFit.cover,)
-              ),
-              TextButton(
-                onPressed: () => getImageFromGallery(),
-                child: Text("Изменить картинку", style: TextStyle(fontSize: 20, color: Colors.white),),
-                style: TextButton.styleFrom(
-                  primary: Colors.black, // Set the text color here
-                  backgroundColor: Colors.deepOrange, // Set the background color here
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-              ),
-            ],
-          )
-
-      );
-    }
-  }
-
-  Future<void> getImageFromGallery() async {
-    imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    pickedFile = XFile(imageFile.path);
-    dropped_image = await convertToDroppedFile(pickedFile);
-
-    // isImage = true;
-    print("(((((((((imageFile)))))))))");
-    print(imageFile);
-
-    if (imageFile != null) {
-      setState(() {
-        _imageFile = File(imageFile.path);
-        AddCollection(context);
-
-        // build(context);
-        print("8888888888888888888");
-        print(_imageFile);
-      });
-
-    }
-  }
-
-  Future<DroppedFile?> convertToDroppedFile(XFile? imageFile) async {
-    if (imageFile == null) return null;
-
-    String name = imageFile.name;
-    String mime = 'image/jpeg'; // Замените это на фактический MIME-тип изображения (image/jpeg, image/png и т.д.)
-
-    Uint8List bytes = await imageFile.readAsBytes();
-    int size = bytes.lengthInBytes;
-
-    return DroppedFile(
-      name: name,
-      mime: mime,
-      bytes: bytes,
-      size: size,
-    );
-  }
 }

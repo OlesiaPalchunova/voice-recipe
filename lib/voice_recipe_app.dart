@@ -16,6 +16,7 @@ import 'package:voice_recipe/pages/collections/collections_list_page.dart';
 import 'package:voice_recipe/pages/not_found_page.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
+
 import 'config/config.dart';
 import 'model/profile.dart';
 
@@ -28,6 +29,10 @@ class VoiceRecipeApp extends StatefulWidget {
 
 class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
   // Profile profile = Profile();
+  @override
+  void initState() {
+    super.initState();
+  }
   final routes = RouteMap(
       onUnknownRoute: (route) {
         return const MaterialPage(child: NotFoundPage());

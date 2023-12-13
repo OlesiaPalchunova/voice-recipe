@@ -31,12 +31,13 @@ class UserDB{
     // password = await storage.read(key: 'password');
   }
 
-  static void addUser(String login, String display_name, String user_password) {
+  static int addUser(String login, String display_name, String user_password) {
     print("ooooooooooooo");
     storage.write(key: 'uid', value: login);
     storage.write(key: 'name', value: display_name);
     storage.write(key: 'password', value: user_password);
     init();
+    return 0;
   }
 
   static Future getUserUid() {

@@ -68,10 +68,7 @@ dependencies:
   flutter_rating_bar:
   image_picker:
   url_launcher: ^6.1.12
-#  native_ads_flutter: ^1.0.7
-#  flutter_native_admob: ^3.0.0
-  google_mobile_ads: ^0.12.0
-  flutter_riverpod: ^0.13.1+1
+  yandex_mobileads: ^6.1.0
 
 dev_dependencies:
   flutter_test:

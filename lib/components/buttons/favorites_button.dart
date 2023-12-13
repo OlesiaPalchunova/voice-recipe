@@ -4,7 +4,7 @@ import 'package:voice_recipe/model/collections_info.dart';
 
 import '../../config/config.dart';
 import '../../model/collection.dart';
-import '../../model/collection_choice.dart';
+import '../../model/dialog/collection_choice.dart';
 import '../../model/collection_model.dart';
 import '../../services/db/collection_db.dart';
 import '../../services/db/favorite_recipes_db_manager.dart';

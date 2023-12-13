@@ -40,7 +40,9 @@ class _SearchButtonState extends State<SearchButton> {
         borderRadius: Config.borderRadiusLarge,
         onTap: () {
           setState(() {
-            _pressed = true;
+            // _pressed = true;
+            _pressed = !_pressed;
+            print(9999);
           });
           Future.delayed(Config.animationTime, () {
             if (_disposed) return;

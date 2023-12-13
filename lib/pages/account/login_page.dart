@@ -20,6 +20,7 @@ import 'package:voice_recipe/services/service_io.dart';
 
 import 'package:http/http.dart' as http;
 
+import '../../services/BannerAdPage.dart';
 import '../../services/auth/Token.dart';
 import '../../services/auth/authorization.dart';
 
@@ -91,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: Config.defaultAppBar,
       backgroundColor: Config.backgroundEdgeColor,
+      bottomNavigationBar: BottomBannerAd(),
       body: GestureDetector(
         onTap: () {
           _nicknameFocusNode.unfocus();

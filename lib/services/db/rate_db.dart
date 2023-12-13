@@ -198,9 +198,9 @@ class RateDbManager{
     print(user_uid);
     print(response.statusCode);
     print(response.body);
-    // if (response.statusCode != 200) {
-    //   return null;
-    // }
+    if (response.statusCode != 200) {
+      return 0;
+    }
     var decodedBody = utf8.decode(response.body.codeUnits);
     var markJson = jsonDecode(decodedBody);
 

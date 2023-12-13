@@ -9,7 +9,7 @@
     },
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/_flutterfire_internals-1.3.11",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/_flutterfire_internals-1.3.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -21,7 +21,7 @@
     },
     {
       "name": "archive",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.4.6",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.4.9",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -63,25 +63,25 @@
     },
     {
       "name": "cloud_firestore",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore-4.12.2",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore-4.13.6",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_platform_interface-6.0.3",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_platform_interface-6.0.10",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "cloud_firestore_web",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_web-3.8.3",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cloud_firestore_web-3.8.10",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "collection",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.1",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -99,9 +99,9 @@
     },
     {
       "name": "cross_file",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+6",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+7",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "crypto",
@@ -123,9 +123,9 @@
     },
     {
       "name": "dbus",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/dbus-0.7.8",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/dbus-0.7.10",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.17"
     },
     {
       "name": "dotted_border",
@@ -153,7 +153,7 @@
     },
     {
       "name": "file_picker",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-6.0.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-6.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -183,25 +183,25 @@
     },
     {
       "name": "firebase_auth",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth-4.12.1",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth-4.15.3",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_platform_interface",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth_platform_interface-7.0.3",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth_platform_interface-7.0.9",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_auth_web",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth_web-5.8.6",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth_web-5.8.12",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-2.21.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-2.24.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -213,7 +213,7 @@
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-2.8.1",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core_web-2.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -225,7 +225,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///C:/src/flutter/packages/flutter",
+      "rootUri": "file:///C:/Users/lisia/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -314,12 +314,6 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "flutter_riverpod",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_riverpod-0.13.1+1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "flutter_secure_storage",
       "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_secure_storage-9.0.0",
       "packageUri": "lib/",
@@ -363,7 +357,7 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///C:/src/flutter/packages/flutter_test",
+      "rootUri": "file:///C:/Users/lisia/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -381,15 +375,9 @@
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/src/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///C:/Users/lisia/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.0"
-    },
-    {
-      "name": "freezed_annotation",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/freezed_annotation-0.14.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "glob",
@@ -404,14 +392,8 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "google_mobile_ads",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_mobile_ads-0.12.2+1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "google_sign_in",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in-6.1.5",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in-6.1.6",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -423,21 +405,21 @@
     },
     {
       "name": "google_sign_in_ios",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_ios-5.6.4",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_ios-5.6.5",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "google_sign_in_platform_interface",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_platform_interface-2.4.2",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_platform_interface-2.4.3",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "google_sign_in_web",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_web-0.12.0+4",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_web-0.12.2+1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.1"
     },
     {
       "name": "graphs",
@@ -471,9 +453,9 @@
     },
     {
       "name": "image_picker",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker-1.0.4",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker-1.0.5",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "image_picker_android",
@@ -549,15 +531,15 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.15",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.2.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.5.0",
       "packageUri": "lib/",
-      "languageVersion": "2.13"
+      "languageVersion": "2.17"
     },
     {
       "name": "meta",
@@ -663,9 +645,9 @@
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.6",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.7",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "pointycastle",
@@ -681,7 +663,7 @@
     },
     {
       "name": "provider",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/provider-6.0.5",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/provider-6.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -692,28 +674,16 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "quiver",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/quiver-3.2.1",
+      "name": "rive",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/rive-0.12.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
-      "name": "rive",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/rive-0.11.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "rive_common",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/rive_common-0.1.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/rive_common-0.2.8",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
-      "name": "riverpod",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/riverpod-0.13.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     },
     {
       "name": "routemaster",
@@ -777,19 +747,19 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/src/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///C:/Users/lisia/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
     {
       "name": "source_span",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.9.1",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.18"
     },
     {
       "name": "speech_to_text",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/speech_to_text-6.4.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/speech_to_text-6.5.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -818,12 +788,6 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "state_notifier",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/state_notifier-0.7.2+1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "stream_channel",
       "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.1",
       "packageUri": "lib/",
@@ -843,7 +807,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.5.1",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -873,9 +837,9 @@
     },
     {
       "name": "url_launcher",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.1.14",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.2.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.1"
     },
     {
       "name": "url_launcher_android",
@@ -885,15 +849,15 @@
     },
     {
       "name": "url_launcher_ios",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.2.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_linux",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.1.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "url_launcher_macos",
@@ -909,9 +873,9 @@
     },
     {
       "name": "url_launcher_web",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.0.19",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.1"
     },
     {
       "name": "url_launcher_windows",
@@ -921,7 +885,7 @@
     },
     {
       "name": "uuid",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.1.0",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.2.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -956,6 +920,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "web",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.1.4-beta",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "webview_flutter",
       "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/webview_flutter-2.7.0",
       "packageUri": "lib/",
@@ -981,9 +951,9 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.0.9",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.1.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.1"
     },
     {
       "name": "xdg_directories",
@@ -1004,13 +974,19 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "yandex_mobileads",
+      "rootUri": "file:///C:/Users/lisia/AppData/Local/Pub/Cache/hosted/pub.dev/yandex_mobileads-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "voice_recipe",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-11-01T07:36:48.371707Z",
+  "generated": "2023-12-13T04:35:21.550461Z",
   "generator": "pub",
-  "generatorVersion": "3.0.6"
+  "generatorVersion": "3.1.5"
 }

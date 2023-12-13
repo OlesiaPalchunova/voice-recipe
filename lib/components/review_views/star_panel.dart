@@ -47,7 +47,7 @@ class StarPanelState extends State<StarPanel> {
   static int rate = 0;
 
   Future initRate() async {
-    int rate1 = await RateDbManager().getMarkById(widget.id, widget.recipe.user_uid);
+    int rate1 = await RateDbManager().getMarkById(widget.id, UserDB.uid);
     print("((((((((((((((((((lesia))))))))))))))))))");
     print(widget.recipe.user_uid);
     setState(() {

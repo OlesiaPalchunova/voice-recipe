@@ -34,6 +34,7 @@ import 'package:voice_recipe/services/service_io.dart';
 
 import '../../model/profile.dart';
 import '../../model/voice_commands/stop_say.dart';
+import '../../services/BannerAdPage.dart';
 import '../../services/db/profile_db.dart';
 
 class RecipePage extends StatefulWidget {
@@ -43,7 +44,7 @@ class RecipePage extends StatefulWidget {
   }) : super(key: key) {
     tts.setLanguage("ru");
     reviewPage.updateComments();
-    slides.add(facePage);
+    // slides.add(facePage);
     slides.add(ingPage);
     for (int i = 2; i <= recipe.steps.length + 1; i++) {
       slides.add(RecipeStepView(recipe: recipe, slideId: i));
@@ -51,11 +52,16 @@ class RecipePage extends StatefulWidget {
     slides.add(reviewPage);
   }
 
+
+
   final Recipe recipe;
   static final FlutterTts tts = FlutterTts();
   late final IngredientsSlideView ingPage =
       IngredientsSlideView(recipe: recipe);
-  late final RecipeFaceSlideView facePage = RecipeFaceSlideView(recipe: recipe);
+  // late final RecipeFaceSlideView facePage = RecipeFaceSlideView(
+  //   recipe: recipe,
+  //   goToLastSlide: _RecipePageState.goToLastSlide()
+  // );
   late final ReviewsSlide reviewPage = ReviewsSlide(recipe: recipe);
   final List<Widget> slides = [];
 
@@ -79,20 +85,41 @@ class _RecipePageState extends State<RecipePage> {
   late Color activeColor = Config.getColor(widget.recipe.id);
   DateTime tapTime = DateTime.now();
 
+  final List<Widget> slides = [];
+  late final IngredientsSlideView ingPage =
+  IngredientsSlideView(recipe: widget.recipe);
+  late final RecipeFaceSlideView facePage = RecipeFaceSlideView(
+      recipe: widget.recipe,
+      goToLastSlide: goToLastSlide
+  );
+  late final ReviewsSlide reviewPage = ReviewsSlide(recipe: widget.recipe);
+
+
+
   static Profile profile = Profile(uid: "root", display_name: "Тимофей", image: "", info: "Обожаю готовить", tg_link: "", vk_link: "https://vk.com/timofeytrubinov");
   // static Profile profile2 = ProfileDB.getProfileId("les");
 
   double sizeIndicator(BuildContext context) =>
-      .3 * Config.constructorWidth(context) / (widget.slides.length * 1.5);
+      .5 * Config.constructorWidth(context) / (slides.length * 1.5);
+
 
   Color get inactiveColor => activeColor;
 
   Future initProfile() async{
     print(widget.recipe.user_uid);
-    Profile profile1 = await ProfileDB.getProfileId(widget.recipe.user_uid);
+    Profile? profile1 = await ProfileDB.getProfileId(widget.recipe.user_uid);
     print(profile1);
+    if (profile1 != null) {
+      setState(() {
+        profile = profile1;
+      });
+    }
+  }
+
+  void goToLastSlide() {
     setState(() {
-      profile = profile1;
+      slideId = lastSlideId;
+      goToTab(slideId);
     });
   }
 
@@ -103,7 +130,12 @@ class _RecipePageState extends State<RecipePage> {
     slideId = stepsMap[widget.recipe.id] ?? 0;
     checkToHideButtons();
     _initCommandsListener();
-
+    slides.add(facePage);
+    slides.add(ingPage);
+    for (int i = 2; i <= widget.recipe.steps.length + 1; i++) {
+      slides.add(RecipeStepView(recipe: widget.recipe, slideId: i));
+    }
+    slides.add(reviewPage);
   }
 
   void checkToHideButtons() {
@@ -121,11 +153,11 @@ class _RecipePageState extends State<RecipePage> {
 
 
 
-  int get lastSlideId => widget.slides.length - 1;
+  int get lastSlideId => slides.length - 1;
 
   Widget buildSlider(BuildContext context) {
     listContentConfig.clear();
-    for (Widget slide in widget.slides) {
+    for (Widget slide in slides) {
       listContentConfig.add(ContentConfig(
           marginTitle: const EdgeInsets.all(0.0),
           verticalScrollbarBehavior: ScrollbarBehavior.hide,
@@ -168,23 +200,23 @@ class _RecipePageState extends State<RecipePage> {
       indicatorConfig: IndicatorConfig(
         sizeIndicator: sizeIndicator(context),
         indicatorWidget: Container(
-          width: sizeIndicator(context),
+          width: sizeIndicator(context)*1.2,
           height: 10,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4), color: inactiveColor),
         ),
         activeIndicatorWidget: Container(
-          width: sizeIndicator(context),
+          width: sizeIndicator(context)*1.2,
           height: 10,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4), color: activeColor), //activeColor
         ),
-        spaceBetweenIndicator: sizeIndicator(context) * .5,
+        spaceBetweenIndicator: sizeIndicator(context) * .3,
         typeIndicatorAnimation: TypeIndicatorAnimation.sizeTransition,
       ),
       navigationBarConfig: NavigationBarConfig(
         navPosition: NavPosition.bottom,
-        padding: const EdgeInsets.all(0.0),
+        padding: EdgeInsets.zero,
       ),
       isAutoScroll: false,
       isLoopAutoScroll: false,
@@ -244,6 +276,27 @@ class _RecipePageState extends State<RecipePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          // actions: [
+          //   Container(
+          //     width: 50,
+          //     height: 20,
+          //     decoration: BoxDecoration(
+          //       color: Colors.white70,
+          //       borderRadius: BorderRadius.circular(10)
+          //     ),
+          //     child: IconButton(
+          //       icon: Icon(Icons.comment),
+          //       onPressed: () {
+          //         setState(() {
+          //           // Перейти на последний слайд
+          //           slideId = lastSlideId;
+          //           goToTab(slideId);
+          //         });
+          //       },
+          //     ),
+          //   ),
+            // Другие кнопки AppBar, если есть
+          // ],
           shadowColor: Config.darkModeOn ? Colors.black87 : Colors.transparent,
           automaticallyImplyLeading: false,
           toolbarHeight: 60,
@@ -278,6 +331,7 @@ class _RecipePageState extends State<RecipePage> {
             ),
           ),
         ),
+        bottomNavigationBar: BottomBannerAd(),
         body: Container(
           alignment: Alignment.topCenter,
           color: Config.darkModeOn

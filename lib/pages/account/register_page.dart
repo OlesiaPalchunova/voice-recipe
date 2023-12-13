@@ -8,6 +8,7 @@ import '../../components/labels/password_label.dart';
 import '../../config/config.dart';
 import 'package:voice_recipe/pages/account/login_page.dart';
 
+import '../../services/BannerAdPage.dart';
 import '../../services/auth/authorization.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -60,6 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: Config.defaultAppBar,
       backgroundColor: Config.backgroundEdgeColor,
+      bottomNavigationBar: BottomBannerAd(),
       body: GestureDetector(
         onTap: () {
           _emailFocusNode.unfocus();

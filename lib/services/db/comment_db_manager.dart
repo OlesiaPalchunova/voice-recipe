@@ -93,7 +93,7 @@ class CommentDbManager {
       "user_uid": await UserDB.getUserUid(),
       "recipe_id": recipeId,
       "content": comment.text,
-      "post_time": "2017-07-21T17:32:28Z",
+      "post_time": date,
     };
     var commentJson = jsonEncode(commentDto);
     return commentJson;
@@ -174,15 +174,14 @@ class CommentDbManager {
     for (var commentJson in commentsJson) {
       print("(((((commentJson)))))");
       print(commentJson);
-      Profile profile = await ProfileDB.getProfileId(commentJson["user_uid"]);
+      Profile? profile = await ProfileDB.getProfileId(commentJson["user_uid"]);
       print("((((((((((profile))))))))))");
-      print(profile.image);
-      print(profile.display_name);
-      Comment comment = commentFromJson(commentJson, profile.image);
+      Comment comment = commentFromJson(commentJson, profile != null ? profile.image : "");
       print(commentJson);
 
       comments.add(comment);
     }
+    print("(((((((comments)))))))");
     print(comments);
     return comments;
   }
@@ -199,7 +198,7 @@ class CommentDbManager {
         userName: commentJson["user_uid"],
         postTime: commentJson["post_time"] != null ? DateTime.parse(commentJson["post_time"]) : DateTime.now(),
         text: commentJson["content"],
-        profileUrl: image,
+        profileUrl: image != "" ? image : defaultProfileUrl,
     );
 
     return comment;

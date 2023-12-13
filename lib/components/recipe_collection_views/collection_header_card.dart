@@ -7,10 +7,10 @@ import 'package:voice_recipe/model/sets_info.dart';
 class CollectionHeaderCard extends StatefulWidget {
   const CollectionHeaderCard(
       {Key? key,
-      required this.set,
-      required this.onTap,
-      this.widthConstraint = 0,
-      this.hasSubtitles = true})
+        required this.set,
+        required this.onTap,
+        this.widthConstraint = 0,
+        this.hasSubtitles = true})
       : super(key: key);
 
   final VoidCallback onTap;
@@ -107,7 +107,7 @@ class _CollectionHeaderCardState extends State<CollectionHeaderCard>
                         style: TextStyle(
                             fontFamily: Config.fontFamily,
                             fontSize:
-                                !active ? fontSize(context) : fontSize(context) + 2,
+                            !active ? fontSize(context) : fontSize(context) + 2,
                             color: Config.iconColor)),
                   ),
                 ]),

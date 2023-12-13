@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voice_recipe/model/collections_info.dart';
 
-import '../services/db/collection_db.dart';
-import 'collection_model.dart';
+import '../../services/db/collection_db.dart';
+import '../collection.dart';
+import '../collection_model.dart';
 
 class CollectionChoice extends StatefulWidget {
   final int recipe_id;
@@ -14,7 +15,7 @@ class CollectionChoice extends StatefulWidget {
 }
 
 class _CollectionChoiceState extends State<CollectionChoice> {
-  List<CollectionModel> collection = CollectionsInfo.restCollections;
+  List<Collection> collection = CollectionsInfo.restCollections;
 
   List<bool> _isChecked = List<bool>.generate(1000, (index) => false);
 

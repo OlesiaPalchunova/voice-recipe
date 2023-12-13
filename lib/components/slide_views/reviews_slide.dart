@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
 import 'package:voice_recipe/components/review_views/new_comment_card.dart';
 import 'package:voice_recipe/components/buttons/favorites_button.dart';
@@ -22,6 +23,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../services/auth/Token.dart';
 import '../../services/auth/authorization.dart';
 import '../../services/db/rate_db.dart';
+import '../../services/db/user_db.dart';
 
 class ReviewsSlide extends StatefulWidget {
   ReviewsSlide({key, required this.recipe});
@@ -40,13 +42,16 @@ class ReviewsSlide extends StatefulWidget {
   Future updateComments() async {
     var commentsDb1 = await CommentDbManager().getComments1(recipe.id);
     // var commentsDb = recipe.comments;
-    // for (MapEntry<String, Comment> entry in commentsDb.entries) {
+    // for (MapEntry<String, Comment> entry in commentsDb1.entries) {
     //   commentsController.add(entry);
     //   comments[entry.key] = entry.value;
     // }
-    for (Comment comment in commentsDb1!) {
-      // commentsController.add(comment);
+    print(333333333333);
+    comments.clear();
+    for (Comment comment in commentsDb1!.reversed) {
+      print(comment.id);
       comments[comment.id] = comment;
+      commentsController.add(MapEntry(comment.id, comment));
     }
   }
 }
@@ -66,11 +71,12 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   static double mark = 0.0;
 
   Future initRate() async {
-    int rate1 = await RateDbManager().getMarkById(widget.recipe.id, widget.recipe.user_uid);
+    int rate1 = await RateDbManager().getMarkById(widget.recipe.id, UserDB.uid);
     setState(() {
       rate = rate1;
       print(":(((((((((((((((");
       print(rate);
+
     });
   }
 
@@ -88,8 +94,11 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
     super.initState();
     initMark();
     initRate();
+    setState(() {
 
+    });
 
+    print(55555555);
     disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
@@ -97,9 +106,14 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
         isEvaluated = true;
       }
     }
+    print(666666666);
     subscription ??= widget.commentsController.stream.listen((event) {
+      print(4444444444);
       comments[event.key] = event.value;
       if (disposed) return;
+
+      print(99999999);
+      print(comments.length);
       setState(() {});
     });
   }
@@ -131,7 +145,8 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
               buildRatesSection(),
               buildStarsSection(),
               buildShareSection(),
-              buildCommentsSection()
+              buildCommentsSection(),
+              SizedBox(height: 50,)
             ],
           ),
         ),
@@ -240,6 +255,15 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   }
 
+  void launchURL(String url) async {
+    print(url);
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Widget buildShareSection() {
     return Container(
       margin: const EdgeInsets.only(top: Config.padding),
@@ -267,14 +291,38 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                           fontSize: fontSize(context)),
                     ),
                     const SizedBox(height: Config.margin / 2,),
-                    SelectableText(
-                      recipeLink,
-                      style: TextStyle(
-                          color: Config.iconColor.withOpacity(.7),
-                          fontFamily: Config.fontFamily,
-                          decoration: TextDecoration.underline,
-                          fontSize: fontSize(context) - 2),
-                    ),
+                    // SelectableText(
+                    //   recipeLink,
+                    //   style: TextStyle(
+                    //     color: Config.iconColor.withOpacity(.7),
+                    //     fontFamily: Config.fontFamily,
+                    //     decoration: TextDecoration.underline,
+                    //     fontSize: fontSize(context) - 2,
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    // ),
+                    GestureDetector(
+                      onTap: () {
+                        // Действия при нажатии на текст - например, переход по ссылке
+                        launchURL(recipeLink);
+                      },
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Container(
+                          width: 260, // Задайте желаемую ширину
+                          child: Text(
+                            recipeLink,
+                            style: TextStyle(
+                              color: Config.iconColor.withOpacity(.7),
+                              fontFamily: Config.fontFamily,
+                              decoration: TextDecoration.underline,
+                              fontSize: fontSize(context) - 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 Container(
@@ -321,7 +369,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
   Widget buildCommentsSection() {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.only(top: Config.padding),
+      margin: const EdgeInsets.only(top: Config.padding, bottom: Config.padding),
       // padding: const EdgeInsets.all(Config.padding),
       decoration: BoxDecoration(
           color: backColor, borderRadius: Config.borderRadiusLarge),
@@ -346,7 +394,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
                   textController: ReviewsSlide.commentController,
                   onSubmit: onSubmitComment,
                   onCancel: () {},
-                   profileImageUrl: defaultProfileUrl),
+                  profileImageUrl: defaultProfileUrl),
                   // profileImageUrl: ServiceIO.loggedIn
                   //     ? FirebaseAuth.instance.currentUser!.photoURL ??
                   //     defaultProfileUrl
@@ -401,6 +449,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
         text: result,
         uid: "89");
     print("gggggggggggggggggg");
+    print(comment.postTime);
     var res = await CommentDbManager().addNewComment(
       comment: comment,
       recipeId: widget.recipe.id,

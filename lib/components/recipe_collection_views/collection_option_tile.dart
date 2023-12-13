@@ -3,8 +3,12 @@ import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 
 import '../../config/config.dart';
+import '../../model/recipes_info.dart';
 import '../../model/sets_info.dart';
 import 'package:voice_recipe/components/buttons/classic_button.dart';
+
+import '../../pages/profile_collection/specific_collections_page.dart';
+import '../../services/db/category_db.dart';
 
 class CollectionOptionTile extends StatefulWidget {
   const CollectionOptionTile({Key? key, required this.setOption})
@@ -103,7 +107,15 @@ class _CollectionOptionTileState extends State<CollectionOptionTile> {
   double fontSize(BuildContext context) => Config.isDesktop(context) ? 20 : 18;
 
   void _navigateToSet(BuildContext context, Collection setOption) async {
-    Routemaster.of(context)
-        .push('${FutureCollectionPage.route}${setOption.collectionName}');
+
+    Map<int, Recipe>? collection;
+    collection = await CategoryDB.getCategory(id: widget.setOption.id, limit: 10);
+    if (collection != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: widget.setOption.id),
+      ));
+    }
+    // Routemaster.of(context)
+    //     .push('${FutureCollectionPage.route}${setOption.collectionName}');
   }
 }
