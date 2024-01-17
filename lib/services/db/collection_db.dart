@@ -316,8 +316,10 @@ class CollectionDB{
 
     double mark = recipeJson["avg_mark"] ?? 0.0;
     int user_mark = recipeJson["user_mark"] ?? 0;
-    print(mark);
-    print(recipeJson[id]);
+    int portion = recipeJson["servings"] ?? 0;
+    print("999779999999");
+    print(portion);
+    print(recipeName);
     for (int i = 0; i < recipeName.length; i++) {
       if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|\.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
@@ -335,7 +337,8 @@ class CollectionDB{
         ingredients: ingredients,
         steps: recipeSteps,
         mark: mark,
-        user_mark: user_mark
+        user_mark: user_mark,
+        portions: portion
     );
     return recipe;
   }

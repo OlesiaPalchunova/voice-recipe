@@ -9,7 +9,7 @@ import '../../model/recipes_info.dart';
 class FutureRecipePage extends StatelessWidget {
   const FutureRecipePage({key, required this.recipeId});
 
-  static const route = "/recipe/";
+  static const route = "/specificCollectionPage/";
 
   final int recipeId;
 

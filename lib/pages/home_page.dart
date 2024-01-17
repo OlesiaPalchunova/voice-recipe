@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             showDialog(
                                 context: context,
-                                // barrierColor: Colors.transparent,
+                                barrierColor: Colors.transparent,
                                 useSafeArea: false,
                                 barrierDismissible: true,
                                 builder: (context) => AlertDialog(
@@ -243,7 +243,6 @@ class _HomePageState extends State<HomePage> {
                           },
                           text: isRecipeSearch ? 'Найти рецепт' : 'Найти коллекцию',
                         ),
-                        //   child: SearchField(focusNode: FocusNode())
                       ),
                     ],
                   ),

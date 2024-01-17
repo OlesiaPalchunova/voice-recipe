@@ -92,32 +92,32 @@ class _SideBarMenuState extends State<SideBarMenu> {
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(Config.margin, Config.margin,
-                    Config.margin, Config.margin * 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Тёмная тема",
-                      style: TextStyle(
-                          fontFamily: Config.fontFamily,
-                          color:
-                              Config.darkModeOn ? Colors.white : Colors.black87,
-                          fontSize: SideBarMenu.fontSize(context)),
-                    ),
-                    CupertinoSwitch(
-                      activeColor: Colors.orangeAccent.shade200,
-                      value: Config.darkModeOn,
-                      onChanged: (value) {
-                        setState(() {
-                          Config.setDarkModeOn(!Config.darkModeOn);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   margin: const EdgeInsets.fromLTRB(Config.margin, Config.margin,
+              //       Config.margin, Config.margin * 3),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         "Тёмная тема",
+              //         style: TextStyle(
+              //             fontFamily: Config.fontFamily,
+              //             color:
+              //                 Config.darkModeOn ? Colors.white : Colors.black87,
+              //             fontSize: SideBarMenu.fontSize(context)),
+              //       ),
+              //       CupertinoSwitch(
+              //         activeColor: Colors.orangeAccent.shade200,
+              //         value: Config.darkModeOn,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             Config.setDarkModeOn(!Config.darkModeOn);
+              //           });
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           )),
     );
@@ -154,12 +154,15 @@ class _SideBarMenuState extends State<SideBarMenu> {
     Map<int, Recipe>? collection;
     print(999999);
     print(collection_id);
-    if (collection_id == 0) collection = {};
-    else collection = await CollectionDB.getCollection(collection_id);
-    if (collection != null) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id),
-      ));
+    // if (collection_id == 0) collection = {};
+    // else collection = await CollectionDB.getCollection(collection_id);
+    if (collection_id != 0) {
+      // Navigator.of(context).push(MaterialPageRoute(
+      //   builder: (context) => SpecificCollectionPage(collectionId: collection_id),
+      // ));
+
+      String route = '${SpecificCollectionPage.route}$collection_id';
+      Routemaster.of(context).push(route);
     }
   }
 
@@ -184,8 +187,10 @@ class _SideBarMenuState extends State<SideBarMenu> {
         stream: Stream.value(Token.isToken()),
         builder: (context, snapshot) {
           if (snapshot.data == true) {
+            print(77777);
             return buildAccountTile();
           } else {
+            print(6666);
             return SideBarTile(
               name: "Войти",
               onClicked: onLoginTap,

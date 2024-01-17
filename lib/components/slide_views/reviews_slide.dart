@@ -53,6 +53,8 @@ class ReviewsSlide extends StatefulWidget {
       comments[comment.id] = comment;
       commentsController.add(MapEntry(comment.id, comment));
     }
+    print(111111111);
+    print(comments.length);
   }
 }
 
@@ -91,14 +93,14 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
 
   @override
   initState() {
+    widget.updateComments();
+    if (disposed) return;
+    setState(() {});
+
     super.initState();
+
     initMark();
     initRate();
-    setState(() {
-
-    });
-
-    print(55555555);
     disposed = false;
     int? rate = ratesMap[widget.recipe.id];
     if (rate != null) {
@@ -106,7 +108,7 @@ class _ReviewsSlideState extends State<ReviewsSlide> {
         isEvaluated = true;
       }
     }
-    print(666666666);
+    setState(() {});
     subscription ??= widget.commentsController.stream.listen((event) {
       print(4444444444);
       comments[event.key] = event.value;

@@ -19,13 +19,14 @@ class Recipe {
   List<RecipeStep> steps;
   double mark;
   int user_mark;
+  int? portions;
   // List<Comment> comments;
 
   DroppedFile? faceImageRaw;
 
   Recipe({required this.name, required this.faceImageUrl, required this.id, required this.user_uid,
   required this.cookTimeMins, required this.prepTimeMins, required this.kilocalories,
-    required this.ingredients, required this.steps, this.faceImageRaw, required this.mark, required this.user_mark
+    required this.ingredients, required this.steps, this.faceImageRaw, required this.mark, required this.user_mark, required this.portions
   });
 }
 

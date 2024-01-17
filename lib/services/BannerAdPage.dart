@@ -5,13 +5,13 @@ class BottomBannerAd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int screenWidth = MediaQuery.of(context).size.width.round();
-    int screenHeight = (MediaQuery.of(context).size.height  * .1).round();
+    int screenHeight = (MediaQuery.of(context).size.height  * .08).round();
 
     final BannerAdSize bannerAdSize = BannerAdSize.inline(width: screenWidth, maxHeight: screenHeight);
     // final BannerAdSize bannerAdSize = BannerAdSize.sticky(width: screenWidth);
 
     final banner = BannerAd(
-      adUnitId: 'demo-banner-yandex',
+      adUnitId: 'R-M-3964939-1',
       adSize: bannerAdSize,
       adRequest: AdRequest(),
       onAdLoaded: () {
@@ -22,6 +22,7 @@ class BottomBannerAd extends StatelessWidget {
       },
     );
 
+    // return SizedBox();
     return AdWidget(bannerAd: banner);
   }
 }

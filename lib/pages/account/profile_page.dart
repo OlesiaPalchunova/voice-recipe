@@ -78,6 +78,7 @@ class _AccountPageState extends State<AccountPage> {
 
     networkImage = UserDB.image ?? "null";
 
+
     // _loginController.text = widget.profile.uid;
     // _nameController.text = widget.profile.display_name;
     // _descriptionController.text = widget.profile.info ?? "";
@@ -88,12 +89,15 @@ class _AccountPageState extends State<AccountPage> {
   Future openMyCollection() async {
     var collection_id = CollectionsInfo.myCollection.id;
     Map<int, Recipe>? collection;
-    if (collection_id == 0) collection = {};
-    else collection = await CollectionDB.getCollection(collection_id);
-    if (collection != null) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: collection_id, showCategories: true,),
-      ));
+    // if (collection_id == 0) collection = {};
+    // else collection = await CollectionDB.getCollection(collection_id);
+    if (collection_id != 0) {
+      // Navigator.of(context).push(MaterialPageRoute(
+      //   builder: (context) => SpecificCollectionPage(collectionId: collection_id, showCategories: true,),
+      // ));
+      String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+      String route = currentRoute + '${SpecificCollectionPage.route}$collection_id';
+      Routemaster.of(context).push(route);
     }
   }
 
@@ -178,12 +182,16 @@ class _AccountPageState extends State<AccountPage> {
                   onTap: (){
                     // Routemaster.of(context).push('/created');
                     // Routemaster.of(context).push(UserPage.route);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CollectionPage(),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => CollectionPage(),
+                    //   ),
+                    // );
+
+                    String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+                    String route = '${currentRoute}${CollectionPage.route}';
+                    Routemaster.of(context).push(route);
                   },
                   child: Card(
                     // elevation: 3,

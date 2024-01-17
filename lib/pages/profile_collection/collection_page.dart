@@ -21,6 +21,8 @@ import '../../services/service_io.dart';
 class CollectionPage extends StatefulWidget {
   CollectionPage({super.key});
 
+  static const route = "/collection_page";
+
 
   @override
   State<CollectionPage> createState() => _CollectionPageState();

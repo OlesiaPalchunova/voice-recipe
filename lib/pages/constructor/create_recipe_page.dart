@@ -14,6 +14,7 @@ import 'package:voice_recipe/components/utils/animated_loading.dart';
 import 'package:voice_recipe/services/service_io.dart';
 
 import '../../components/constructor_views/category_label.dart';
+import '../../components/constructor_views/portion_label.dart';
 import '../../config/config.dart';
 import '../../model/category_model.dart';
 import '../../model/recipes_info.dart';
@@ -63,6 +64,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
   final ingCountFocusNode = FocusNode();
   final descFocusNode = FocusNode();
   final List<CategoryModel> categories = [];
+  int? portion;
 
   final int recipeId = 0;
 
@@ -135,6 +137,13 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
     );
   }
 
+  void ChangePortions(int? count) {
+    setState(() {
+      print(count);
+      portion = count;
+    });
+  }
+
   Recipe? createdRecipe;
 
   List<Widget> allLabels(BuildContext context) {
@@ -147,6 +156,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       ),
       CreateStepsLabel(insertList: steps, descFocusNode: descFocusNode),
       CategoryLabel(categories: categories),
+      PortionLabel(onChange: ChangePortions,),
       Container(
         margin: Config.paddingAll,
         alignment: Alignment.centerLeft,
@@ -192,6 +202,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       ServiceIO.showAlertDialog("У рецепта должен быть хотя бы один шаг", context);
       return;
     }
+
     createdRecipe = Recipe(
       name: headers.name!,
       user_uid: UserDB.uid!,
@@ -205,6 +216,7 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
       steps: steps,
       mark: 0,
       user_mark: 0,
+      portions: portion
     );
     AnimatedLoading().execute(context, task: () async {
       print("((((((((((((((((((((((object))))))))))))))))))))))");

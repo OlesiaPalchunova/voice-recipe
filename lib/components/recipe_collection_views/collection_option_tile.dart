@@ -112,7 +112,7 @@ class _CollectionOptionTileState extends State<CollectionOptionTile> {
     collection = await CategoryDB.getCategory(id: widget.setOption.id, limit: 10);
     if (collection != null) {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: widget.setOption.id),
+        builder: (context) => SpecificCollectionPage(collectionId: widget.setOption.id),
       ));
     }
     // Routemaster.of(context)

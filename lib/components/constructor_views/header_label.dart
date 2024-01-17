@@ -179,10 +179,8 @@ class CreateHeaderLabelState extends State<CreateHeaderLabel> {
   }
 
   void onCookTimeSet() async {
-    TimeOfDay initialTime =
-        cookTime == null ? const TimeOfDay(hour: 0, minute: 0) : cookTime!;
-    cookTime = await ServiceIO.showTimeInputDialog(
-        context, "Время приготовления", initialTime);
+    TimeOfDay initialTime = (cookTime == null) ? const TimeOfDay(hour: 0, minute: 0) : cookTime!;
+    cookTime = await ServiceIO.showTimeInputDialog(context, "Время приготовления", initialTime);
     if (cookTime != null) {
       setState(() {});
     }

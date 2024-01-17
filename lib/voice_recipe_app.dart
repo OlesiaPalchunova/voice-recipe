@@ -10,6 +10,8 @@ import 'package:voice_recipe/pages/constructor/create_recipe_page.dart';
 import 'package:voice_recipe/pages/collections/future_collection_page.dart';
 import 'package:voice_recipe/pages/constructor/edit_recipe_page.dart';
 import 'package:voice_recipe/pages/constructor/future_edit_page.dart';
+import 'package:voice_recipe/pages/profile_collection/collection_page.dart';
+import 'package:voice_recipe/pages/profile_collection/specific_collections_page.dart';
 import 'package:voice_recipe/pages/recipe/future_recipe_page.dart';
 import 'package:voice_recipe/pages/home_page.dart';
 import 'package:voice_recipe/pages/collections/collections_list_page.dart';
@@ -66,6 +68,30 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
         '/catalogue': (_) => ServiceIO.loggedIn
             ? const MaterialPage(child: FutureCollectionPage(name: "catalogue"))
             : const MaterialPage(child: NotFoundPage()),
+        '/profile/collection_page${SpecificCollectionPage.route}:collectionId': (info) {
+          return MaterialPage(
+            child: SpecificCollectionPage(
+              collectionId: int.parse(info.pathParameters['collectionId']!),
+            ),
+          );
+        },
+        '/profile${SpecificCollectionPage.route}:collectionId': (info) {
+          return MaterialPage(
+            child: SpecificCollectionPage(
+              collectionId: int.parse(info.pathParameters['collectionId']!),
+              showCategories: true,
+              showLikes: false,
+            ),
+          );
+        },
+        '${SpecificCollectionPage.route}:collectionId': (info) {
+          return MaterialPage(
+            child: SpecificCollectionPage(
+              collectionId: int.parse(info.pathParameters['collectionId']!),
+            ),
+          );
+        },
+        '/profile${CollectionPage.route}': (_) => MaterialPage(child: CollectionPage()),
         '${FutureRecipePage.route}:id': materialRecipeRoute,
         '${EditRecipePage.route}:id': (info) {
           int id = int.parse(info.pathParameters['id']!);
@@ -77,6 +103,7 @@ class _VoiceRecipeAppState extends State<VoiceRecipeApp> {
       });
 
   static MaterialPage<dynamic> materialRecipeRoute(RouteData info) {
+    print(9999);
     int id = int.parse(info.pathParameters['id']!);
     return MaterialPage(child: FutureRecipePage(recipeId: id));
   }

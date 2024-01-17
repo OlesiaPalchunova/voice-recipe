@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voice_recipe/services/auth/Token.dart';
 import 'package:voice_recipe/services/db/profile_db.dart';
 
 class UserDB{
@@ -15,6 +16,7 @@ class UserDB{
 
   static Future init() async{
     var profile = await ProfileDB().getProfile();
+    if (profile == null) Token.notToken();
 
     uid = profile.uid;
     name = profile.display_name;

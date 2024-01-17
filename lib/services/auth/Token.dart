@@ -9,11 +9,19 @@ class Token{
   static bool is_token = false;
 
   static void init() async{
+    print(await storage.read(key: 'access_token'));
     if (await storage.containsKey(key: 'access_token')) is_token = true;
   }
 
   static bool isToken(){
+    print("999999999");
+    print(is_token);
     return is_token;
+  }
+
+  static void notToken(){
+    print("777777777777777777");
+    is_token = false;
   }
 
   static Future<void> setAccessToken(String newAccessToken) async {

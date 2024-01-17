@@ -14,6 +14,7 @@ const ingUnitName = "measure_unit_name";
 const ingCount = "count";
 const ingredientId = "ingredient_id";
 const steps = "steps";
+const portions = "servings";
 const stepMedia = "media_id";
 const stepDescription = "description";
 const stepNum = "step_num";

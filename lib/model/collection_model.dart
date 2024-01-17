@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:voice_recipe/model/collection.dart';
 import 'package:voice_recipe/model/recipes_info.dart';
 
@@ -57,11 +58,19 @@ class _CollectionModelState extends State<CollectionModel> {
     //   ));
     // });;
 
-    Map<int, Recipe>? collection = await CollectionDB.getCollection(id);
+    // Map<int, Recipe>? collection = await CollectionDB.getCollection(id);
     if (collection != null) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SpecificCollectionPage(recipes: collection, collectionId: id,),
-      ));
+      // Navigator.of(context).push(MaterialPageRoute(
+      //   builder: (context) => SpecificCollectionPage(collectionId: id,),
+      // ));
+      String currentRoute = Routemaster.of(context).currentRoute.fullPath;
+      String route = currentRoute + '${SpecificCollectionPage.route}$id';
+      Routemaster.of(context).push(route);
+      // print(HomePage.route);
+      // if (currentRoute != HomePage.route) {
+      //   route = '$currentRoute/${recipe.id}';
+      //   print("route: $route");
+      // }
     }
   }
 

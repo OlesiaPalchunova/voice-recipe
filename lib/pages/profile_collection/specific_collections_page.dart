@@ -4,27 +4,29 @@ import '../../components/recipe_header_card.dart';
 import '../../config/config.dart';
 import '../../model/recipes_info.dart';
 import '../../services/BannerAdPage.dart';
+import '../../services/db/collection_db.dart';
 import '../../services/db/rate_db.dart';
 
 class SpecificCollectionPage extends StatefulWidget {
   const SpecificCollectionPage(
       {key,
-        required this.recipes,
         this.collectionId = -1,
         this.showLikes = true,
         this.showCategories = false});
 
-  final Map<int, Recipe>? recipes;
   final bool showLikes;
   final bool showCategories;
   final int collectionId;
+
+  static const route = "/current_collection/";
 
   @override
   State<SpecificCollectionPage> createState() => _SpecificCollectionPageState();
 }
 
 class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
-  late final recipes = widget.recipes;
+
+  Map<int, Recipe>? recipes = {};
   final recipeCards = <RecipeHeaderCard>[];
   late final isLaptopView =
       Config.pageWidth(context) > Config.pageHeight(context);
@@ -51,6 +53,18 @@ class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
   //   setState(() => isLoadingMore = false);
   // }
 
+  void initRecipes() async {
+    if (widget.collectionId == 0) recipes = {};
+    else recipes = await CollectionDB.getCollection(widget.collectionId);
+    setState(() {
+      recipeCards.addAll(recipes!.entries.map((entry) {
+        int recipeId = entry.key;
+        Recipe recipe = entry.value;
+        return RecipeHeaderCard(recipe: recipe, isSaved: true, collectionId: widget.collectionId, showCategories: widget.showCategories,);
+      }));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,11 +72,8 @@ class _SpecificCollectionPageState extends State<SpecificCollectionPage> {
     // if (special.contains(widget.collectionName)) {
     //   currentPage = maxPage;
     // }
-    recipeCards.addAll(recipes!.entries.map((entry) {
-      int recipeId = entry.key;
-      Recipe recipe = entry.value;
-      return RecipeHeaderCard(recipe: recipe, isSaved: true, collectionId: widget.collectionId, showCategories: widget.showCategories,);
-    }));
+
+    initRecipes();
 
     // recipeCards.addAll(recipes.map((recipe) => RecipeHeaderCard(recipe: recipe)));
     // scrollController.addListener(scrollListener);

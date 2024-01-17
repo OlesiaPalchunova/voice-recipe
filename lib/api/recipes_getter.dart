@@ -153,15 +153,16 @@ class RecipesGetter {
     num? kilocaloriesCount = recipeJson[kilocalories];
     String recipeName = recipeJson[name];
     String userUid = recipeJson[authorId];
-
     double mark = recipeJson["avg_mark"] ?? 0.0;
     int user_mark = recipeJson["user_mark"] ?? 0;
+    int? portion = recipeJson["servings"];
     for (int i = 0; i < recipeName.length; i++) {
       if (recipeName.substring(i).startsWith(RegExp(r"(- пошаговый)|\.|/"))) {
         recipeName = recipeName.substring(0, i).trim();
         break;
       }
     }
+
     var recipe = Recipe(
         name: recipeName,
         faceImageUrl: getImageUrl(recipeJson[faceMedia]),
@@ -173,7 +174,8 @@ class RecipesGetter {
         ingredients: ingredients,
         steps: recipeSteps,
         mark: mark,
-        user_mark: user_mark
+        user_mark: user_mark,
+        portions: portion
     );
     return recipe;
   }

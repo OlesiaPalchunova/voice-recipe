@@ -146,11 +146,14 @@ class GeneralInfo extends StatelessWidget {
   final Recipe recipe;
   final Color _textColor = Config.darkModeOn ? Colors.white : Colors.black87;
 
+
   double titleFontSize(BuildContext context) =>
       Config.isDesktop(context) ? 22 : 20;
   
   @override
   Widget build(BuildContext context) {
+    print(recipe.portions);
+    print("recipe.portions");
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -170,20 +173,27 @@ class GeneralInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Assignment(
-              recipe: recipe,
-              name: "Подготовка",
+              name: "Подготовка\n",
               value: TimeLabel.timeToStr(TimeLabel.convertToTOD(recipe.prepTimeMins)),
               iconData: Icons.access_time,
             ),
             Assignment(
-              recipe: recipe,
-              name: "Приготовление",
+              name: "Приготовление\n",
               value: TimeLabel.timeToStr(TimeLabel.convertToTOD(recipe.cookTimeMins)),
               iconData: Icons.access_time,
             )
           ],
         ),
-        const SizedBox(height: Config.margin,)
+        recipe.portions != null ?
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Config.margin),
+          child: Assignment(
+            name: "Количество порций:  ",
+            value: recipe.portions.toString(),
+            iconData: Icons.coffee_outlined,
+          ),
+        )
+        : SizedBox(),
         // recipes at the current moment don't have calories, so I commented this
         // Container(
         //   alignment: Alignment.centerLeft,
@@ -203,13 +213,11 @@ class GeneralInfo extends StatelessWidget {
 class Assignment extends StatelessWidget {
   Assignment(
       {Key? key,
-      required this.recipe,
       required this.name,
       required this.value,
       required this.iconData})
       : super(key: key);
 
-  final Recipe recipe;
   final String name;
   final String value;
   final IconData iconData;
@@ -242,7 +250,7 @@ class Assignment extends StatelessWidget {
                   color: _textColor),
               children: <TextSpan>[
                 TextSpan(
-                  text: "$name\n",
+                  text: "$name",
                 ),
                 TextSpan(
                     text: value,

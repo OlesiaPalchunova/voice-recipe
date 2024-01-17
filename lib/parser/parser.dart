@@ -282,7 +282,9 @@ class CookPadParser {
         ingredients: ingredients,
         steps: steps,
         mark: 0,
-        user_mark: 0,);
+        user_mark: 0,
+        portions: null
+    );
     return result;
   }
 

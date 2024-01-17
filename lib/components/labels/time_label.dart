@@ -16,6 +16,7 @@ class TimeLabel extends StatelessWidget {
   static TimeOfDay convertToTOD(int mins) {
     int hours = 0;
     while (mins >= 60) {
+      print(9999);
       hours++;
       mins -= 60;
     }
@@ -39,11 +40,11 @@ class TimeLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Icon(
-        Icons.timer_outlined,
-        color: Config.iconColor,
-        size: iconSize,
-      ),
+      // Icon(
+      //   Icons.timer_outlined,
+      //   color: Config.iconColor,
+      //   size: iconSize,
+      // ),
       const SizedBox(
         width: Config.margin / 2
       ),
@@ -75,21 +76,21 @@ class TimeLabel extends StatelessWidget {
         required VoidCallback onDeleteTap}) {
     return time == null
         ? SizedBox(
-      width: widthConstraint(context),
-          child: ClassicButton(
-      onTap: onSetTap,
-      text: buttonText,
-          customColor: CreateRecipePage.buttonColor,
-      fontSize: CreateRecipePage.generalFontSize(context),
-    ),
+          width: widthConstraint(context),
+              child: ClassicButton(
+          onTap: onSetTap,
+          text: buttonText,
+              customColor: CreateRecipePage.buttonColor,
+          fontSize: CreateRecipePage.generalFontSize(context),
+        ),
         )
         : Container(
-      width: widthConstraint(context),
-      decoration: BoxDecoration(
-          color: CreateRecipePage.buttonColor.withOpacity(.9),
-          borderRadius: Config.borderRadiusLarge),
-      padding: const EdgeInsets.symmetric(horizontal: Config.padding),
-      child: Row(
+          width: widthConstraint(context),
+          decoration: BoxDecoration(
+              color: CreateRecipePage.buttonColor.withOpacity(.9),
+              borderRadius: Config.borderRadiusLarge),
+          padding: const EdgeInsets.symmetric(horizontal: Config.padding),
+          child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
@@ -105,16 +106,17 @@ class TimeLabel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TimeLabel(time: time),
-                  const SizedBox(
-                    width: Config.margin / 2,
-                  ),
+                  // const SizedBox(
+                  //   width: Config.margin / 2,
+                  // ),
                   DeleteButton(
                       margin: const EdgeInsets.all(Config.margin * .2),
                       onPressed: onDeleteTap)
                 ],
               ),
             )
-          ]),
+          ]
+          ),
     );
   }
 }

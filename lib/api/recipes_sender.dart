@@ -20,11 +20,15 @@ class RecipesSender {
   }
 
   Future<int> sendRecipe(Recipe recipe) async {
-    print("ooooooooooooooooo");
+    print("ooooooooooooooooo1");
     String? recipeJson = await recipeToJson(recipe);
+
+    print(7777777777777);
+    print(recipeJson);
     if (recipeJson == null) {
       return fail;
     }
+    print("ooooooooooooooooo12");
     var accessToken = await Token.getAccessToken();
     var response = await http.post(Uri.parse('${apiUrl}recipes'),
         headers: {
@@ -32,7 +36,7 @@ class RecipesSender {
           "Content-Type": "application/json; charset=UTF-8",
         },
         body: recipeJson);
-    print("ooooooooooooooooo");
+    print("ooooooooooooooooo2");
     print(response.body);
     if (response.statusCode != 200) {
       // print(response.bodyBytes);
@@ -53,6 +57,7 @@ class RecipesSender {
       print("!!!!!!!!!!!!!");
       print(faceId);
     }
+    print("------------");
     if (fail == faceId) {
       print("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
       return null;
@@ -113,7 +118,8 @@ class RecipesSender {
       fats: recipe.fats as double?,
       carbohydrates: recipe.carbohydrates as double?,
       ingredientsDistributions: ingsDto,
-      steps: stepsDto
+      steps: stepsDto,
+      portions: recipe.portions
     };
     var recipeJson = jsonEncode(recipeDto);
     return recipeJson;

@@ -42,7 +42,7 @@ class AnimatedLoading {
             builder: (content) => Center(
                 child: CustomPositioned(
                 topOffset: 200,
-                scale: 20,
+                scale: 6,
                 child: RiveAnimation.asset(
                     "assets/RiveAssets/confetti.riv",
                     onInit: _onConfettiRiveInit,
@@ -57,7 +57,6 @@ class AnimatedLoading {
             builder: (content) => Center(
                 child: CustomPositioned(
                 topOffset: 200,
-                scale: 20,
                 child: RiveAnimation.asset(
                     'assets/RiveAssets/check.riv',
                     fit: BoxFit.cover,
@@ -72,10 +71,10 @@ class AnimatedLoading {
         print("hhhhhhhhhhhhhh");
         if (completed) {
             success?.fire();
-            Future.delayed(const Duration(seconds: 5), () {
+            Future.delayed(const Duration(seconds: 2), () {
                 Navigator.of(context).pop();
                 confetti?.fire();
-                Future.delayed(const Duration(seconds: 5), () {
+                Future.delayed(const Duration(seconds: 1), () {
                     Navigator.of(context).pop();
                     onSuccess();
                 }
