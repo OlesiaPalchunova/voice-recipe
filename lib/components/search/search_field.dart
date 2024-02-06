@@ -201,7 +201,7 @@ class _SearchFieldState extends State<SearchField> {
 
   }
 
-  void onChanged(String request) async {
+  void onChanged(String request, List<String> error) async {
     print((widget.isRecipeSearch && searchRecipeResults.isNotEmpty) || (!widget.isRecipeSearch && searchCollectionResults.isNotEmpty));
     shownAll = false;
     requestString = widget.isRecipeSearch ? controllerRecipe.text : controllerCollection.text;
@@ -211,7 +211,7 @@ class _SearchFieldState extends State<SearchField> {
         searchRecipeResults = [];
         searchCollectionResults = [];
       });
-      return;
+      return null;
     } else {
       hovered?.change(true);
     }

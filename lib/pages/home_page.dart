@@ -51,8 +51,12 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     setState(() => isLoadingMore = true);
+    print(66666666666666);
+    print(isLoadingMore);
     await fetchNewRecipesPortion();
     setState(() => isLoadingMore = false);
+    print(88888888888888);
+    print(isLoadingMore);
   }
 
   @override
@@ -63,6 +67,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchNewRecipesPortion() async {
+    print(99999999999999999);
     var newPortion =
         await RecipesGetter().getCollection(collectionName, currentPage++);
     if (newPortion != null) {
@@ -84,8 +89,11 @@ class _HomePageState extends State<HomePage> {
 
   void initRecipeViews() async {
     try {
+      setState(() => isLoadingMore = true);
+      print("-----------------");
       List<Recipe>? mainPage =
           await RecipesGetter().getCollection(collectionName, currentPage++);
+      setState(() => isLoadingMore = false);
       if (mainPage != null) {
         recipes.addAll(mainPage);
       }

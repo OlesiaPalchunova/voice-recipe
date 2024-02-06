@@ -33,7 +33,7 @@ class AnimatedLoading {
         return AnimatedLoading._internal();
     }
 
-    Future<bool> execute(BuildContext context, {required Future<bool> Function() task, 
+    Future<bool> execute(BuildContext context, {required Future<int> Function() task,
     required VoidCallback onSuccess}) async {
         print("(((99999999999)))");
         showDialog(
@@ -67,9 +67,9 @@ class AnimatedLoading {
 
             )
         );
-        bool completed = await task();
+        int status = await task();
         print("hhhhhhhhhhhhhh");
-        if (completed) {
+        if (status == 200) {
             success?.fire();
             Future.delayed(const Duration(seconds: 2), () {
                 Navigator.of(context).pop();
@@ -89,6 +89,6 @@ class AnimatedLoading {
             },
             );
         }
-        return completed;
+        return status == 200;
     }
  }

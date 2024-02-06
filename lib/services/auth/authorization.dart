@@ -14,7 +14,7 @@ class Authorization {
 
   final Token token = Token();
 
-  static void loginUser(String nickname, String password) async{
+  static Future<int> loginUser(String nickname, String password) async{
 
     var reqBody = {
       "login":nickname,
@@ -50,9 +50,10 @@ class Authorization {
     } else {
       print("555555555555555555");
     }
+    return response.statusCode;
   }
 
-  static void registerUser(String nickname, String password, String displayName, String email) async{
+  static Future<int> registerUser(String nickname, String password, String displayName, String email) async{
 
     var reqBody = {
       "login":nickname,
@@ -90,6 +91,8 @@ class Authorization {
     } else {
       print("555555555555555555");
     }
+
+    return response.statusCode;
   }
 
   static Future refreshTokens() async{

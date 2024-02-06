@@ -237,7 +237,8 @@ class _CreateRecipePageState extends State<CreateRecipePage> {
 
         }
       });
-      return recipeId != RecipesSender.fail;
+      int status = recipeId != RecipesSender.fail ? 200 : -1;
+      return status;
     }, onSuccess: () {
       ServiceIO.showAlertDialog(
           "Ваш рецепт был успешно сохранен!\n"

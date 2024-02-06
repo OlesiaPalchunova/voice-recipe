@@ -198,6 +198,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
 //   late SharedPreferences prefs;
 //
 //   @override
@@ -257,9 +258,9 @@ class _LoginPageState extends State<LoginPage> {
     AnimatedLoading().execute(
       context,
       task: () async {
-        Authorization.loginUser(_nicknameController.text, _passwordController.text);
+        return Authorization.loginUser(_nicknameController.text, _passwordController.text);
         // Authorization.refreshTokens();
-        return true;
+        // return true;
         // bool logged = false;
         // if (method == Method.nickname) {
         //   logged = await AuthenticationManager()

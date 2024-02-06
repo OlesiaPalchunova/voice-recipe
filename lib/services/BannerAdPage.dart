@@ -11,7 +11,8 @@ class BottomBannerAd extends StatelessWidget {
     // final BannerAdSize bannerAdSize = BannerAdSize.sticky(width: screenWidth);
 
     final banner = BannerAd(
-      adUnitId: 'R-M-3964939-1',
+      // adUnitId: 'R-M-3964939-1',
+      adUnitId: 'demo-banner-yandex',
       adSize: bannerAdSize,
       adRequest: AdRequest(),
       onAdLoaded: () {

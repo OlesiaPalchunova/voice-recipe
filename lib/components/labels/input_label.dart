@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 
 import '../../config/config.dart';
 
-class InputLabel extends StatelessWidget {
+
+class InputLabel extends StatefulWidget {
   const InputLabel(
       {key,
-      required this.labelText,
-      required this.controller,
-      this.focusNode,
-      this.onSubmit,
-      this.onTap,
-      this.onChanged,
-      this.hintText,
-      this.prefixIcon,
-      this.fontSize = 18,
-      this.verticalExpand = false,
-      this.withContentPadding = false});
+        required this.labelText,
+        required this.controller,
+        this.focusNode,
+        this.onSubmit,
+        this.onTap,
+        this.onChanged,
+        this.hintText,
+        this.prefixIcon,
+        this.fontSize = 18,
+        this.verticalExpand = false,
+        this.withContentPadding = false});
 
   final bool verticalExpand;
   final bool withContentPadding;
@@ -27,10 +28,21 @@ class InputLabel extends StatelessWidget {
   final VoidCallback? onSubmit;
   final VoidCallback? onTap;
   final Widget? prefixIcon;
-  final Function(String)? onChanged;
+  final Function(String, List<String>)? onChanged;
   final double fontSize;
 
-  static InputDecoration buildInputDecoration(
+  @override
+  State<InputLabel> createState() => _InputLabelState();
+}
+
+class _InputLabelState extends State<InputLabel> {
+
+  bool get verticalExpand => widget.verticalExpand;
+  VoidCallback? get onSubmit => widget.onSubmit;
+  VoidCallback? get onTap => widget.onTap;
+  Function(String, List<String>)? get onChanged => widget.onChanged;
+
+  InputDecoration buildInputDecoration(
           {required String labelText,
           Widget? suffixIcon,
           Widget? prefixIcon,
@@ -69,7 +81,20 @@ class InputLabel extends StatelessWidget {
         fillColor: Config.darkModeOn ? Colors.grey.shade900 : Colors.white,
         filled: true,
         prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon);
+        suffixIcon: suffixIcon,
+        errorText: (error[0] != "") ? error[0] : null,
+        errorStyle: TextStyle(height: 9),
+    );
+  }
+
+  List<String> error = [""];
+
+  void _onChanged (String input){
+    List<String> output = [""];
+    if (onChanged != null) onChanged!(input, output);
+    setState(() {
+      error[0] = output[0];
+    });
   }
 
   @override
@@ -84,17 +109,19 @@ class InputLabel extends StatelessWidget {
               },
               maxLines: null,
               onTap: onTap,
-              onChanged: onChanged,
-              focusNode: focusNode,
-              controller: controller,
+              onChanged: _onChanged,
+              focusNode: widget.focusNode,
+              controller: widget.controller,
               decoration: buildInputDecoration(
-                  labelText: labelText,
-                  hintText: hintText,
-                  prefixIcon: prefixIcon,
-                  withContentPadding: withContentPadding),
+                  labelText: widget.labelText,
+                  hintText: widget.hintText,
+                  prefixIcon: widget.prefixIcon,
+                  withContentPadding: widget.withContentPadding,
+
+              ),
               style: TextStyle(
                   color: Config.iconColor.withOpacity(0.8),
-                  fontSize: fontSize,
+                  fontSize: widget.fontSize,
                   fontFamily: Config.fontFamily
               ),
             ),
@@ -107,17 +134,17 @@ class InputLabel extends StatelessWidget {
                 onSubmit!();
               },
               onTap: onTap,
-              onChanged: onChanged,
-              focusNode: focusNode,
-              controller: controller,
+              onChanged: _onChanged,
+              focusNode: widget.focusNode,
+              controller: widget.controller,
               decoration: buildInputDecoration(
-                  labelText: labelText,
-                  hintText: hintText,
-                  prefixIcon: prefixIcon,
-                  withContentPadding: withContentPadding),
+                  labelText: widget.labelText,
+                  hintText: widget.hintText,
+                  prefixIcon: widget.prefixIcon,
+                  withContentPadding: widget.withContentPadding),
               style: TextStyle(
                   color: Config.iconColor.withOpacity(0.8),
-                  fontSize: fontSize,
+                  fontSize: widget.fontSize,
                   fontFamily: Config.fontFamily),
             ),
           );

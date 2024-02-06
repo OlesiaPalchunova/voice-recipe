@@ -91,13 +91,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                 InputLabel(
                                     focusNode: _displayNameFocusNode,
                                     labelText: "Имя",
-                                    controller: _displayNameController),
+                                    controller: _displayNameController,
+                                ),
                                 context),
                             LoginPage.inputWrapper(
                                 InputLabel(
                                     focusNode: _nickNameFocusNode,
                                     labelText: "Логин",
-                                    controller: _nickNameController),
+                                    controller: _nickNameController,
+                                    onChanged: onChangeName,
+                                ),
                                 context),
                             LoginPage.inputWrapper(
                                 InputLabel(
@@ -160,12 +163,26 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  void onChangeName(String name, List<String> error) {
+    if (name.length < 4) error[0] = "Имя слишком короткое";
+    else if (name.length > 32) error[0] = "Имя слишком длинное";
+    else error[0] = "";
+  }
+
+  void onChangePassword(String password, List<String> error) {
+    if (password.length < 4) error[0] = "Имя слишком короткое";
+    else if (password.length > 32) error[0] = "Имя слишком длинное";
+    else if (!RegExp(r'[0-9]').hasMatch(password)) error[0] = "Нет цифр";
+    else if (!RegExp(r'[a-zA-Z]').hasMatch(password)) error[0] = "Нет букв";
+    else error[0] = "";
+  }
+
   void register(Method method) async {
     AnimatedLoading().execute(
       context,
       task: () async {
-        Authorization.registerUser(_nickNameController.text, _passwordController.text, _displayNameController.text, _emailController.text);
-        return true;
+        return Authorization.registerUser(_nickNameController.text, _passwordController.text, _displayNameController.text, _emailController.text);
+        // return true;
 
         // bool logged = false;
         // if (method == Method.email) {
